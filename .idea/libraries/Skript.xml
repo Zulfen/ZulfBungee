@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Skript">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Minecraft Server/Plugins/Skript.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
