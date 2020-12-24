@@ -3,11 +3,11 @@ package tk.zulfengaming.bungeesk.universal.socket;
 import org.json.simple.JSONObject;
 
 import java.io.Serializable;
-import java.net.InetAddress;
+import java.net.SocketAddress;
 
 public class Packet implements Serializable {
 
-    public InetAddress address;
+    public SocketAddress address;
     public String name;
 
     public PacketTypes type;
@@ -15,7 +15,7 @@ public class Packet implements Serializable {
     public boolean returnable;
     public JSONObject data;
 
-    public Packet(InetAddress serverAddress, String serverName, PacketTypes packetType, JSONObject packetData, boolean isReturnable) {
+    public Packet(SocketAddress serverAddress, String serverName, PacketTypes packetType, JSONObject packetData, boolean isReturnable) {
         this.address = serverAddress;
         this.name = serverName;
 

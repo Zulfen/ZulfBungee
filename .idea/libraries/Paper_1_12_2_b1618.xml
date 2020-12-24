@@ -1,8 +1,6 @@
 <component name="libraryTable">
   <library name="Paper-1.12.2-b1618">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../../Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />

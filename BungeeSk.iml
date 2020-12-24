@@ -21,5 +21,14 @@
     <orderEntry type="library" name="Paper-1.12.2-b1618" level="project" />
     <orderEntry type="library" name="Skript" level="project" />
     <orderEntry type="library" name="waterfall-1.16-384" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/20.1.0/annotations-20.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

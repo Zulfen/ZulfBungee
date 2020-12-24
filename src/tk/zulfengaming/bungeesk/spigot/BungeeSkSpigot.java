@@ -5,23 +5,30 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
+import tk.zulfengaming.bungeesk.spigot.task.TaskManager;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class BungeeSkSpigot extends JavaPlugin {
 
     // bukkit shit
-    BungeeSkSpigot plugin;
+    public static BungeeSkSpigot plugin;
     SkriptAddon addon;
 
-    BukkitScheduler scheduler = getServer().getScheduler();
+    TaskManager taskManager;
+
+    // keeps track of running shit
+    public HashMap<String, BukkitTask> tasks;
 
     // other
 
     public void onEnable() {
-        plugin = this;
-        addon = Skript.registerAddon(plugin);
+        this.plugin = this;
+        this.addon = Skript.registerAddon(plugin);
+
+        this.taskManager = new TaskManager(plugin);
 
         // Registers the addon
         try {
@@ -39,7 +46,7 @@ public class BungeeSkSpigot extends JavaPlugin {
         Bukkit.getLogger().info("[BungeeSk] " + message);
     }
 
-    public BungeeSkSpigot getPlugin() {
+    public static BungeeSkSpigot getPlugin() {
         return plugin;
     }
 

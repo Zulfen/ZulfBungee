@@ -1,20 +1,19 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket;
 
-import net.md_5.bungee.api.scheduler.ScheduledTask;
-import net.md_5.bungee.scheduler.BungeeTask;
+import org.jetbrains.annotations.Nullable;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
-import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
+import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
-import tk.zulfengaming.bungeesk.universal.socket.PacketHandlerManager;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import static tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot.*;
-
 public class ServerConnection implements Runnable {
 
+    Server server;
     // plugin instance ?
     BungeeSkProxy instance;
 
@@ -26,46 +25,65 @@ public class ServerConnection implements Runnable {
     // handling packets
     PacketHandlerManager packetManager;
 
+    public boolean running = true;
+
     // direct access to IO
     private ObjectInputStream dataIn;
     private ObjectOutputStream dataOut;
 
-    public ServerConnection(Server serverIn) {
+    public ServerConnection(Server serverIn) throws TaskAlreadyExists {
         this.socket = serverIn.socket;
         this.packetManager = serverIn.packetManager;
         this.instance = serverIn.instance;
+        this.server = serverIn;
 
         this.address = socket.getRemoteSocketAddress();
 
 
     }
 
-    public void connection() {
+    public void run() {
         try {
             this.dataIn = new ObjectInputStream(socket.getInputStream());
             this.dataOut = new ObjectOutputStream(socket.getOutputStream());
 
-            Packet packetIn = convertPacket(dataIn.readObject());
+            while (running) {
+                Packet packetIn = convertPacket(dataIn.readObject());
 
-            if(!(packetIn == null)) {
-                Packet processedPacket = (Packet) packetManager.handlePacket(packetIn);
+                if (!(packetIn == null)) {
+                    Packet processedPacket = packetManager.handlePacket(packetIn, address);
 
-                if (!(processedPacket == null) && packetIn.returnable) {
-                    send(processedPacket);
+                    if (!(processedPacket == null) && packetIn.returnable) {
+                        send(processedPacket);
+                    }
                 }
             }
 
         } catch (IOException | ClassNotFoundException e) {
-            log("There was an error while handling data for a connection!");
+            instance.log("There was an error while handling data for a connection!");
             e.printStackTrace();
         }
     }
 
-    private Packet convertPacket(Object object) {
+    public void disconnect() throws IOException {
+        instance.log("Disconnecting client " + String.valueOf(address));
+
+        running = false;
+
+        dataIn.close();
+        dataOut.close();
+
+    }
+
+
+    private @Nullable
+    Packet convertPacket(Object object) {
         if (object instanceof Packet) {
             return (Packet) object;
+        } else {
+            instance.log("Packet received, but does not appear to be valid. Ignoring it.");
+            return null;
         }
-        return null;
     }
 
     public Object read() throws IOException, ClassNotFoundException {
@@ -73,17 +91,13 @@ public class ServerConnection implements Runnable {
     }
 
     public void send(Packet packetIn) {
-        log("Sending packet " + packetIn.type.toString() + "...");
+        instance.log("Sending packet " + packetIn.type.toString() + "...");
         try {
             dataOut.writeObject(packetIn);
+            dataOut.flush();
         } catch (IOException e) {
-            log("That packed failed to send :(");
+            instance.log("That packed failed to send :(");
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void run() {
-        connection();
     }
 }
