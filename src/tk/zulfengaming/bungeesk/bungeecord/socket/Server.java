@@ -6,18 +6,16 @@ import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.net.*;
 import java.util.HashMap;
 
 public class Server implements Runnable {
     // plugin instance !!!
 
-    public BungeeSkProxy instance;
+    public BungeeSkProxy pluginInstance;
 
     // setting up the server
+    public ServerSocket serverSocket;
     public int port;
     public InetAddress address;
     public int timeout = 10000;
@@ -26,6 +24,7 @@ public class Server implements Runnable {
 
     // hey, keep that to yourself!
     public Socket socket;
+    public SocketAddress socketAddress;
 
     // keeping track
     public HashMap<SocketAddress, ServerConnection> activeConnections;
@@ -35,43 +34,45 @@ public class Server implements Runnable {
 
     public Server(int port, InetAddress address, BungeeSkProxy instanceIn) {
         this.address = address;
+        this.socketAddress = new InetSocketAddress(this.address, this.port);
         this.port = port;
-        this.instance = instanceIn;
+        this.pluginInstance = instanceIn;
 
         this.packetManager = new PacketHandlerManager(this);
     }
 
     public void run() {
         // making the server socket
+
         try {
 
+            serverSocket = new ServerSocket(port, 50, address);
+
+            pluginInstance.log("Server socket successfully established on port " + port + "!");
+            pluginInstance.log("Waiting for connections...");
+
             while (running) {
-                runServer();
+                socket = serverSocket.accept();
+                acceptConnection();
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public void runServer() throws IOException {
+    public void acceptConnection() throws IOException {
 
         try {
-
-            ServerSocket serverSocket = new ServerSocket(port, 50, address);
-
-            instance.log("Server socket successfully established on port " + port + "!");
-            instance.log("Waiting for connections...");
-
-            socket = serverSocket.accept();
 
             ServerConnection connection = new ServerConnection(this);
             SocketAddress connectionAddress = connection.address;
 
-            instance.taskManager.newTask(connection, String.valueOf(connectionAddress));
+            pluginInstance.taskManager.newTask(connection, String.valueOf(connectionAddress));
             activeConnections.put(connectionAddress, connection);
 
-            instance.log("Connection established with address: " + connectionAddress);
+            pluginInstance.log("Connection established with address: " + connectionAddress);
 
         } catch (TaskAlreadyExists taskAlreadyExists) {
             taskAlreadyExists.printStackTrace();
@@ -80,7 +81,7 @@ public class Server implements Runnable {
     }
 
     public void sendToAllClients(Packet packetIn) {
-        instance.log("Sending packet " + packetIn.type.toString() + "to all clients...");
+        pluginInstance.log("Sending packet " + packetIn.type.toString() + "to all clients...");
 
         for (ServerConnection connection : activeConnections.values()) {
             connection.send(packetIn);

@@ -12,19 +12,17 @@ import java.util.Collection;
 
 public class GlobalPlayers extends PacketHandler {
 
-    Server server;
-
     public GlobalPlayers(Server serverIn) {
-        super(PacketTypes.GLOBAL_PLAYERS);
+        super(serverIn, PacketTypes.GLOBAL_PLAYERS);
 
-        this.server = serverIn;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
         JSONObject packetData = new JSONObject();
-        final Collection<ProxiedPlayer> players = server.instance.getProxy().getPlayers();
+
+        final Collection<ProxiedPlayer> players = getSocketServer().pluginInstance.getProxy().getPlayers();
 
         packetData.put("value", players.size());
 

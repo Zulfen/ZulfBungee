@@ -34,16 +34,17 @@ public class ServerConnection implements Runnable {
     public ServerConnection(Server serverIn) throws TaskAlreadyExists {
         this.socket = serverIn.socket;
         this.packetManager = serverIn.packetManager;
-        this.instance = serverIn.instance;
+        this.instance = serverIn.pluginInstance;
         this.server = serverIn;
 
         this.address = socket.getRemoteSocketAddress();
 
-
     }
 
     public void run() {
+
         try {
+
             this.dataIn = new ObjectInputStream(socket.getInputStream());
             this.dataOut = new ObjectOutputStream(socket.getOutputStream());
 
@@ -59,6 +60,10 @@ public class ServerConnection implements Runnable {
                 }
             }
 
+            socket.close();
+            dataIn.close();
+            dataOut.close();
+
         } catch (IOException | ClassNotFoundException e) {
             instance.log("There was an error while handling data for a connection!");
             e.printStackTrace();
@@ -70,11 +75,7 @@ public class ServerConnection implements Runnable {
 
         running = false;
 
-        dataIn.close();
-        dataOut.close();
-
     }
-
 
     private @Nullable
     Packet convertPacket(Object object) {
