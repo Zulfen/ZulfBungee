@@ -27,7 +27,7 @@ public class Server implements Runnable {
     public SocketAddress socketAddress;
 
     // keeping track
-    public HashMap<SocketAddress, ServerConnection> activeConnections;
+    public HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
 
     // quite neat
     PacketHandlerManager packetManager;
@@ -65,7 +65,7 @@ public class Server implements Runnable {
     public void acceptConnection() throws IOException {
 
         try {
-
+            socket.setTcpNoDelay(true);
             ServerConnection connection = new ServerConnection(this);
             SocketAddress connectionAddress = connection.address;
 
@@ -84,7 +84,7 @@ public class Server implements Runnable {
         pluginInstance.log("Sending packet " + packetIn.type.toString() + "to all clients...");
 
         for (ServerConnection connection : activeConnections.values()) {
-            connection.send(packetIn);
+            final Packet send = connection.send(packetIn);
         }
     }
 

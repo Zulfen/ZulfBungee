@@ -45,6 +45,14 @@ public class BungeeSkProxy extends Plugin {
     }
 
     public void log(String message) {
-        logger.info("[BungeeSk] " + message);
+        logger.info(message);
+    }
+
+    public void error(String message) {
+        logger.severe(message);
+    }
+
+    public void warning(String message) {
+        logger.warning(message);
     }
 }

@@ -10,30 +10,39 @@ import java.io.IOException;
 
 public class YamlConfig {
 
-    BungeeSkProxy instance;
+    public BungeeSkProxy instance;
 
-    File configFile;
+    public File configFile;
 
-    ConfigurationProvider configObject;
+    public String configPath;
 
-    Configuration loadedConfig;
+    private ConfigurationProvider configObject;
+
+    private Configuration loadedConfig;
 
     public YamlConfig(BungeeSkProxy instanceIn) {
         this.instance = instanceIn;
 
-        this.configFile = new File(instance.getDataFolder(), "bungee.yml");
+        this.configPath = instance.getDataFolder() + File.separator;
 
-        instance.log("Loading config...");
+        this.configFile = new File(configPath + "config.yml");
+
+
+        instance.log("Loading config into "+ configFile.getPath() + "...");
 
         try {
-            if (!(configFile.exists())) configFile.createNewFile();
+            if (!instance.getDataFolder().exists()) {
+                instance.getDataFolder().mkdirs();
+            }
+            if (!configFile.exists()) //noinspection ResultOfMethodCallIgnored
+                configFile.createNewFile();
 
             this.configObject = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
             this.loadedConfig = configObject.load(configFile);
 
         } catch (IOException e) {
-            instance.log("There was an error getting the config!");
+            instance.error("There was an error getting the config!");
 
             e.printStackTrace();
         }

@@ -8,14 +8,20 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 
 public class ServerConnection implements Runnable {
 
     Server server;
     // plugin instance ?
-    BungeeSkProxy instance;
+    BungeeSkProxy pluginInstance;
 
     Socket socket;
 
@@ -30,11 +36,12 @@ public class ServerConnection implements Runnable {
     // direct access to IO
     private ObjectInputStream dataIn;
     private ObjectOutputStream dataOut;
+    private Packet packetIn;
 
     public ServerConnection(Server serverIn) throws TaskAlreadyExists {
         this.socket = serverIn.socket;
         this.packetManager = serverIn.packetManager;
-        this.instance = serverIn.pluginInstance;
+        this.pluginInstance = serverIn.pluginInstance;
         this.server = serverIn;
 
         this.address = socket.getRemoteSocketAddress();
@@ -48,8 +55,8 @@ public class ServerConnection implements Runnable {
             this.dataIn = new ObjectInputStream(socket.getInputStream());
             this.dataOut = new ObjectOutputStream(socket.getOutputStream());
 
-            while (running) {
-                Packet packetIn = convertPacket(dataIn.readObject());
+            while (running && socket.isConnected()) {
+                Packet packetIn = read();
 
                 if (!(packetIn == null)) {
                     Packet processedPacket = packetManager.handlePacket(packetIn, address);
@@ -60,20 +67,23 @@ public class ServerConnection implements Runnable {
                 }
             }
 
-            socket.close();
-            dataIn.close();
-            dataOut.close();
+            disconnect();
 
+        } catch (StreamCorruptedException e) {
+            pluginInstance.warning("The client at " + address + " sent some invalid data. Ignoring.");
         } catch (IOException | ClassNotFoundException e) {
-            instance.log("There was an error while handling data for a connection!");
+            pluginInstance.error("There was an error while handling data for a connection!");
             e.printStackTrace();
         }
     }
 
     public void disconnect() throws IOException {
-        instance.log("Disconnecting client " + String.valueOf(address));
+        pluginInstance.log("Disconnecting client " + address);
 
         running = false;
+        socket.close();
+        dataIn.close();
+        dataOut.close();
 
     }
 
@@ -82,23 +92,39 @@ public class ServerConnection implements Runnable {
         if (object instanceof Packet) {
             return (Packet) object;
         } else {
-            instance.log("Packet received, but does not appear to be valid. Ignoring it.");
+            pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
             return null;
         }
     }
 
-    public Object read() throws IOException, ClassNotFoundException {
-        return dataIn.readObject();
+    public Packet read() throws IOException, ClassNotFoundException {
+        return convertPacket(dataIn.readObject());
     }
 
-    public void send(Packet packetIn) {
-        instance.log("Sending packet " + packetIn.type.toString() + "...");
+    public Packet send(Packet packetIn) {
+        pluginInstance.log("Sending packet " + packetIn.type.toString() + "...");
+
         try {
             dataOut.writeObject(packetIn);
             dataOut.flush();
-        } catch (IOException e) {
-            instance.log("That packed failed to send :(");
+
+            Supplier<Packet> response = () -> {
+                try {
+                    return read();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            };
+
+            return CompletableFuture.supplyAsync(response).get(socket.getSoTimeout(), TimeUnit.MILLISECONDS);
+
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            pluginInstance.error("That packed failed to send :(");
             e.printStackTrace();
+
         }
+        return null;
     }
 }

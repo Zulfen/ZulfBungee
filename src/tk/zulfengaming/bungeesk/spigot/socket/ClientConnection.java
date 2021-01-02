@@ -1,21 +1,15 @@
 package tk.zulfengaming.bungeesk.spigot.socket;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.bungeecord.socket.PacketHandlerManager;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
 
-import static tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot.*;
+import static tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot.log;
 
 public class ClientConnection implements Runnable {
 
@@ -76,7 +70,7 @@ public class ClientConnection implements Runnable {
         }
     }
 
-    public void end() {
+    public void end() throws IOException {
         socket.close();
     }
 }
