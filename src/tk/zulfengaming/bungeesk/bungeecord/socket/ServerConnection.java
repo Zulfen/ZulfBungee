@@ -1,6 +1,5 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket;
 
-import org.jetbrains.annotations.Nullable;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
@@ -11,11 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Supplier;
 
 public class ServerConnection implements Runnable {
 
@@ -56,14 +50,16 @@ public class ServerConnection implements Runnable {
             this.dataOut = new ObjectOutputStream(socket.getOutputStream());
 
             while (running && socket.isConnected()) {
-                Packet packetIn = read();
 
-                if (!(packetIn == null)) {
-                    Packet processedPacket = packetManager.handlePacket(packetIn, address);
+                if (dataIn.readObject() instanceof Packet) {
+                    Packet processedPacket = packetManager.handlePacket((Packet) dataIn.readObject(), address);
 
                     if (!(processedPacket == null) && packetIn.returnable) {
                         send(processedPacket);
+
                     }
+                } else {
+                    pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
                 }
             }
 
@@ -81,50 +77,28 @@ public class ServerConnection implements Runnable {
         pluginInstance.log("Disconnecting client " + address);
 
         running = false;
+
         socket.close();
         dataIn.close();
         dataOut.close();
 
     }
 
-    private @Nullable
-    Packet convertPacket(Object object) {
-        if (object instanceof Packet) {
-            return (Packet) object;
-        } else {
-            pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
-            return null;
-        }
-    }
-
     public Packet read() throws IOException, ClassNotFoundException {
-        return convertPacket(dataIn.readObject());
+        return (Packet) dataIn.readObject();
     }
 
-    public Packet send(Packet packetIn) {
+    public void send(Packet packetIn) {
         pluginInstance.log("Sending packet " + packetIn.type.toString() + "...");
 
         try {
             dataOut.writeObject(packetIn);
             dataOut.flush();
 
-            Supplier<Packet> response = () -> {
-                try {
-                    return read();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            };
-
-            return CompletableFuture.supplyAsync(response).get(socket.getSoTimeout(), TimeUnit.MILLISECONDS);
-
-        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+        } catch (IOException e) {
             pluginInstance.error("That packed failed to send :(");
             e.printStackTrace();
 
         }
-        return null;
     }
 }

@@ -34,6 +34,7 @@ public class BungeeSkProxy extends Plugin {
 
         try {
             server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), plugin);
+
             taskManager.newTask(server, "MainServer");
         } catch (UnknownHostException | TaskAlreadyExists e) {
             e.printStackTrace();

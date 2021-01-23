@@ -66,6 +66,7 @@ public class Server implements Runnable {
 
         try {
             socket.setTcpNoDelay(true);
+
             ServerConnection connection = new ServerConnection(this);
             SocketAddress connectionAddress = connection.address;
 
@@ -84,7 +85,7 @@ public class Server implements Runnable {
         pluginInstance.log("Sending packet " + packetIn.type.toString() + "to all clients...");
 
         for (ServerConnection connection : activeConnections.values()) {
-            final Packet send = connection.send(packetIn);
+            connection.send(packetIn);
         }
     }
 

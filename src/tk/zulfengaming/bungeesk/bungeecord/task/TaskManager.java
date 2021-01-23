@@ -28,6 +28,7 @@ public class TaskManager {
         } else {
             instance.warning(taskIn.toString());
             ScheduledTask theTask = scheduler.runAsync(instance, taskIn);
+
             tasks.put(name, theTask);
             instance.log("New task: " + name + " created!");
         }
@@ -38,6 +39,7 @@ public class TaskManager {
             throw new TaskAlreadyExists("Task '"+ name + "' already exists.");
         } else {
             ScheduledTask theTask = scheduler.schedule(instance, taskIn, seconds, TimeUnit.SECONDS);
+
             tasks.put(name, theTask);
             instance.log("New repeating task: " + name + " created!");
         }
@@ -46,6 +48,7 @@ public class TaskManager {
 
     public void endTask(String name) {
         ScheduledTask theTask = tasks.get(name);
+
         tasks.remove(name);
         theTask.cancel();
         instance.log("Task: " + name + " removed and stopped!");
