@@ -1,0 +1,7 @@
+server-port: 8000
+server-host: "0.0.0.0"
+
+client-port: 8001
+client-host: "0.0.0.0"
+
+debug: true

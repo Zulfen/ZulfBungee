@@ -3,32 +3,34 @@ package tk.zulfengaming.bungeesk.spigot;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
+import tk.zulfengaming.bungeesk.spigot.config.YamlConfig;
+import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.task.TaskManager;
+import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class BungeeSkSpigot extends JavaPlugin {
 
-    // bukkit shit
-    public static BungeeSkSpigot plugin;
-    SkriptAddon addon;
+    public BungeeSkSpigot plugin;
+    private SkriptAddon addon;
 
-    TaskManager taskManager;
+    public TaskManager taskManager;
+    public YamlConfig config;
 
-    // keeps track of running shit
-    public HashMap<String, BukkitTask> tasks;
+    public ClientConnection connection;
 
     // other
 
     public void onEnable() {
-        this.plugin = this;
-        this.addon = Skript.registerAddon(plugin);
+        plugin = this;
+        addon = Skript.registerAddon(plugin);
 
-        this.taskManager = new TaskManager(plugin);
+        taskManager = new TaskManager(plugin);
+        config = new YamlConfig(this);
 
         // Registers the addon
         try {
@@ -39,15 +41,27 @@ public class BungeeSkSpigot extends JavaPlugin {
             e.printStackTrace();
         }
 
+        try {
+            connection = new ClientConnection(this, InetAddress.getByName(config.getString("client-host")), config.getInt("client-port"));
+
+            taskManager.newTask(connection, "MainConnection");
+
+        } catch (UnknownHostException | TaskAlreadyExists e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public static void log(String message) {
-        Bukkit.getLogger().info("[BungeeSk] " + message);
+    public void log(String message) {
+        getLogger().info(message);
     }
 
-    public static BungeeSkSpigot getPlugin() {
-        return plugin;
+    public void error(String message) {
+        getLogger().severe(message);
+    }
+
+    public void warning(String message) {
+        getLogger().warning(message);
     }
 
     public SkriptAddon getAddon() {

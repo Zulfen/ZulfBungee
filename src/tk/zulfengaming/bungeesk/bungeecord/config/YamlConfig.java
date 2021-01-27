@@ -1,20 +1,18 @@
 package tk.zulfengaming.bungeesk.bungeecord.config;
 
+import com.google.common.io.ByteStreams;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class YamlConfig {
 
     public BungeeSkProxy instance;
 
     public File configFile;
-
-    public String configPath;
 
     private ConfigurationProvider configObject;
 
@@ -23,19 +21,30 @@ public class YamlConfig {
     public YamlConfig(BungeeSkProxy instanceIn) {
         this.instance = instanceIn;
 
-        this.configPath = instance.getDataFolder() + File.separator;
-
-        this.configFile = new File(configPath + "config.yml");
-
-
-        instance.log("Loading config into "+ configFile.getPath() + "...");
+        this.configFile = new File(instance.getDataFolder(), "config.yml");
 
         try {
             if (!instance.getDataFolder().exists()) {
-                instance.getDataFolder().mkdirs();
+                instance.getDataFolder().mkdir();
             }
-            if (!configFile.exists()) //noinspection ResultOfMethodCallIgnored
-                configFile.createNewFile();
+
+            // Thank you https://www.spigotmc.org/members/tux.2180/ <3
+
+            if (!configFile.exists())
+
+                try {
+
+                    configFile.createNewFile();
+
+                    try (InputStream is = instance.getResourceAsStream("bungeecord.yml");
+                         OutputStream os = new FileOutputStream(configFile)) {
+                        ByteStreams.copy(is, os);
+                    }
+
+                } catch (IOException e) {
+                    instance.error("There was an error copying the default config:");
+                    e.printStackTrace();
+                }
 
             this.configObject = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
@@ -49,7 +58,7 @@ public class YamlConfig {
 
     }
 
-    public void save(String node, String value) throws IOException {
+    public void save(String node, Object value) throws IOException {
         loadedConfig.set(node, value);
         configObject.save(loadedConfig, configFile);
 

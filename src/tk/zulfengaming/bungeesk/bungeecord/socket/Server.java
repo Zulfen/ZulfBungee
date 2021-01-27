@@ -1,6 +1,7 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket;
 
 
+import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
@@ -8,6 +9,7 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Server implements Runnable {
     // plugin instance !!!
@@ -20,7 +22,7 @@ public class Server implements Runnable {
     public InetAddress address;
     public int timeout = 10000;
 
-    public boolean running = true;
+    public boolean running;
 
     // hey, keep that to yourself!
     public Socket socket;
@@ -30,7 +32,7 @@ public class Server implements Runnable {
     public HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
 
     // quite neat
-    PacketHandlerManager packetManager;
+    public PacketHandlerManager packetManager;
 
     public Server(int port, InetAddress address, BungeeSkProxy instanceIn) {
         this.address = address;
@@ -41,23 +43,39 @@ public class Server implements Runnable {
         this.packetManager = new PacketHandlerManager(this);
     }
 
+    public void start() throws IOException {
+        serverSocket = new ServerSocket(port, 50, address);
+
+        pluginInstance.log("Server socket successfully established on port " + port + "!");
+        pluginInstance.log("Waiting for connections...");
+
+        running = true;
+    }
+
     public void run() {
         // making the server socket
 
         try {
 
-            serverSocket = new ServerSocket(port, 50, address);
-
-            pluginInstance.log("Server socket successfully established on port " + port + "!");
-            pluginInstance.log("Waiting for connections...");
+            start();
 
             while (running) {
                 socket = serverSocket.accept();
-                acceptConnection();
+
+                if (isValidClient(socket.getRemoteSocketAddress())) {
+                    acceptConnection();
+                } else {
+                    pluginInstance.warning("Client who tried to connect is not defined in bungeecord's config. Ignoring.");
+                }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException serverError) {
+
+            pluginInstance.error("Server encountered an error!");
+            serverError.printStackTrace();
+
+            restart();
+
         }
 
     }
@@ -66,6 +84,7 @@ public class Server implements Runnable {
 
         try {
             socket.setTcpNoDelay(true);
+            socket.setSoTimeout(timeout);
 
             ServerConnection connection = new ServerConnection(this);
             SocketAddress connectionAddress = connection.address;
@@ -81,6 +100,18 @@ public class Server implements Runnable {
 
     }
 
+    public boolean isValidClient(SocketAddress addressIn) {
+        Map<String, ServerInfo> servers = pluginInstance.getProxy().getServersCopy();
+
+        for (ServerInfo server : servers.values()) {
+            if (addressIn == server.getSocketAddress()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void sendToAllClients(Packet packetIn) {
         pluginInstance.log("Sending packet " + packetIn.type.toString() + "to all clients...");
 
@@ -89,9 +120,45 @@ public class Server implements Runnable {
         }
     }
 
+    public void addConnection(SocketAddress addressIn, ServerConnection connection) {
+        activeConnections.put(addressIn, connection);
+    }
+
+    public void removeConnection(ServerConnection connection) {
+        activeConnections.remove(connection.address);
+    }
+
     public ServerConnection getConnection(SocketAddress addressIn) {
-        final ServerConnection connection = activeConnections.get(addressIn);
-        return connection;
+        return activeConnections.get(addressIn);
+    }
+
+    public void end() throws IOException {
+
+        pluginInstance.log("Shutting down MainServer...");
+
+        for (ServerConnection connection : activeConnections.values()) {
+            connection.disconnect();
+        }
+
+        running = false;
+
+        socket.close();
+
+    }
+
+    public void restart() {
+
+        pluginInstance.log("Restarting server...");
+
+        try {
+            end();
+            start();
+
+        } catch (IOException e) {
+            pluginInstance.error("Something went wrong trying to restart. You are utterly fucked, i'm sorry.");
+            e.printStackTrace();
+        }
+
     }
 }
 

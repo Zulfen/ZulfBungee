@@ -9,7 +9,7 @@ public abstract class PacketHandler {
 
     private PacketTypes[] types;
 
-    public abstract Object handlePacket(Packet packetIn, SocketAddress address);
+    public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
 
     public PacketTypes[] getTypes() {
         return types;

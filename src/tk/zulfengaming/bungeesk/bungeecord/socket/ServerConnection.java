@@ -20,7 +20,7 @@ public class ServerConnection implements Runnable {
     Socket socket;
 
     public SocketAddress address;
-    public String name;
+    public String id;
 
     // handling packets
     PacketHandlerManager packetManager;
@@ -78,9 +78,10 @@ public class ServerConnection implements Runnable {
 
         running = false;
 
-        socket.close();
         dataIn.close();
         dataOut.close();
+
+        server.removeConnection(this);
 
     }
 
@@ -92,6 +93,7 @@ public class ServerConnection implements Runnable {
         pluginInstance.log("Sending packet " + packetIn.type.toString() + "...");
 
         try {
+
             dataOut.writeObject(packetIn);
             dataOut.flush();
 

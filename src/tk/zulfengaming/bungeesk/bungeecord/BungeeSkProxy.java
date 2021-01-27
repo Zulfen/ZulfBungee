@@ -12,8 +12,6 @@ import java.util.logging.Logger;
 
 public class BungeeSkProxy extends Plugin {
 
-    public static BungeeSkProxy plugin;
-
     public Logger logger;
 
     public YamlConfig config;
@@ -22,31 +20,33 @@ public class BungeeSkProxy extends Plugin {
 
     public TaskManager taskManager;
 
+    public boolean isDebug = false;
+
     public void onEnable() {
-        plugin = this;
-        logger = plugin.getLogger();
+
+        logger = getProxy().getLogger();
 
         taskManager = new TaskManager(this);
 
-        config = new YamlConfig(plugin);
+        config = new YamlConfig(this);
 
-        log("BungeeSk has been enabled!");
+        if (config.getBoolean("debug")) isDebug = true;
 
         try {
             server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), plugin);
 
             taskManager.newTask(server, "MainServer");
-        } catch (UnknownHostException | TaskAlreadyExists e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static BungeeSkProxy getPlugin() {
-        return plugin;
+        } catch (UnknownHostException | TaskAlreadyExists e) {
+            error("There was an error trying to start the server?:");
+            e.printStackTrace();
+
+        }
+
     }
 
     public void log(String message) {
-        logger.info(message);
+        if (isDebug) logger.info(message);
     }
 
     public void error(String message) {
