@@ -33,7 +33,7 @@ public class BungeeSkProxy extends Plugin {
         if (config.getBoolean("debug")) isDebug = true;
 
         try {
-            server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), plugin);
+            server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
             taskManager.newTask(server, "MainServer");
 

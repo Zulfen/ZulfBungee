@@ -66,6 +66,7 @@ public class Server implements Runnable {
                     acceptConnection();
                 } else {
                     pluginInstance.warning("Client who tried to connect is not defined in bungeecord's config. Ignoring.");
+                    socket.close();
                 }
             }
 

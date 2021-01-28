@@ -3,8 +3,6 @@ package tk.zulfengaming.bungeesk.spigot.config;
 import org.bukkit.configuration.file.FileConfiguration;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 
-import java.io.IOException;
-
 public class YamlConfig {
 
     public BungeeSkSpigot instance;
@@ -20,7 +18,7 @@ public class YamlConfig {
 
     }
 
-    public void addDefault(String node, Object value) throws IOException {
+    public void addDefault(String node, Object value) {
         configObject.addDefault(node, value);
 
     }

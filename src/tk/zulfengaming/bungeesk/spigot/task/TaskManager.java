@@ -14,7 +14,7 @@ public class TaskManager {
     private final BukkitScheduler scheduler;
 
     // keeps track of running shit
-    public HashMap<String, BukkitTask> tasks;
+    public HashMap<String, BukkitTask> tasks = new HashMap<>();
 
     public TaskManager(BungeeSkSpigot instanceIn ) {
         this.instance = instanceIn;

@@ -30,7 +30,6 @@ public class ServerConnection implements Runnable {
     // direct access to IO
     private ObjectInputStream dataIn;
     private ObjectOutputStream dataOut;
-    private Packet packetIn;
 
     public ServerConnection(Server serverIn) throws TaskAlreadyExists {
         this.socket = serverIn.socket;
@@ -52,7 +51,10 @@ public class ServerConnection implements Runnable {
             while (running && socket.isConnected()) {
 
                 if (dataIn.readObject() instanceof Packet) {
-                    Packet processedPacket = packetManager.handlePacket((Packet) dataIn.readObject(), address);
+
+                    Packet packetIn = (Packet) dataIn.readObject();
+
+                    Packet processedPacket = packetManager.handlePacket(packetIn, address);
 
                     if (!(processedPacket == null) && packetIn.returnable) {
                         send(processedPacket);
@@ -67,6 +69,7 @@ public class ServerConnection implements Runnable {
 
         } catch (StreamCorruptedException e) {
             pluginInstance.warning("The client at " + address + " sent some invalid data. Ignoring.");
+
         } catch (IOException | ClassNotFoundException e) {
             pluginInstance.error("There was an error while handling data for a connection!");
             e.printStackTrace();

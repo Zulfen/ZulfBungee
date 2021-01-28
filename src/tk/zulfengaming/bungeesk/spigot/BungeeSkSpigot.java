@@ -18,6 +18,8 @@ public class BungeeSkSpigot extends JavaPlugin {
     public BungeeSkSpigot plugin;
     private SkriptAddon addon;
 
+    public boolean debug = false;
+
     public TaskManager taskManager;
     public YamlConfig config;
 
@@ -31,6 +33,10 @@ public class BungeeSkSpigot extends JavaPlugin {
 
         taskManager = new TaskManager(plugin);
         config = new YamlConfig(this);
+
+        if (config.getBoolean("debug")) {
+            debug = true;
+        }
 
         // Registers the addon
         try {
@@ -53,7 +59,9 @@ public class BungeeSkSpigot extends JavaPlugin {
     }
 
     public void log(String message) {
-        getLogger().info(message);
+        if (debug) {
+            getLogger().info(message);
+        }
     }
 
     public void error(String message) {

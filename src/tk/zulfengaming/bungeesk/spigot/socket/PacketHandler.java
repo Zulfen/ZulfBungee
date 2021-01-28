@@ -9,13 +9,20 @@ public abstract class PacketHandler {
 
     private PacketTypes[] types;
 
+    private final ClientConnection connection;
+
     public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
 
     public PacketTypes[] getTypes() {
         return types;
     }
 
-    public PacketHandler(PacketTypes... types){
+    public ClientConnection getConnection() {
+        return connection;
+    }
+
+    public PacketHandler(ClientConnection connection, PacketTypes... types){
+        this.connection = connection;
         this.types = types;
 
     }
