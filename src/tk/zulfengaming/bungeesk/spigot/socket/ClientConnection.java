@@ -2,6 +2,7 @@ package tk.zulfengaming.bungeesk.spigot.socket;
 
 import org.json.simple.JSONObject;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
+import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
@@ -38,29 +39,41 @@ public class ClientConnection implements Runnable {
         this.instance = instance;
         this.clientAddress = addressIn;
         this.clientPort = portIn;
-        instance.log(String.valueOf(clientPort));
+
+        try {
+            this.serverSocketAddress = new InetSocketAddress(InetAddress.getByName(instance.config.getString("server-address")), instance.config.getInt("server-port"));
+        } catch (UnknownHostException e) {
+            instance.warning("Couldn't find hostname for specified address.");
+        }
 
         this.packetManager = new PacketHandlerManager(this);
     }
 
-    public void connect() {
+    public void connect() throws IOException {
+
+
+        socket = new Socket();
 
         try {
 
-            socket = new Socket(InetAddress.getByName(instance.config.getString("server-address")), instance.config.getInt("server-port"));
+            instance.taskManager.newRepeatingTask(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (this) {
 
-            dataIn = new ObjectInputStream(socket.getInputStream());
-            dataOut = new ObjectOutputStream(socket.getOutputStream());
+                    }
 
-            send_direct(new Packet(new InetSocketAddress(clientAddress, clientPort), "test", PacketTypes.HANDSHAKE, new JSONObject(), true));
+            }, "ConnectionConnecting", 100);
 
-            running = true;
+        } catch (TaskAlreadyExists e) {
 
-        } catch (IOException e) {
+            instance.error("There was an error trying connect to the endpoint. :(");
 
-            instance.error("There was an error trying connect to the endpoint. Retrying...");
             e.printStackTrace();
+            notify();
         }
+
+
 
     }
 
@@ -69,29 +82,30 @@ public class ClientConnection implements Runnable {
 
             connect();
 
+            dataIn = new ObjectInputStream(socket.getInputStream());
+            dataOut = new ObjectOutputStream(socket.getOutputStream());
+
+            send_direct(new Packet(new InetSocketAddress(clientAddress, clientPort), "test", PacketTypes.HANDSHAKE, new JSONObject(), true));
+
             while (running) {
 
-                while (running && socket.isConnected()) {
+                if (dataIn.readObject() instanceof Packet) {
+                    instance.log("uwu");
+                    Packet packetIn = (Packet) dataIn.readObject();
 
-                    if (dataIn.readObject() instanceof Packet) {
-                        Packet packetIn = (Packet) dataIn.readObject();
+                    Packet processedPacket = packetManager.handlePacket(packetIn, serverSocketAddress);
 
-                        Packet processedPacket = packetManager.handlePacket(packetIn, serverSocketAddress);
+                    if (!(processedPacket == null) && packetIn.returnable) {
+                        send_direct(processedPacket);
 
-                        if (!(processedPacket == null) && packetIn.returnable) {
-                            send(processedPacket);
-
-                        }
-                    } else {
-                        instance.warning("Packet received from " + serverSocketAddress + ", but does not appear to be valid. Ignoring it.");
                     }
+                } else {
+                    instance.warning("Packet received from " + serverSocketAddress + ", but does not appear to be valid. Ignoring it.");
                 }
-
             }
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | InterruptedException e) {
             instance.error("There was an error while handling data from the server!");
-            e.printStackTrace();
         }
     }
 
@@ -129,20 +143,6 @@ public class ClientConnection implements Runnable {
 
     }
 
-    public void restart() {
-
-        instance.log("Restarting server...");
-
-        try {
-            end();
-            connect();
-
-        } catch (IOException e) {
-            instance.error("Something went wrong trying to restart. You are utterly fucked, i'm sorry.");
-            e.printStackTrace();
-        }
-
-    }
 
     // this is a singleton. yes, i am aware other classes are like this
     public static ClientConnection getClientConnection() {

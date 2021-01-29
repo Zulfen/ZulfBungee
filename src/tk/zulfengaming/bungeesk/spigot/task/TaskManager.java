@@ -25,7 +25,7 @@ public class TaskManager {
         if (tasks.containsKey(name)) {
             throw new TaskAlreadyExists("Task '"+ name + "' already exists.");
         } else {
-            BukkitTask theTask = scheduler.runTask(instance, taskIn);
+            BukkitTask theTask = scheduler.runTaskAsynchronously(instance, taskIn);
             tasks.put(name, theTask);
             instance.log("New task: " + name + " created!");
         }
