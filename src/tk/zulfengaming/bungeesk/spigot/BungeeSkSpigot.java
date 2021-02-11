@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.bungeesk.spigot.config.YamlConfig;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.task.TaskManager;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -18,20 +17,20 @@ public class BungeeSkSpigot extends JavaPlugin {
     public BungeeSkSpigot plugin;
     private SkriptAddon addon;
 
-    public boolean debug = false;
+    private boolean debug = false;
 
-    public TaskManager taskManager;
-    public YamlConfig config;
+
+    private TaskManager taskManager;
+    private YamlConfig config;
 
     public ClientConnection connection;
 
     // other
 
     public void onEnable() {
-        plugin = this;
-        addon = Skript.registerAddon(plugin);
+        addon = Skript.registerAddon(this);
 
-        taskManager = new TaskManager(plugin);
+        taskManager = new TaskManager(this);
         config = new YamlConfig(this);
 
         if (config.getBoolean("debug")) {
@@ -52,9 +51,15 @@ public class BungeeSkSpigot extends JavaPlugin {
 
             taskManager.newTask(connection, "MainConnection");
 
-        } catch (UnknownHostException | TaskAlreadyExists e) {
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void onDisable() {
+        taskManager.shutdown();
+        connection.shutdown();
 
     }
 
@@ -72,10 +77,21 @@ public class BungeeSkSpigot extends JavaPlugin {
         getLogger().warning(message);
     }
 
+    public YamlConfig getYamlConfig() {
+        return config;
+    }
+
     public SkriptAddon getAddon() {
         return addon;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
 }
 
 

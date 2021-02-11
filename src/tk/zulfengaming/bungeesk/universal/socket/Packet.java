@@ -1,5 +1,6 @@
 package tk.zulfengaming.bungeesk.universal.socket;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.Serializable;
@@ -7,21 +8,38 @@ import java.net.SocketAddress;
 
 public class Packet implements Serializable {
 
-    public SocketAddress address;
-    public String name;
+    private static final long serialVersionUID = 7526472295622776147L;
 
-    public PacketTypes type;
+    private final SocketAddress address;
+    private final String name;
 
-    public boolean returnable;
-    public JSONObject data;
+    private final PacketTypes type;
 
-    public Packet(SocketAddress serverAddress, String serverName, PacketTypes packetType, JSONObject packetData, boolean isReturnable) {
+    private final boolean returnable;
+    private JSONObject data;
+
+    public Packet(SocketAddress serverAddress, String serverName, PacketTypes packetType, boolean isReturnable, JSONArray packetData) {
         this.address = serverAddress;
         this.name = serverName;
 
         this.type = packetType;
         this.returnable = isReturnable;
-        this.data = packetData;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public PacketTypes getType() {
+        return type;
+    }
+
+    public boolean isReturnable() {
+        return returnable;
+    }
+
+    public SocketAddress getAddress() {
+        return address;
     }
 
 }

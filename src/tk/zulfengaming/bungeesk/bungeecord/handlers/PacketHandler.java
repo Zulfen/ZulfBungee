@@ -1,5 +1,6 @@
-package tk.zulfengaming.bungeesk.spigot.socket;
+package tk.zulfengaming.bungeesk.bungeecord.handlers;
 
+import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
@@ -9,7 +10,7 @@ public abstract class PacketHandler {
 
     private PacketTypes[] types;
 
-    private final ClientConnection connection;
+    private final Server socketServer;
 
     public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
 
@@ -17,12 +18,12 @@ public abstract class PacketHandler {
         return types;
     }
 
-    public ClientConnection getConnection() {
-        return connection;
+    public Server getSocketServer() {
+        return socketServer;
     }
 
-    public PacketHandler(ClientConnection connection, PacketTypes... types){
-        this.connection = connection;
+    public PacketHandler(Server serverIn, PacketTypes... types) {
+        this.socketServer = serverIn;
         this.types = types;
 
     }

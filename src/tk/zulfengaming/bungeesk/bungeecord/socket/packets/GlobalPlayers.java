@@ -1,8 +1,9 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket.packets;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.json.simple.JSONObject;
-import tk.zulfengaming.bungeesk.bungeecord.socket.PacketHandler;
+import tk.zulfengaming.bungeesk.bungeecord.handlers.PacketHandler;
 import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
@@ -18,14 +19,14 @@ public class GlobalPlayers extends PacketHandler {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
-        JSONObject packetData = new JSONObject();
 
-        final Collection<ProxiedPlayer> players = getSocketServer().pluginInstance.getProxy().getPlayers();
+        final Collection<ProxiedPlayer> players = getSocketServer().getPluginInstance().getProxy().getPlayers();
 
-        packetData.put("value", players.size());
+        JsonObject data = new JsonObject();
+        data.
 
-        return new Packet(null, null, PacketTypes.GLOBAL_PLAYERS, packetData, false);
+
+        return packetOut;
     }
 }

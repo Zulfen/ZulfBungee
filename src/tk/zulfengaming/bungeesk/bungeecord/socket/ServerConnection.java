@@ -15,7 +15,7 @@ public class ServerConnection implements Runnable {
 
     Server server;
     // plugin instance ?
-    BungeeSkProxy pluginInstance;
+    private BungeeSkProxy pluginInstance;
 
     Socket socket;
 
@@ -32,9 +32,9 @@ public class ServerConnection implements Runnable {
     private ObjectOutputStream dataOut;
 
     public ServerConnection(Server serverIn) throws TaskAlreadyExists {
-        this.socket = serverIn.socket;
-        this.packetManager = serverIn.packetManager;
-        this.pluginInstance = serverIn.pluginInstance;
+        this.socket = serverIn.getSocket();
+        this.packetManager = serverIn.getPacketManager();
+        this.pluginInstance = serverIn.getPluginInstance();
         this.server = serverIn;
 
         this.address = socket.getRemoteSocketAddress();
@@ -56,7 +56,7 @@ public class ServerConnection implements Runnable {
 
                     Packet processedPacket = packetManager.handlePacket(packetIn, address);
 
-                    if (!(processedPacket == null) && packetIn.returnable) {
+                    if (!(processedPacket == null) && packetIn.isReturnable()) {
                         send(processedPacket);
 
                     }
@@ -72,17 +72,27 @@ public class ServerConnection implements Runnable {
 
         } catch (IOException | ClassNotFoundException e) {
             pluginInstance.error("There was an error while handling data for a connection!");
+
+            disconnect();
+
             e.printStackTrace();
         }
+
     }
 
-    public void disconnect() throws IOException {
+    public void disconnect()  {
         pluginInstance.log("Disconnecting client " + address);
 
         running = false;
 
-        dataIn.close();
-        dataOut.close();
+        try {
+            dataIn.close();
+            dataOut.close();
+        } catch (IOException e) {
+            pluginInstance.error("Error closing data streams in a server connection:");
+
+            e.printStackTrace();
+        }
 
         server.removeConnection(this);
 
@@ -93,7 +103,7 @@ public class ServerConnection implements Runnable {
     }
 
     public void send(Packet packetIn) {
-        pluginInstance.log("Sending packet " + packetIn.type.toString() + "...");
+        pluginInstance.log("Sending packet " + packetIn.getType().toString() + "...");
 
         try {
 
@@ -105,5 +115,25 @@ public class ServerConnection implements Runnable {
             e.printStackTrace();
 
         }
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public BungeeSkProxy getPluginInstance() {
+        return pluginInstance;
+    }
+
+    public SocketAddress getAddress() {
+        return address;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

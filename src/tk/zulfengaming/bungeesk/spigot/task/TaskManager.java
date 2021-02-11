@@ -3,9 +3,10 @@ package tk.zulfengaming.bungeesk.spigot.task;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TaskManager {
 
@@ -13,43 +14,52 @@ public class TaskManager {
 
     private final BukkitScheduler scheduler;
 
+    private final ExecutorService executorService;
+
     // keeps track of running shit
-    public HashMap<String, BukkitTask> tasks = new HashMap<>();
+    private final HashMap<String, BukkitTask> bukkitTasks = new HashMap<>();
 
     public TaskManager(BungeeSkSpigot instanceIn ) {
         this.instance = instanceIn;
         this.scheduler = instanceIn.getServer().getScheduler();
+
+        this.executorService = Executors.newFixedThreadPool(10);
     }
 
-    public void newTask(Runnable taskIn, String name) throws TaskAlreadyExists {
-        if (tasks.containsKey(name)) {
-            throw new TaskAlreadyExists("Task '"+ name + "' already exists.");
-        } else {
-            BukkitTask theTask = scheduler.runTaskAsynchronously(instance, taskIn);
-            tasks.put(name, theTask);
-            instance.log("New task: " + name + " created!");
-        }
+    public void newTask(Runnable taskIn, String name) {
+        BukkitTask theTask = scheduler.runTaskAsynchronously(instance, taskIn);
+
+        bukkitTasks.put(name, theTask);
     }
 
-    public void newRepeatingTask(Runnable taskIn, String name, int ticks) throws TaskAlreadyExists {
-        if (tasks.containsKey(name)) {
-            throw new TaskAlreadyExists("Task '" + name + "' already exists.");
-        } else {
-            BukkitTask theTask = scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
-            tasks.put(name, theTask);
-            instance.log("New task: " + name + " created!");
-        }
+    public void newRepeatingTask(Runnable taskIn, String name, int ticks) {
+        BukkitTask theTask = scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
+
+        bukkitTasks.put(name, theTask);
     }
 
     public void endTask(String name) {
-        BukkitTask theTask = tasks.get(name);
-        tasks.remove(name);
+        BukkitTask theTask = bukkitTasks.get(name);
+        bukkitTasks.remove(name);
 
         theTask.cancel();
-        instance.log("Task: " + name + " removed and stopped!");
     }
 
     public BukkitTask getTask(String name) {
-        return tasks.get(name);
+        return bukkitTasks.get(name);
+    }
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    public void shutdown() {
+
+        for (BukkitTask task : bukkitTasks.values()) {
+            task.cancel();
+        }
+
+        executorService.shutdown();
+
     }
 }

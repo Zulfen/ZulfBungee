@@ -10,29 +10,30 @@ import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Server implements Runnable {
     // plugin instance !!!
 
-    public BungeeSkProxy pluginInstance;
+    private BungeeSkProxy pluginInstance;
 
     // setting up the server
-    public ServerSocket serverSocket;
-    public int port;
-    public InetAddress address;
-    public int timeout = 10000;
+    private ServerSocket serverSocket;
+    private int port;
+    private InetAddress address;
+    private int timeout = 10000;
 
-    public boolean running;
+    private boolean running;
 
     // hey, keep that to yourself!
-    public Socket socket;
-    public SocketAddress socketAddress;
+    private Socket socket;
+    private SocketAddress socketAddress;
 
     // keeping track
-    public HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
+    private HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
 
     // quite neat
-    public PacketHandlerManager packetManager;
+    private PacketHandlerManager packetManager;
 
     public Server(int port, InetAddress address, BungeeSkProxy instanceIn) {
         this.address = address;
@@ -88,9 +89,10 @@ public class Server implements Runnable {
             socket.setSoTimeout(timeout);
 
             ServerConnection connection = new ServerConnection(this);
-            SocketAddress connectionAddress = connection.address;
+            SocketAddress connectionAddress = connection.getAddress();
+            UUID identifier = UUID.randomUUID();
 
-            pluginInstance.taskManager.newTask(connection, String.valueOf(connectionAddress));
+            pluginInstance.taskManager.newTask(connection, String.valueOf(identifier));
             activeConnections.put(connectionAddress, connection);
 
             pluginInstance.log("Connection established with address: " + connectionAddress);
@@ -114,7 +116,7 @@ public class Server implements Runnable {
     }
 
     public void sendToAllClients(Packet packetIn) {
-        pluginInstance.log("Sending packet " + packetIn.type.toString() + "to all clients...");
+        pluginInstance.log("Sending packet " + packetIn.getType().toString() + "to all clients...");
 
         for (ServerConnection connection : activeConnections.values()) {
             connection.send(packetIn);
@@ -161,5 +163,18 @@ public class Server implements Runnable {
         }
 
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public PacketHandlerManager getPacketManager() {
+        return packetManager;
+    }
+
+    public BungeeSkProxy getPluginInstance() {
+        return pluginInstance;
+    }
+
 }
 

@@ -1,148 +1,204 @@
 package tk.zulfengaming.bungeesk.spigot.socket;
 
-import org.json.simple.JSONObject;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
+import tk.zulfengaming.bungeesk.spigot.handlers.SocketHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
-import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Optional;
+import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 public class ClientConnection implements Runnable {
 
     public static ClientConnection clientConnection;
 
+
     // plugin instance ?
-    public BungeeSkSpigot instance;
+    private final BungeeSkSpigot pluginInstance;
 
-    public Socket socket;
+    private final InetAddress clientAddress;
+    private final int clientPort;
 
-    public InetAddress clientAddress;
-    public SocketAddress serverSocketAddress;
+    private Socket socket;
 
-    public int clientPort;
-    public String name;
+    private final InetAddress serverAddress;
+    private final int serverPort;
 
-    public boolean running;
+    private boolean running = true;
+    private boolean connected = false;
 
     // handling packets
-    PacketHandlerManager packetManager;
+    private final PacketHandlerManager packetManager;
+    private final SocketHandler socketHandler;
 
     // direct access to IO
-    public ObjectInputStream dataIn;
-    public ObjectOutputStream dataOut;
+    private ObjectInputStream dataIn;
+    private ObjectOutputStream dataOut;
 
-    public ClientConnection(BungeeSkSpigot instance, InetAddress addressIn, int portIn) {
-        this.instance = instance;
+    public ClientConnection(BungeeSkSpigot pluginInstance, InetAddress addressIn, int portIn) throws UnknownHostException {
+        this.pluginInstance = pluginInstance;
+
         this.clientAddress = addressIn;
         this.clientPort = portIn;
 
-        try {
-            this.serverSocketAddress = new InetSocketAddress(InetAddress.getByName(instance.config.getString("server-address")), instance.config.getInt("server-port"));
-        } catch (UnknownHostException e) {
-            instance.warning("Couldn't find hostname for specified address.");
-        }
+        this.serverAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("server-address"));
+        this.serverPort = pluginInstance.getYamlConfig().getInt("server-port");
 
         this.packetManager = new PacketHandlerManager(this);
-    }
-
-    public void connect() throws IOException {
-
-
-        socket = new Socket();
-
-        try {
-
-            instance.taskManager.newRepeatingTask(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (this) {
-
-                    }
-
-            }, "ConnectionConnecting", 100);
-
-        } catch (TaskAlreadyExists e) {
-
-            instance.error("There was an error trying connect to the endpoint. :(");
-
-            e.printStackTrace();
-            notify();
-        }
-
-
+        this.socketHandler = new SocketHandler(this);
 
     }
 
     public void run() {
-        try {
+        do {
 
-            connect();
+            try {
 
-            dataIn = new ObjectInputStream(socket.getInputStream());
-            dataOut = new ObjectOutputStream(socket.getOutputStream());
+                if (connected) {
 
-            send_direct(new Packet(new InetSocketAddress(clientAddress, clientPort), "test", PacketTypes.HANDSHAKE, new JSONObject(), true));
+                    if (read().isPresent()) {
 
-            while (running) {
+                        Packet packetIn = read().get();
 
-                if (dataIn.readObject() instanceof Packet) {
-                    instance.log("uwu");
-                    Packet packetIn = (Packet) dataIn.readObject();
+                        Packet processedPacket = packetManager.handlePacket(packetIn, new InetSocketAddress(serverAddress, serverPort));
 
-                    Packet processedPacket = packetManager.handlePacket(packetIn, serverSocketAddress);
+                        if (!(processedPacket == null) && packetIn.isReturnable()) {
+                            send_direct(processedPacket);
 
-                    if (!(processedPacket == null) && packetIn.returnable) {
-                        send_direct(processedPacket);
-
+                        }
                     }
+
                 } else {
-                    instance.warning("Packet received from " + serverSocketAddress + ", but does not appear to be valid. Ignoring it.");
+                    Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
+
+                    pluginInstance.warning("Connection is not available, retrying...");
+
+                    if (futureSocket.isPresent()) {
+
+                        socket = futureSocket.get();
+
+                        dataIn = new ObjectInputStream(socket.getInputStream());
+                        dataOut = new ObjectOutputStream(socket.getOutputStream());
+
+                        connected = true;
+                        pluginInstance.log("Connected to the proxy!");
+                    }
+
                 }
+
+            } catch (IOException | ClassNotFoundException | InterruptedException | ExecutionException | TimeoutException e){
+                pluginInstance.error("There was an error while handling data from the server!");
+
+                connected = false;
+
+                e.printStackTrace();
             }
 
-        } catch (IOException | ClassNotFoundException | InterruptedException e) {
-            instance.error("There was an error while handling data from the server!");
-        }
+
+        } while (running);
+
     }
 
-    // methods below are static as there is only once instance of this class ever created
 
-    public Packet read() throws IOException, ClassNotFoundException {
-        return (Packet) dataIn.readObject();
+    private Future<Optional<Socket>> connect() {
+        return pluginInstance.getTaskManager().getExecutorService().submit(socketHandler);
+    }
+
+    // TODO: This is stupid and very unsafe. Fix it sometime, whore.
+    public void shutdown() {
+        running = false;
+    }
+
+    public Optional<Packet> read() throws IOException, ClassNotFoundException {
+        Object objectIn = dataIn.readObject();
+
+        if (objectIn instanceof Packet) {
+
+            Packet packetIn = (Packet) objectIn;
+            return Optional.of(packetIn);
+
+        } else {
+
+            pluginInstance.warning("Packet received from " + serverAddress + ", but does not appear to be valid. Ignoring it.");
+        }
+
+
+        return Optional.empty();
+
     }
 
     public void send_direct(Packet packetIn) {
-        instance.log("Sending packet " + packetIn.type.toString() + "...");
+        pluginInstance.log("Sending packet " + packetIn.getType().toString() + "...");
         try {
             dataOut.writeObject(packetIn);
             dataOut.flush();
 
         } catch (IOException e) {
-            instance.error("That packed failed to send :(");
-            e.printStackTrace();
+            if (connected) {
+                pluginInstance.error("That packed failed to send :(");
+                e.printStackTrace();
+            }
         }
     }
 
-    public Packet send(Packet packetIn) throws IOException, ClassNotFoundException {
-        send_direct(packetIn);
+    public Optional<Packet> send(Packet packetIn) {
 
-        return read();
+        try {
+
+            send_direct(packetIn);
+
+            Supplier<Optional<Packet>> getPacket = () -> {
+                if (connected) {
+                    try {
+                        return read();
+                    } catch (IOException | ClassNotFoundException e) {
+                        pluginInstance.error("Trying to receive a packet failed:");
+                        e.printStackTrace();
+                    }
+                }
+                return Optional.empty();
+            };
+
+            return CompletableFuture.supplyAsync(getPacket).get(5, TimeUnit.SECONDS);
+
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            pluginInstance.error("Trying to send a packet failed.");
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
-    public void end() throws IOException {
-
-        instance.log("Shutting down MainServer...");
-
-        socket.close();
-
-        running = false;
-
+    public boolean isRunning() {
+        return running;
     }
 
+    public InetAddress getClientAddress() {
+        return clientAddress;
+    }
+
+    public int getClientPort() {
+        return clientPort;
+    }
+
+    public InetAddress getServerAddress() {
+        return serverAddress;
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public BungeeSkSpigot getPluginInstance() {
+        return pluginInstance;
+    }
 
     // this is a singleton. yes, i am aware other classes are like this
     public static ClientConnection getClientConnection() {

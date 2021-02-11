@@ -1,5 +1,6 @@
 package tk.zulfengaming.bungeesk.spigot.socket;
 
+import tk.zulfengaming.bungeesk.spigot.handlers.PacketHandler;
 import tk.zulfengaming.bungeesk.spigot.socket.packets.Handshake;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
@@ -19,7 +20,7 @@ public class PacketHandlerManager {
 
     public PacketHandler getHandler(Packet packetIn) {
         for (PacketHandler packetHandler : handlers)
-            for (PacketTypes type : packetHandler.getTypes()) if (type == packetIn.type) return packetHandler;
+            for (PacketTypes type : packetHandler.getTypes()) if (type == packetIn.getType()) return packetHandler;
         return null;
     }
 
