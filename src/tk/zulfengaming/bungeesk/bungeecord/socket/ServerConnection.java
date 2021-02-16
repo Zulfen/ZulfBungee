@@ -1,7 +1,6 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket;
 
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Optional;
 
 public class ServerConnection implements Runnable {
 
@@ -31,7 +31,7 @@ public class ServerConnection implements Runnable {
     private ObjectInputStream dataIn;
     private ObjectOutputStream dataOut;
 
-    public ServerConnection(Server serverIn) throws TaskAlreadyExists {
+    public ServerConnection(Server serverIn) {
         this.socket = serverIn.getSocket();
         this.packetManager = serverIn.getPacketManager();
         this.pluginInstance = serverIn.getPluginInstance();
@@ -50,18 +50,13 @@ public class ServerConnection implements Runnable {
 
             while (running && socket.isConnected()) {
 
-                if (dataIn.readObject() instanceof Packet) {
+                Packet packetIn = read();
 
-                    Packet packetIn = (Packet) dataIn.readObject();
+                Packet processedPacket = packetManager.handlePacket(packetIn, address);
 
-                    Packet processedPacket = packetManager.handlePacket(packetIn, address);
+                if (!(processedPacket == null) && packetIn.isReturnable()) {
+                    send(processedPacket);
 
-                    if (!(processedPacket == null) && packetIn.isReturnable()) {
-                        send(processedPacket);
-
-                    }
-                } else {
-                    pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
                 }
             }
 
@@ -98,8 +93,15 @@ public class ServerConnection implements Runnable {
 
     }
 
-    public Packet read() throws IOException, ClassNotFoundException {
-        return (Packet) dataIn.readObject();
+    public Optional<Packet> read() throws IOException, ClassNotFoundException {
+        Object data = dataIn.readObject();
+
+        if (data instanceof Packet) {
+            return (Packet) data;
+        } else {
+            pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
+
+        }
     }
 
     public void send(Packet packetIn) {

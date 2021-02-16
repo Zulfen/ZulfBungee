@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BungeeSk.iml" filepath="$PROJECT_DIR$/BungeeSk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../BungeeSkMaven/BungeeSkMaven/BungeeSkMaven.iml" filepath="$PROJECT_DIR$/../BungeeSkMaven/BungeeSkMaven/BungeeSkMaven.iml" />
     </modules>
   </component>
 </project>

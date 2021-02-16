@@ -1,8 +1,5 @@
 package tk.zulfengaming.bungeesk.universal.socket;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.io.Serializable;
 import java.net.SocketAddress;
 
@@ -16,14 +13,16 @@ public class Packet implements Serializable {
     private final PacketTypes type;
 
     private final boolean returnable;
-    private JSONObject data;
+    private final Object data;
 
-    public Packet(SocketAddress serverAddress, String serverName, PacketTypes packetType, boolean isReturnable, JSONArray packetData) {
+    public Packet(SocketAddress serverAddress, String serverName, PacketTypes packetType, boolean isReturnable, Object dataIn) {
         this.address = serverAddress;
         this.name = serverName;
 
         this.type = packetType;
         this.returnable = isReturnable;
+
+        this.data = dataIn;
     }
 
     public String getName() {
@@ -32,6 +31,10 @@ public class Packet implements Serializable {
 
     public PacketTypes getType() {
         return type;
+    }
+
+    public Object getData() {
+        return data;
     }
 
     public boolean isReturnable() {

@@ -3,7 +3,6 @@ package tk.zulfengaming.bungeesk.bungeecord.socket;
 
 import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
@@ -15,29 +14,27 @@ import java.util.UUID;
 public class Server implements Runnable {
     // plugin instance !!!
 
-    private BungeeSkProxy pluginInstance;
+    private final BungeeSkProxy pluginInstance;
 
     // setting up the server
     private ServerSocket serverSocket;
-    private int port;
-    private InetAddress address;
+    private final int port;
+    private final InetAddress address;
     private int timeout = 10000;
 
     private boolean running;
 
     // hey, keep that to yourself!
     private Socket socket;
-    private SocketAddress socketAddress;
 
     // keeping track
-    private HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
+    private final HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
 
     // quite neat
-    private PacketHandlerManager packetManager;
+    private final PacketHandlerManager packetManager;
 
     public Server(int port, InetAddress address, BungeeSkProxy instanceIn) {
         this.address = address;
-        this.socketAddress = new InetSocketAddress(this.address, this.port);
         this.port = port;
         this.pluginInstance = instanceIn;
 
@@ -84,22 +81,17 @@ public class Server implements Runnable {
 
     public void acceptConnection() throws IOException {
 
-        try {
-            socket.setTcpNoDelay(true);
-            socket.setSoTimeout(timeout);
+        socket.setTcpNoDelay(true);
+        socket.setSoTimeout(timeout);
 
-            ServerConnection connection = new ServerConnection(this);
-            SocketAddress connectionAddress = connection.getAddress();
-            UUID identifier = UUID.randomUUID();
+        ServerConnection connection = new ServerConnection(this);
+        SocketAddress connectionAddress = connection.getAddress();
+        UUID identifier = UUID.randomUUID();
 
-            pluginInstance.taskManager.newTask(connection, String.valueOf(identifier));
-            activeConnections.put(connectionAddress, connection);
+        pluginInstance.getTaskManager().newTask(connection, String.valueOf(identifier));
+        activeConnections.put(connectionAddress, connection);
 
-            pluginInstance.log("Connection established with address: " + connectionAddress);
-
-        } catch (TaskAlreadyExists taskAlreadyExists) {
-            taskAlreadyExists.printStackTrace();
-        }
+        pluginInstance.log("Connection established with address: " + connectionAddress);
 
     }
 

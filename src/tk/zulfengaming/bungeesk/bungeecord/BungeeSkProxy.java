@@ -4,7 +4,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import tk.zulfengaming.bungeesk.bungeecord.config.YamlConfig;
 import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.bungeecord.task.TaskManager;
-import tk.zulfengaming.bungeesk.universal.exceptions.TaskAlreadyExists;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,15 +11,15 @@ import java.util.logging.Logger;
 
 public class BungeeSkProxy extends Plugin {
 
-    public Logger logger;
+    private Logger logger;
 
-    public YamlConfig config;
+    private YamlConfig config;
 
-    public Server server;
+    private Server server;
 
-    public TaskManager taskManager;
+    private TaskManager taskManager;
 
-    public boolean isDebug = false;
+    private boolean isDebug = false;
 
     public void onEnable() {
 
@@ -37,8 +36,8 @@ public class BungeeSkProxy extends Plugin {
 
             taskManager.newTask(server, "MainServer");
 
-        } catch (UnknownHostException | TaskAlreadyExists e) {
-            error("There was an error trying to start the server?:");
+        } catch (UnknownHostException e) {
+            error("There was an error trying to start the server:");
             e.printStackTrace();
 
         }
@@ -55,5 +54,21 @@ public class BungeeSkProxy extends Plugin {
 
     public void warning(String message) {
         logger.warning(message);
+    }
+
+    public YamlConfig getConfig() {
+        return config;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
+
+    public boolean isDebug() {
+        return isDebug;
     }
 }

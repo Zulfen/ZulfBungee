@@ -4,6 +4,7 @@ public enum PacketTypes {
 
     HANDSHAKE,
     CLIENT_DISCONNECT,
-    GLOBAL_PLAYERS;
+    GLOBAL_PLAYERS,
+    HEARTBEAT;
 
 }
