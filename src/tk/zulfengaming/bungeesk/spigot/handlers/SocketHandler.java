@@ -17,15 +17,16 @@ public class SocketHandler implements Callable<Optional<Socket>> {
     }
 
     @Override
-    public Optional<Socket> call() {
+    public Optional<Socket> call() throws InterruptedException {
 
         try {
             Socket socket = new Socket(connection.getServerAddress(), connection.getServerPort(), connection.getClientAddress(), connection.getClientPort());
+            socket.setReuseAddress(true);
 
             return Optional.of(socket);
 
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            Thread.sleep(2000);
         }
 
         return Optional.empty();

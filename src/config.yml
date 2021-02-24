@@ -4,4 +4,6 @@ server-host: "0.0.0.0"
 client-port: 8001
 client-host: "0.0.0.0"
 
+heartbeat-ticks: 100
+
 debug: true

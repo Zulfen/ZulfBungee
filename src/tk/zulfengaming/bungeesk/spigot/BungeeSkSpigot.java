@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.config.YamlConfig;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.task.TaskManager;
@@ -14,7 +15,7 @@ import java.net.UnknownHostException;
 
 public class BungeeSkSpigot extends JavaPlugin {
 
-    public BungeeSkSpigot plugin;
+    private static BungeeSkSpigot plugin;
     private SkriptAddon addon;
 
     private boolean debug = false;
@@ -28,7 +29,8 @@ public class BungeeSkSpigot extends JavaPlugin {
     // other
 
     public void onEnable() {
-        addon = Skript.registerAddon(this);
+
+        plugin = this;
 
         taskManager = new TaskManager(this);
         config = new YamlConfig(this);
@@ -36,6 +38,17 @@ public class BungeeSkSpigot extends JavaPlugin {
         if (config.getBoolean("debug")) {
             debug = true;
         }
+
+        try {
+            connection = new ClientConnection(this, InetAddress.getByName(config.getString("client-host")), config.getInt("client-port"));
+
+            BukkitTask serverTask = taskManager.newTask(connection, "MainConnection");
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        addon = Skript.registerAddon(this);
 
         // Registers the addon
         try {
@@ -46,20 +59,11 @@ public class BungeeSkSpigot extends JavaPlugin {
             e.printStackTrace();
         }
 
-        try {
-            connection = new ClientConnection(this, InetAddress.getByName(config.getString("client-host")), config.getInt("client-port"));
-
-            taskManager.newTask(connection, "MainConnection");
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void onDisable() {
-        taskManager.shutdown();
         connection.shutdown();
+        taskManager.shutdown();
 
     }
 
@@ -92,6 +96,15 @@ public class BungeeSkSpigot extends JavaPlugin {
     public TaskManager getTaskManager() {
         return taskManager;
     }
+
+    public ClientConnection getConnection() {
+        return connection;
+    }
+
+    public static BungeeSkSpigot getPlugin() {
+        return plugin;
+    }
+
 }
 
 

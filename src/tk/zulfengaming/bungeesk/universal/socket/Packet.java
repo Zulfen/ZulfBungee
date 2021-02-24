@@ -1,26 +1,36 @@
 package tk.zulfengaming.bungeesk.universal.socket;
 
 import java.io.Serializable;
-import java.net.SocketAddress;
 
 public class Packet implements Serializable {
 
-    private static final long serialVersionUID = 7526472295622776147L;
+    private static final long serialVersionUID = 9176873029745254542L;
 
-    private final SocketAddress address;
     private final String name;
 
     private final PacketTypes type;
 
     private final boolean returnable;
-    private final Object data;
 
-    public Packet(SocketAddress serverAddress, String serverName, PacketTypes packetType, boolean isReturnable, Object dataIn) {
-        this.address = serverAddress;
+    private final boolean shouldHandle;
+
+    private final Object[] data;
+
+    // these arguments should be self explanatory, but the field shouldHandle could be
+    // seen as misleading.
+
+    // that field is used to determine whether it automatically gets handled as soon
+    // as the ClientConnection receives it. an example of a packet that uses this
+    // is the heartbeat packet, as it is separate from Skript.
+
+    // packets sent by skript should set this field to false
+
+    public Packet(String serverName, PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn) {
         this.name = serverName;
 
         this.type = packetType;
         this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
 
         this.data = dataIn;
     }
@@ -33,7 +43,7 @@ public class Packet implements Serializable {
         return type;
     }
 
-    public Object getData() {
+    public Object[] getData() {
         return data;
     }
 
@@ -41,8 +51,8 @@ public class Packet implements Serializable {
         return returnable;
     }
 
-    public SocketAddress getAddress() {
-        return address;
+    public boolean shouldHandle() {
+        return shouldHandle;
     }
 
 }

@@ -2,3 +2,4 @@ name: BungeeSk
 main: tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot
 version: 1.0
 author: zulfen
+depend: [Skript]

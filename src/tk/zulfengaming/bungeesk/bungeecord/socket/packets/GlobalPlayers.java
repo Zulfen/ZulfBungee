@@ -7,9 +7,8 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class GlobalPlayers extends PacketHandler {
 
@@ -18,18 +17,15 @@ public class GlobalPlayers extends PacketHandler {
 
     }
 
+    // not implemented
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
         final Collection<ProxiedPlayer> players = getProxy().getPlayers();
-        final ArrayList<String> playersStrings = new ArrayList<>();
 
-        for (ProxiedPlayer player : players.stream().parallel().collect(Collectors.toList())) {
-            playersStrings.add(player.getName());
-        }
+        // players.stream().map(ProxiedPlayer::getUniqueId).toArray()
 
-
-        return new Packet(address, getProxy().getName(), PacketTypes.GLOBAL_PLAYERS, false, playersStrings);
+        return new Packet(getProxy().getName(), PacketTypes.GLOBAL_PLAYERS, true, false, new Object[] {UUID.fromString("3f888bd6-e8ff-48ca-8394-fc19dd11d063")});
 
     }
 }

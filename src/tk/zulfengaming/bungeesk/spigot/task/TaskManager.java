@@ -26,17 +26,22 @@ public class TaskManager {
         this.executorService = Executors.newFixedThreadPool(10);
     }
 
-    public void newTask(Runnable taskIn, String name) {
+    public BukkitTask newTask(Runnable taskIn, String name) {
         BukkitTask theTask = scheduler.runTaskAsynchronously(instance, taskIn);
 
         bukkitTasks.put(name, theTask);
+
+        return theTask;
     }
 
-    public void newRepeatingTask(Runnable taskIn, String name, int ticks) {
+    public BukkitTask newRepeatingTask(Runnable taskIn, String name, int ticks) {
         BukkitTask theTask = scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
 
         bukkitTasks.put(name, theTask);
+
+        return theTask;
     }
+
 
     public void endTask(String name) {
         BukkitTask theTask = bukkitTasks.get(name);

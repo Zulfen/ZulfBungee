@@ -5,11 +5,14 @@ import net.md_5.bungee.api.scheduler.TaskScheduler;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class TaskManager {
 
-    private BungeeSkProxy instance;
+    private final ExecutorService executorService;
+    private final BungeeSkProxy instance;
 
     public TaskScheduler scheduler;
 
@@ -19,22 +22,24 @@ public class TaskManager {
     public TaskManager(BungeeSkProxy instanceIn) {
         this.instance = instanceIn;
         this.scheduler = instanceIn.getProxy().getScheduler();
+        this.executorService = Executors.newFixedThreadPool(10);
     }
 
-    public void newTask(Runnable taskIn, String name) {
+    public ScheduledTask newTask(Runnable taskIn, String name) {
         ScheduledTask theTask = scheduler.runAsync(instance, taskIn);
 
         tasks.put(name, theTask);
-        instance.log("New task: " + name + " created!");
+
+        return theTask;
     }
 
-    public void newRepeatingTask(Runnable taskIn, String name, long ms) {
+    public ScheduledTask newRepeatingTask(Runnable taskIn, String name, long ms) {
         ScheduledTask theTask = scheduler.schedule(instance, taskIn, ms, TimeUnit.MILLISECONDS);
 
         tasks.put(name, theTask);
-        instance.log("New repeating task: " + name + " created!");
-    }
 
+        return theTask;
+    }
 
 
     public void endTask(String name) {
@@ -48,4 +53,9 @@ public class TaskManager {
     public ScheduledTask getTask(String name) {
         return tasks.get(name);
     }
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+
 }

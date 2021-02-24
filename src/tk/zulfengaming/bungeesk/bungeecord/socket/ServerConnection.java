@@ -3,41 +3,49 @@ package tk.zulfengaming.bungeesk.bungeecord.socket;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class ServerConnection implements Runnable {
+public class ServerConnection extends ReentrantReadWriteLock implements Runnable {
 
-    Server server;
+    private final Server server;
     // plugin instance ?
-    private BungeeSkProxy pluginInstance;
+    private final BungeeSkProxy pluginInstance;
 
-    Socket socket;
+    private final Socket socket;
 
-    public SocketAddress address;
-    public String id;
+    private final SocketAddress address;
+    private final String id;
 
     // handling packets
-    PacketHandlerManager packetManager;
+    private final PacketHandlerManager packetManager;
 
-    public boolean running = true;
+    private boolean running = true;
+    private boolean interrupted = false;
 
     // direct access to IO
-    private ObjectInputStream dataIn;
-    private ObjectOutputStream dataOut;
+    private ObjectInputStream streamIn;
+    private ObjectOutputStream streamOut;
 
-    public ServerConnection(Server serverIn) {
+    // thread management
+    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    public ServerConnection(Server serverIn, String idIn) {
         this.socket = serverIn.getSocket();
         this.packetManager = serverIn.getPacketManager();
         this.pluginInstance = serverIn.getPluginInstance();
         this.server = serverIn;
 
         this.address = socket.getRemoteSocketAddress();
+        this.id = idIn;
 
     }
 
@@ -45,18 +53,26 @@ public class ServerConnection implements Runnable {
 
         try {
 
-            this.dataIn = new ObjectInputStream(socket.getInputStream());
-            this.dataOut = new ObjectOutputStream(socket.getOutputStream());
+            pluginInstance.log("proxy: before");
+            this.streamIn = new ObjectInputStream(socket.getInputStream());
+            pluginInstance.log("proxy: middle");
+            this.streamOut = new ObjectOutputStream(socket.getOutputStream());
+            pluginInstance.log("proxy: after");
 
             while (running && socket.isConnected()) {
 
-                Packet packetIn = read();
+                Optional<Packet> dataIn = Objects.requireNonNull(read()).get(10, TimeUnit.SECONDS);
 
-                Packet processedPacket = packetManager.handlePacket(packetIn, address);
+                if (dataIn.isPresent()) {
 
-                if (!(processedPacket == null) && packetIn.isReturnable()) {
-                    send(processedPacket);
+                    Packet packetIn = dataIn.get();
+                    Packet processedPacket = packetManager.handlePacket(packetIn, address);
+                    processedPacket.getData();
 
+                    if (packetIn.isReturnable()) {
+                        send(processedPacket);
+
+                    }
                 }
             }
 
@@ -65,24 +81,33 @@ public class ServerConnection implements Runnable {
         } catch (StreamCorruptedException e) {
             pluginInstance.warning("The client at " + address + " sent some invalid data. Ignoring.");
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (EOFException | TimeoutException | InterruptedException | ExecutionException e) {
+            interrupted = true;
+            disconnect();
+
+        } catch (IOException e) {
             pluginInstance.error("There was an error while handling data for a connection!");
 
+            interrupted = true;
             disconnect();
 
             e.printStackTrace();
+
         }
 
     }
 
     public void disconnect()  {
-        pluginInstance.log("Disconnecting client " + address);
+        pluginInstance.log("Disconnecting client " + address + " (" + id + ")");
 
         running = false;
 
         try {
-            dataIn.close();
-            dataOut.close();
+
+            if (!interrupted) {
+                socket.close();
+            }
+
         } catch (IOException e) {
             pluginInstance.error("Error closing data streams in a server connection:");
 
@@ -93,30 +118,56 @@ public class ServerConnection implements Runnable {
 
     }
 
-    public Optional<Packet> read() throws IOException, ClassNotFoundException {
-        Object data = dataIn.readObject();
+    private Future<Optional<Packet>> read() {
 
-        if (data instanceof Packet) {
-            return (Packet) data;
-        } else {
-            pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
+        return pluginInstance.getTaskManager().getExecutorService().submit(() -> {
 
-        }
+            pluginInstance.log("read callable is acquiring lock...");
+            readWriteLock.readLock().lock();
+            pluginInstance.log("read callable released lock");
+
+            try {
+
+                Object objectIn = streamIn.readObject();
+
+                if (objectIn instanceof Packet) {
+                    Packet packetIn = (Packet) objectIn;
+                    return Optional.of(packetIn);
+
+                } else {
+                    pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
+                }
+            } finally {
+                readWriteLock.readLock().unlock();
+            }
+
+            return Optional.empty();
+        });
+
     }
 
     public void send(Packet packetIn) {
         pluginInstance.log("Sending packet " + packetIn.getType().toString() + "...");
 
+        pluginInstance.log("send is acquiring lock...");
+        readWriteLock.writeLock().lock();
+        pluginInstance.log("send unlocked");
+
         try {
 
-            dataOut.writeObject(packetIn);
-            dataOut.flush();
+            streamOut.writeObject(packetIn);
+            streamOut.flush();
 
         } catch (IOException e) {
             pluginInstance.error("That packed failed to send :(");
             e.printStackTrace();
 
+            disconnect();
+
+        } finally {
+            readWriteLock.writeLock().lock();
         }
+
     }
 
     public Server getServer() {

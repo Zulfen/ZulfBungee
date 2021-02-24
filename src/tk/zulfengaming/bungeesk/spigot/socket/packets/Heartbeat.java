@@ -7,16 +7,17 @@ import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
 
-public class Handshake extends PacketHandler {
+public class Heartbeat extends PacketHandler {
 
-    public Handshake(ClientConnection connection) {
-        super(connection, PacketTypes.HANDSHAKE);
+    public Heartbeat(ClientConnection connection) {
+        super(connection, PacketTypes.HEARTBEAT);
 
     }
 
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
         getConnection().getPluginInstance().log("Packet recieved !!!");
+        getConnection().getPluginInstance().log(packetIn.getData()[0].toString());
         return packetIn;
 
     }

@@ -34,11 +34,13 @@ public class YamlConfig {
 
                 try {
 
-                    configFile.createNewFile();
+                    boolean created = configFile.createNewFile();
 
-                    try (InputStream is = instance.getResourceAsStream("bungeecord.yml");
-                         OutputStream os = new FileOutputStream(configFile)) {
-                        ByteStreams.copy(is, os);
+                    if (created) {
+                        try (InputStream is = instance.getResourceAsStream("bungeecord.yml");
+                             OutputStream os = new FileOutputStream(configFile)) {
+                            ByteStreams.copy(is, os);
+                        }
                     }
 
                 } catch (IOException e) {
