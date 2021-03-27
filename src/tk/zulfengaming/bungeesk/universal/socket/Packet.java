@@ -1,10 +1,11 @@
 package tk.zulfengaming.bungeesk.universal.socket;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class Packet implements Serializable {
 
-    private static final long serialVersionUID = 9176873029745254542L;
+    private static final long serialVersionUID = 45_737_538_534_983L;
 
     private final String name;
 
@@ -13,6 +14,8 @@ public class Packet implements Serializable {
     private final boolean returnable;
 
     private final boolean shouldHandle;
+
+    private final UUID id;
 
     private final Object[] data;
 
@@ -31,6 +34,7 @@ public class Packet implements Serializable {
         this.type = packetType;
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
+        this.id = UUID.randomUUID();
 
         this.data = dataIn;
     }
@@ -53,6 +57,10 @@ public class Packet implements Serializable {
 
     public boolean shouldHandle() {
         return shouldHandle;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
 }

@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.handlers;
+package tk.zulfengaming.bungeesk.spigot.interfaces;
 
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;

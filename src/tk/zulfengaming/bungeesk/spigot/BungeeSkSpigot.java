@@ -6,11 +6,11 @@ import ch.njol.skript.SkriptAddon;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.config.YamlConfig;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.task.TaskManager;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class BungeeSkSpigot extends JavaPlugin {
@@ -25,6 +25,7 @@ public class BungeeSkSpigot extends JavaPlugin {
     private YamlConfig config;
 
     public ClientConnection connection;
+    private ClientManager clientManager;
 
     // other
 
@@ -39,8 +40,9 @@ public class BungeeSkSpigot extends JavaPlugin {
             debug = true;
         }
 
+
         try {
-            connection = new ClientConnection(this, InetAddress.getByName(config.getString("client-host")), config.getInt("client-port"));
+            connection = new ClientConnection(this);
 
             BukkitTask serverTask = taskManager.newTask(connection, "MainConnection");
 

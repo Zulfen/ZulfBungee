@@ -28,7 +28,7 @@ public class ExprBungeePlayers extends SimpleExpression<OfflinePlayer> {
 
         ClientConnection connection = BungeeSkSpigot.getPlugin().getConnection();
 
-        Optional<Packet> request = connection.send(new Packet(Bukkit.getServer().getServerName(), PacketTypes.GLOBAL_PLAYERS,
+        //Optional<Packet> request = connection.send(new Packet(Bukkit.getServer().getServerName(), PacketTypes.GLOBAL_PLAYERS,
                 true, false, null));
 
         if (request.isPresent()) {

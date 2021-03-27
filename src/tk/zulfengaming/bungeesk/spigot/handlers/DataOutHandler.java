@@ -6,32 +6,30 @@ import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-public class DataInHandler extends ClientListener implements Runnable {
+public class DataOutHandler extends ClientListener implements Runnable {
 
     private final ClientConnection connection;
 
     private final ClientManager clientManager;
 
-    private final BlockingQueue<Packet> queueIn;
+    private final BlockingQueue<Packet> queueOut;
 
-    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
 
-
-    public DataInHandler(ClientManager clientManagerIn, ClientConnection connectionIn) {
+    public DataOutHandler(ClientManager clientManagerIn, ClientConnection connectionIn) {
         super(clientManagerIn);
 
+        this.connection = connectionIn;
         this.clientManager = clientManagerIn;
 
-        this.connection = connectionIn;
-
-        this.queueIn = connectionIn.getQueueIn();
+        this.queueOut = connectionIn.getQueueOut();
 
     }
 
@@ -43,13 +41,10 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 if (clientManager.isSocketConnected()) {
 
-                    Object dataIn = inputStream.readObject();
+                    Packet packetOut = queueOut.take();
 
-                    if (dataIn instanceof Packet) {
-
-                        queueIn.put((Packet) dataIn);
-
-                    }
+                    outputStream.writeObject(packetOut);
+                    outputStream.flush();
 
                 } else {
 
@@ -58,12 +53,12 @@ public class DataInHandler extends ClientListener implements Runnable {
                     if (optionalSocket.isPresent()) {
                         Socket socket = optionalSocket.get();
 
-                        inputStream = new ObjectInputStream(socket.getInputStream());
+                        outputStream = new ObjectOutputStream(socket.getOutputStream());
                     }
 
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException | InterruptedException | ClassNotFoundException e) {
+            } catch (IOException | ExecutionException | TimeoutException | InterruptedException e) {
                 clientManager.getPluginInstance().error("There was an error running the server! Disconnecting");
 
                 clientManager.disconnect();
@@ -77,7 +72,7 @@ public class DataInHandler extends ClientListener implements Runnable {
     public void onDisconnect() {
 
         try {
-            inputStream.close();
+            outputStream.close();
 
         } catch (IOException e) {
 
