@@ -130,7 +130,7 @@ public class ClientManager {
                 socket = futureSocket.get();
                 socketConnected = true;
 
-                return futureSocket;
+                return Optional.of(socket);
             }
 
             return Optional.empty();

@@ -24,22 +24,31 @@ public class ExprBungeePlayers extends SimpleExpression<OfflinePlayer> {
     }
 
     @Override
-    protected OfflinePlayer[] get(Event event) {
+    protected OfflinePlayer[] get(@NotNull Event event) {
 
         ClientConnection connection = BungeeSkSpigot.getPlugin().getConnection();
 
-        //Optional<Packet> request = connection.send(new Packet(Bukkit.getServer().getServerName(), PacketTypes.GLOBAL_PLAYERS,
-                true, false, null));
+        try {
+            Optional<Packet> request = connection.send(new Packet(Bukkit.getServer().getServerName(), PacketTypes.GLOBAL_PLAYERS,
+                    true, false, null));
 
-        if (request.isPresent()) {
-            Packet packet = request.get();
-            connection.getPluginInstance().log("Recieved bruh");
+            if (request.isPresent()) {
+                Packet packet = request.get();
+                connection.getPluginInstance().log("Recieved bruh");
 
-            return (OfflinePlayer[]) Arrays.stream(packet.getData())
-                    .map(o -> Bukkit.getOfflinePlayer((UUID) o))
-                    .toArray();
+                return (OfflinePlayer[]) Arrays.stream(packet.getData())
+                        .map(o -> Bukkit.getOfflinePlayer((UUID) o))
+                        .toArray();
 
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+
+            return null;
         }
+
+
 
         return null;
     }

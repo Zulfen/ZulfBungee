@@ -31,7 +31,7 @@ public class DataInHandler extends ClientListener implements Runnable {
 
         this.connection = connectionIn;
 
-        this.queueIn = connectionIn.getQueueIn();
+        this.queueIn = clientManagerIn.getQueueIn();
 
     }
 

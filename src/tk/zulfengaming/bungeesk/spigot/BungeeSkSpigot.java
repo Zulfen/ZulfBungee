@@ -24,7 +24,7 @@ public class BungeeSkSpigot extends JavaPlugin {
     private TaskManager taskManager;
     private YamlConfig config;
 
-    public ClientConnection connection;
+    private ClientConnection connection;
     private ClientManager clientManager;
 
     // other
