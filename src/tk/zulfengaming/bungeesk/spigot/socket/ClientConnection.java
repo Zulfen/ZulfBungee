@@ -2,6 +2,8 @@ package tk.zulfengaming.bungeesk.spigot.socket;
 
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
+import tk.zulfengaming.bungeesk.spigot.handlers.DataInHandler;
+import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
 import tk.zulfengaming.bungeesk.spigot.task.HeartbeatTask;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
@@ -20,15 +22,19 @@ public class ClientConnection implements Runnable {
     private Socket socket;
 
     // the lastest packet from the queue coming in.
-    private BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
 
     private boolean running = true;
-
-    private boolean connected = true;
 
     private final PacketHandlerManager packetHandlerManager;
 
     private final ClientManager clientManager;
+
+    // other tasks
+
+    private DataOutHandler dataOutHandler;
+
+    private DataInHandler dataInHandler;
 
     public ClientConnection(BungeeSkSpigot pluginInstanceIn) throws UnknownHostException {
 
@@ -48,6 +54,9 @@ public class ClientConnection implements Runnable {
 
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", pluginInstance.getYamlConfig().getInt("heartbeat-ticks"));
 
+        this.dataInHandler = new DataInHandler(clientManager, this);
+        this.dataOutHandler = new DataOutHandler(clientManager, this);
+
 
     }
 
@@ -60,7 +69,7 @@ public class ClientConnection implements Runnable {
             try {
 
                 if (clientManager.isSocketConnected()) {
-                    Packet packetIn = clientManager.getQueueIn().take();
+                    Packet packetIn = dataInHandler.getQueue().take();
 
                     if (packetIn.shouldHandle()) {
                         packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
@@ -91,7 +100,7 @@ public class ClientConnection implements Runnable {
     public void send_direct(Packet packetIn) {
 
         try {
-            clientManager.getQueueOut().put(packetIn);
+            dataOutHandler.getQueue().put(packetIn);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -102,7 +111,11 @@ public class ClientConnection implements Runnable {
 
         send_direct(packetIn);
 
-        return read();
+        if (clientManager.isSocketConnected()) {
+            return read();
+        } else {
+            return Optional.empty();
+        }
 
     }
 
@@ -111,7 +124,7 @@ public class ClientConnection implements Runnable {
     }
 
     public boolean isConnected() {
-        return connected;
+        return clientManager.isSocketConnected();
     }
 
     public void shutdown() {

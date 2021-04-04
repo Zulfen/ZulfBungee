@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.interfaces;
+package tk.zulfengaming.bungeesk.universal.interfaces;
 
 public interface ClientEvents {
 

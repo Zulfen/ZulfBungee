@@ -1,11 +1,11 @@
 package tk.zulfengaming.bungeesk.bungeecord;
 
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 import tk.zulfengaming.bungeesk.bungeecord.config.YamlConfig;
 import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.bungeecord.task.TaskManager;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
@@ -35,12 +35,23 @@ public class BungeeSkProxy extends Plugin {
         try {
             server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
-            ScheduledTask serverTask = taskManager.newTask(server, "MainServer");
+            taskManager.newTask(server, "MainServer");
 
         } catch (UnknownHostException e) {
             error("There was an error trying to start the server:");
             e.printStackTrace();
 
+        }
+
+    }
+
+    @Override
+    public void onDisable() {
+
+        try {
+            server.end();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }

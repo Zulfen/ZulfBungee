@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.handlers;
+package tk.zulfengaming.bungeesk.bungeecord.handlers;
 
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
@@ -6,7 +6,7 @@ import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
@@ -14,21 +14,23 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeoutException;
 
-public class DataOutHandler extends ClientListener implements Runnable {
+public class DataInHandler implements Runnable, Clie {
 
     private final ClientConnection connection;
 
     private final ClientManager clientManager;
 
-    private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
 
-    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
-    public DataOutHandler(ClientManager clientManagerIn, ClientConnection connectionIn) {
+
+    public DataInHandler(ClientManager clientManagerIn, ClientConnection connectionIn) {
         super(clientManagerIn);
 
-        this.connection = connectionIn;
         this.clientManager = clientManagerIn;
+
+        this.connection = connectionIn;
 
     }
 
@@ -40,25 +42,27 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 if (clientManager.isSocketConnected()) {
 
-                    Packet packetOut = queueOut.take();
+                    Object dataIn = inputStream.readObject();
 
-                    outputStream.writeObject(packetOut);
-                    outputStream.flush();
+                    if (dataIn instanceof Packet) {
+
+                        queueIn.put((Packet) dataIn);
+
+                    }
 
                 } else {
 
                     Optional<Socket> optionalSocket = clientManager.getSocket();
-                    clientManager.getPluginInstance().log("DataOut requested socket!");
 
                     if (optionalSocket.isPresent()) {
                         Socket socket = optionalSocket.get();
 
-                        outputStream = new ObjectOutputStream(socket.getOutputStream());
+                        inputStream = new ObjectInputStream(socket.getInputStream());
                     }
 
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException | InterruptedException e) {
+            } catch (IOException | ExecutionException | TimeoutException | InterruptedException | ClassNotFoundException e) {
                 clientManager.getPluginInstance().error("There was an error running the server! Disconnecting");
 
                 clientManager.disconnect();
@@ -72,7 +76,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
     public void onDisconnect() {
 
         try {
-            outputStream.close();
+            inputStream.close();
 
         } catch (IOException e) {
 
@@ -89,6 +93,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
     }
 
     public BlockingQueue<Packet> getQueue() {
-        return queueOut;
+        return queueIn;
     }
+
 }

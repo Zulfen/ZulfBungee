@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeoutException;
 
 public class DataInHandler extends ClientListener implements Runnable {
@@ -19,7 +20,7 @@ public class DataInHandler extends ClientListener implements Runnable {
 
     private final ClientManager clientManager;
 
-    private final BlockingQueue<Packet> queueIn;
+    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
 
     private ObjectInputStream inputStream;
 
@@ -30,8 +31,6 @@ public class DataInHandler extends ClientListener implements Runnable {
         this.clientManager = clientManagerIn;
 
         this.connection = connectionIn;
-
-        this.queueIn = clientManagerIn.getQueueIn();
 
     }
 
@@ -91,6 +90,10 @@ public class DataInHandler extends ClientListener implements Runnable {
     @Override
     public void onShutdown() {
 
+    }
+
+    public BlockingQueue<Packet> getQueue() {
+        return queueIn;
     }
 
 }

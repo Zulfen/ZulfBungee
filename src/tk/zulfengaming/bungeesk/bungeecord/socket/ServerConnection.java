@@ -35,9 +35,6 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
     private ObjectInputStream streamIn;
     private ObjectOutputStream streamOut;
 
-    // thread management
-    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
     public ServerConnection(Server serverIn, String idIn) {
         this.socket = serverIn.getSocket();
         this.packetManager = serverIn.getPacketManager();
@@ -46,6 +43,11 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
 
         this.address = socket.getRemoteSocketAddress();
         this.id = idIn;
+
+        init();
+    }
+
+    public void init() {
 
     }
 
@@ -62,18 +64,6 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
             while (running && socket.isConnected()) {
 
                 Optional<Packet> dataIn = Objects.requireNonNull(read()).get(10, TimeUnit.SECONDS);
-
-                if (dataIn.isPresent()) {
-
-                    Packet packetIn = dataIn.get();
-                    Packet processedPacket = packetManager.handlePacket(packetIn, address);
-                    processedPacket.getData();
-
-                    if (packetIn.isReturnable()) {
-                        send(processedPacket);
-
-                    }
-                }
             }
 
             disconnect();
@@ -104,9 +94,7 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
 
         try {
 
-            if (!interrupted) {
-                socket.close();
-            }
+            socket.close();
 
         } catch (IOException e) {
             pluginInstance.error("Error closing data streams in a server connection:");
@@ -120,29 +108,6 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
 
     private Future<Optional<Packet>> read() {
 
-        return pluginInstance.getTaskManager().getExecutorService().submit(() -> {
-
-            pluginInstance.log("read callable is acquiring lock...");
-            readWriteLock.readLock().lock();
-            pluginInstance.log("read callable released lock");
-
-            try {
-
-                Object objectIn = streamIn.readObject();
-
-                if (objectIn instanceof Packet) {
-                    Packet packetIn = (Packet) objectIn;
-                    return Optional.of(packetIn);
-
-                } else {
-                    pluginInstance.warning("Packet received from " + address + ", but does not appear to be valid. Ignoring it.");
-                }
-            } finally {
-                readWriteLock.readLock().unlock();
-            }
-
-            return Optional.empty();
-        });
 
     }
 

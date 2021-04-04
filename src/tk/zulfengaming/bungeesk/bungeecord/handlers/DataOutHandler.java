@@ -1,5 +1,6 @@
-package tk.zulfengaming.bungeesk.spigot.handlers;
+package tk.zulfengaming.bungeesk.bungeecord.handlers;
 
+import tk.zulfengaming.bungeesk.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
@@ -24,7 +25,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
     private ObjectOutputStream outputStream;
 
-    public DataOutHandler(ClientManager clientManagerIn, ClientConnection connectionIn) {
+    public DataOutHandler(ServerConnection) {
         super(clientManagerIn);
 
         this.connection = connectionIn;

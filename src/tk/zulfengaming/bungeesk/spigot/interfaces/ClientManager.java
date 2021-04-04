@@ -2,7 +2,6 @@ package tk.zulfengaming.bungeesk.spigot.interfaces;
 
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 import tk.zulfengaming.bungeesk.spigot.handlers.SocketHandler;
-import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -10,7 +9,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class ClientManager {
 
@@ -29,9 +31,6 @@ public class ClientManager {
     private Socket socket;
 
     private boolean socketConnected = false;
-
-    private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
-    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
 
     private final ArrayList<ClientListener> listeners = new ArrayList<>();
 
@@ -135,14 +134,6 @@ public class ClientManager {
 
             return Optional.empty();
         }
-    }
-
-    public BlockingQueue<Packet> getQueueOut() {
-        return queueOut;
-    }
-
-    public BlockingQueue<Packet> getQueueIn() {
-        return queueIn;
     }
 
 }
