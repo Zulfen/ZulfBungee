@@ -2,7 +2,7 @@ package tk.zulfengaming.bungeesk.bungeecord.handlers;
 
 import tk.zulfengaming.bungeesk.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
@@ -19,7 +19,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
     private final ClientConnection connection;
 
-    private final ClientManager clientManager;
+    private final ClientListenerManager clientListenerManager;
 
     private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
 
@@ -29,7 +29,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
         super(clientManagerIn);
 
         this.connection = connectionIn;
-        this.clientManager = clientManagerIn;
+        this.clientListenerManager = clientManagerIn;
 
     }
 
@@ -39,7 +39,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
         do {
             try {
 
-                if (clientManager.isSocketConnected()) {
+                if (clientListenerManager.isSocketConnected()) {
 
                     Packet packetOut = queueOut.take();
 
@@ -48,8 +48,8 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 } else {
 
-                    Optional<Socket> optionalSocket = clientManager.getSocket();
-                    clientManager.getPluginInstance().log("DataOut requested socket!");
+                    Optional<Socket> optionalSocket = clientListenerManager.getSocket();
+                    clientListenerManager.getPluginInstance().log("DataOut requested socket!");
 
                     if (optionalSocket.isPresent()) {
                         Socket socket = optionalSocket.get();
@@ -60,9 +60,9 @@ public class DataOutHandler extends ClientListener implements Runnable {
                 }
 
             } catch (IOException | ExecutionException | TimeoutException | InterruptedException e) {
-                clientManager.getPluginInstance().error("There was an error running the server! Disconnecting");
+                clientListenerManager.getPluginInstance().error("There was an error running the server! Disconnecting");
 
-                clientManager.disconnect();
+                clientListenerManager.disconnect();
                 e.printStackTrace();
             }
 
@@ -77,7 +77,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
         } catch (IOException e) {
 
-            clientManager.getPluginInstance().error("Error closing input stream:");
+            clientListenerManager.getPluginInstance().error("Error closing input stream:");
 
             e.printStackTrace();
         }

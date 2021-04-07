@@ -6,7 +6,7 @@ import ch.njol.skript.SkriptAddon;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.config.YamlConfig;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.task.TaskManager;
 
@@ -25,7 +25,7 @@ public class BungeeSkSpigot extends JavaPlugin {
     private YamlConfig config;
 
     private ClientConnection connection;
-    private ClientManager clientManager;
+    private ClientListenerManager clientListenerManager;
 
     // other
 

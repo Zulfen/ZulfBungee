@@ -4,7 +4,7 @@ import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 import tk.zulfengaming.bungeesk.spigot.handlers.DataInHandler;
 import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.spigot.task.HeartbeatTask;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
@@ -28,7 +28,7 @@ public class ClientConnection implements Runnable {
 
     private final PacketHandlerManager packetHandlerManager;
 
-    private final ClientManager clientManager;
+    private final ClientListenerManager clientListenerManager;
 
     // other tasks
 
@@ -42,7 +42,7 @@ public class ClientConnection implements Runnable {
 
         this.packetHandlerManager = new PacketHandlerManager(this);
 
-        this.clientManager = new ClientManager(pluginInstanceIn);
+        this.clientListenerManager = new ClientListenerManager(pluginInstanceIn);
 
         init();
 
@@ -50,12 +50,12 @@ public class ClientConnection implements Runnable {
 
     private void init() {
 
-        HeartbeatTask heartbeatTask = new HeartbeatTask(clientManager);
+        HeartbeatTask heartbeatTask = new HeartbeatTask(clientListenerManager);
 
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", pluginInstance.getYamlConfig().getInt("heartbeat-ticks"));
 
-        this.dataInHandler = new DataInHandler(clientManager, this);
-        this.dataOutHandler = new DataOutHandler(clientManager, this);
+        this.dataInHandler = new DataInHandler(clientListenerManager, this);
+        this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
 
 
     }
@@ -68,7 +68,7 @@ public class ClientConnection implements Runnable {
         do {
             try {
 
-                if (clientManager.isSocketConnected()) {
+                if (clientListenerManager.isSocketConnected()) {
                     Packet packetIn = dataInHandler.getQueue().take();
 
                     if (packetIn.shouldHandle()) {
@@ -79,7 +79,7 @@ public class ClientConnection implements Runnable {
                     }
 
                 } else {
-                    Optional<Socket> optionalSocket = clientManager.getSocket();
+                    Optional<Socket> optionalSocket = clientListenerManager.getSocket();
 
                     optionalSocket.ifPresent(value -> socket = value);
                 }
@@ -111,7 +111,7 @@ public class ClientConnection implements Runnable {
 
         send_direct(packetIn);
 
-        if (clientManager.isSocketConnected()) {
+        if (clientListenerManager.isSocketConnected()) {
             return read();
         } else {
             return Optional.empty();
@@ -124,12 +124,12 @@ public class ClientConnection implements Runnable {
     }
 
     public boolean isConnected() {
-        return clientManager.isSocketConnected();
+        return clientListenerManager.isSocketConnected();
     }
 
     public void shutdown() {
         heartbeatThread.cancel();
-        clientManager.shutdown();
+        clientListenerManager.shutdown();
 
     }
 
@@ -137,7 +137,7 @@ public class ClientConnection implements Runnable {
         return pluginInstance;
     }
 
-    public ClientManager getClientManager() {
-        return clientManager;
+    public ClientListenerManager getClientManager() {
+        return clientListenerManager;
     }
 }

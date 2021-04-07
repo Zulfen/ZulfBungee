@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class ClientManager {
+public class ClientListenerManager {
 
     private final BungeeSkSpigot pluginInstance;
 
@@ -34,7 +34,7 @@ public class ClientManager {
 
     private final ArrayList<ClientListener> listeners = new ArrayList<>();
 
-    public ClientManager(BungeeSkSpigot instanceIn) {
+    public ClientListenerManager(BungeeSkSpigot instanceIn) {
 
         this.pluginInstance = instanceIn;
 

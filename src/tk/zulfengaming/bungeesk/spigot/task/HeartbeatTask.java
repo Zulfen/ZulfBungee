@@ -1,32 +1,26 @@
 package tk.zulfengaming.bungeesk.spigot.task;
 
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
-import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
-import tk.zulfengaming.bungeesk.universal.socket.Packet;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
-
-import java.net.Socket;
-import java.util.Optional;
-import java.util.concurrent.Future;
 
 public class HeartbeatTask extends ClientListener implements Runnable {
 
-    private final ClientManager clientManager;
+    private final ClientListenerManager clientListenerManager;
 
-    public HeartbeatTask(ClientManager clientManagerIn) {
-        super(clientManagerIn);
-        this.clientManager = clientManagerIn;
+    public HeartbeatTask(ClientListenerManager clientListenerManagerIn) {
+        super(clientListenerManagerIn);
+        this.clientListenerManager = clientListenerManagerIn;
     }
 
     @Override
     public void run() {
 
-        if (clientManager.isSocketConnected()) {
+        if (clientListenerManager.isSocketConnected()) {
 
             double simpleKey = Math.random();
             //connection.send_direct(new Packet(
-                    clientManager.getPluginInstance().getName(), PacketTypes.HEARTBEAT, true, true, new Object[]{simpleKey}));
+                    clientListenerManager.getPluginInstance().getName(), PacketTypes.HEARTBEAT, true, true, new Object[]{simpleKey}));
 
         }
     }

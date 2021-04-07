@@ -4,8 +4,8 @@ import tk.zulfengaming.bungeesk.universal.interfaces.ClientEvents;
 
 public abstract class ClientListener implements ClientEvents {
 
-    public ClientListener(ClientManager clientManagerIn) {
-        clientManagerIn.addListener(this);
+    public ClientListener(ClientListenerManager clientListenerManagerIn) {
+        clientListenerManagerIn.addListener(this);
     }
 
 }

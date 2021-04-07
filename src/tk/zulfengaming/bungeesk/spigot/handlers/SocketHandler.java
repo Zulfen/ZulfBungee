@@ -1,8 +1,7 @@
 package tk.zulfengaming.bungeesk.spigot.handlers;
 
-import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientManager;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -11,12 +10,12 @@ import java.util.concurrent.Callable;
 
 public class SocketHandler extends ClientListener implements Callable<Optional<Socket>> {
 
-    private final ClientManager clientManager;
+    private final ClientListenerManager clientListenerManager;
 
-    public SocketHandler(ClientManager clientManagerIn) {
-        super(clientManagerIn);
+    public SocketHandler(ClientListenerManager clientListenerManagerIn) {
+        super(clientListenerManagerIn);
 
-        this.clientManager = clientManagerIn;
+        this.clientListenerManager = clientListenerManagerIn;
 
 
     }
@@ -28,14 +27,14 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
 
     @Override
     public void onShutdown() {
-        Thread.currentThread().interrupt();
+
     }
 
     @Override
     public Optional<Socket> call() throws InterruptedException {
 
         try {
-            Socket socket = new Socket(getServerAddress(), getServerPort(), getClientAddress(), getClientPort());
+            Socket socket = new Socket(clientListenerManager.getServerAddress(), clientListenerManager.getServerPort(), clientListenerManager.getClientAddress(), clientListenerManager.getClientPort());
             socket.setReuseAddress(true);
 
             return Optional.of(socket);
