@@ -1,6 +1,8 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket;
 
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
+import tk.zulfengaming.bungeesk.bungeecord.handlers.DataInHandler;
+import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.*;
@@ -12,9 +14,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class ServerConnection extends ReentrantReadWriteLock implements Runnable {
+public class ServerConnection implements Runnable {
 
     private final Server server;
     // plugin instance ?
@@ -28,16 +29,17 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
     // handling packets
     private final PacketHandlerManager packetManager;
 
+    // data I/O
+    private DataInHandler dataInHandler;
+    private DataOutHandler dataOutHandler;
+
     private boolean running = true;
-    private boolean interrupted = false;
 
-    // direct access to IO
-    private ObjectInputStream streamIn;
-    private ObjectOutputStream streamOut;
-
-    public ServerConnection(Server serverIn, String idIn) {
+    public ServerConnection(Server serverIn, String idIn) throws IOException {
         this.socket = serverIn.getSocket();
+
         this.packetManager = serverIn.getPacketManager();
+
         this.pluginInstance = serverIn.getPluginInstance();
         this.server = serverIn;
 
@@ -47,7 +49,9 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
         init();
     }
 
-    public void init() {
+    public void init() throws IOException {
+
+        this.dataInHandler = new DataInHandler(this);
 
     }
 
@@ -55,15 +59,9 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
 
         try {
 
-            pluginInstance.log("proxy: before");
-            this.streamIn = new ObjectInputStream(socket.getInputStream());
-            pluginInstance.log("proxy: middle");
-            this.streamOut = new ObjectOutputStream(socket.getOutputStream());
-            pluginInstance.log("proxy: after");
-
             while (running && socket.isConnected()) {
+                Packet packetIn =
 
-                Optional<Packet> dataIn = Objects.requireNonNull(read()).get(10, TimeUnit.SECONDS);
             }
 
             disconnect();
@@ -72,7 +70,6 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
             pluginInstance.warning("The client at " + address + " sent some invalid data. Ignoring.");
 
         } catch (EOFException | TimeoutException | InterruptedException | ExecutionException e) {
-            interrupted = true;
             disconnect();
 
         } catch (IOException e) {
@@ -137,6 +134,10 @@ public class ServerConnection extends ReentrantReadWriteLock implements Runnable
 
     public Server getServer() {
         return server;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
     public BungeeSkProxy getPluginInstance() {

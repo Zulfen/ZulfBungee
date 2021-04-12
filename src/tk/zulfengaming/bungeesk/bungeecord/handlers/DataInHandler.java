@@ -1,35 +1,30 @@
 package tk.zulfengaming.bungeesk.bungeecord.handlers;
 
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
-import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
+import tk.zulfengaming.bungeesk.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeoutException;
 
-public class DataInHandler implements Runnable, Clie {
+public class DataInHandler implements Runnable {
 
-    private final ClientConnection connection;
+    private final ServerConnection connection;
 
-    private final ClientListenerManager clientListenerManager;
+    private final Socket socket;
 
     private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
 
-    private ObjectInputStream inputStream;
+    private final ObjectInputStream inputStream;
 
 
-    public DataInHandler(ClientListenerManager clientListenerManagerIn, ClientConnection connectionIn) {
-        super(clientListenerManagerIn);
-
-        this.clientListenerManager = clientListenerManagerIn;
-
+    public DataInHandler(ServerConnection connectionIn) throws IOException {
         this.connection = connectionIn;
+
+        this.socket = connectionIn.getSocket();
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
 
     }
 
@@ -37,9 +32,10 @@ public class DataInHandler implements Runnable, Clie {
     @Override
     public void run() {
         do {
+
             try {
 
-                if (clientListenerManager.isSocketConnected()) {
+                if (socket.isConnected()) {
 
                     Object dataIn = inputStream.readObject();
 
@@ -49,46 +45,35 @@ public class DataInHandler implements Runnable, Clie {
 
                     }
 
-                } else {
-
-                    Optional<Socket> optionalSocket = clientListenerManager.getSocket();
-
-                    if (optionalSocket.isPresent()) {
-                        Socket socket = optionalSocket.get();
-
-                        inputStream = new ObjectInputStream(socket.getInputStream());
-                    }
-
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException | InterruptedException | ClassNotFoundException e) {
-                clientListenerManager.getPluginInstance().error("There was an error running the server! Disconnecting");
+            } catch (IOException | InterruptedException | ClassNotFoundException e) {
+                connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
-                clientListenerManager.disconnect();
+                connection.disconnect();
+
                 e.printStackTrace();
             }
 
         } while (connection.isRunning());
     }
 
-    @Override
-    public void onDisconnect() {
+    public void disconnect() {
 
         try {
             inputStream.close();
 
         } catch (IOException e) {
 
-            clientListenerManager.getPluginInstance().error("Error closing input stream:");
+            connection.getPluginInstance().error("Error closing input stream:");
 
             e.printStackTrace();
         }
 
     }
 
-    @Override
-    public void onShutdown() {
-
+    public void shutdown() {
+        disconnect();
     }
 
     public BlockingQueue<Packet> getQueue() {

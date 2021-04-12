@@ -17,11 +17,13 @@ public class ClientConnection implements Runnable {
 
     private final BungeeSkSpigot pluginInstance;
 
+    // threads
+
     private BukkitTask heartbeatThread;
 
     private Socket socket;
 
-    // the lastest packet from the queue coming in.
+    // the latest packet from the queue coming in.
     private final BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
 
     private boolean running = true;
@@ -56,6 +58,9 @@ public class ClientConnection implements Runnable {
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
+
+        pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
+        pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOut");
 
 
     }
@@ -128,7 +133,11 @@ public class ClientConnection implements Runnable {
     }
 
     public void shutdown() {
+
+        running = false;
+
         heartbeatThread.cancel();
+        
         clientListenerManager.shutdown();
 
     }
