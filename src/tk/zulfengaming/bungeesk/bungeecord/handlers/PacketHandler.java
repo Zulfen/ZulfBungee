@@ -9,7 +9,7 @@ import java.net.SocketAddress;
 
 public abstract class PacketHandler {
 
-    private PacketTypes[] types;
+    private final PacketTypes[] types;
 
     private final Server socketServer;
 

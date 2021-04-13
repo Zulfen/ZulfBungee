@@ -20,7 +20,7 @@ public class SocketHandler implements Callable<Optional<ServerSocket>> {
     public Optional<ServerSocket> call() throws InterruptedException {
 
         try {
-            ServerSocket socket = new ServerSocket(server.getPort(), 50, server.getAddress());
+            ServerSocket socket = new ServerSocket(server.getPort(), 50, server.getHostAddress());
             socket.setReuseAddress(true);
 
             return Optional.of(socket);

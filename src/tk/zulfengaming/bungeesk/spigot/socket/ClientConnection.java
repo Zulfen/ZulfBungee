@@ -8,6 +8,7 @@ import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.spigot.task.HeartbeatTask;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class ClientConnection implements Runnable {
 
     private void init() {
 
-        HeartbeatTask heartbeatTask = new HeartbeatTask(clientListenerManager);
+        HeartbeatTask heartbeatTask = new HeartbeatTask(this);
 
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", pluginInstance.getYamlConfig().getInt("heartbeat-ticks"));
 
@@ -80,7 +81,7 @@ public class ClientConnection implements Runnable {
                         packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
 
                     } else {
-                        skriptPacketQueue.put(packetIn);
+                        skriptPacketQueue.add(packetIn);
                     }
 
                 } else {
@@ -132,7 +133,7 @@ public class ClientConnection implements Runnable {
         return clientListenerManager.isSocketConnected();
     }
 
-    public void shutdown() {
+    public void shutdown() throws IOException {
 
         running = false;
 

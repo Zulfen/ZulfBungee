@@ -2,18 +2,14 @@ package tk.zulfengaming.bungeesk.bungeecord.socket;
 
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.DataInHandler;
-import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
+import tk.zulfengaming.bungeesk.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 public class ServerConnection implements Runnable {
 
@@ -32,6 +28,8 @@ public class ServerConnection implements Runnable {
     // data I/O
     private DataInHandler dataInHandler;
     private DataOutHandler dataOutHandler;
+
+    private final BlockingQueue<Packet> packetInBuffer = new SynchronousQueue<>();
 
     private boolean running = true;
 
@@ -52,40 +50,41 @@ public class ServerConnection implements Runnable {
     public void init() throws IOException {
 
         this.dataInHandler = new DataInHandler(this);
+        this.dataOutHandler = new DataOutHandler(this);
 
     }
 
     public void run() {
 
-        try {
+        do {
 
-            while (running && socket.isConnected()) {
-                Packet packetIn =
+            try {
+
+                pluginInstance.log("Waiting for packet");
+
+                Packet packetIn = dataInHandler.getQueue().take();
+
+                packetInBuffer.add(packetIn);
+
+                dataOutHandler.getQueue().put(packetManager.handlePacket(packetIn, address));
+
+            } catch (InterruptedException e) {
+                end();
 
             }
 
-            disconnect();
+        } while (running && socket.isConnected());
 
-        } catch (StreamCorruptedException e) {
-            pluginInstance.warning("The client at " + address + " sent some invalid data. Ignoring.");
+        end();
 
-        } catch (EOFException | TimeoutException | InterruptedException | ExecutionException e) {
-            disconnect();
-
-        } catch (IOException e) {
-            pluginInstance.error("There was an error while handling data for a connection!");
-
-            interrupted = true;
-            disconnect();
-
-            e.printStackTrace();
-
-        }
 
     }
 
-    public void disconnect()  {
+    public void end()  {
         pluginInstance.log("Disconnecting client " + address + " (" + id + ")");
+
+        dataOutHandler.disconnect();
+        dataInHandler.disconnect();
 
         running = false;
 
@@ -103,31 +102,21 @@ public class ServerConnection implements Runnable {
 
     }
 
-    private Future<Optional<Packet>> read() {
-
+    private Optional<Packet> read() throws InterruptedException {
+        return Optional.ofNullable(packetInBuffer.poll(5, TimeUnit.SECONDS));
 
     }
 
     public void send(Packet packetIn) {
         pluginInstance.log("Sending packet " + packetIn.getType().toString() + "...");
 
-        pluginInstance.log("send is acquiring lock...");
-        readWriteLock.writeLock().lock();
-        pluginInstance.log("send unlocked");
-
         try {
 
-            streamOut.writeObject(packetIn);
-            streamOut.flush();
+            dataOutHandler.getQueue().put(packetIn);
 
-        } catch (IOException e) {
-            pluginInstance.error("That packed failed to send :(");
+        } catch (InterruptedException e) {
+            pluginInstance.error("That packet failed ");
             e.printStackTrace();
-
-            disconnect();
-
-        } finally {
-            readWriteLock.writeLock().lock();
         }
 
     }

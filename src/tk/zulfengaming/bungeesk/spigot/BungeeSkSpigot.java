@@ -19,7 +19,6 @@ public class BungeeSkSpigot extends JavaPlugin {
 
     private boolean debug = false;
 
-
     private TaskManager taskManager;
     private YamlConfig config;
 
@@ -62,7 +61,15 @@ public class BungeeSkSpigot extends JavaPlugin {
     }
 
     public void onDisable() {
-        connection.shutdown();
+
+        try {
+            warning("Could not shutdown the connection to the proxy!");
+            connection.shutdown();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         taskManager.shutdown();
 
     }

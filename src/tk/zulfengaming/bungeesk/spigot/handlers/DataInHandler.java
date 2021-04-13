@@ -42,6 +42,7 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 if (clientListenerManager.isSocketConnected()) {
 
+                    clientListenerManager.getPluginInstance().log("DataOut connected!:");
                     Object dataIn = inputStream.readObject();
 
                     if (dataIn instanceof Packet) {
@@ -53,6 +54,7 @@ public class DataInHandler extends ClientListener implements Runnable {
                 } else {
 
                     Optional<Socket> optionalSocket = clientListenerManager.getSocket();
+                    clientListenerManager.getPluginInstance().log("DataIn requested socket!");
 
                     if (optionalSocket.isPresent()) {
                         Socket socket = optionalSocket.get();
@@ -76,7 +78,10 @@ public class DataInHandler extends ClientListener implements Runnable {
     public void onDisconnect() {
 
         try {
-            inputStream.close();
+
+            if (connection.isConnected()) {
+                inputStream.close();
+            }
 
         } catch (IOException e) {
 
@@ -89,6 +94,11 @@ public class DataInHandler extends ClientListener implements Runnable {
 
     @Override
     public void onShutdown() {
+
+    }
+
+    @Override
+    public void onConnect() {
 
     }
 

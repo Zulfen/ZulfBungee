@@ -38,6 +38,7 @@ public class DataInHandler implements Runnable {
                 if (socket.isConnected()) {
 
                     Object dataIn = inputStream.readObject();
+                    connection.getPluginInstance().log("read object!");
 
                     if (dataIn instanceof Packet) {
 
@@ -47,10 +48,12 @@ public class DataInHandler implements Runnable {
 
                 }
 
+                connection.end();
+
             } catch (IOException | InterruptedException | ClassNotFoundException e) {
                 connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
-                connection.disconnect();
+                connection.end();
 
                 e.printStackTrace();
             }
@@ -61,6 +64,7 @@ public class DataInHandler implements Runnable {
     public void disconnect() {
 
         try {
+
             inputStream.close();
 
         } catch (IOException e) {

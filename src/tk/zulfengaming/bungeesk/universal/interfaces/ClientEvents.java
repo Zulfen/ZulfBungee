@@ -6,4 +6,6 @@ public interface ClientEvents {
 
     void onShutdown();
 
+    void onConnect();
+
 }

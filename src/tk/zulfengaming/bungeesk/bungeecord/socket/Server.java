@@ -1,17 +1,15 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket;
 
 
-import net.md_5.bungee.api.scheduler.ScheduledTask;
+import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.SocketHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.net.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +25,7 @@ public class Server implements Runnable {
 
     // setting up the server
     private final int port;
-    private final InetAddress address;
+    private final InetAddress hostAddress;
 
     private boolean running = true;
     private boolean serverSocketAvailable = false;
@@ -43,7 +41,7 @@ public class Server implements Runnable {
     private final PacketHandlerManager packetManager;
 
     public Server(int port, InetAddress address, BungeeSkProxy instanceIn) {
-        this.address = address;
+        this.hostAddress = address;
         this.port = port;
         this.pluginInstance = instanceIn;
 
@@ -62,22 +60,21 @@ public class Server implements Runnable {
             try {
 
                 if (serverSocketAvailable) {
-                    pluginInstance.log("poop shit: before accept");
                     socket = serverSocket.accept();
-                    pluginInstance.log("poop shit: middle accept");
 
                     if (isValidClient(socket.getRemoteSocketAddress())) {
                         acceptConnection();
-                        pluginInstance.log("poop shit: after accept");
+
                     } else {
                         pluginInstance.warning("Client who tried to connect is not defined in bungeecord's config. Ignoring.");
+
                         socket.close();
                     }
 
                 } else {
 
                     for (ServerConnection connection : activeConnections.values()) {
-                        connection.disconnect();
+                        connection.end();
                     }
 
                     Optional<ServerSocket> futureSocket = start().get(5, TimeUnit.SECONDS);
@@ -87,7 +84,7 @@ public class Server implements Runnable {
                     if (futureSocket.isPresent()) {
 
                         serverSocket = futureSocket.get();
-                        pluginInstance.log("Waiting for connections on " + address + ":" + port);
+                        pluginInstance.log("Waiting for connections on " + hostAddress + ":" + port);
 
                         serverSocketAvailable = true;
 
@@ -113,7 +110,7 @@ public class Server implements Runnable {
         ServerConnection connection = new ServerConnection(this, identifier.toString());
         SocketAddress connectionAddress = connection.getAddress();
 
-        ScheduledTask connectionTask = pluginInstance.getTaskManager().newTask(connection, String.valueOf(identifier));
+        pluginInstance.getTaskManager().newTask(connection, String.valueOf(identifier));
         activeConnections.put(connectionAddress, connection);
 
         pluginInstance.log("Connection established with address: " + connectionAddress);
@@ -121,13 +118,19 @@ public class Server implements Runnable {
     }
 
     public boolean isValidClient(SocketAddress addressIn) {
-//        Map<String, ServerInfo> servers = pluginInstance.getProxy().getServersCopy();
-//
-//        for (ServerInfo server : servers.values()) {
-//            if (addressIn == server.getSocketAddress()) {
-//                return true;
-//            }
-//        }
+        Map<String, ServerInfo> servers = pluginInstance.getProxy().getServersCopy();
+
+        for (ServerInfo server : servers.values()) {
+            InetSocketAddress serverAddress = (InetSocketAddress) server.getSocketAddress();
+            InetSocketAddress inetAddressIn = (InetSocketAddress) addressIn;
+
+            pluginInstance.log(serverAddress.toString() + " / " +  inetAddressIn.toString());
+
+            if (serverAddress.equals(inetAddressIn)) {
+                return true;
+            }
+
+        }
 
         return true;
     }
@@ -155,7 +158,7 @@ public class Server implements Runnable {
     public void end() throws IOException {
 
         for (ServerConnection connection : activeConnections.values()) {
-            connection.disconnect();
+            connection.end();
         }
 
         running = false;
@@ -168,8 +171,8 @@ public class Server implements Runnable {
         return port;
     }
 
-    public InetAddress getAddress() {
-        return address;
+    public InetAddress getHostAddress() {
+        return hostAddress;
     }
 
     public boolean isRunning() {

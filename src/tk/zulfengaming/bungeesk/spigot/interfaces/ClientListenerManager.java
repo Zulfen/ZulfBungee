@@ -71,13 +71,17 @@ public class ClientListenerManager {
             socket.close();
 
         } catch (IOException e) {
-            pluginInstance.error("Error trying to closet ClientManager socket!");
+            pluginInstance.error("Error trying to close ClientManager socket!");
             e.printStackTrace();
         }
     }
 
-    public void shutdown() {
-        socketConnected = false;
+    public void shutdown() throws IOException {
+
+        if (socketConnected) {
+            socketConnected = false;
+            socket.close();
+        }
 
         for (ClientListener listener : listeners) {
             listener.onDisconnect();
@@ -123,11 +127,16 @@ public class ClientListenerManager {
             return Optional.of(socket);
 
         } else {
+            pluginInstance.warning("Connection failed. Trying to connect:");
             Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
 
             if (futureSocket.isPresent()) {
                 socket = futureSocket.get();
                 socketConnected = true;
+
+                for (ClientListener listener : listeners) {
+                    listener.onConnect();
+                }
 
                 return Optional.of(socket);
             }

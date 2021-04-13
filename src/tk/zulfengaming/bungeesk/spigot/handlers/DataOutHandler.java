@@ -40,6 +40,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 if (clientListenerManager.isSocketConnected()) {
 
+                    clientListenerManager.getPluginInstance().log("DataOut connected!:");
                     Packet packetOut = queueOut.take();
 
                     outputStream.writeObject(packetOut);
@@ -72,7 +73,10 @@ public class DataOutHandler extends ClientListener implements Runnable {
     public void onDisconnect() {
 
         try {
-            outputStream.close();
+
+            if (connection.isConnected()) {
+                outputStream.close();
+            }
 
         } catch (IOException e) {
 
@@ -85,6 +89,11 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
     @Override
     public void onShutdown() {
+
+    }
+
+    @Override
+    public void onConnect() {
 
     }
 

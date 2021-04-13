@@ -31,6 +31,11 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
     }
 
     @Override
+    public void onConnect() {
+
+    }
+
+    @Override
     public Optional<Socket> call() throws InterruptedException {
 
         try {
