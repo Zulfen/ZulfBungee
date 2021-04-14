@@ -58,7 +58,10 @@ public class DataOutHandler implements Runnable {
     public void disconnect() {
 
         try {
-            outputStream.close();
+
+            if (!socket.isClosed()) {
+                outputStream.close();
+            }
 
         } catch (IOException e) {
 

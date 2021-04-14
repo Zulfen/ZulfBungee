@@ -122,11 +122,8 @@ public class ClientListenerManager {
 
     public synchronized Optional<Socket> getSocket() throws InterruptedException, ExecutionException, TimeoutException {
 
-        if (socketConnected) {
+        if (!socketConnected) {
 
-            return Optional.of(socket);
-
-        } else {
             pluginInstance.warning("Connection failed. Trying to connect:");
             Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
 
@@ -138,11 +135,11 @@ public class ClientListenerManager {
                     listener.onConnect();
                 }
 
-                return Optional.of(socket);
             }
 
-            return Optional.empty();
         }
-    }
 
+        return Optional.ofNullable(socket);
+
+    }
 }

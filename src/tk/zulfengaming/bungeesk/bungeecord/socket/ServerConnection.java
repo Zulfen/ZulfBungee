@@ -5,11 +5,10 @@ import tk.zulfengaming.bungeesk.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Optional;
-import java.util.concurrent.*;
 
 public class ServerConnection implements Runnable {
 
@@ -29,7 +28,7 @@ public class ServerConnection implements Runnable {
     private DataInHandler dataInHandler;
     private DataOutHandler dataOutHandler;
 
-    private final BlockingQueue<Packet> packetInBuffer = new SynchronousQueue<>();
+    private Packet packetInBuffer;
 
     private boolean running = true;
 
@@ -52,6 +51,9 @@ public class ServerConnection implements Runnable {
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
 
+        pluginInstance.getTaskManager().newTask(dataInHandler, "DataInHandler");
+        pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOutHandler");
+
     }
 
     public void run() {
@@ -64,7 +66,7 @@ public class ServerConnection implements Runnable {
 
                 Packet packetIn = dataInHandler.getQueue().take();
 
-                packetInBuffer.add(packetIn);
+                packetInBuffer = packetIn;
 
                 dataOutHandler.getQueue().put(packetManager.handlePacket(packetIn, address));
 
@@ -102,8 +104,8 @@ public class ServerConnection implements Runnable {
 
     }
 
-    private Optional<Packet> read() throws InterruptedException {
-        return Optional.ofNullable(packetInBuffer.poll(5, TimeUnit.SECONDS));
+    private Optional<Packet> read() {
+        return Optional.ofNullable(packetInBuffer);
 
     }
 

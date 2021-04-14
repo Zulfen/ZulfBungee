@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 public class DataOutHandler extends ClientListener implements Runnable {
 
@@ -20,7 +17,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
     private final ClientListenerManager clientListenerManager;
 
-    private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueOut = new LinkedBlockingDeque<>();
 
     private ObjectOutputStream outputStream;
 

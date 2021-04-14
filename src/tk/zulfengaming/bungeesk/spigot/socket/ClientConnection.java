@@ -81,7 +81,7 @@ public class ClientConnection implements Runnable {
                         packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
 
                     } else {
-                        skriptPacketQueue.add(packetIn);
+                        skriptPacketQueue.put(packetIn);
                     }
 
                 } else {

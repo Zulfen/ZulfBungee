@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
+// issue must be here
+
 public class DataInHandler implements Runnable {
 
     private final ServerConnection connection;
@@ -48,8 +50,6 @@ public class DataInHandler implements Runnable {
 
                 }
 
-                connection.end();
-
             } catch (IOException | InterruptedException | ClassNotFoundException e) {
                 connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
@@ -65,7 +65,9 @@ public class DataInHandler implements Runnable {
 
         try {
 
-            inputStream.close();
+            if (!socket.isClosed()) {
+                inputStream.close();
+            }
 
         } catch (IOException e) {
 
