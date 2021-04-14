@@ -37,7 +37,9 @@ public class ExprBungeePlayers extends SimpleExpression<OfflinePlayer> {
                 connection.getPluginInstance().log("Recieved bruh");
 
                 return (OfflinePlayer[]) Arrays.stream(packet.getData())
-                        .map(o -> Bukkit.getOfflinePlayer((UUID) o))
+                        .filter(o -> o instanceof UUID)
+                        .map(o -> (UUID) o)
+                        .map(Bukkit::getOfflinePlayer)
                         .toArray();
 
             }
@@ -47,8 +49,6 @@ public class ExprBungeePlayers extends SimpleExpression<OfflinePlayer> {
 
             return null;
         }
-
-
 
         return null;
     }

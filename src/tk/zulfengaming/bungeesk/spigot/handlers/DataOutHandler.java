@@ -17,7 +17,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
     private final ClientListenerManager clientListenerManager;
 
-    private final BlockingQueue<Packet> queueOut = new LinkedBlockingDeque<>();
+    private final BlockingQueue<Packet> queueOut = new ArrayBlockingQueue<>(10);
 
     private ObjectOutputStream outputStream;
 

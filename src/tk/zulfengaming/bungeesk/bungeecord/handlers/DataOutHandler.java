@@ -6,8 +6,8 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 
 public class DataOutHandler implements Runnable {
 
@@ -15,7 +15,7 @@ public class DataOutHandler implements Runnable {
 
     private final Socket socket;
 
-    private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueOut = new ArrayBlockingQueue<>(10);
 
     private final ObjectOutputStream outputStream;
 

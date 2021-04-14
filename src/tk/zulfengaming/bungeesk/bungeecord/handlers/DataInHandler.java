@@ -6,8 +6,8 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 
 // issue must be here
 
@@ -17,7 +17,7 @@ public class DataInHandler implements Runnable {
 
     private final Socket socket;
 
-    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueIn = new ArrayBlockingQueue<>(10);
 
     private final ObjectInputStream inputStream;
 
