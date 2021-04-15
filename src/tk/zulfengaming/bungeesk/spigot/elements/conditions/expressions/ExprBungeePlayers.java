@@ -16,6 +16,7 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ExprBungeePlayers extends SimpleExpression<OfflinePlayer> {
 
@@ -34,13 +35,12 @@ public class ExprBungeePlayers extends SimpleExpression<OfflinePlayer> {
 
             if (request.isPresent()) {
                 Packet packet = request.get();
-                connection.getPluginInstance().log("Recieved bruh");
 
-                return (OfflinePlayer[]) Arrays.stream(packet.getData())
-                        .filter(o -> o instanceof UUID)
-                        .map(o -> (UUID) o)
+                return Stream.of(packet.getData())
+                        .filter(UUID.class::isInstance)
+                        .map(UUID.class::cast)
                         .map(Bukkit::getOfflinePlayer)
-                        .toArray();
+                        .toArray(OfflinePlayer[]::new);
 
             }
 

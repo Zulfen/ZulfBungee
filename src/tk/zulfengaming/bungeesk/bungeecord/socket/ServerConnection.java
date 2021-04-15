@@ -65,19 +65,20 @@ public class ServerConnection implements Runnable {
                 pluginInstance.log("Waiting for packet");
 
                 Packet packetIn = dataInHandler.getQueue().take();
-
                 packetInBuffer = packetIn;
 
-                dataOutHandler.getQueue().put(packetManager.handlePacket(packetIn, address));
+                Packet handledPacket = packetManager.handlePacket(packetIn, address);
+
+                if (packetIn.isReturnable()) {
+                    dataOutHandler.getQueue().put(handledPacket);
+                }
 
             } catch (InterruptedException e) {
-                end();
+                e.printStackTrace();
 
             }
 
         } while (running && socket.isConnected());
-
-        end();
 
 
     }

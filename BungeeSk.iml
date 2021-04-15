@@ -10,12 +10,12 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
+          <root url="jar://$USER_HOME$/Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
-          <root url="jar://$MODULE_DIR$/../../Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
+          <root url="jar://$USER_HOME$/Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
+          <root url="jar://$USER_HOME$/Minecraft Server/Paper/Paper-1.12.2-b1618.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -33,5 +33,14 @@
     </orderEntry>
     <orderEntry type="library" name="Maven: com.github.cliftonlabs:json-simple:3.1.1" level="project" />
     <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1.4" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/20.1.0/annotations-20.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

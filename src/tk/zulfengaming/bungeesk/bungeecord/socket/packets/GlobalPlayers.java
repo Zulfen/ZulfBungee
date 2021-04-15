@@ -23,9 +23,11 @@ public class GlobalPlayers extends PacketHandler {
 
         final Collection<ProxiedPlayer> players = getProxy().getPlayers();
 
-        // players.stream().map(ProxiedPlayer::getUniqueId).toArray()
+        UUID[] uuids = players.stream()
+                .map(ProxiedPlayer::getUniqueId)
+                .toArray(UUID[]::new);
 
-        return new Packet(getProxy().getName(), PacketTypes.GLOBAL_PLAYERS, true, false, new Object[] {UUID.fromString("3f888bd6-e8ff-48ca-8394-fc19dd11d063")});
+        return new Packet(getProxy().getName(), PacketTypes.GLOBAL_PLAYERS, true, false, uuids);
 
     }
 }

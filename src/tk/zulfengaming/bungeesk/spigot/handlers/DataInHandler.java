@@ -50,6 +50,8 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 } else {
 
+                    // TODO: fix me getting a closed socket, and fix exceptions!
+
                     Optional<Socket> optionalSocket = clientListenerManager.getSocket();
                     clientListenerManager.getPluginInstance().log("DataIn requested socket!");
 

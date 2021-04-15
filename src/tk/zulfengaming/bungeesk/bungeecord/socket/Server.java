@@ -163,7 +163,7 @@ public class Server implements Runnable {
 
         running = false;
 
-        socket.close();
+        serverSocket.close();
 
     }
 
@@ -178,7 +178,6 @@ public class Server implements Runnable {
     public boolean isRunning() {
         return running;
     }
-
 
     public Socket getSocket() {
         return socket;

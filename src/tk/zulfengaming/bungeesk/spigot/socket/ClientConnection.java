@@ -69,8 +69,6 @@ public class ClientConnection implements Runnable {
 
     public void run() {
 
-        // TODO: Wait for SyncQueue here! while other thread does object listening
-
         do {
             try {
 
