@@ -172,6 +172,8 @@ public class Server implements Runnable {
             connection.end();
         }
 
+        serverSocket.close();
+
     }
 
     public int getPort() {

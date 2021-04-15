@@ -81,19 +81,6 @@ public class DataInHandler extends ClientListener implements Runnable {
     @Override
     public void onDisconnect() {
 
-        try {
-
-            if (connection.isConnected()) {
-                inputStream.close();
-            }
-
-        } catch (IOException e) {
-
-            clientListenerManager.getPluginInstance().error("Error closing input stream:");
-
-            e.printStackTrace();
-        }
-
     }
 
     @Override

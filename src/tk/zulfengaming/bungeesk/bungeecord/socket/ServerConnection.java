@@ -87,9 +87,6 @@ public class ServerConnection implements Runnable {
     public void end()  {
         pluginInstance.log("Disconnecting client " + address + " (" + id + ")");
 
-        dataOutHandler.disconnect();
-        dataInHandler.disconnect();
-
         running = false;
 
         try {

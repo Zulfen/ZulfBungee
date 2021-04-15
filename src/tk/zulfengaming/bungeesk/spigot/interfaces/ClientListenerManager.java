@@ -61,8 +61,6 @@ public class ClientListenerManager {
 
     public void disconnect() {
 
-        socketConnected = false;
-
         for (ClientListener listener : listeners) {
             listener.onDisconnect();
         }
@@ -72,6 +70,8 @@ public class ClientListenerManager {
             if (socketConnected) {
                 socket.close();
             }
+
+            socketConnected = false;
 
         } catch (IOException e) {
             socketConnected = false;
@@ -84,9 +84,10 @@ public class ClientListenerManager {
     public void shutdown() throws IOException {
 
         if (socketConnected) {
-            socketConnected = false;
             socket.close();
         }
+
+        socketConnected = false;
 
         for (ClientListener listener : listeners) {
             listener.onDisconnect();
