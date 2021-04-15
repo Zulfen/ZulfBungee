@@ -3,6 +3,7 @@ package tk.zulfengaming.bungeesk.bungeecord.socket;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.DataOutHandler;
+import tk.zulfengaming.bungeesk.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
@@ -111,7 +112,6 @@ public class ServerConnection implements Runnable {
     }
 
     public void send(Packet packetIn) {
-        pluginInstance.log("Sending packet " + packetIn.getType().toString() + "...");
 
         try {
 
@@ -120,6 +120,10 @@ public class ServerConnection implements Runnable {
         } catch (InterruptedException e) {
             pluginInstance.error("That packet failed ");
             e.printStackTrace();
+        }
+
+        if (!packetManager.getHandler(packetIn).shouldHideInDebug()) {
+            pluginInstance.log("Sent packet " + packetIn.getType().toString() + "...");
         }
 
     }

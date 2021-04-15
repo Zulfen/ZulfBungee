@@ -10,6 +10,8 @@ public abstract class PacketHandler {
 
     private final PacketTypes[] types;
 
+    private final boolean debugVisiblity;
+
     private final ClientConnection connection;
 
     public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
@@ -22,9 +24,15 @@ public abstract class PacketHandler {
         return connection;
     }
 
-    public PacketHandler(ClientConnection connection, PacketTypes... types){
+    public boolean shouldHideInDebug() {
+        return debugVisiblity;
+    }
+
+    public PacketHandler(ClientConnection connection, boolean hideIn, PacketTypes... types){
         this.connection = connection;
         this.types = types;
+
+        this.debugVisiblity = hideIn;
 
     }
 

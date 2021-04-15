@@ -1,9 +1,26 @@
+# - Key Setup -
+
+# The port which you defined in your proxy config.
 server-port: 8000
+
+# The IP of your proxy.
 server-host: "0.0.0.0"
 
+# The port which this client (this Spigot server) will bind to, so it can listen for the proxy.
 client-port: 8001
+
+# The IP this client will bind to.
+# This should usually be left as 0.0.0.0, or 127.0.0.1, but feel free to change this if you need to -
+# (i.e. you are on shared hosting / Pterodactyl)
 client-host: "0.0.0.0"
 
+# - Options -
+
+# How many ticks this client will wait before sending a heartbeat packet -
+# This is used to make sure that there is still a proxy on the other end.
+# Change this to match your network conditions / server performance. You don't need to change this if you don't need to.
 heartbeat-ticks: 100
 
-debug: true
+# This will toggle the display of detailed messages about what is going to the console.
+# When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!
+debug: false

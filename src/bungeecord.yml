@@ -1,4 +1,15 @@
+# - Key Setup -
+
+# This is the port that this server will bind to, which will listen for incoming connections.
 port: 8000
+
+# The IP that this server will bind to. Similar to the "client-host" in the Spigot config.
+# This should usually be left as 0.0.0.0, or 127.0.0.1, but feel free to change this if you need to -
+# (i.e. you are on shared hosting / Pterodactyl)
 host: "0.0.0.0"
 
+# - Options -
+
+# This will toggle the display of detailed messages about what is going to the console.
+# When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!
 debug: true

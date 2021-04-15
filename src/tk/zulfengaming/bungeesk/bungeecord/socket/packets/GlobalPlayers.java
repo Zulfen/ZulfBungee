@@ -13,7 +13,7 @@ import java.util.UUID;
 public class GlobalPlayers extends PacketHandler {
 
     public GlobalPlayers(Server serverIn) {
-        super(serverIn, PacketTypes.GLOBAL_PLAYERS);
+        super(serverIn, false, PacketTypes.GLOBAL_PLAYERS);
 
     }
 

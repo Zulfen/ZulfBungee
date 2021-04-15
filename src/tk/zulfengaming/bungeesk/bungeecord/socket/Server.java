@@ -4,6 +4,7 @@ package tk.zulfengaming.bungeesk.bungeecord.socket;
 import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.SocketHandler;
+import tk.zulfengaming.bungeesk.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
@@ -92,14 +93,20 @@ public class Server implements Runnable {
 
                 }
 
-            } catch (IOException | InterruptedException | TimeoutException | ExecutionException serverError) {
+            } catch (SocketException e) {
+                serverSocketAvailable = false;
+
+            } catch (IOException | TimeoutException | ExecutionException serverError) {
 
                 pluginInstance.error("Server encountered an error!");
                 serverError.printStackTrace();
 
                 serverSocketAvailable = false;
 
+            } catch (InterruptedException ignored) {
+
             }
+
         } while (running);
     }
 
@@ -127,6 +134,7 @@ public class Server implements Runnable {
             pluginInstance.log(serverAddress.toString() + " / " +  inetAddressIn.toString());
 
             if (serverAddress.equals(inetAddressIn)) {
+                pluginInstance.log("The same!");
                 return true;
             }
 
@@ -157,13 +165,12 @@ public class Server implements Runnable {
 
     public void end() throws IOException {
 
+        serverSocketAvailable = false;
+        running = false;
+
         for (ServerConnection connection : activeConnections.values()) {
             connection.end();
         }
-
-        running = false;
-
-        serverSocket.close();
 
     }
 

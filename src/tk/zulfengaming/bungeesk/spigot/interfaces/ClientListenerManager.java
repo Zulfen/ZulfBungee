@@ -61,16 +61,21 @@ public class ClientListenerManager {
 
     public void disconnect() {
 
+        socketConnected = false;
+
         for (ClientListener listener : listeners) {
             listener.onDisconnect();
         }
 
-        socketConnected = false;
-
         try {
-            socket.close();
+
+            if (socketConnected) {
+                socket.close();
+            }
 
         } catch (IOException e) {
+            socketConnected = false;
+
             pluginInstance.error("Error trying to close ClientManager socket!");
             e.printStackTrace();
         }

@@ -10,7 +10,7 @@ import java.net.SocketAddress;
 public class Heartbeat extends PacketHandler {
 
     public Heartbeat(Server serverIn) {
-        super(serverIn, PacketTypes.HEARTBEAT);
+        super(serverIn, true, PacketTypes.HEARTBEAT);
 
     }
 

@@ -10,7 +10,7 @@ import java.net.SocketAddress;
 public class Handshake extends PacketHandler {
 
     public Handshake(Server serverIn) {
-        super(serverIn, PacketTypes.HANDSHAKE);
+        super(serverIn, false, PacketTypes.HANDSHAKE);
 
     }
 

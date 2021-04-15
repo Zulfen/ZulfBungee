@@ -5,7 +5,7 @@ import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 import tk.zulfengaming.bungeesk.spigot.handlers.DataInHandler;
 import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
-import tk.zulfengaming.bungeesk.spigot.task.HeartbeatTask;
+import tk.zulfengaming.bungeesk.spigot.task.tasks.HeartbeatTask;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
@@ -107,6 +107,10 @@ public class ClientConnection implements Runnable {
             dataOutHandler.getQueue().put(packetIn);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+
+        if (!packetHandlerManager.getHandler(packetIn).shouldHideInDebug()) {
+            pluginInstance.log("Sent packet " + packetIn.getType().toString() + "...");
         }
 
     }

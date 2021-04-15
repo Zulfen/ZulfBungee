@@ -56,11 +56,14 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException | InterruptedException e) {
+            } catch (IOException | ExecutionException | TimeoutException e) {
                 clientListenerManager.getPluginInstance().error("There was an error running the server! Disconnecting");
 
                 clientListenerManager.disconnect();
                 e.printStackTrace();
+
+            } catch (InterruptedException ignored) {
+
             }
 
         } while (connection.isRunning());

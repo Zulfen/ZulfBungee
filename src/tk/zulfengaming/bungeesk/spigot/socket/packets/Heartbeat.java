@@ -10,14 +10,12 @@ import java.net.SocketAddress;
 public class Heartbeat extends PacketHandler {
 
     public Heartbeat(ClientConnection connection) {
-        super(connection, PacketTypes.HEARTBEAT);
+        super(connection, true, PacketTypes.HEARTBEAT);
 
     }
 
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
-        getConnection().getPluginInstance().log("Packet recieved !!!");
-        getConnection().getPluginInstance().log(packetIn.getData()[0].toString());
         return packetIn;
 
     }

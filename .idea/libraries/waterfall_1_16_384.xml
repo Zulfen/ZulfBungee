@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="waterfall-1.16-384">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Coding/Server Copies/Proxy/waterfall-1.16-389.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Minecraft Server/Server Copies/Proxy/waterfall-1.16-389.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

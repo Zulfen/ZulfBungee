@@ -50,13 +50,17 @@ public class DataInHandler implements Runnable {
 
                 }
 
-            } catch (IOException | InterruptedException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
                 connection.end();
 
                 e.printStackTrace();
+
+            } catch (InterruptedException ignored) {
+
             }
+
 
         } while (connection.isRunning());
     }

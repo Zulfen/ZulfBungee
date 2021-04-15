@@ -11,6 +11,8 @@ public abstract class PacketHandler {
 
     private final PacketTypes[] types;
 
+    private final boolean debugVisibility;
+
     private final Server socketServer;
 
     public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
@@ -27,9 +29,15 @@ public abstract class PacketHandler {
         return socketServer.getPluginInstance().getProxy();
     }
 
-    public PacketHandler(Server serverIn, PacketTypes... types) {
+    public boolean shouldHideInDebug() {
+        return debugVisibility;
+    }
+
+    public PacketHandler(Server serverIn, boolean hideIn, PacketTypes... types) {
         this.socketServer = serverIn;
         this.types = types;
+
+        this.debugVisibility = hideIn;
 
     }
 

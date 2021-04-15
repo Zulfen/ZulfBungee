@@ -50,6 +50,8 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 } else {
 
+                    clientListenerManager.disconnect();
+
                     // TODO: fix me getting a closed socket, and fix exceptions!
 
                     Optional<Socket> optionalSocket = clientListenerManager.getSocket();
@@ -63,11 +65,14 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException | InterruptedException | ClassNotFoundException e) {
+            } catch (IOException | ExecutionException | TimeoutException | ClassNotFoundException e) {
                 clientListenerManager.getPluginInstance().error("There was an error running the server! Disconnecting");
 
                 clientListenerManager.disconnect();
                 e.printStackTrace();
+
+            } catch (InterruptedException ignored) {
+
             }
 
         } while (connection.isRunning());

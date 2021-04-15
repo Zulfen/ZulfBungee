@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.task;
+package tk.zulfengaming.bungeesk.spigot.task.tasks;
 
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
@@ -18,7 +18,6 @@ public class HeartbeatTask implements Runnable {
         if (connection.isConnected()) {
 
             double simpleKey = Math.random();
-            connection.getPluginInstance().log("Sending heartbeat:");
 
             connection.send_direct(new Packet(
                     connection.getPluginInstance().getName(), PacketTypes.HEARTBEAT, true, true, new Object[]{simpleKey}));

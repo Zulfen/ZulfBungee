@@ -44,12 +44,14 @@ public class DataOutHandler implements Runnable {
 
                 }
 
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
                 connection.end();
-
                 e.printStackTrace();
+
+            } catch (InterruptedException ignored) {
+
             }
 
         } while (connection.isRunning());
