@@ -7,9 +7,8 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.Socket;
-import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class DataInHandler extends ClientListener implements Runnable {
 
@@ -39,7 +38,6 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 if (clientListenerManager.isSocketConnected()) {
 
-                    clientListenerManager.getPluginInstance().log("DataOut connected!:");
                     Object dataIn = inputStream.readObject();
 
                     if (dataIn instanceof Packet) {
@@ -50,26 +48,23 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 } else {
 
-                    clientListenerManager.disconnect();
-
-                    // TODO: fix me getting a closed socket, and fix exceptions!
-
-                    Optional<Socket> optionalSocket = clientListenerManager.getSocket();
-                    clientListenerManager.getPluginInstance().log("DataIn requested socket!");
-
-                    if (optionalSocket.isPresent()) {
-                        Socket socket = optionalSocket.get();
-
-                        inputStream = new ObjectInputStream(socket.getInputStream());
+                    synchronized (clientListenerManager.getSocketLock()) {
+                        clientListenerManager.getSocketLock().wait();
                     }
+
+                    inputStream = new ObjectInputStream(clientListenerManager.getSocket().getInputStream());
+
 
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException | ClassNotFoundException e) {
+            } catch (IOException e) {
+                clientListenerManager.setSocketConnected(false);
+
+            } catch (ClassNotFoundException e) {
                 clientListenerManager.getPluginInstance().error("There was an error running the server! Disconnecting");
 
-                clientListenerManager.disconnect();
                 e.printStackTrace();
+
 
             } catch (InterruptedException ignored) {
 

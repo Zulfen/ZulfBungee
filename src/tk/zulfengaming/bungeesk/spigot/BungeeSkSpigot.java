@@ -63,7 +63,6 @@ public class BungeeSkSpigot extends JavaPlugin {
     public void onDisable() {
 
         try {
-            warning("Could not shutdown the connection to the proxy!");
             connection.shutdown();
 
         } catch (IOException e) {

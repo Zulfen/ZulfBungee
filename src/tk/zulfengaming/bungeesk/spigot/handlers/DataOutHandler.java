@@ -7,9 +7,8 @@ import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class DataOutHandler extends ClientListener implements Runnable {
 
@@ -37,7 +36,6 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 if (clientListenerManager.isSocketConnected()) {
 
-                    clientListenerManager.getPluginInstance().log("DataOut connected!:");
                     Packet packetOut = queueOut.take();
 
                     outputStream.writeObject(packetOut);
@@ -45,22 +43,16 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 } else {
 
-                    Optional<Socket> optionalSocket = clientListenerManager.getSocket();
-                    clientListenerManager.getPluginInstance().log("DataOut requested socket!");
-
-                    if (optionalSocket.isPresent()) {
-                        Socket socket = optionalSocket.get();
-
-                        outputStream = new ObjectOutputStream(socket.getOutputStream());
+                    synchronized (clientListenerManager.getSocketLock()) {
+                        clientListenerManager.getSocketLock().wait();
                     }
+
+                    outputStream = new ObjectOutputStream(clientListenerManager.getSocket().getOutputStream());
 
                 }
 
-            } catch (IOException | ExecutionException | TimeoutException e) {
-                clientListenerManager.getPluginInstance().error("There was an error running the server! Disconnecting");
-
-                clientListenerManager.disconnect();
-                e.printStackTrace();
+            } catch (IOException e) {
+                clientListenerManager.setSocketConnected(false);
 
             } catch (InterruptedException ignored) {
 

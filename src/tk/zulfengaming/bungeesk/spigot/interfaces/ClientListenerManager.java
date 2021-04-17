@@ -2,6 +2,7 @@ package tk.zulfengaming.bungeesk.spigot.interfaces;
 
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 import tk.zulfengaming.bungeesk.spigot.handlers.SocketHandler;
+import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -14,9 +15,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class ClientListenerManager {
+public class ClientListenerManager implements Runnable {
 
     private final BungeeSkSpigot pluginInstance;
+
+    private final ClientConnection connection;
 
     private final SocketHandler socketHandler;
 
@@ -30,20 +33,23 @@ public class ClientListenerManager {
 
     private Socket socket;
 
+    private final Object socketLock = new Object();
+
     private boolean socketConnected = false;
 
     private final ArrayList<ClientListener> listeners = new ArrayList<>();
 
-    public ClientListenerManager(BungeeSkSpigot instanceIn) {
+    public ClientListenerManager(ClientConnection connectionIn) {
 
-        this.pluginInstance = instanceIn;
+        this.connection = connectionIn;
+        this.pluginInstance = connectionIn.getPluginInstance();
 
         try {
-            this.serverAddress = InetAddress.getByName(instanceIn.getYamlConfig().getString("server-address"));
-            this.clientAddress = InetAddress.getByName(instanceIn.getYamlConfig().getString("client-address"));
+            this.serverAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("server-address"));
+            this.clientAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("client-address"));
         } catch (UnknownHostException e) {
 
-            instanceIn.error("Could not get the name of the host in the config!:");
+            pluginInstance.error("Could not get the name of the host in the config!:");
             e.printStackTrace();
 
         }
@@ -59,33 +65,8 @@ public class ClientListenerManager {
         return pluginInstance.getTaskManager().getExecutorService().submit(socketHandler);
     }
 
-    public void disconnect() {
 
-        for (ClientListener listener : listeners) {
-            listener.onDisconnect();
-        }
-
-        try {
-
-            if (socketConnected) {
-                socket.close();
-            }
-
-            socketConnected = false;
-
-        } catch (IOException e) {
-            socketConnected = false;
-
-            pluginInstance.error("Error trying to close ClientManager socket!");
-            e.printStackTrace();
-        }
-    }
-
-    public void shutdown() throws IOException {
-
-        if (socketConnected) {
-            socket.close();
-        }
+    public void shutdown() {
 
         socketConnected = false;
 
@@ -126,26 +107,56 @@ public class ClientListenerManager {
         return socketConnected;
     }
 
-    public synchronized Optional<Socket> getSocket() throws InterruptedException, ExecutionException, TimeoutException {
+    public void setSocketConnected(boolean socketConnected) {
+
+        this.socketConnected = socketConnected;
 
         if (!socketConnected) {
+            try {
+                // If socket was connected and then threw an exception, close it.
+                socket.close();
+                pluginInstance.warning("Socket closed");
+            } catch (IOException e) {
+                pluginInstance.error("Failed to close ClientListenerManager socket");
+                e.printStackTrace();
+            }
+        }
+    }
 
-            pluginInstance.warning("Connection failed. Trying to connect:");
-            Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
+    public Socket getSocket() {
+        return socket;
+    }
 
-            if (futureSocket.isPresent()) {
-                socket = futureSocket.get();
-                socketConnected = true;
+    public Object getSocketLock() {
+        return socketLock;
+    }
 
-                for (ClientListener listener : listeners) {
-                    listener.onConnect();
+    @Override
+    public void run() {
+
+        while (connection.isRunning()) {
+
+            synchronized (socketLock) {
+
+                while (!socketConnected) {
+                    pluginInstance.warning("Connection failed. Trying to connect:");
+
+                    try {
+                        Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
+
+                        if (futureSocket.isPresent()) {
+                            socket = futureSocket.get();
+                            socketConnected = true;
+                        }
+
+                    } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
+                socketLock.notifyAll();
             }
-
         }
-
-        return Optional.ofNullable(socket);
-
     }
 }

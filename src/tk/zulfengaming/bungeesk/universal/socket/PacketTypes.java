@@ -2,8 +2,7 @@ package tk.zulfengaming.bungeesk.universal.socket;
 
 public enum PacketTypes {
 
-    HANDSHAKE,
-    CLIENT_DISCONNECT,
+    PLAYER_SEND_MESSAGE,
     GLOBAL_PLAYERS,
     HEARTBEAT
 

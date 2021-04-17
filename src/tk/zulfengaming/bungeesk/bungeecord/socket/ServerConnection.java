@@ -5,6 +5,7 @@ import tk.zulfengaming.bungeesk.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
+import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,6 +19,8 @@ public class ServerConnection implements Runnable {
     private final BungeeSkProxy pluginInstance;
 
     private final Socket socket;
+
+    private boolean socketConnected = true;
 
     private final SocketAddress address;
     private final String id;
@@ -63,31 +66,32 @@ public class ServerConnection implements Runnable {
 
             try {
 
-                pluginInstance.log("Waiting for packet");
+                if (socketConnected) {
 
-                Packet packetIn = dataInHandler.getQueue().take();
-                packetInBuffer = packetIn;
+                    Packet packetIn = dataInHandler.getQueue().take();
+                    packetInBuffer = packetIn;
 
-                Packet handledPacket = packetManager.handlePacket(packetIn, address);
+                    Packet handledPacket = packetManager.handlePacket(packetIn, address);
 
-                if (packetIn.isReturnable()) {
-                    dataOutHandler.getQueue().put(handledPacket);
+                    if (packetIn.isReturnable()) {
+                        dataOutHandler.getQueue().put(handledPacket);
+                    }
                 }
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException ignored) {
 
             }
 
-        } while (running && socket.isConnected());
+        } while (running);
 
 
     }
 
-    public void end()  {
+    public synchronized void end()  {
         pluginInstance.log("Disconnecting client " + address + " (" + id + ")");
 
         running = false;
+        socketConnected = false;
 
         try {
 
@@ -119,7 +123,7 @@ public class ServerConnection implements Runnable {
             e.printStackTrace();
         }
 
-        if (!packetManager.getHandler(packetIn).shouldHideInDebug()) {
+        if (!(packetIn.getType() == PacketTypes.HEARTBEAT)) {
             pluginInstance.log("Sent packet " + packetIn.getType().toString() + "...");
         }
 
@@ -143,6 +147,10 @@ public class ServerConnection implements Runnable {
 
     public String getId() {
         return id;
+    }
+
+    public boolean isSocketConnected() {
+        return socketConnected;
     }
 
     public boolean isRunning() {

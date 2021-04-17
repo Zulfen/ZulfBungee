@@ -3,8 +3,8 @@ package tk.zulfengaming.bungeesk.bungeecord.interfaces;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.PacketHandler;
 import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.bungeecord.socket.packets.GlobalPlayers;
-import tk.zulfengaming.bungeesk.bungeecord.socket.packets.Handshake;
 import tk.zulfengaming.bungeesk.bungeecord.socket.packets.Heartbeat;
+import tk.zulfengaming.bungeesk.bungeecord.socket.packets.PlayerSendMessage;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
@@ -19,9 +19,9 @@ public class PacketHandlerManager {
     // TODO: Refactor this!
 
     public PacketHandlerManager(Server serverIn) {
-        handlers.add(new Handshake(serverIn));
         handlers.add(new Heartbeat(serverIn));
         handlers.add(new GlobalPlayers(serverIn));
+        handlers.add(new PlayerSendMessage(serverIn));
     }
 
     public PacketHandler getHandler(Packet packetIn) {

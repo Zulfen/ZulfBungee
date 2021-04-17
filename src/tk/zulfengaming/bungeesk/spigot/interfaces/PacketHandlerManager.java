@@ -1,6 +1,6 @@
-package tk.zulfengaming.bungeesk.spigot.socket;
+package tk.zulfengaming.bungeesk.spigot.interfaces;
 
-import tk.zulfengaming.bungeesk.spigot.interfaces.PacketHandler;
+import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.socket.packets.Heartbeat;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;

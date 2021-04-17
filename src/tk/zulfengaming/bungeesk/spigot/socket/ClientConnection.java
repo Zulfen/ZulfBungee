@@ -5,8 +5,10 @@ import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
 import tk.zulfengaming.bungeesk.spigot.handlers.DataInHandler;
 import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
+import tk.zulfengaming.bungeesk.spigot.interfaces.PacketHandlerManager;
 import tk.zulfengaming.bungeesk.spigot.task.tasks.HeartbeatTask;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
+import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -45,7 +47,7 @@ public class ClientConnection implements Runnable {
 
         this.packetHandlerManager = new PacketHandlerManager(this);
 
-        this.clientListenerManager = new ClientListenerManager(pluginInstanceIn);
+        this.clientListenerManager = new ClientListenerManager(this);
 
         init();
 
@@ -60,6 +62,7 @@ public class ClientConnection implements Runnable {
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
 
+        pluginInstance.getTaskManager().newTask(clientListenerManager, "ClientListenerManager");
         pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
         pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOut");
 
@@ -81,16 +84,18 @@ public class ClientConnection implements Runnable {
                     } else {
                         skriptPacketQueue.put(packetIn);
                     }
-
                 } else {
-                    Optional<Socket> optionalSocket = clientListenerManager.getSocket();
+                    synchronized (clientListenerManager.getSocketLock()) {
+                        clientListenerManager.getSocketLock().wait();
+                    }
 
-                    optionalSocket.ifPresent(value -> socket = value);
+                    socket = clientListenerManager.getSocket();
+
+                    pluginInstance.log("Connection established with proxy!");
                 }
 
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            } catch (InterruptedException ignored) {
 
-                e.printStackTrace();
             }
 
         } while (running);
@@ -109,7 +114,7 @@ public class ClientConnection implements Runnable {
             e.printStackTrace();
         }
 
-        if (!packetHandlerManager.getHandler(packetIn).shouldHideInDebug()) {
+        if (!(packetIn.getType() == PacketTypes.HEARTBEAT)) {
             pluginInstance.log("Sent packet " + packetIn.getType().toString() + "...");
         }
 

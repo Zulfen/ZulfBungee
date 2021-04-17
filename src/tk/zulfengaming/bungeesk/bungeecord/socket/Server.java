@@ -7,6 +7,7 @@ import tk.zulfengaming.bungeesk.bungeecord.handlers.SocketHandler;
 import tk.zulfengaming.bungeesk.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
@@ -96,14 +97,22 @@ public class Server implements Runnable {
             } catch (SocketException e) {
                 serverSocketAvailable = false;
 
+            } catch (EOFException | InterruptedException ignored) {
+
             } catch (IOException | TimeoutException | ExecutionException serverError) {
+
+                try {
+                    serverSocket.close();
+
+                } catch (IOException e) {
+                    pluginInstance.error("Couldn't close ServerSocket");
+                    e.printStackTrace();
+                }
 
                 pluginInstance.error("Server encountered an error!");
                 serverError.printStackTrace();
 
                 serverSocketAvailable = false;
-
-            } catch (InterruptedException ignored) {
 
             }
 
@@ -133,8 +142,7 @@ public class Server implements Runnable {
 
             pluginInstance.log(serverAddress.toString() + " / " +  inetAddressIn.toString());
 
-            if (serverAddress.equals(inetAddressIn)) {
-                pluginInstance.log("The same!");
+            if (serverAddress.getAddress().equals(inetAddressIn.getAddress())) {
                 return true;
             }
 
@@ -165,8 +173,8 @@ public class Server implements Runnable {
 
     public void end() throws IOException {
 
-        serverSocketAvailable = false;
         running = false;
+        serverSocketAvailable = false;
 
         for (ServerConnection connection : activeConnections.values()) {
             connection.end();
@@ -194,6 +202,10 @@ public class Server implements Runnable {
 
     public PacketHandlerManager getPacketManager() {
         return packetManager;
+    }
+
+    public HashMap<SocketAddress, ServerConnection> getActiveConnections() {
+        return activeConnections;
     }
 
     public BungeeSkProxy getPluginInstance() {

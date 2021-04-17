@@ -35,7 +35,7 @@ public class DataOutHandler implements Runnable {
 
             try {
 
-                if (socket.isConnected()) {
+                if (connection.isSocketConnected()) {
 
                     Packet packetOut = queueOut.take();
 
@@ -47,7 +47,7 @@ public class DataOutHandler implements Runnable {
             } catch (IOException e) {
                 connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
-                connection.end();
+                disconnect();
                 e.printStackTrace();
 
             } catch (InterruptedException ignored) {
@@ -64,6 +64,8 @@ public class DataOutHandler implements Runnable {
             if (!socket.isClosed()) {
                 outputStream.close();
             }
+
+            connection.end();
 
         } catch (IOException e) {
 
