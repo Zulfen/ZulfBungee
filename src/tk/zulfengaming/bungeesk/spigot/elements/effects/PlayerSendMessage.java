@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.elements.conditions.effects;
+package tk.zulfengaming.bungeesk.spigot.elements.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Effect;

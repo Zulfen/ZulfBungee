@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.elements.conditions.expressions;
+package tk.zulfengaming.bungeesk.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
