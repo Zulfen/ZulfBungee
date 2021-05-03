@@ -1,7 +1,6 @@
 package tk.zulfengaming.bungeesk.spigot.handlers;
 
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
@@ -76,6 +75,18 @@ public class DataInHandler extends ClientListener implements Runnable {
     @Override
     public void onDisconnect() {
 
+        try {
+
+            if (connection.isConnected()) {
+                inputStream.close();
+            }
+
+        } catch (IOException e) {
+
+            clientListenerManager.getPluginInstance().error("Error closing input stream:");
+
+            e.printStackTrace();
+        }
     }
 
     @Override

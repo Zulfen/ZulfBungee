@@ -1,7 +1,6 @@
 package tk.zulfengaming.bungeesk.spigot.handlers;
 
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 
 import java.io.IOException;
 import java.net.Socket;

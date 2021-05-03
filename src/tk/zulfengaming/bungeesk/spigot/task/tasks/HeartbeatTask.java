@@ -20,7 +20,7 @@ public class HeartbeatTask implements Runnable {
             double simpleKey = Math.random();
 
             connection.send_direct(new Packet(
-                    connection.getPluginInstance().getName(), PacketTypes.HEARTBEAT, true, true, new Object[]{simpleKey}));
+                    PacketTypes.HEARTBEAT, true, true, new Object[]{simpleKey}));
 
         }
     }

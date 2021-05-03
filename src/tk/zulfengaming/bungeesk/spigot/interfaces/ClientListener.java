@@ -1,5 +1,6 @@
 package tk.zulfengaming.bungeesk.spigot.interfaces;
 
+import tk.zulfengaming.bungeesk.spigot.handlers.ClientListenerManager;
 import tk.zulfengaming.bungeesk.universal.interfaces.ClientEvents;
 
 public abstract class ClientListener implements ClientEvents {

@@ -13,3 +13,26 @@ host: "0.0.0.0"
 # This will toggle the display of detailed messages about what is going to the console.
 # When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!
 debug: true
+
+# - Storage -
+
+# What kind of database should be used to store network variables.
+# Currently supported databases: MySQL
+
+# If you have no clue what this does, just leave this as the default.
+storage-type: "MySQL"
+
+# [MySQL Setup]
+# Each option should be self-explanatory if you know what you are doing.
+
+mysql-host: "localhost"
+mysql-port: 3306
+
+mysql-username: "username"
+mysql-password: "password"
+
+mysql-database: "database"
+
+# If you get errors in console because of SSL, disable it here, but it's better to set up SSL on the MySQL server.
+mysql-useSSL: true
+

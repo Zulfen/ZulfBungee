@@ -1,7 +1,6 @@
 package tk.zulfengaming.bungeesk.spigot.handlers;
 
 import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
@@ -72,7 +71,7 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
         } catch (IOException e) {
 
-            clientListenerManager.getPluginInstance().error("Error closing input stream:");
+            clientListenerManager.getPluginInstance().error("Error closing output stream:");
 
             e.printStackTrace();
         }

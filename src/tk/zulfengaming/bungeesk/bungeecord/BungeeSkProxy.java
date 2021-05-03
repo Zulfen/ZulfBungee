@@ -38,7 +38,7 @@ public class BungeeSkProxy extends Plugin {
             taskManager.newTask(server, "MainServer");
 
         } catch (UnknownHostException e) {
-            error("There was an error trying to start the server:");
+            error("There was an error trying to initialise the server:");
             e.printStackTrace();
 
         }

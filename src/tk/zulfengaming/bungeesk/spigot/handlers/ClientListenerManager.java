@@ -1,7 +1,7 @@
-package tk.zulfengaming.bungeesk.spigot.interfaces;
+package tk.zulfengaming.bungeesk.spigot.handlers;
 
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
-import tk.zulfengaming.bungeesk.spigot.handlers.SocketHandler;
+import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListener;
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 
 import java.io.IOException;

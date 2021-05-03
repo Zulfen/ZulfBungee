@@ -2,10 +2,7 @@ package tk.zulfengaming.bungeesk.spigot.socket;
 
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot;
-import tk.zulfengaming.bungeesk.spigot.handlers.DataInHandler;
-import tk.zulfengaming.bungeesk.spigot.handlers.DataOutHandler;
-import tk.zulfengaming.bungeesk.spigot.interfaces.ClientListenerManager;
-import tk.zulfengaming.bungeesk.spigot.interfaces.PacketHandlerManager;
+import tk.zulfengaming.bungeesk.spigot.handlers.*;
 import tk.zulfengaming.bungeesk.spigot.task.tasks.HeartbeatTask;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
@@ -31,10 +28,11 @@ public class ClientConnection implements Runnable {
 
     private boolean running = true;
 
+    // managers
+
     private final PacketHandlerManager packetHandlerManager;
 
     private final ClientListenerManager clientListenerManager;
-
     // other tasks
 
     private DataOutHandler dataOutHandler;
@@ -92,6 +90,8 @@ public class ClientConnection implements Runnable {
                     socket = clientListenerManager.getSocket();
 
                     pluginInstance.log("Connection established with proxy!");
+                    send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, false, true, pluginInstance.getServer().getName()));
+
                 }
 
             } catch (InterruptedException ignored) {

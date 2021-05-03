@@ -5,15 +5,14 @@ import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.SocketHandler;
 import tk.zulfengaming.bungeesk.bungeecord.interfaces.PacketHandlerManager;
+import tk.zulfengaming.bungeesk.bungeecord.interfaces.StorageImpl;
+import tk.zulfengaming.bungeesk.bungeecord.storage.MySQLHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -37,10 +36,15 @@ public class Server implements Runnable {
     private Socket socket;
 
     // keeping track
-    private final HashMap<SocketAddress, ServerConnection> activeConnections = new HashMap<>();
+    private final HashMap<SocketAddress, ServerConnection> socketConnections = new HashMap<>();
+
+    private final HashMap<ServerConnection, String> activeConnections = new HashMap<>();
 
     // quite neat
     private final PacketHandlerManager packetManager;
+
+    // storage
+    private StorageImpl storage;
 
     public Server(int port, InetAddress address, BungeeSkProxy instanceIn) {
         this.hostAddress = address;
@@ -49,6 +53,10 @@ public class Server implements Runnable {
 
         this.packetManager = new PacketHandlerManager(this);
         this.socketHandler = new SocketHandler(this);
+
+        setupStorage();
+
+        pluginInstance.getTaskManager().newTask(() -> storage.initialise(), "StorageSetupThread");
     }
 
     private Future<Optional<ServerSocket>> start() throws IOException {
@@ -75,7 +83,7 @@ public class Server implements Runnable {
 
                 } else {
 
-                    for (ServerConnection connection : activeConnections.values()) {
+                    for (ServerConnection connection : socketConnections.values()) {
                         connection.end();
                     }
 
@@ -119,7 +127,7 @@ public class Server implements Runnable {
         } while (running);
     }
 
-    public void acceptConnection() throws IOException {
+    private void acceptConnection() throws IOException {
 
         UUID identifier = UUID.randomUUID();
 
@@ -127,7 +135,7 @@ public class Server implements Runnable {
         SocketAddress connectionAddress = connection.getAddress();
 
         pluginInstance.getTaskManager().newTask(connection, String.valueOf(identifier));
-        activeConnections.put(connectionAddress, connection);
+        addSocketConnection(connectionAddress, connection);
 
         pluginInstance.log("Connection established with address: " + connectionAddress);
 
@@ -140,35 +148,49 @@ public class Server implements Runnable {
             InetSocketAddress serverAddress = (InetSocketAddress) server.getSocketAddress();
             InetSocketAddress inetAddressIn = (InetSocketAddress) addressIn;
 
-            pluginInstance.log(serverAddress.toString() + " / " +  inetAddressIn.toString());
-
             if (serverAddress.getAddress().equals(inetAddressIn.getAddress())) {
                 return true;
             }
 
         }
 
-        return true;
+        return false;
     }
 
     public void sendToAllClients(Packet packetIn) {
         pluginInstance.log("Sending packet " + packetIn.getType().toString() + "to all clients...");
 
-        for (ServerConnection connection : activeConnections.values()) {
+        for (ServerConnection connection : socketConnections.values()) {
             connection.send(packetIn);
         }
     }
 
-    public void addConnection(SocketAddress addressIn, ServerConnection connection) {
-        activeConnections.put(addressIn, connection);
+    private void addSocketConnection(SocketAddress addressIn, ServerConnection connection) {
+        socketConnections.put(addressIn, connection);
     }
 
-    public void removeConnection(ServerConnection connection) {
-        activeConnections.remove(connection.getAddress());
+    public void addActiveConnection(ServerConnection connection, String name) {
+        activeConnections.put(connection, name);
     }
 
-    public ServerConnection getConnection(SocketAddress addressIn) {
-        return activeConnections.get(addressIn);
+    public void removeSocketConnection(ServerConnection connection) {
+        socketConnections.remove(connection.getAddress());
+
+        activeConnections.remove(connection);
+
+        try {
+
+            connection.getSocket().close();
+
+        } catch (IOException e) {
+            pluginInstance.error("Error removing socket connection:");
+
+            e.printStackTrace();
+        }
+    }
+
+    public ServerConnection getSocketConnection(SocketAddress addressIn) {
+        return socketConnections.get(addressIn);
     }
 
     public void end() throws IOException {
@@ -176,11 +198,18 @@ public class Server implements Runnable {
         running = false;
         serverSocketAvailable = false;
 
-        for (ServerConnection connection : activeConnections.values()) {
+        for (ServerConnection connection : socketConnections.values()) {
             connection.end();
         }
 
         serverSocket.close();
+        storage.shutdown();
+
+    }
+
+    private void setupStorage() {
+
+        storage = new MySQLHandler(this);
 
     }
 
@@ -204,8 +233,16 @@ public class Server implements Runnable {
         return packetManager;
     }
 
-    public HashMap<SocketAddress, ServerConnection> getActiveConnections() {
-        return activeConnections;
+    public StorageImpl getStorage() {
+        return storage;
+    }
+
+    public Collection<ServerConnection> getSocketConnections() {
+        return socketConnections.values();
+    }
+
+    public Set<ServerConnection> getActiveConnections() {
+        return activeConnections.keySet();
     }
 
     public BungeeSkProxy getPluginInstance() {

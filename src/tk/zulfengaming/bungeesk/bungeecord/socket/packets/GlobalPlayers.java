@@ -5,10 +5,10 @@ import tk.zulfengaming.bungeesk.bungeecord.handlers.PacketHandler;
 import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
+import tk.zulfengaming.bungeesk.universal.utilclasses.skript.ProxyPlayer;
 
 import java.net.SocketAddress;
 import java.util.Collection;
-import java.util.UUID;
 
 public class GlobalPlayers extends PacketHandler {
 
@@ -23,11 +23,11 @@ public class GlobalPlayers extends PacketHandler {
 
         final Collection<ProxiedPlayer> players = getProxy().getPlayers();
 
-        UUID[] uuids = players.stream()
-                .map(ProxiedPlayer::getUniqueId)
-                .toArray(UUID[]::new);
+        ProxyPlayer[] convertedPlayers = players.stream()
+                .map(proxiedPlayer -> new ProxyPlayer(proxiedPlayer.getName(), proxiedPlayer.getUniqueId()))
+                .toArray(ProxyPlayer[]::new);
 
-        return new Packet(getProxy().getName(), PacketTypes.GLOBAL_PLAYERS, true, false, uuids);
+        return new Packet(PacketTypes.GLOBAL_PLAYERS, true, false, convertedPlayers);
 
     }
 }

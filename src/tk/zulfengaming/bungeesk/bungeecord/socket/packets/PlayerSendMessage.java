@@ -1,13 +1,14 @@
 package tk.zulfengaming.bungeesk.bungeecord.socket.packets;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.bungeesk.bungeecord.handlers.PacketHandler;
 import tk.zulfengaming.bungeesk.bungeecord.socket.Server;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
-import java.util.UUID;
 
 public class PlayerSendMessage extends PacketHandler {
 
@@ -20,14 +21,17 @@ public class PlayerSendMessage extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        Object[] data = packetIn.getData();
+        Object[] data = packetIn.getDataArray();
+        String message = (String) data[data.length - 1];
 
         for (int i = 0; i < data.length - 1; i++) {
 
-            UUID uuid = UUID.fromString((String) data[i]);
+            String skriptPlayerName = (String) data[i];
+            ProxiedPlayer bungeecordPlayer = getProxy().getPlayer(skriptPlayerName);
 
-            getProxy().getPlayer(uuid).sendMessage(TextComponent.fromLegacyText(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&',
-                    (String) data[data.length - 1])));
+            if (bungeecordPlayer != null) {
+                bungeecordPlayer.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
+            }
         }
 
         return null;

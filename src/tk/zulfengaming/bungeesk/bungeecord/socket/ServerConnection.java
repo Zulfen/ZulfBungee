@@ -74,7 +74,7 @@ public class ServerConnection implements Runnable {
                     Packet handledPacket = packetManager.handlePacket(packetIn, address);
 
                     if (packetIn.isReturnable()) {
-                        dataOutHandler.getQueue().put(handledPacket);
+                        send(handledPacket);
                     }
                 }
 
@@ -87,24 +87,17 @@ public class ServerConnection implements Runnable {
 
     }
 
+    // TODO: Kind of hacky implementation, redo
     public synchronized void end()  {
-        pluginInstance.log("Disconnecting client " + address + " (" + id + ")");
 
-        running = false;
-        socketConnected = false;
+        if (running) {
 
-        try {
+            pluginInstance.log("Disconnecting client " + address + " (" + id + ")");
 
-            socket.close();
-
-        } catch (IOException e) {
-            pluginInstance.error("Error closing data streams in a server connection:");
-
-            e.printStackTrace();
+            running = false;
+            socketConnected = false;
+            server.removeSocketConnection(this);
         }
-
-        server.removeConnection(this);
-
     }
 
     private Optional<Packet> read() {
@@ -119,7 +112,7 @@ public class ServerConnection implements Runnable {
             dataOutHandler.getQueue().put(packetIn);
 
         } catch (InterruptedException e) {
-            pluginInstance.error("That packet failed ");
+            pluginInstance.error("That packet failed to send.");
             e.printStackTrace();
         }
 

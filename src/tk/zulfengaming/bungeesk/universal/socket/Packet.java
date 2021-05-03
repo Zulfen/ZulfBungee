@@ -7,8 +7,6 @@ public class Packet implements Serializable {
 
     private static final long serialVersionUID = 45_737_538_534_983L;
 
-    private final String name;
-
     private final PacketTypes type;
 
     private final boolean returnable;
@@ -17,7 +15,7 @@ public class Packet implements Serializable {
 
     private final UUID id;
 
-    private final Object[] data;
+    private Object[] data = new Object[1];
 
     // these arguments should be self explanatory, but the field shouldHandle could be
     // seen as misleading.
@@ -28,8 +26,7 @@ public class Packet implements Serializable {
 
     // packets sent by skript should set this field to false
 
-    public Packet(String serverName, PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn) {
-        this.name = serverName;
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn) {
 
         this.type = packetType;
         this.returnable = isReturnable;
@@ -39,16 +36,25 @@ public class Packet implements Serializable {
         this.data = dataIn;
     }
 
-    public String getName() {
-        return name;
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object dataIn) {
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+        this.id = UUID.randomUUID();
+
+        this.data[0] = dataIn;
     }
 
     public PacketTypes getType() {
         return type;
     }
 
-    public Object[] getData() {
+    public Object[] getDataArray() {
         return data;
+    }
+
+    public Object getDataSingle() {
+        return data[0];
     }
 
     public boolean isReturnable() {

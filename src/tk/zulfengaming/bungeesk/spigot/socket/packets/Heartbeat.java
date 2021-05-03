@@ -1,7 +1,7 @@
 package tk.zulfengaming.bungeesk.spigot.socket.packets;
 
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
-import tk.zulfengaming.bungeesk.spigot.interfaces.PacketHandler;
+import tk.zulfengaming.bungeesk.spigot.handlers.PacketHandler;
 import tk.zulfengaming.bungeesk.universal.socket.Packet;
 import tk.zulfengaming.bungeesk.universal.socket.PacketTypes;
 

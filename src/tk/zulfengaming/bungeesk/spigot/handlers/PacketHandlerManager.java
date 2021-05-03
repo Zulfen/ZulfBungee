@@ -1,4 +1,4 @@
-package tk.zulfengaming.bungeesk.spigot.interfaces;
+package tk.zulfengaming.bungeesk.spigot.handlers;
 
 import tk.zulfengaming.bungeesk.spigot.socket.ClientConnection;
 import tk.zulfengaming.bungeesk.spigot.socket.packets.Heartbeat;
