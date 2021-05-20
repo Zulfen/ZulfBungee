@@ -1,0 +1,13 @@
+# Small tests to confirm things are working.
+
+command /bungeesktest:
+   trigger:
+      broadcast "%all bungeecord players%"
+
+      set {_p} to "ZulfenFloof"
+      
+      message bungeecord player {_p} the message "&7test"
+      
+      set network variable {test::*} to "one", "two"
+      
+      broadcast "%network variable {test::*}%"
