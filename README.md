@@ -5,10 +5,18 @@ This plugin is currently *closed source* for now!
 
 **Known Bugs:**
 
-* Socket closed exception on the proxy side when the DataIn thread disconnects. Investigating.
+* Closing socket too quickly can throw some exceptions on the client side, but fixes itself. This can be observed in the routine that checks for duplicate server names.
 
 **Supported Syntax:**
 
-message bungeecord player %offlineplayers% [the message] %string% (effect)
+message bungeecord player %-proxyplayers% [the message] %string% **(effect)**
+message (proxy|network|bungeecord) server %-proxyservers% [the message] %string% **(effect)**
 
-[(all [[of] the]|the)] bungeecord players (expression)
+player switch server **(event)**
+server message %string% **(event)**
+
+[(all [[of] the]|the)] bungeecord players **(expression)**
+(proxy|network|bungeecord) variable %objects% **(expression)**
+[(all [[of] the]|the)] online servers **(expression)**
+
+proxy server %-proxyserver% (1¦is|2¦is(n't| not)) online **(condition)**
