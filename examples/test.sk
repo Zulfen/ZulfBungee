@@ -2,12 +2,22 @@
 
 command /bungeesktest:
    trigger:
-      broadcast "%all bungeecord players%"
-
-      set {_p} to "ZulfenFloof"
-      
-      message bungeecord player {_p} the message "&7test"
       
       set network variable {test::*} to "one", "two"
       
       broadcast "%network variable {test::*}%"
+      
+      broadcast "%all bungeecord players%"
+
+      loop all of the bungeecord players:
+         message bungeecord player loop-proxyplayer the message "&7test"
+
+      loop all of the online servers:
+         broadcast "%loop-proxyserver%"
+         message proxy server loop-proxyserver the message "message"
+
+on player switch server:
+   broadcast uuid of event-player
+
+on server message "message":
+   broadcast event-text
