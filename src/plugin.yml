@@ -1,5 +1,5 @@
-name: BungeeSk
-main: tk.zulfengaming.bungeesk.spigot.BungeeSkSpigot
-version: 1.0
+name: ZulfBungee
+main: tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot
+version: 0.1
 author: zulfen
 depend: [Skript]

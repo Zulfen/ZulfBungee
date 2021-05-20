@@ -1,0 +1,57 @@
+package tk.zulfengaming.zulfbungee.spigot.elements.effects;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
+import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyServer;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class EffServerSendMessage extends Effect {
+
+    private Expression<ProxyServer> servers;
+    private Expression<String> message;
+
+    static {
+        Skript.registerEffect(EffServerSendMessage.class, "message (proxy|network|bungeecord) server %-proxyservers% [the message] %string%");
+    }
+
+    @Override
+    protected void execute(Event event) {
+
+        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+
+        List<String> data = Stream.of(servers.getArray(event))
+                .map(ProxyServer::getName)
+                .collect(Collectors.toList());
+
+        data.add(message.getSingle(event));
+
+        connection.send_direct(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
+                false, false, data.toArray(new String[0])));
+
+    }
+
+    @Override
+    public @NotNull String toString(Event event, boolean b) {
+        return null;
+    }
+
+    @Override
+    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+        servers = (Expression<ProxyServer>) expressions[0];
+        message = (Expression<String>) expressions[1];
+
+        return true;
+    }
+}

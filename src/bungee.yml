@@ -1,4 +1,4 @@
-name: BungeeSk
-main: tk.zulfengaming.bungeesk.bungeecord.BungeeSkProxy
-version: 1.0
+name: ZulfBungee
+main: tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord
+version: "0.1"
 author: zulfen

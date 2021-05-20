@@ -1,0 +1,16 @@
+package tk.zulfengaming.zulfbungee.universal.socket;
+
+public enum PacketTypes {
+
+    PLAYER_SEND_MESSAGE,
+    GLOBAL_PLAYERS,
+    HEARTBEAT,
+    CLIENT_HANDSHAKE,
+    NETWORK_VARIABLE_MODIFY,
+    NETWORK_VARIABLE_GET,
+    SERVER_ONLINE,
+    GLOBAL_SERVERS,
+    SWITCH_SERVER_EVENT,
+    SERVER_SEND_MESSAGE_EVENT
+
+}
