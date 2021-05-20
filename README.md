@@ -1,4 +1,4 @@
-**BungeeSk - a bungeecord Skript addon!**
+**ZulfBungee - a bungeecord Skript addon!**
 
 Inspired by Limeglass' work on Skungee, but custom coded for my network.
 This plugin is currently *closed source* for now!
