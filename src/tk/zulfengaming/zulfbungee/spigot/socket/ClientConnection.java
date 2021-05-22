@@ -27,7 +27,7 @@ public class ClientConnection implements Runnable {
     // the latest packet from the queue coming in.
     private final BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
 
-    private AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean running = new AtomicBoolean(true);
 
     // managers
 
@@ -87,13 +87,14 @@ public class ClientConnection implements Runnable {
         do {
             try {
 
-                if (isConnected()) {
+                if (clientListenerManager.isSocketConnected().get()) {
 
                     Packet packetIn = dataInHandler.getDataQueue().poll(5, TimeUnit.SECONDS);
 
                     if (packetIn != null) {
 
                         if (packetIn.shouldHandle()) {
+
                             packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
 
                         } else {
@@ -120,17 +121,25 @@ public class ClientConnection implements Runnable {
 
     public Optional<Packet> read() throws InterruptedException {
 
-        if (isConnected()) {
+        if (clientListenerManager.isSocketConnected().get()) {
+
             return Optional.ofNullable(skriptPacketQueue.poll(5, TimeUnit.SECONDS));
+
         } else {
+
             return Optional.empty();
+
         }
     }
 
     public void send_direct(Packet packetIn) {
 
         try {
-            dataOutHandler.getDataQueue().put(packetIn);
+
+            if (clientListenerManager.isSocketConnected().get()) {
+                dataOutHandler.getDataQueue().put(packetIn);
+            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -159,11 +168,13 @@ public class ClientConnection implements Runnable {
 
     public void shutdown() throws IOException {
 
-        running.set(false);
+        if (running.compareAndSet(true, false)) {
 
-        heartbeatThread.cancel();
-        
-        clientListenerManager.shutdown();
+            heartbeatThread.cancel();
+
+            clientListenerManager.shutdown();
+
+        }
 
     }
 

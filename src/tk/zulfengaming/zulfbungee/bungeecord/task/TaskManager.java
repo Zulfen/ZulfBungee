@@ -14,10 +14,10 @@ public class TaskManager {
     private final ExecutorService executorService;
     private final ZulfBungeecord instance;
 
-    public final TaskScheduler scheduler;
+    private final TaskScheduler scheduler;
 
     // keeps track of running shit
-    public final HashMap<String, ScheduledTask> tasks = new HashMap<>();
+    private final HashMap<String, ScheduledTask> tasks = new HashMap<>();
 
     public TaskManager(ZulfBungeecord instanceIn) {
         this.instance = instanceIn;

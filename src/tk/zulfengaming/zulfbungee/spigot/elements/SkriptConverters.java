@@ -14,8 +14,6 @@ public class SkriptConverters {
 
         Converters.registerConverter(OfflinePlayer.class, ProxyPlayer.class, offlinePlayer -> new ProxyPlayer(offlinePlayer.getName(), offlinePlayer.getUniqueId()));
 
-        Converters.registerConverter(String.class, ProxyServer.class, ProxyServer::new);
-
         Converters.registerConverter(ProxyServer.class, String.class, ProxyServer::getName);
     }
 }

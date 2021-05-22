@@ -10,6 +10,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.MySQLHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -82,10 +83,12 @@ public class Server implements Runnable {
                     } else {
 
                         if (!invalidClients.contains(connectedAddress)) {
+
                             pluginInstance.warning("Client who tried to connect is not defined in bungeecord's config. Ignoring.");
+
+                            socket.close();
                         }
 
-                        socket.close();
                     }
 
                 } else {
@@ -188,7 +191,8 @@ public class Server implements Runnable {
                     " is set to a name that is already taken! Please change it!");
 
             invalidClients.add(connection.getAddress());
-            connection.end();
+
+            connection.send(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, null));
 
         }
 

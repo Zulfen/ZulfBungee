@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.handlers;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -45,7 +46,7 @@ public class DataOutHandler implements Runnable {
 
                 }
 
-            } catch (SocketException e) {
+            } catch (SocketException | EOFException e) {
                 connection.end();
 
             } catch (IOException e) {

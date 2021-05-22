@@ -7,6 +7,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.*;
 
 public class DataOutHandler extends ClientListener implements Runnable {
@@ -52,6 +53,10 @@ public class DataOutHandler extends ClientListener implements Runnable {
                     outputStream = new ObjectOutputStream(newSocket.getOutputStream());
 
                 }
+
+            } catch (SocketException e) {
+
+                getClientListenerManager().isSocketConnected().compareAndSet(true, false);
 
             } catch (IOException e) {
 

@@ -70,9 +70,12 @@ public class ClientListenerManager implements Runnable {
     }
 
 
-    public void shutdown() {
+    public void shutdown() throws IOException {
 
         listeners.clear();
+
+        socket.close();
+
     }
 
     public void addListener(ClientListener listener) {
@@ -132,7 +135,7 @@ public class ClientListenerManager implements Runnable {
                 }
             }
 
-            while (!socketConnected.get()) {
+            while (!socketConnected.get() && connection.isRunning().get()) {
 
                 pluginInstance.warning("Not connected to the proxy! Trying to connect...");
 

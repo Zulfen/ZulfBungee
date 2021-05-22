@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.spigot.handlers;
 
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.Heartbeat;
+import tk.zulfengaming.zulfbungee.spigot.socket.packets.InvalidConfiguration;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.ServerMessageEvent;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.SwitchServerEvent;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -19,6 +20,7 @@ public class PacketHandlerManager {
         handlers.add(new Heartbeat(connectionIn));
         handlers.add(new SwitchServerEvent(connectionIn));
         handlers.add(new ServerMessageEvent(connectionIn));
+        handlers.add(new InvalidConfiguration(connectionIn));
 
     }
 

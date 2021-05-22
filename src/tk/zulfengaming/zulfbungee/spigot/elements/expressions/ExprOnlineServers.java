@@ -27,7 +27,6 @@ public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-
         try {
             Optional<Packet> request = connection.send(new Packet(PacketTypes.GLOBAL_SERVERS,
                     true, false, null));

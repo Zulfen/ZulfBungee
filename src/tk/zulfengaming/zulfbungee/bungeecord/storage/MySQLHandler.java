@@ -163,12 +163,20 @@ public class MySQLHandler extends StorageImpl {
 
                 ResultSet result = getStatement.executeQuery();
 
+                int querySize = 0;
+
+                while (result.next()) {
+                    querySize++;
+                }
+
                 int valueArrayIndex = 0;
 
-                for (int i = result.getFetchSize(); i < values.length; i++) {
+                for (int i = 0; i < values.length; i++) {
+
+                    int listIndex = querySize + (i + 1);
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
-                    String variableNameOut = listName + "::" + (i + 1);
+                    String variableNameOut = listName + "::" + listIndex;
 
                     setStatement.setString(1, variableNameOut);
                     setStatement.setString(2, values[valueArrayIndex].type);
@@ -256,14 +264,14 @@ public class MySQLHandler extends StorageImpl {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
-            getMainServer().getPluginInstance().logDebug("MySQL connected successfully to " + jdbcUrl);
+            getMainServer().getPluginInstance().logInfo("MySQL connected successfully to " + jdbcUrl);
 
             DatabaseMetaData metaData = tempConnection.getMetaData();
 
             ResultSet resultSet = metaData.getTables(null, null, "variables", null);
             if (!resultSet.next()) {
 
-                getMainServer().getPluginInstance().logDebug("Setting up your database...");
+                getMainServer().getPluginInstance().logInfo("Setting up your database...");
 
                 String creationStatement = "CREATE TABLE variables " +
                         "(name VARCHAR(255) not NULL PRIMARY KEY, " +
@@ -273,7 +281,7 @@ public class MySQLHandler extends StorageImpl {
                 Statement statement = tempConnection.createStatement();
                 statement.execute(creationStatement);
 
-                getMainServer().getPluginInstance().logDebug("Done setting up the MySQL database!");
+                getMainServer().getPluginInstance().logInfo("Done setting up the MySQL database!");
 
             }
 

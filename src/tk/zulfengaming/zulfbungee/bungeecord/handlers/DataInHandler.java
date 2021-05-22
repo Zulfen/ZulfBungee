@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.handlers;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -50,7 +51,7 @@ public class DataInHandler implements Runnable {
 
                 }
 
-            } catch (SocketException e) {
+            } catch (SocketException | EOFException e) {
                 disconnect();
 
             } catch (IOException | ClassNotFoundException e) {

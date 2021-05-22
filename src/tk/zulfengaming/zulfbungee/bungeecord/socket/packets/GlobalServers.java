@@ -21,10 +21,12 @@ public class GlobalServers extends PacketHandler {
 
         Collection<String> activeConnections = getMainServer().getActiveConnections().keySet();
 
-        return new Packet(PacketTypes.GLOBAL_SERVERS, false, false,
+        return new Packet(PacketTypes.GLOBAL_SERVERS,
+                false,
+                false,
                 activeConnections.stream()
-                .map(ProxyServer::new)
-                .toArray(ProxyServer[]::new)
+                        .map(ProxyServer::new)
+                        .toArray(ProxyServer[]::new)
         );
     }
 }
