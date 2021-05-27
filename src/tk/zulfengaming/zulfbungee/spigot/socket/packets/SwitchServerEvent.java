@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
-import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -11,8 +11,8 @@ import java.net.SocketAddress;
 
 public class SwitchServerEvent extends PacketHandler {
 
-    public SwitchServerEvent(ClientConnection connection) {
-        super(connection, PacketTypes.SWITCH_SERVER_EVENT);
+    public SwitchServerEvent(ClientConnection connectionIn) {
+        super(connectionIn, PacketTypes.SWITCH_SERVER_EVENT);
 
     }
 

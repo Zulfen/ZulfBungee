@@ -9,6 +9,7 @@ import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyPlayer;
 
 import java.net.SocketAddress;
 import java.util.Collection;
+import java.util.Objects;
 
 public class GlobalPlayers extends PacketHandler {
 
@@ -24,10 +25,11 @@ public class GlobalPlayers extends PacketHandler {
         final Collection<ProxiedPlayer> players = getProxy().getPlayers();
 
         ProxyPlayer[] convertedPlayers = players.stream()
+                .filter(Objects::nonNull)
                 .map(proxiedPlayer -> new ProxyPlayer(proxiedPlayer.getName(), proxiedPlayer.getUniqueId()))
                 .toArray(ProxyPlayer[]::new);
 
-        return new Packet(PacketTypes.GLOBAL_PLAYERS, true, false, convertedPlayers);
+        return new Packet(PacketTypes.GLOBAL_PLAYERS, false, false, convertedPlayers);
 
     }
 }

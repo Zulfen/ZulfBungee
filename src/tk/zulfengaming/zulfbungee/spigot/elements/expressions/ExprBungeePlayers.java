@@ -14,6 +14,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyPlayer;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -36,6 +37,7 @@ public class ExprBungeePlayers extends SimpleExpression<ProxyPlayer> {
                 Packet packet = request.get();
 
                 return Stream.of(packet.getDataArray())
+                        .filter(Objects::nonNull)
                         .filter(ProxyPlayer.class::isInstance)
                         .map(ProxyPlayer.class::cast)
                         .toArray(ProxyPlayer[]::new);

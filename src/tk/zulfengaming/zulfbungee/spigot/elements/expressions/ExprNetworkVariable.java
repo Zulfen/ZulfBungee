@@ -20,6 +20,7 @@ import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.Value;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -50,6 +51,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
                 NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
 
                 return Stream.of(variable.getValueArray())
+                        .filter(Objects::nonNull)
                         .map(value -> Classes.deserialize(value.type, value.data))
                         .toArray(Object[]::new);
 

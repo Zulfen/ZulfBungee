@@ -5,14 +5,11 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 
 public class YamlConfig {
 
-    public final ZulfBungeeSpigot instance;
-
-    public final FileConfiguration configObject;
+    private final FileConfiguration configObject;
 
     public YamlConfig(ZulfBungeeSpigot instanceIn) {
-        this.instance = instanceIn;
 
-        instance.saveDefaultConfig();
+        instanceIn.saveDefaultConfig();
 
         this.configObject = instanceIn.getConfig();
 

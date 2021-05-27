@@ -87,6 +87,10 @@ public class ClientListenerManager implements Runnable {
         return pluginInstance;
     }
 
+    public ClientConnection getConnection() {
+        return connection;
+    }
+
     public InetAddress getServerAddress() {
         return serverAddress;
     }

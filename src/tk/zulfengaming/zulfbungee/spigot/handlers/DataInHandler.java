@@ -31,6 +31,8 @@ public class DataInHandler extends ClientListener implements Runnable {
 
         this.socketBarrier = clientListenerManagerIn.getSocketBarrier();
 
+        socketBarrier.register();
+
     }
 
 

@@ -27,6 +27,8 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
         this.socketBarrier = clientListenerManagerIn.getSocketBarrier();
 
+        socketBarrier.register();
+
     }
 
 

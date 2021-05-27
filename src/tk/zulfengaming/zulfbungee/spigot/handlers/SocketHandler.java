@@ -15,7 +15,7 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
     public SocketHandler(ClientListenerManager clientListenerManagerIn) {
         super(clientListenerManagerIn);
 
-        this.timeout = getClientListenerManager().getPluginInstance().getYamlConfig().getInt("connection-timeout");
+        this.timeout = (int) Math.ceil((getClientListenerManager().getConnection().getHeartbeatTicks() / 20f) * 1000);
     }
 
     @Override

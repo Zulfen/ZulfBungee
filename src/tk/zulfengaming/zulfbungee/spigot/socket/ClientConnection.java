@@ -2,7 +2,10 @@ package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.handlers.*;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ClientListenerManager;
+import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
+import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
+import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.task.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -11,7 +14,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Phaser;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientConnection implements Runnable {
@@ -43,6 +49,10 @@ public class ClientConnection implements Runnable {
 
     private DataInHandler dataInHandler;
 
+    private BukkitTask socketDaemon;
+
+    private final int heartbeatTicks;
+
     // identification
 
     private final String serverName;
@@ -51,11 +61,12 @@ public class ClientConnection implements Runnable {
 
         this.pluginInstance = pluginInstanceIn;
 
-        this.packetHandlerManager = new PacketHandlerManager(this);
-
         this.clientListenerManager = new ClientListenerManager(this);
 
+        this.packetHandlerManager = new PacketHandlerManager(this);
+
         this.serverName = pluginInstanceIn.getYamlConfig().getString("server-name");
+        this.heartbeatTicks = pluginInstance.getYamlConfig().getInt("heartbeat-ticks");
 
         socketBarrier = clientListenerManager.getSocketBarrier();
 
@@ -67,14 +78,15 @@ public class ClientConnection implements Runnable {
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
 
-        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", pluginInstance.getYamlConfig().getInt("heartbeat-ticks"));
+        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", heartbeatTicks);
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
 
         socketBarrier.register();
 
-        pluginInstance.getTaskManager().newTask(clientListenerManager, "ClientListenerManager");
+        socketDaemon = pluginInstance.getTaskManager().newTask(clientListenerManager, "ClientListenerManager");
+
         pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
         pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOut");
 
@@ -158,6 +170,10 @@ public class ClientConnection implements Runnable {
 
     }
 
+    public int getHeartbeatTicks() {
+        return heartbeatTicks;
+    }
+
     public AtomicBoolean isRunning() {
         return running;
     }
@@ -166,11 +182,16 @@ public class ClientConnection implements Runnable {
         return clientListenerManager.isSocketConnected().get();
     }
 
+    public ClientListenerManager getClientListenerManager() {
+        return clientListenerManager;
+    }
+
     public void shutdown() throws IOException {
 
         if (running.compareAndSet(true, false)) {
 
             heartbeatThread.cancel();
+            socketDaemon.cancel();
 
             clientListenerManager.shutdown();
 
@@ -186,7 +207,4 @@ public class ClientConnection implements Runnable {
         return serverName;
     }
 
-    public ClientListenerManager getClientManager() {
-        return clientListenerManager;
-    }
 }

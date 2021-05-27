@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
-import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -10,8 +10,8 @@ import java.net.SocketAddress;
 
 public class InvalidConfiguration extends PacketHandler {
 
-    public InvalidConfiguration(ClientConnection connection) {
-        super(connection, PacketTypes.INVALID_CONFIGURATION);
+    public InvalidConfiguration(ClientConnection connectionIn) {
+        super(connectionIn, PacketTypes.INVALID_CONFIGURATION);
 
     }
 

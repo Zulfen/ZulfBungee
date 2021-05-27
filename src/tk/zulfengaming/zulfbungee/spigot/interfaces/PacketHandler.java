@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.spigot.handlers;
+package tk.zulfengaming.zulfbungee.spigot.interfaces;
 
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -22,8 +22,9 @@ public abstract class PacketHandler {
         return connection;
     }
 
-    public PacketHandler(ClientConnection connection, PacketTypes... types){
-        this.connection = connection;
+    public PacketHandler(ClientConnection connectionIn, PacketTypes... types){
+
+        this.connection = connectionIn;
         this.types = types;
 
     }

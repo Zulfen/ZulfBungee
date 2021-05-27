@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
+import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.Heartbeat;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.InvalidConfiguration;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class PacketHandlerManager {
 
-    public final ArrayList<PacketHandler> handlers = new ArrayList<>();
+    private final ArrayList<PacketHandler> handlers = new ArrayList<>();
 
     public PacketHandlerManager(ClientConnection connectionIn) {
         handlers.add(new Heartbeat(connectionIn));
@@ -22,6 +23,10 @@ public class PacketHandlerManager {
         handlers.add(new ServerMessageEvent(connectionIn));
         handlers.add(new InvalidConfiguration(connectionIn));
 
+    }
+
+    public ArrayList<PacketHandler> getHandlers() {
+        return handlers;
     }
 
     public PacketHandler getHandler(Packet packetIn) {

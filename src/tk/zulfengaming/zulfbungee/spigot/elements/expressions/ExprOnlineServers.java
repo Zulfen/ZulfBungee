@@ -13,6 +13,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyServer;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -35,6 +36,7 @@ public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
                 Packet packet = request.get();
 
                 return Stream.of(packet.getDataArray())
+                        .filter(Objects::nonNull)
                         .filter(ProxyServer.class::isInstance)
                         .map(ProxyServer.class::cast)
                         .toArray(ProxyServer[]::new);
