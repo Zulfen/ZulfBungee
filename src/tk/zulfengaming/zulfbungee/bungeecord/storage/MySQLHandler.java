@@ -15,8 +15,6 @@ public class MySQLHandler extends StorageImpl {
 
     private HikariDataSource dataSource;
 
-    // TODO: Allow user customisation of the table name that this reads and writes to.
-
     public MySQLHandler(Server serverIn) {
         super(serverIn);
 
