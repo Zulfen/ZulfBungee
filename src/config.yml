@@ -15,12 +15,13 @@ client-port: 8001
 client-host: "0.0.0.0"
 
 # The name of the server which the proxy will use to identify this client.
+# These should be unique to eliminate conflicts!
 server-name: "Client"
 
 # - Options -
 
 # How many ticks this client will wait before sending a heartbeat packet -
-# This is used to make sure that there is still a proxy on the other shutdown.
+# This is used to make sure that there is still a proxy on the other side.
 # Change this to match your network conditions / server performance. You don't need to change this if you don't need to.
 heartbeat-ticks: 100
 

@@ -1,6 +1,6 @@
 # - Key Setup -
 
-# This is the port that this server will bind to, which will listen for incoming connections.
+# This is the port that this server will bind to, which will it listen for incoming connections on.
 port: 8000
 
 # The IP that this server will bind to. Similar to the "client-host" in the Spigot config.
