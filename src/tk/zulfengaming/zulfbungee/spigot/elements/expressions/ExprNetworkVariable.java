@@ -16,8 +16,8 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.Value;
+import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
 import java.util.ArrayList;
 import java.util.Objects;

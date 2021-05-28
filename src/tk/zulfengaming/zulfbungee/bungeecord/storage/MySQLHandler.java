@@ -1,10 +1,11 @@
 package tk.zulfengaming.zulfbungee.bungeecord.storage;
 
 import com.zaxxer.hikari.HikariDataSource;
+import net.md_5.bungee.api.ChatColor;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.Value;
+import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,19 +17,8 @@ public class MySQLHandler extends StorageImpl {
 
     // TODO: Allow user customisation of the table name that this reads and writes to.
 
-    private final String host, port, username, password, database;
-
     public MySQLHandler(Server serverIn) {
         super(serverIn);
-
-        host = getMainServer().getPluginInstance().getConfig().getString("mysql-host");
-        port = String.valueOf(getMainServer().getPluginInstance().getConfig().getInt("mysql-port"));
-
-        username = getMainServer().getPluginInstance().getConfig().getString("mysql-username");
-        password = getMainServer().getPluginInstance().getConfig().getString("mysql-password");
-
-        database = getMainServer().getPluginInstance().getConfig().getString("mysql-database");
-
 
     }
 
@@ -41,9 +31,11 @@ public class MySQLHandler extends StorageImpl {
 
                 String listName = name.split("::\\*")[0];
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT name, type, data FROM ? WHERE name LIKE ?");
                 String finalisedQuery = "%" + listName + "::%";
-                preparedStatement.setString(1, finalisedQuery);
+
+                preparedStatement.setString(1, getTable());
+                preparedStatement.setString(2, finalisedQuery);
 
                 ResultSet result = preparedStatement.executeQuery();
 
@@ -66,8 +58,10 @@ public class MySQLHandler extends StorageImpl {
 
             } else {
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
-                preparedStatement.setString(1, name);
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM ? WHERE name=?");
+
+                preparedStatement.setString(1, getTable());
+                preparedStatement.setString(2, name);
 
                 ResultSet result = preparedStatement.executeQuery();
 
@@ -107,15 +101,16 @@ public class MySQLHandler extends StorageImpl {
                 for (int i = 0; i < variableValuesIn.length; i++) {
                     Value value = variableValuesIn[i];
 
-                    PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO ? (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
                     String variableNameOut = variableNameInRoot + "::" + (i + 1);
 
-                    preparedStatement.setString(1, variableNameOut);
-                    preparedStatement.setString(2, value.type);
-                    preparedStatement.setBytes(3, value.data);
-
+                    preparedStatement.setString(1, getTable());
+                    preparedStatement.setString(2, variableNameOut);
+                    preparedStatement.setString(3, value.type);
                     preparedStatement.setBytes(4, value.data);
-                    preparedStatement.setString(5, value.type);
+
+                    preparedStatement.setBytes(5, value.data);
+                    preparedStatement.setString(6, value.type);
 
                     preparedStatement.executeUpdate();
 
@@ -127,14 +122,15 @@ public class MySQLHandler extends StorageImpl {
 
                 Value value = variable.getSingleValue();
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO ? (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
-                preparedStatement.setString(1, variableNameIn);
-                preparedStatement.setString(2, value.type);
-                preparedStatement.setBytes(3, value.data);
-
+                preparedStatement.setString(1, getTable());
+                preparedStatement.setString(2, variableNameIn);
+                preparedStatement.setString(3, value.type);
                 preparedStatement.setBytes(4, value.data);
-                preparedStatement.setString(5, value.type);
+
+                preparedStatement.setBytes(5, value.data);
+                preparedStatement.setString(6, value.type);
 
                 preparedStatement.executeUpdate();
 
@@ -157,9 +153,12 @@ public class MySQLHandler extends StorageImpl {
 
                 String listName = name.split("::\\*")[0];
 
-                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
+                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM ? WHERE name LIKE ?");
+
                 String finalisedQuery = "%" + listName + "::%";
-                getStatement.setString(1, finalisedQuery);
+
+                getStatement.setString(1, getTable());
+                getStatement.setString(2, finalisedQuery);
 
                 ResultSet result = getStatement.executeQuery();
 
@@ -175,15 +174,16 @@ public class MySQLHandler extends StorageImpl {
 
                     int listIndex = querySize + (i + 1);
 
-                    PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO ? (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
                     String variableNameOut = listName + "::" + listIndex;
 
-                    setStatement.setString(1, variableNameOut);
-                    setStatement.setString(2, values[valueArrayIndex].type);
-                    setStatement.setBytes(3, values[valueArrayIndex].data);
-
+                    setStatement.setString(1, getTable());
+                    setStatement.setString(2, variableNameOut);
+                    setStatement.setString(3, values[valueArrayIndex].type);
                     setStatement.setBytes(4, values[valueArrayIndex].data);
-                    setStatement.setString(5, values[valueArrayIndex].type);
+
+                    setStatement.setBytes(5, values[valueArrayIndex].data);
+                    setStatement.setString(6, values[valueArrayIndex].type);
 
                     setStatement.executeUpdate();
 
@@ -208,12 +208,13 @@ public class MySQLHandler extends StorageImpl {
 
             if (name.endsWith("::*")) {
 
-                preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name LIKE ?");
+                preparedStatement = tempConnection.prepareStatement("DELETE FROM ? WHERE name LIKE ?");
 
                 String listName = name.split("::\\*")[0];
                 String finalisedQuery = "%" + listName + "::%";
 
-                preparedStatement.setString(1, finalisedQuery);
+                preparedStatement.setString(1, getTable());
+                preparedStatement.setString(2, finalisedQuery);
 
             } else {
                 preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name=?");
@@ -252,28 +253,28 @@ public class MySQLHandler extends StorageImpl {
         dataSource = new HikariDataSource();
         dataSource.setMaximumPoolSize(10);
 
-        String jdbcUrl = "jdbc:mysql://" + host + ":" + port + "/" + database;
+        String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
 
         if (!getMainServer().getPluginInstance().getConfig().getBoolean("mysql-useSSL")) {
             jdbcUrl += "?&useSSL=false";
         }
 
         dataSource.setJdbcUrl(jdbcUrl);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setUsername(getUsername());
+        dataSource.setPassword(getPassword());
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
-            getMainServer().getPluginInstance().logInfo("MySQL connected successfully to " + jdbcUrl);
+            getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "MySQL connected successfully to " + jdbcUrl);
 
             DatabaseMetaData metaData = tempConnection.getMetaData();
 
-            ResultSet resultSet = metaData.getTables(null, null, "variables", null);
+            ResultSet resultSet = metaData.getTables(null, null, getTable(), null);
             if (!resultSet.next()) {
 
                 getMainServer().getPluginInstance().logInfo("Setting up your database...");
 
-                String creationStatement = "CREATE TABLE variables " +
+                String creationStatement = "CREATE TABLE " + getTable() + " " +
                         "(name VARCHAR(255) not NULL PRIMARY KEY, " +
                         " type VARCHAR(128) not NULL,  " +
                         " data VARBINARY(8000))";
@@ -281,7 +282,7 @@ public class MySQLHandler extends StorageImpl {
                 Statement statement = tempConnection.createStatement();
                 statement.execute(creationStatement);
 
-                getMainServer().getPluginInstance().logInfo("Done setting up the MySQL database!");
+                getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Done setting up the MySQL database!");
 
             }
 

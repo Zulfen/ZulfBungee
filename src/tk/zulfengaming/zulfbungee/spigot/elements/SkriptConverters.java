@@ -3,8 +3,8 @@ package tk.zulfengaming.zulfbungee.spigot.elements;
 import ch.njol.skript.registrations.Converters;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class SkriptConverters {
 

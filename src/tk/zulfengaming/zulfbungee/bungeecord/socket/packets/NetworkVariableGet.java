@@ -5,7 +5,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 
 import java.net.SocketAddress;
 import java.util.Optional;

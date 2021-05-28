@@ -156,7 +156,7 @@ public class ClientConnection implements Runnable {
             e.printStackTrace();
         }
 
-        if (!(packetIn.getType() == PacketTypes.HEARTBEAT)) {
+        if (packetIn.getType() != PacketTypes.HEARTBEAT) {
             pluginInstance.logDebug("Sent packet " + packetIn.getType().toString() + "...");
         }
 

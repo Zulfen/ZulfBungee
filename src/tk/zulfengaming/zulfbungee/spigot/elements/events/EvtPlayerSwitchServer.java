@@ -9,8 +9,8 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class EvtPlayerSwitchServer extends SkriptEvent {
 

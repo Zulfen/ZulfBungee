@@ -5,8 +5,8 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class SkriptTypes {
 

@@ -7,6 +7,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 
 import java.io.*;
+import java.util.List;
 
 public class YamlConfig {
 
@@ -16,6 +17,7 @@ public class YamlConfig {
 
     private Configuration loadedConfig;
 
+    @SuppressWarnings("UnstableApiUsage")
     public YamlConfig(ZulfBungeecord instanceIn) {
 
         this.configFile = new File(instanceIn.getDataFolder(), "config.yml");
@@ -61,7 +63,6 @@ public class YamlConfig {
     public void save(String node, Object value) throws IOException {
         loadedConfig.set(node, value);
         configObject.save(loadedConfig, configFile);
-
     }
 
     public String getString(String node) {
@@ -74,5 +75,9 @@ public class YamlConfig {
 
     public int getInt(String node) {
         return loadedConfig.getInt(node);
+    }
+
+    public List<Integer> getIntList(String node) {
+        return loadedConfig.getIntList(node);
     }
 }

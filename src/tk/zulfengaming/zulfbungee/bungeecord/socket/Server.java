@@ -75,21 +75,24 @@ public class Server implements Runnable {
                 if (serverSocketAvailable) {
                     socket = serverSocket.accept();
 
-                    SocketAddress connectedAddress = socket.getRemoteSocketAddress();
+                    SocketAddress remoteAddress = socket.getRemoteSocketAddress();
 
-                    if (isValidClient(connectedAddress)) {
+                    if (isValidClient(remoteAddress)) {
+
                         acceptConnection();
 
                     } else {
 
-                        if (!invalidClients.contains(connectedAddress)) {
+                        pluginInstance.warning("A connection to the proxy was established, but the security check failed!");
+                        pluginInstance.warning("Please check your Bungeecord config.yml to see if the Spigot server is defined, or make sure the client" +
+                                "'s port is defined in the port whitelist section of the ZulfBungee config, if it's enabled!");
 
-                            pluginInstance.warning("Client who tried to connect is not defined in bungeecord's config. Ignoring.");
+                        pluginInstance.warning("");
+                        pluginInstance.warning("Address that tried to connect: " + remoteAddress.toString());
 
-                            socket.close();
-                        }
-
+                        socket.close();
                     }
+
 
                 } else {
 
@@ -144,16 +147,29 @@ public class Server implements Runnable {
 
     }
 
-    public boolean isValidClient(SocketAddress addressIn) {
+    private boolean isValidClient(SocketAddress addressIn) {
         Map<String, ServerInfo> servers = pluginInstance.getProxy().getServersCopy();
 
-        for (ServerInfo server : servers.values()) {
-            final InetSocketAddress serverAddress = (InetSocketAddress) server.getSocketAddress();
-            final InetSocketAddress inetAddressIn = (InetSocketAddress) addressIn;
+        final boolean portWhitelistEnabled = pluginInstance.getConfig().getBoolean("port-whitelist");
+        List<Integer> ports = pluginInstance.getConfig().getIntList("ports");
 
-            if (serverAddress.getAddress().equals(inetAddressIn.getAddress()) && !invalidClients.contains(addressIn)) {
+        for (ServerInfo server : servers.values()) {
+            final InetSocketAddress inetServerAddr = (InetSocketAddress) server.getSocketAddress();
+            final InetSocketAddress inetAddrIn = (InetSocketAddress) addressIn;
+
+            if (inetServerAddr.getAddress().equals(inetAddrIn.getAddress())) {
+
+                if (portWhitelistEnabled) {
+
+                    return ports.contains(inetAddrIn.getPort());
+
+                }
+
                 return true;
+
             }
+
+            return false;
 
         }
 

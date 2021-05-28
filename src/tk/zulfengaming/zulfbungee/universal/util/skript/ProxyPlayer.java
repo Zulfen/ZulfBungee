@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.utilclasses.skript;
+package tk.zulfengaming.zulfbungee.universal.util.skript;
 
 import java.io.Serializable;
 import java.util.UUID;

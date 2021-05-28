@@ -20,19 +20,37 @@ debug: true
 # Currently supported databases: MySQL
 
 # If you have no clue what this does, just leave this as the default.
-storage-type: "MySQL"
+storage-type: "none"
 
-# [MySQL Setup]
 # Each option should be self-explanatory if you know what you are doing.
 
-mysql-host: "localhost"
-mysql-port: 3306
+storage-host: "localhost"
+storage-port: 3306
 
-mysql-username: "username"
-mysql-password: "password"
+storage-username: "username"
+storage-password: "password"
 
-mysql-database: "database"
+storage-database: "database"
+
+# Change the table the variables are saved to.
+
+storage-table: "variables"
+
+# [MySQL Setup]
 
 # If you get errors in console because of SSL, disable it here, but it's better to set up SSL on the MySQL server.
 mysql-useSSL: true
 
+# - Security -
+
+# [Port Whitelisting]
+
+# Enable this option if you want to only allow ports from a defined list to be able to connect to this proxy.
+# Useful if you are on a shared machine and want to prevent unwanted connections to your proxy.
+
+port-whitelist: false
+
+# The ports you want to allow to connect should be defined here:
+
+ports:
+  - 8000

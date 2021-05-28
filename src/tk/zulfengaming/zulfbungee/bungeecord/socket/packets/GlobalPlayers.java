@@ -5,7 +5,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.utilclasses.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.net.SocketAddress;
 import java.util.Collection;
