@@ -6,8 +6,6 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
 import java.util.Optional;
 
-// TODO: Since this only needs to handle doing things with Values, just make the return and function arguments those
-// and implement it for each storage type.
 public abstract class StorageImpl {
 
     private final Server mainServer;

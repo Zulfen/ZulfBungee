@@ -71,9 +71,9 @@ public class DataInHandler implements Runnable {
 
     public void disconnect() {
 
-        connection.isSocketConnected().compareAndSet(true, false);
-
-        connection.end();
+        if (connection.isSocketConnected().compareAndSet(true, false)) {
+            connection.end();
+        }
 
     }
 

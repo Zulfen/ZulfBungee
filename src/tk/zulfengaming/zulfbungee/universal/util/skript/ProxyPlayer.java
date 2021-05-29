@@ -9,6 +9,8 @@ public class ProxyPlayer implements Serializable {
 
     private final String name;
 
+    private boolean online = true;
+
     private ProxyServer server = null;
 
     private final UUID uuid;

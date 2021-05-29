@@ -5,6 +5,7 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
 
 import java.net.SocketAddress;
 
@@ -18,7 +19,7 @@ public class ServerMessageEvent extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        String message = (String) packetIn.getDataSingle();
+        ServerMessage message = (ServerMessage) packetIn.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(new EventMessage(message));
 

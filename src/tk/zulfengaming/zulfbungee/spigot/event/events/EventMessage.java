@@ -2,15 +2,16 @@ package tk.zulfengaming.zulfbungee.spigot.event.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
 
 public class EventMessage extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
-    private final String message;
+    private final ServerMessage message;
 
-    public EventMessage(String text) {
-        this.message = text;
+    public EventMessage(ServerMessage messageIn) {
+        this.message = messageIn;
     }
 
     @Override
@@ -22,7 +23,8 @@ public class EventMessage extends Event {
         return handlerList;
     }
 
-    public String getMessage() {
+    public ServerMessage getMessage() {
         return message;
     }
+
 }

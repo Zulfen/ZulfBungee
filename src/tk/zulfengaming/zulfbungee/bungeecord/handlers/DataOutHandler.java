@@ -47,12 +47,12 @@ public class DataOutHandler implements Runnable {
                 }
 
             } catch (SocketException | EOFException e) {
-                connection.end();
+                disconnect();
 
             } catch (IOException e) {
                 connection.getPluginInstance().error("There was an error running the server! Disconnecting");
 
-                connection.end();
+                disconnect();
                 e.printStackTrace();
 
             } catch (InterruptedException ignored) {
@@ -62,8 +62,16 @@ public class DataOutHandler implements Runnable {
         } while (connection.isRunning().get());
     }
 
+    public void disconnect() {
+
+        if (connection.isSocketConnected().compareAndSet(true, false)) {
+            connection.end();
+        }
+
+    }
 
     public void shutdown() {
+        disconnect();
     }
 
     public BlockingQueue<Packet> getQueue() {

@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;

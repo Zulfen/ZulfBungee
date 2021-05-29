@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
-import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -19,7 +19,7 @@ public class GlobalServers extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        Collection<String> activeConnections = getMainServer().getActiveConnections().keySet();
+        final Collection<String> activeConnections = getMainServer().getActiveConnections().keySet();
 
         return new Packet(PacketTypes.GLOBAL_SERVERS,
                 false,

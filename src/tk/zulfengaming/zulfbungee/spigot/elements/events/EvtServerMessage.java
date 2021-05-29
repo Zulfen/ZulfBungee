@@ -20,7 +20,7 @@ public class EvtServerMessage extends SkriptEvent {
         EventValues.registerEventValue(EventMessage.class, String.class, new Getter<String, EventMessage>() {
             @Override
             public String get(EventMessage eventMessage) {
-                return eventMessage.getMessage();
+                return eventMessage.getMessage().getText();
             }
         }, 0);
     }
@@ -36,7 +36,7 @@ public class EvtServerMessage extends SkriptEvent {
 
         EventMessage messageEvent = (EventMessage) event;
 
-        return messageEvent.getMessage().equals(message.getSingle());
+        return messageEvent.getMessage().getTitle().equals(message.getSingle());
 
     }
 

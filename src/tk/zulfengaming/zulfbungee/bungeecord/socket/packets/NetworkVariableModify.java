@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
-import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;

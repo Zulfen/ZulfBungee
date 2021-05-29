@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.bungeecord.handlers;
+package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
 
 import net.md_5.bungee.api.ProxyServer;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;

@@ -12,18 +12,16 @@ import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
 
 public class EffServerSendMessage extends Effect {
 
     private Expression<ProxyServer> servers;
     private Expression<String> message;
+    private Expression<String> title;
 
     static {
-        Skript.registerEffect(EffServerSendMessage.class, "message (proxy|network|bungeecord) server %-proxyservers% [the message] %string%");
+        Skript.registerEffect(EffServerSendMessage.class, "message (proxy|network|bungeecord) server %-proxyservers% [the message] %string% (named|called) %string%");
     }
 
     @Override
@@ -31,14 +29,10 @@ public class EffServerSendMessage extends Effect {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        List<String> data = Stream.of(servers.getArray(event))
-                .map(ProxyServer::getName)
-                .collect(Collectors.toList());
-
-        data.add(message.getSingle(event));
+        ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event));
 
         connection.send_direct(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
-                false, false, data.toArray(new String[0])));
+                false, false, messageOut));
 
     }
 
@@ -51,6 +45,7 @@ public class EffServerSendMessage extends Effect {
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         servers = (Expression<ProxyServer>) expressions[0];
         message = (Expression<String>) expressions[1];
+        title = (Expression<String>) expressions[2];
 
         return true;
     }
