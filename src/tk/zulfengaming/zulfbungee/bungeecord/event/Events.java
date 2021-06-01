@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -12,9 +12,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.util.ArrayList;
 
 public class Events implements Listener {
 
@@ -31,29 +29,36 @@ public class Events implements Listener {
 
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
-            String serverName = null;
+            String serverName = event.getFrom().getName();
 
-            for (SocketAddress storedSockAddr : server.getServerConnections().keySet()) {
-                InetAddress storedInetAddr = ((InetSocketAddress) storedSockAddr).getAddress();
+            ServerConnection connection = server.getActiveConnections().get(serverName);
 
-                for (ServerInfo info : server.getPluginInstance().getProxy().getServersCopy().values()) {
+            if (connection != null) {
 
-                    InetAddress retrievedInetAddr = ((InetSocketAddress) info.getSocketAddress()).getAddress();
+                ProxyServer proxyServer = server.getServers().get(connection);
 
-                    if (retrievedInetAddr.equals(storedInetAddr)) {
+                ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId(), proxyServer);
 
-                        ServerConnection connection = server.getServerConnections().get(storedSockAddr);
-                        serverName = server.getActiveConnections().inverse().get(connection);
+                proxyServer.addPlayer(playerOut);
 
-                    }
-                }
+                server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
             }
-
-            ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId(), new ProxyServer(serverName));
-
-            server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
 
         }, event.toString());
 
+    }
+
+    public void onPlayerDisconnect(PlayerDisconnectEvent event) {
+
+        ProxiedPlayer eventPlayer = event.getPlayer();
+        ProxyPlayer proxyPlayer = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
+
+        for (ProxyServer server : server.getServers().values()) {
+
+            ArrayList<ProxyPlayer> players = server.getPlayers();
+
+            players.removeIf(player -> player.equals(proxyPlayer));
+
+        }
     }
 }

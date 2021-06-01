@@ -15,7 +15,7 @@ public class HeartbeatTask implements Runnable {
     @Override
     public void run() {
 
-        if (connection.isConnected()) {
+        if (connection.isConnected().get()) {
 
             connection.send_direct(new Packet(PacketTypes.HEARTBEAT, true, true, null));
 

@@ -55,7 +55,7 @@ public class ClientConnection implements Runnable {
 
     // identification
 
-    private final String serverName;
+    private String serverName;
 
     public ClientConnection(ZulfBungeeSpigot pluginInstanceIn) throws UnknownHostException {
 
@@ -65,7 +65,6 @@ public class ClientConnection implements Runnable {
 
         this.packetHandlerManager = new PacketHandlerManager(this);
 
-        this.serverName = pluginInstanceIn.getYamlConfig().getString("server-name");
         this.heartbeatTicks = pluginInstance.getYamlConfig().getInt("heartbeat-ticks");
 
         socketBarrier = clientListenerManager.getSocketBarrier();
@@ -178,12 +177,8 @@ public class ClientConnection implements Runnable {
         return running;
     }
 
-    public boolean isConnected() {
-        return clientListenerManager.isSocketConnected().get();
-    }
-
-    public ClientListenerManager getClientListenerManager() {
-        return clientListenerManager;
+    public AtomicBoolean isConnected() {
+        return clientListenerManager.isSocketConnected();
     }
 
     public void shutdown() throws IOException {
@@ -203,8 +198,12 @@ public class ClientConnection implements Runnable {
         return pluginInstance;
     }
 
-    public String getServerName() {
-        return serverName;
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public Optional<String> getServerName() {
+        return Optional.ofNullable(serverName);
     }
 
 }

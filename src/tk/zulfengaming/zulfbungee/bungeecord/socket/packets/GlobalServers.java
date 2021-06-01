@@ -7,7 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
-import java.util.Collection;
 
 public class GlobalServers extends PacketHandler {
 
@@ -19,14 +18,9 @@ public class GlobalServers extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        final Collection<String> activeConnections = getMainServer().getActiveConnections().keySet();
-
         return new Packet(PacketTypes.GLOBAL_SERVERS,
                 false,
                 false,
-                activeConnections.stream()
-                        .map(ProxyServer::new)
-                        .toArray(ProxyServer[]::new)
-        );
+                getMainServer().getServers().values().toArray(new ProxyServer[0]));
     }
 }

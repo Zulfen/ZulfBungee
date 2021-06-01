@@ -29,7 +29,7 @@ public class CondIsServerOnline extends Condition {
 
         try {
 
-            Optional<Packet> response = connection.send(new Packet(PacketTypes.SERVER_ONLINE, true, false, server.getSingle(event).getName()));
+            Optional<Packet> response = connection.send(new Packet(PacketTypes.SERVER_ONLINE, true, false, server));
 
             if (response.isPresent()) {
 

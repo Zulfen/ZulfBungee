@@ -29,11 +29,10 @@ public class MySQLHandler extends StorageImpl {
 
                 String listName = name.split("::\\*")[0];
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT name, type, data FROM ? WHERE name LIKE ?");
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
                 String finalisedQuery = "%" + listName + "::%";
 
-                preparedStatement.setString(1, getTable());
-                preparedStatement.setString(2, finalisedQuery);
+                preparedStatement.setString(1, finalisedQuery);
 
                 ResultSet result = preparedStatement.executeQuery();
 
@@ -56,10 +55,9 @@ public class MySQLHandler extends StorageImpl {
 
             } else {
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM ? WHERE name=?");
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
 
-                preparedStatement.setString(1, getTable());
-                preparedStatement.setString(2, name);
+                preparedStatement.setString(1, name);
 
                 ResultSet result = preparedStatement.executeQuery();
 
@@ -99,16 +97,15 @@ public class MySQLHandler extends StorageImpl {
                 for (int i = 0; i < variableValuesIn.length; i++) {
                     Value value = variableValuesIn[i];
 
-                    PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO ? (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
                     String variableNameOut = variableNameInRoot + "::" + (i + 1);
 
-                    preparedStatement.setString(1, getTable());
-                    preparedStatement.setString(2, variableNameOut);
-                    preparedStatement.setString(3, value.type);
-                    preparedStatement.setBytes(4, value.data);
+                    preparedStatement.setString(1, variableNameOut);
+                    preparedStatement.setString(2, value.type);
+                    preparedStatement.setBytes(3, value.data);
 
-                    preparedStatement.setBytes(5, value.data);
-                    preparedStatement.setString(6, value.type);
+                    preparedStatement.setBytes(4, value.data);
+                    preparedStatement.setString(5, value.type);
 
                     preparedStatement.executeUpdate();
 
@@ -120,15 +117,14 @@ public class MySQLHandler extends StorageImpl {
 
                 Value value = variable.getSingleValue();
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO ? (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
-                preparedStatement.setString(1, getTable());
-                preparedStatement.setString(2, variableNameIn);
-                preparedStatement.setString(3, value.type);
+                preparedStatement.setString(1, variableNameIn);
+                preparedStatement.setString(2, value.type);
+                preparedStatement.setBytes(3, value.data);
+
                 preparedStatement.setBytes(4, value.data);
-
-                preparedStatement.setBytes(5, value.data);
-                preparedStatement.setString(6, value.type);
+                preparedStatement.setString(5, value.type);
 
                 preparedStatement.executeUpdate();
 
@@ -151,12 +147,11 @@ public class MySQLHandler extends StorageImpl {
 
                 String listName = name.split("::\\*")[0];
 
-                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM ? WHERE name LIKE ?");
+                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
 
                 String finalisedQuery = "%" + listName + "::%";
 
-                getStatement.setString(1, getTable());
-                getStatement.setString(2, finalisedQuery);
+                getStatement.setString(1, finalisedQuery);
 
                 ResultSet result = getStatement.executeQuery();
 
@@ -172,16 +167,15 @@ public class MySQLHandler extends StorageImpl {
 
                     int listIndex = querySize + (i + 1);
 
-                    PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO ? (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
                     String variableNameOut = listName + "::" + listIndex;
 
-                    setStatement.setString(1, getTable());
-                    setStatement.setString(2, variableNameOut);
-                    setStatement.setString(3, values[valueArrayIndex].type);
-                    setStatement.setBytes(4, values[valueArrayIndex].data);
+                    setStatement.setString(1, variableNameOut);
+                    setStatement.setString(2, values[valueArrayIndex].type);
+                    setStatement.setBytes(3, values[valueArrayIndex].data);
 
-                    setStatement.setBytes(5, values[valueArrayIndex].data);
-                    setStatement.setString(6, values[valueArrayIndex].type);
+                    setStatement.setBytes(4, values[valueArrayIndex].data);
+                    setStatement.setString(5, values[valueArrayIndex].type);
 
                     setStatement.executeUpdate();
 
@@ -206,13 +200,12 @@ public class MySQLHandler extends StorageImpl {
 
             if (name.endsWith("::*")) {
 
-                preparedStatement = tempConnection.prepareStatement("DELETE FROM ? WHERE name LIKE ?");
+                preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name LIKE ?");
 
                 String listName = name.split("::\\*")[0];
                 String finalisedQuery = "%" + listName + "::%";
 
-                preparedStatement.setString(1, getTable());
-                preparedStatement.setString(2, finalisedQuery);
+                preparedStatement.setString(1, finalisedQuery);
 
             } else {
                 preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name=?");
@@ -267,12 +260,12 @@ public class MySQLHandler extends StorageImpl {
 
             DatabaseMetaData metaData = tempConnection.getMetaData();
 
-            ResultSet resultSet = metaData.getTables(null, null, getTable(), null);
+            ResultSet resultSet = metaData.getTables(null, null, "variables", null);
             if (!resultSet.next()) {
 
                 getMainServer().getPluginInstance().logInfo("Setting up your database...");
 
-                String creationStatement = "CREATE TABLE " + getTable() + " " +
+                String creationStatement = "CREATE TABLE variables " +
                         "(name VARCHAR(255) not NULL PRIMARY KEY, " +
                         " type VARCHAR(128) not NULL,  " +
                         " data VARBINARY(8000))";

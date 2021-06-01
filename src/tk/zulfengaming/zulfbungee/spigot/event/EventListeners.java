@@ -9,6 +9,7 @@ public class EventListeners implements Listener {
 
     @EventHandler
     public void onPlayerSwitchServer(EventPlayerSwitchServer event) {
+
     }
 
     @EventHandler

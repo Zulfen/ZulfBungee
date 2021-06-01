@@ -15,6 +15,8 @@ public class InvalidConfiguration extends PacketHandler {
 
     }
 
+    // maybe will use now, kind of unused.
+
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 

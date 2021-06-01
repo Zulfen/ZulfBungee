@@ -10,7 +10,7 @@ public abstract class StorageImpl {
 
     private final Server mainServer;
 
-    private final String host, port, username, password, database, table;
+    private final String host, port, username, password, database;
 
     public StorageImpl(Server serverIn) {
         this.mainServer = serverIn;
@@ -22,8 +22,6 @@ public abstract class StorageImpl {
         this.password = serverIn.getPluginInstance().getConfig().getString("storage-password");
 
         this.database = serverIn.getPluginInstance().getConfig().getString("storage-database");
-        this.table = serverIn.getPluginInstance().getConfig().getString("storage-table");
-        
     }
     
     public String getHost() {
@@ -46,9 +44,6 @@ public abstract class StorageImpl {
         return database;
     }
 
-    public String getTable() {
-        return table;
-    }
 
     public abstract void initialise();
 

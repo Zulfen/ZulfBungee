@@ -4,6 +4,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
 import java.util.Collection;
@@ -18,11 +19,11 @@ public class ServerOnline extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        String serverName = (String) packetIn.getDataSingle();
+        ProxyServer server = (ProxyServer) packetIn.getDataSingle();
 
-        Collection<String> activeConnections = getMainServer().getActiveConnections().keySet();
+        final Collection<ProxyServer> values = getMainServer().getServers().values();
 
-        if (activeConnections.contains(serverName)) {
+        if (values.contains(server)) {
             return new Packet(PacketTypes.SERVER_ONLINE, false, false, true);
         }
 

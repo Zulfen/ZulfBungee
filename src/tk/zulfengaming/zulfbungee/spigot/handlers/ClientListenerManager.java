@@ -139,11 +139,12 @@ public class ClientListenerManager implements Runnable {
                 }
             }
 
-            while (!socketConnected.get() && connection.isRunning().get()) {
+            while (!socketConnected.get()) {
 
                 pluginInstance.warning("Not connected to the proxy! Trying to connect...");
 
                 try {
+
                     Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
 
                     if (futureSocket.isPresent()) {
@@ -154,10 +155,12 @@ public class ClientListenerManager implements Runnable {
                             socketHandoff.transfer(socket);
                         }
 
-                        socketConnected.set(true);
+                        socketConnected.compareAndSet(false, true);
 
                         pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
-                        connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, false, true, connection.getServerName()));
+
+                        connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, true, true, null));
+
                     }
 
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {

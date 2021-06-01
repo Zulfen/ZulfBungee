@@ -25,6 +25,7 @@ public class PacketHandlerManager {
         handlers.add(new ServerOnline(serverIn));
         handlers.add(new GlobalServers(serverIn));
         handlers.add(new ServerSendMessage(serverIn));
+        handlers.add(new PlayerServer(serverIn));
     }
 
     public PacketHandler getHandler(Packet packetIn) {
