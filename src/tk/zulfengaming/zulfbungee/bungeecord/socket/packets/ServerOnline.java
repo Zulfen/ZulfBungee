@@ -21,9 +21,7 @@ public class ServerOnline extends PacketHandler {
 
         ProxyServer server = (ProxyServer) packetIn.getDataSingle();
 
-        final Collection<ProxyServer> values = getMainServer().getServers().values();
-
-        if (values.contains(server)) {
+        if (getMainServer().getActiveConnections().containsKey(server.getName())) {
             return new Packet(PacketTypes.SERVER_ONLINE, false, false, true);
         }
 

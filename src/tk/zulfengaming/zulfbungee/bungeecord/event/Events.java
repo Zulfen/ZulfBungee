@@ -37,7 +37,7 @@ public class Events implements Listener {
 
             ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
 
-            connection.getPlayers().put(eventPlayer.getUniqueId(), playerOut);
+            players.put(eventPlayer.getUniqueId(), playerOut);
             playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
 
             server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));

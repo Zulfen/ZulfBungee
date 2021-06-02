@@ -8,6 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.net.SocketAddress;
+import java.util.LinkedList;
 
 public class GlobalPlayers extends PacketHandler {
 
@@ -20,9 +21,13 @@ public class GlobalPlayers extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        ServerConnection connection = getMainServer().getServerConnections().get(address);
+        LinkedList<ProxyPlayer> playersOut = new LinkedList<>();
 
-        return new Packet(PacketTypes.GLOBAL_PLAYERS, false, false, connection.getPlayers().values().toArray(new ProxyPlayer[0]));
+        for (ServerConnection connection : getMainServer().getActiveConnections().values()) {
+            playersOut.addAll(connection.getPlayers().values());
+        }
+
+        return new Packet(PacketTypes.GLOBAL_PLAYERS, false, false, playersOut.toArray(new ProxyPlayer[0]));
 
     }
 }
