@@ -2,13 +2,12 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
-import java.util.LinkedList;
 
 public class GlobalPlayers extends PacketHandler {
 
@@ -21,13 +20,9 @@ public class GlobalPlayers extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        LinkedList<ProxyPlayer> playersOut = new LinkedList<>();
+        ServerConnection connection = getMainServer().getServerConnections().get(address);
 
-        for (ProxyServer server : getMainServer().getServers().values()) {
-            playersOut.addAll(server.getPlayers());
-        }
-
-        return new Packet(PacketTypes.GLOBAL_PLAYERS, false, false, playersOut.toArray(new ProxyPlayer[0]));
+        return new Packet(PacketTypes.GLOBAL_PLAYERS, false, false, connection.getPlayers().values().toArray(new ProxyPlayer[0]));
 
     }
 }

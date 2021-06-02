@@ -10,12 +10,14 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.MySQLHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class Server implements Runnable {
     // plugin instance !!!
@@ -37,8 +39,6 @@ public class Server implements Runnable {
     private final BiMap<SocketAddress, ServerConnection> serverConnections = HashBiMap.create();
 
     private final BiMap<String, ServerConnection> activeConnections = HashBiMap.create();
-
-    private final HashMap<ServerConnection, ProxyServer> servers = new HashMap<>();
 
     // quite neat
     private final PacketHandlerManager packetManager;
@@ -191,8 +191,6 @@ public class Server implements Runnable {
     public void addActiveConnection(ServerConnection connection, String name) {
 
         activeConnections.put(name, connection);
-        servers.put(connection, new ProxyServer(name));
-
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
     }
@@ -202,7 +200,6 @@ public class Server implements Runnable {
         serverConnections.remove(connection.getAddress());
 
         activeConnections.remove(activeConnections.inverse().get(connection));
-        servers.remove(connection);
 
     }
 
@@ -216,7 +213,6 @@ public class Server implements Runnable {
 
         activeConnections.clear();
         serverConnections.clear();
-        servers.clear();
 
         if (socket != null) {
             socket.close();
@@ -261,10 +257,6 @@ public class Server implements Runnable {
 
     public BiMap<SocketAddress, ServerConnection> getServerConnections() {
         return serverConnections;
-    }
-
-    public HashMap<ServerConnection, ProxyServer> getServers() {
-        return servers;
     }
 
     public ZulfBungeecord getPluginInstance() {

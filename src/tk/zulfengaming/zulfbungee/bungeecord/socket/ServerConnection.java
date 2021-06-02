@@ -6,11 +6,14 @@ import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,9 +37,12 @@ public class ServerConnection implements Runnable {
     private DataInHandler dataInHandler;
     private DataOutHandler dataOutHandler;
 
+    // tracking
+    private final HashMap<UUID, ProxyPlayer> players = new HashMap<>();
+
     private Packet packetInBuffer;
 
-    private AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean running = new AtomicBoolean(true);
 
     public ServerConnection(Server serverIn, String idIn) throws IOException {
         this.socket = serverIn.getSocket();
@@ -140,6 +146,10 @@ public class ServerConnection implements Runnable {
 
     public Server getServer() {
         return server;
+    }
+
+    public HashMap<UUID, ProxyPlayer> getPlayers() {
+        return players;
     }
 
     public String getId() {

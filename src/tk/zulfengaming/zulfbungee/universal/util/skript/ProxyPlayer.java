@@ -10,7 +10,7 @@ public class ProxyPlayer implements Serializable {
 
     private final String name;
 
-    private final ProxyServer server;
+    private ProxyServer server;
 
     private final UUID uuid;
 
@@ -24,6 +24,10 @@ public class ProxyPlayer implements Serializable {
         this.name = nameIn;
         this.uuid = uuidIn;
         this.server = serverIn;
+    }
+
+    public void setServer(ProxyServer server) {
+        this.server = server;
     }
 
     public ProxyServer getServer() {

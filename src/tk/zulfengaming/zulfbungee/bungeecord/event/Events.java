@@ -12,7 +12,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Events implements Listener {
 
@@ -25,24 +26,21 @@ public class Events implements Listener {
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent event) {
 
-        ProxiedPlayer player = event.getPlayer();
+        ProxiedPlayer eventPlayer = event.getPlayer();
 
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
             String serverName = event.getFrom().getName();
 
             ServerConnection connection = server.getActiveConnections().get(serverName);
+            HashMap<UUID, ProxyPlayer> players = connection.getPlayers();
 
-            if (connection != null) {
+            ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
 
-                ProxyServer proxyServer = server.getServers().get(connection);
+            connection.getPlayers().put(eventPlayer.getUniqueId(), playerOut);
+            playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
 
-                ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId(), proxyServer);
-
-                proxyServer.addPlayer(playerOut);
-
-                server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
-            }
+            server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
 
         }, event.toString());
 
@@ -50,15 +48,8 @@ public class Events implements Listener {
 
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
 
-        ProxiedPlayer eventPlayer = event.getPlayer();
-        ProxyPlayer proxyPlayer = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
-
-        for (ProxyServer server : server.getServers().values()) {
-
-            ArrayList<ProxyPlayer> players = server.getPlayers();
-
-            players.removeIf(player -> player.equals(proxyPlayer));
-
+        for (ServerConnection connection : server.getActiveConnections().values()) {
+            connection.getPlayers().remove(event.getPlayer().getUniqueId());
         }
     }
 }
