@@ -19,14 +19,6 @@ public class ProxyServer implements Serializable {
         Collections.addAll(players, playersIn);
     }
 
-    public synchronized void addPlayer(ProxyPlayer playerIn) {
-        players.add(playerIn);
-    }
-
-    public synchronized void removePlayer(ProxyPlayer playerIn) {
-        players.remove(playerIn);
-    }
-
     public ArrayList<ProxyPlayer> getPlayers() {
         return players;
     }

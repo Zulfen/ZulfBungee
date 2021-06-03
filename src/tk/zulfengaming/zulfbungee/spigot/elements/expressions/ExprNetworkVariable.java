@@ -43,6 +43,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
         try {
+            // not returnable as response sent async from packet handler
             Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, networkVariable.getName().toString(event)));
 
             if (response.isPresent()) {

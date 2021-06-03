@@ -12,7 +12,7 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventMessage;
 
 public class EvtServerMessage extends SkriptEvent {
 
-    Literal<String> message;
+    Literal<String> title;
 
     static {
         Skript.registerEvent("Server Message", EvtServerMessage.class, EventMessage.class, "server message %string%");
@@ -27,7 +27,7 @@ public class EvtServerMessage extends SkriptEvent {
 
     @Override
     public boolean init(Literal<?>[] literals, int i, SkriptParser.@NotNull ParseResult parseResult) {
-        message = (Literal<String>) literals[0];
+        title = (Literal<String>) literals[0];
         return true;
     }
 
@@ -36,7 +36,7 @@ public class EvtServerMessage extends SkriptEvent {
 
         EventMessage messageEvent = (EventMessage) event;
 
-        return messageEvent.getMessage().getTitle().equals(message.getSingle());
+        return messageEvent.getMessage().getTitle().equals(title.getSingle());
 
     }
 

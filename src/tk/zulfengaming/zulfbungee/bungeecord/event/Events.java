@@ -1,7 +1,9 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -24,32 +26,89 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onServerSwitch(ServerSwitchEvent event) {
+    public void onServerConnect(ServerConnectEvent event) {
 
         ProxiedPlayer eventPlayer = event.getPlayer();
 
+        ServerInfo fromServer = eventPlayer.getServer().getInfo();
+        ServerInfo toServer = event.getTarget();
+
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
-            String serverName = event.getFrom().getName();
+            ProxyPlayer playerOut = null;
 
-            ServerConnection connection = server.getActiveConnections().get(serverName);
-            HashMap<UUID, ProxyPlayer> players = connection.getPlayers();
+            if (fromServer != null) {
 
-            ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
+                String serverName = fromServer.getName();
 
-            players.put(eventPlayer.getUniqueId(), playerOut);
-            playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
+                ServerConnection connection = server.getActiveConnections().get(serverName);
+                HashMap<UUID, ProxyPlayer> players = connection.getPlayers();
 
-            server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
+                players.put(eventPlayer.getUniqueId(), playerOut);
+
+                playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
+
+                playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
+
+                server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
+
+            }
+
+
 
         }, event.toString());
 
     }
 
+    @EventHandler
+    public void onServerSwitch(ServerSwitchEvent event) {
+
+        ProxiedPlayer eventPlayer = event.getPlayer();
+
+        ServerInfo fromServer = event.getFrom();
+
+        server.getPluginInstance().getTaskManager().newTask(() -> {
+
+            ProxyPlayer playerOut = null;
+
+            if (fromServer != null) {
+
+                String serverName = fromServer.getName();
+
+                ServerConnection connection = server.getActiveConnections().get(serverName);
+                HashMap<UUID, ProxyPlayer> players = connection.getPlayers();
+
+                players.put(eventPlayer.getUniqueId(), playerOut);
+
+                playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
+
+                playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
+
+                server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
+
+            }
+
+
+
+        }, event.toString());
+
+    }
+
+    @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
 
-        for (ServerConnection connection : server.getActiveConnections().values()) {
-            connection.getPlayers().remove(event.getPlayer().getUniqueId());
-        }
+        server.getPluginInstance().getTaskManager().newTask(() -> {
+
+            ProxiedPlayer player = event.getPlayer();
+
+            for (ServerConnection connection : server.getActiveConnections().values()) {
+                connection.getPlayers().remove(player.getUniqueId());
+            }
+
+            server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
+                    new ProxyPlayer(player.getName(), player.getUniqueId())));
+
+        }, event.toString());
+
     }
 }
