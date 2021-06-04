@@ -37,7 +37,7 @@ public class NetworkVariableGet extends PacketHandler {
                     NetworkVariable variable = storedVariable.get();
 
                     // sent async instead of from main ServerConnection thread to prevent it locking up.
-                    getMainServer().getServerConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable));
+                    getMainServer().getSocketConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable));
 
                 } else {
                     getMainServer().getPluginInstance().warning("Couldn't find variable " + variableName + "! Please check the name!");

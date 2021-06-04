@@ -44,7 +44,10 @@ public class NetworkVariableModify extends PacketHandler {
                             break;
                         case ADD:
                             storage.addToVariable(variable.getName(), variable.getValueArray());
+
                     }
+
+                    getMainServer().getSocketConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, null));
 
                 }, "StorageOperation@" + UUID.randomUUID());
             }

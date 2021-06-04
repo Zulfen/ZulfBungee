@@ -9,10 +9,10 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.net.SocketAddress;
 
-public class SwitchServerEvent extends PacketHandler {
+public class ServerSwitchEvent extends PacketHandler {
 
-    public SwitchServerEvent(ClientConnection connectionIn) {
-        super(connectionIn, PacketTypes.SWITCH_SERVER_EVENT);
+    public ServerSwitchEvent(ClientConnection connectionIn) {
+        super(connectionIn, PacketTypes.SERVER_SWITCH_EVENT);
 
     }
 

@@ -10,15 +10,15 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Phaser;
 
 public class DataInHandler extends ClientListener implements Runnable {
 
     private final ClientConnection connection;
 
-    private final BlockingQueue<Packet> queueIn = new ArrayBlockingQueue<>(10);
+    private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
 
     private final Phaser socketBarrier;
 

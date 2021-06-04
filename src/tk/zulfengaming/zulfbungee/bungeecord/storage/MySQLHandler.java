@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.storage;
 
+import com.google.common.primitives.Longs;
 import com.zaxxer.hikari.HikariDataSource;
 import net.md_5.bungee.api.ChatColor;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
@@ -8,7 +9,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Optional;
 
 public class MySQLHandler extends StorageImpl {
@@ -36,14 +37,14 @@ public class MySQLHandler extends StorageImpl {
 
                 ResultSet result = preparedStatement.executeQuery();
 
-                ArrayList<Value> values = new ArrayList<>();
+                LinkedList<Value> values = new LinkedList<>();
 
                 while (result.next()) {
                     String type = result.getString("type");
                     byte[] data = result.getBytes("data");
 
                     //getMainServer().getPluginInstance().logDebug("Got value " + valueName);
-                    values.add(new Value(type, data));
+                    values.addLast(new Value(type, data));
 
                 }
 
@@ -95,6 +96,7 @@ public class MySQLHandler extends StorageImpl {
                 String variableNameInRoot = variableNameIn.split("::\\*")[0];
 
                 for (int i = 0; i < variableValuesIn.length; i++) {
+
                     Value value = variableValuesIn[i];
 
                     PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
@@ -141,6 +143,7 @@ public class MySQLHandler extends StorageImpl {
 
     @Override
     public void addToVariable(String name, Value[] values) {
+
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
             if (name.endsWith("::*")) {
@@ -182,6 +185,41 @@ public class MySQLHandler extends StorageImpl {
                     valueArrayIndex++;
 
                 }
+
+            } else {
+
+                Value value = values[0];
+
+                if (value.type.equals("long")) {
+
+                    PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+
+                    getStatement.setString(1, name);
+
+                    ResultSet result = getStatement.executeQuery();
+
+                    if (result.next()) {
+
+                        long storedLong = Longs.fromByteArray(result.getBytes("data"));
+                        long givenLong = Longs.fromByteArray(value.data);
+
+                        byte[] bytesOut = Longs.toByteArray(storedLong + givenLong);
+
+                        PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+
+                        setStatement.setString(1, name);
+                        setStatement.setString(2, value.type);
+                        setStatement.setBytes(3, bytesOut);
+
+                        setStatement.setBytes(4, bytesOut);
+                        setStatement.setString(5, value.type);
+
+                        setStatement.executeUpdate();
+
+                    }
+
+                }
+
             }
 
         } catch (SQLException e) {
@@ -228,6 +266,67 @@ public class MySQLHandler extends StorageImpl {
     @Override
     public void removeFromVariable(String name, Value[] values) {
 
+        try (java.sql.Connection tempConnection = dataSource.getConnection()) {
+
+            if (name.endsWith("::*")) {
+
+                String listName = name.split("::\\*")[0];
+
+                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
+
+                String finalisedQuery = "%" + listName + "::%";
+
+                getStatement.setString(1, finalisedQuery);
+
+                ResultSet result = getStatement.executeQuery();
+
+                int querySize = 0;
+
+                while (result.next()) {
+                    querySize++;
+                }
+
+
+            } else {
+
+                Value value = values[0];
+
+                if (value.type.equals("long")) {
+
+                    PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+
+                    getStatement.setString(1, name);
+
+                    ResultSet result = getStatement.executeQuery();
+
+                    if (result.next()) {
+
+                        long storedLong = Longs.fromByteArray(result.getBytes("data"));
+                        long givenLong = Longs.fromByteArray(value.data);
+
+                        byte[] bytesOut = Longs.toByteArray(storedLong - givenLong);
+
+                        PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+
+                        setStatement.setString(1, name);
+                        setStatement.setString(2, value.type);
+                        setStatement.setBytes(3, bytesOut);
+
+                        setStatement.setBytes(4, bytesOut);
+                        setStatement.setString(5, value.type);
+
+                        setStatement.executeUpdate();
+
+                    }
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            getMainServer().getPluginInstance().error("Error removing variable to MySQL Database!");
+        }
     }
 
     @Override
@@ -261,6 +360,7 @@ public class MySQLHandler extends StorageImpl {
             DatabaseMetaData metaData = tempConnection.getMetaData();
 
             ResultSet resultSet = metaData.getTables(null, null, "variables", null);
+
             if (!resultSet.next()) {
 
                 getMainServer().getPluginInstance().logInfo("Setting up your database...");

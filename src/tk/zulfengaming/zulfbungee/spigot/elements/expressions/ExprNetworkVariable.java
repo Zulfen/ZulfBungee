@@ -19,7 +19,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -43,6 +43,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
         try {
+
             // not returnable as response sent async from packet handler
             Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, networkVariable.getName().toString(event)));
 
@@ -109,17 +110,27 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
             return;
         }
 
-        ArrayList<Value> valuesOut = new ArrayList<>();
+        LinkedList<Value> valuesOut = new LinkedList<>();
 
         if (delta != null && !mode.equals(Changer.ChangeMode.DELETE)) {
             for (Object o : delta) {
                 SerializedVariable.Value value = Classes.serialize(o);
-                valuesOut.add(new Value(value.type, value.data));
+                valuesOut.addLast(new Value(value.type, value.data));
             }
         }
 
         NetworkVariable variableOut = new NetworkVariable(networkVariable.getName().toString(e), mode.name(), valuesOut.toArray(new Value[0]));
-        connection.send_direct(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, variableOut));
+
+
+        try {
+
+            // makes the thread wait for a response that a modification has been done on the proxy before continuing
+            // prevents consistency issues
+            connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, variableOut));
+
+        } catch (InterruptedException ignored) {
+
+        }
 
     }
 

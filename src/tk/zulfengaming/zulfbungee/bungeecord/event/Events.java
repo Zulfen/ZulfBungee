@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.event;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -26,38 +26,12 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onServerConnect(ServerConnectEvent event) {
-
-        ProxiedPlayer eventPlayer = event.getPlayer();
-
-        ServerInfo fromServer = eventPlayer.getServer().getInfo();
-        ServerInfo toServer = event.getTarget();
-
+    public void onPostLogin(PostLoginEvent event) {
         server.getPluginInstance().getTaskManager().newTask(() -> {
-
-            ProxyPlayer playerOut = null;
-
-            if (fromServer != null) {
-
-                String serverName = fromServer.getName();
-
-                ServerConnection connection = server.getActiveConnections().get(serverName);
-                HashMap<UUID, ProxyPlayer> players = connection.getPlayers();
-
-                players.put(eventPlayer.getUniqueId(), playerOut);
-
-                playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
-
-                playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
-
-                server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
-
-            }
-
-
-
+            ProxiedPlayer eventPlayer = event.getPlayer();
+            server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
+                    new ProxyPlayer(eventPlayer.getName(), event.getPlayer().getUniqueId())));
         }, event.toString());
-
     }
 
     @EventHandler
@@ -66,6 +40,7 @@ public class Events implements Listener {
         ProxiedPlayer eventPlayer = event.getPlayer();
 
         ServerInfo fromServer = event.getFrom();
+        net.md_5.bungee.api.connection.Server toServer = eventPlayer.getServer();
 
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
@@ -73,22 +48,25 @@ public class Events implements Listener {
 
             if (fromServer != null) {
 
-                String serverName = fromServer.getName();
+                String fromServerName = fromServer.getName();
 
-                ServerConnection connection = server.getActiveConnections().get(serverName);
-                HashMap<UUID, ProxyPlayer> players = connection.getPlayers();
+                HashMap<UUID, ProxyPlayer> fromPlayers = server.getActiveConnections().get(fromServerName).getPlayers();
 
-                players.put(eventPlayer.getUniqueId(), playerOut);
-
-                playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
-
-                playerOut.setServer(new ProxyServer(serverName, players.values().toArray(new ProxyPlayer[0])));
-
-                server.sendToAllClients(new Packet(PacketTypes.SWITCH_SERVER_EVENT, false, true, playerOut));
+                fromPlayers.remove(eventPlayer.getUniqueId());
 
             }
 
+            String toServerName = toServer.getInfo().getName();
 
+            HashMap<UUID, ProxyPlayer> toPlayers = server.getActiveConnections().get(toServerName).getPlayers();
+
+            playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
+
+            toPlayers.put(eventPlayer.getUniqueId(), playerOut);
+
+            playerOut.setServer(new ProxyServer(toServerName, toPlayers.values().toArray(new ProxyPlayer[0])));
+
+            server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
         }, event.toString());
 

@@ -36,7 +36,7 @@ public class Server implements Runnable {
     private Socket socket;
 
     // keeping track
-    private final BiMap<SocketAddress, ServerConnection> serverConnections = HashBiMap.create();
+    private final BiMap<SocketAddress, ServerConnection> socketConnections = HashBiMap.create();
 
     private final BiMap<String, ServerConnection> activeConnections = HashBiMap.create();
 
@@ -185,7 +185,7 @@ public class Server implements Runnable {
     }
 
     private void addServerConnection(SocketAddress addressIn, ServerConnection connection) {
-        serverConnections.put(addressIn, connection);
+        socketConnections.put(addressIn, connection);
     }
 
     public void addActiveConnection(ServerConnection connection, String name) {
@@ -197,7 +197,7 @@ public class Server implements Runnable {
 
     public void removeServerConnection(ServerConnection connection) {
 
-        serverConnections.remove(connection.getAddress());
+        socketConnections.remove(connection.getAddress());
 
         activeConnections.remove(activeConnections.inverse().get(connection));
 
@@ -207,12 +207,12 @@ public class Server implements Runnable {
 
         running = false;
 
-        for (ServerConnection connection : serverConnections.values()) {
+        for (ServerConnection connection : socketConnections.values()) {
             connection.shutdown();
         }
 
         activeConnections.clear();
-        serverConnections.clear();
+        socketConnections.clear();
 
         if (socket != null) {
             socket.close();
@@ -255,8 +255,8 @@ public class Server implements Runnable {
         return activeConnections;
     }
 
-    public BiMap<SocketAddress, ServerConnection> getServerConnections() {
-        return serverConnections;
+    public BiMap<SocketAddress, ServerConnection> getSocketConnections() {
+        return socketConnections;
     }
 
     public ZulfBungeecord getPluginInstance() {

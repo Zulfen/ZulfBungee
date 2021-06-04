@@ -4,13 +4,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
-public class EventPlayerDisconnect extends Event {
+public class EventPlayerServerDisconnect extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
     private final ProxyPlayer player;
 
-    public EventPlayerDisconnect(ProxyPlayer player) {
+    public EventPlayerServerDisconnect(ProxyPlayer player) {
         this.player = player;
     }
 

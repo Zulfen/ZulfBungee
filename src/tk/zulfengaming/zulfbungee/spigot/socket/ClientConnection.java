@@ -134,7 +134,7 @@ public class ClientConnection implements Runnable {
 
         if (clientListenerManager.isSocketConnected().get()) {
 
-            return Optional.ofNullable(skriptPacketQueue.poll(5, TimeUnit.SECONDS));
+            return Optional.ofNullable(skriptPacketQueue.poll(3, TimeUnit.SECONDS));
 
         } else {
 

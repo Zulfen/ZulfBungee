@@ -24,7 +24,9 @@ public class GlobalPlayers extends PacketHandler {
         LinkedList<ProxyPlayer> playersOut = new LinkedList<>();
 
         for (ServerConnection connection : getMainServer().getActiveConnections().values()) {
-            playersOut.addAll(connection.getPlayers().values());
+            for (ProxyPlayer player : connection.getPlayers().values()) {
+                playersOut.addLast(player);
+            }
         }
 
         return new Packet(PacketTypes.GLOBAL_PLAYERS, false, false, playersOut.toArray(new ProxyPlayer[0]));

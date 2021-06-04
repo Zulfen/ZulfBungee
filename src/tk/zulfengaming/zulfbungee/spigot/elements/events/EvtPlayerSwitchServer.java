@@ -15,7 +15,8 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 public class EvtPlayerSwitchServer extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "player switch server");
+
+        Skript.registerEvent("Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "(proxy|bungeecord) player switch server");
 
         EventValues.registerEventValue(EventPlayerSwitchServer.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerSwitchServer>() {
             @Override
@@ -30,6 +31,7 @@ public class EvtPlayerSwitchServer extends SkriptEvent {
                 return eventPlayerSwitchServer.getPlayer().getServer();
             }
         }, 0);
+
     }
 
     @Override

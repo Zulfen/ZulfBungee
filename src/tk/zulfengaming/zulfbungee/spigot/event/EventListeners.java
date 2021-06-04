@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot.event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventMessage;
-import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerDisconnect;
+import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
 
 public class EventListeners implements Listener {
@@ -19,7 +19,7 @@ public class EventListeners implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDisconnect(EventPlayerDisconnect event) {
+    public void onPlayerDisconnect(EventPlayerServerDisconnect event) {
 
     }
 

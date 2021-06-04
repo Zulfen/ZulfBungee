@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
-import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerDisconnect;
+import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -22,7 +22,7 @@ public class PlayerDisconnectEvent extends PacketHandler {
         ProxyPlayer player = (ProxyPlayer) packetIn.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                new EventPlayerDisconnect(player)
+                new EventPlayerServerDisconnect(player)
         );
 
         return null;

@@ -22,7 +22,7 @@ public class ClientHandshake extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        ServerConnection connection = getMainServer().getServerConnections().get(address);
+        ServerConnection connection = getMainServer().getSocketConnections().get(address);
 
         InetAddress addressIn = ((InetSocketAddress) address).getAddress();
 
