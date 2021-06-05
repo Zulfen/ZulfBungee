@@ -8,7 +8,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.bungeecord.storage.MySQLHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Handler;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 
 import java.io.EOFException;
@@ -59,7 +60,10 @@ public class Server implements Runnable {
 
             storage = newStorage.get();
 
-            instanceIn.getTaskManager().newTask(() -> storage.initialise(), "StorageSetupThread");
+            instanceIn.getTaskManager().newTask(() -> {
+               storage.initialise();
+               storage.setupDatabase();
+            }, "SetupStorageThread");
 
         }
 
@@ -232,6 +236,8 @@ public class Server implements Runnable {
 
         if (storageChoice.matches("(?i)mysql")) {
             newStorage = new MySQLHandler(this);
+        } else if (storageChoice.matches("(?i)h2")) {
+            newStorage = new H2Handler(this);
         }
 
         return Optional.ofNullable(newStorage);

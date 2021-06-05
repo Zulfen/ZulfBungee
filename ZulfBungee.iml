@@ -41,5 +41,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:4.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.200" level="project" />
   </component>
 </module>

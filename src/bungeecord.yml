@@ -17,16 +17,18 @@ debug: true
 # - Storage -
 
 # What kind of database should be used to store network variables.
-# Currently supported databases: MySQL
+# Currently supported databases: MySQL, H2
 
 # If you have no clue what this does, just leave this as the default.
 storage-type: "none"
 
 # Each option should be self-explanatory if you know what you are doing.
 
+# If you are using H2, this will not apply - these two settings only apply to remote databases.
 storage-host: "localhost"
 storage-port: 3306
 
+# Change these from the default to improve security.
 storage-username: "username"
 storage-password: "password"
 

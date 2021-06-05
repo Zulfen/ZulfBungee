@@ -13,12 +13,41 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Optional;
 
-public class MySQLHandler extends StorageImpl {
+public class SQLHandler extends StorageImpl {
 
     private HikariDataSource dataSource;
 
-    public MySQLHandler(Server serverIn) {
+    public SQLHandler(Server serverIn) {
         super(serverIn);
+
+    }
+
+    @Override
+    public void initialise() {
+
+    }
+
+    @Override
+    public void setupDatabase() {
+
+        try (java.sql.Connection tempConnection = dataSource.getConnection()) {
+
+            getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Storage successfully started!");
+
+            String creationStatement = "CREATE TABLE IF NOT EXISTS variables " +
+                    "(name VARCHAR(255) not NULL PRIMARY KEY, " +
+                    " type VARCHAR(128) not NULL,  " +
+                    " data VARBINARY(8000))";
+
+            Statement statement = tempConnection.createStatement();
+            statement.execute(creationStatement);
+
+            getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Done setting up the database!");
+
+        } catch (SQLException e) {
+            getMainServer().getPluginInstance().error("There was an error setting up/connecting to the database!");
+            e.printStackTrace();
+        }
 
     }
 
@@ -344,56 +373,17 @@ public class MySQLHandler extends StorageImpl {
     @Override
     public void shutdown() {
 
-        getMainServer().getPluginInstance().logDebug("Shutting down MySQL connection...");
+        getMainServer().getPluginInstance().logDebug("Shutting down database connection...");
         dataSource.close();
 
     }
 
-    @Override
-    public void initialise() {
+    public HikariDataSource getDataSource() {
+        return dataSource;
+    }
 
-        dataSource = new HikariDataSource();
-        dataSource.setMaximumPoolSize(10);
-
-        String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
-
-        if (!getMainServer().getPluginInstance().getConfig().getBoolean("mysql-useSSL")) {
-            jdbcUrl += "?&useSSL=false";
-        }
-
-        dataSource.setJdbcUrl(jdbcUrl);
-        dataSource.setUsername(getUsername());
-        dataSource.setPassword(getPassword());
-
-        try (java.sql.Connection tempConnection = dataSource.getConnection()) {
-
-            getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "MySQL connected successfully to " + jdbcUrl);
-
-            DatabaseMetaData metaData = tempConnection.getMetaData();
-
-            ResultSet resultSet = metaData.getTables(null, null, "variables", null);
-
-            if (!resultSet.next()) {
-
-                getMainServer().getPluginInstance().logInfo("Setting up your database...");
-
-                String creationStatement = "CREATE TABLE variables " +
-                        "(name VARCHAR(255) not NULL PRIMARY KEY, " +
-                        " type VARCHAR(128) not NULL,  " +
-                        " data VARBINARY(8000))";
-
-                Statement statement = tempConnection.createStatement();
-                statement.execute(creationStatement);
-
-                getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Done setting up the MySQL database!");
-
-            }
-
-        } catch (SQLException e) {
-            getMainServer().getPluginInstance().error("There was an error setting up/connecting to the MySQL database!");
-            e.printStackTrace();
-        }
-
+    public void setDataSource(HikariDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 }

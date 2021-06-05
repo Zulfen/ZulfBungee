@@ -36,6 +36,7 @@ public class NetworkVariableModify extends PacketHandler {
                     SkriptChangeMode mode = variable.getChangeMode().get();
 
                     switch (mode) {
+
                         case SET:
                             storage.setVariables(variable);
                             break;
@@ -44,6 +45,10 @@ public class NetworkVariableModify extends PacketHandler {
                             break;
                         case ADD:
                             storage.addToVariable(variable.getName(), variable.getValueArray());
+                            break;
+                        case REMOVE:
+                            storage.removeFromVariable(variable.getName(), variable.getValueArray());
+                            break;
 
                     }
 
