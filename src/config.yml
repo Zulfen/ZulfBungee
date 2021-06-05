@@ -14,19 +14,14 @@ client-port: 8001
 # (i.e. you are on shared hosting / Pterodactyl)
 client-host: "0.0.0.0"
 
-# The name of the server which the proxy will use to identify this client.
-# These should be unique to eliminate conflicts!
-server-name: "Client"
-
 # - Options -
 
 # How many ticks this client will wait before sending a heartbeat packet -
 # This is used to make sure that there is still a proxy on the other side.
-# Change this to match your network conditions / server performance. You don't need to change this if you don't need to.
+# A timeout will be pronounced if the server does not respond in this time.
+# Change this to match your network conditions / server performance.
 heartbeat-ticks: 100
 
-# How many milliseconds this client will wait for to pronounce a timeout. You shouldn't need to change this.
-connection-timeout: 5000
 
 # This will toggle the display of detailed messages about what is going to the console.
 # When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!

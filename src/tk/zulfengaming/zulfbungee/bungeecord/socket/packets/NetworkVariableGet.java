@@ -32,16 +32,15 @@ public class NetworkVariableGet extends PacketHandler {
             getMainServer().getPluginInstance().getTaskManager().newTask(() -> {
 
                 Optional<NetworkVariable> storedVariable = storage.getVariables(variableName);
+                NetworkVariable variable = null;
 
                 if (storedVariable.isPresent()) {
-                    NetworkVariable variable = storedVariable.get();
+                    variable = storedVariable.get();
 
-                    // sent async instead of from main ServerConnection thread to prevent it locking up.
-                    getMainServer().getSocketConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable));
-
-                } else {
-                    getMainServer().getPluginInstance().warning("Couldn't find variable " + variableName + "! Please check the name!");
                 }
+
+                // sent async instead of from main ServerConnection thread to prevent it locking up.
+                getMainServer().getSocketConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable));
 
             }, "StorageOperation@" + UUID.randomUUID());
 

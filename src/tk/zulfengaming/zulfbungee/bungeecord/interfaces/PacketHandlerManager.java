@@ -6,26 +6,24 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class PacketHandlerManager {
 
-    public final ArrayList<PacketHandler> handlers = new ArrayList<>();
-
-    // TODO: Refactor this!
+    private final LinkedList<PacketHandler> handlers = new LinkedList<>();
 
     public PacketHandlerManager(Server serverIn) {
-        handlers.add(new Heartbeat(serverIn));
-        handlers.add(new GlobalPlayers(serverIn));
-        handlers.add(new PlayerSendMessage(serverIn));
-        handlers.add(new ClientHandshake(serverIn));
-        handlers.add(new NetworkVariableModify(serverIn));
-        handlers.add(new NetworkVariableGet(serverIn));
-        handlers.add(new ServerOnline(serverIn));
-        handlers.add(new GlobalServers(serverIn));
-        handlers.add(new ServerSendMessage(serverIn));
-        handlers.add(new PlayerServer(serverIn));
+        handlers.addLast(new Heartbeat(serverIn));
+        handlers.addLast(new GlobalPlayers(serverIn));
+        handlers.addLast(new PlayerSendMessage(serverIn));
+        handlers.addLast(new ClientHandshake(serverIn));
+        handlers.addLast(new NetworkVariableModify(serverIn));
+        handlers.addLast(new NetworkVariableGet(serverIn));
+        handlers.addLast(new ServerOnline(serverIn));
+        handlers.addLast(new GlobalServers(serverIn));
+        handlers.addLast(new ServerSendMessage(serverIn));
+        handlers.addLast(new PlayerServer(serverIn));
     }
 
     public PacketHandler getHandler(Packet packetIn) {

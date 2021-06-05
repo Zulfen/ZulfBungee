@@ -8,7 +8,11 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
-import java.sql.*;
+import java.nio.ByteBuffer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -220,33 +224,56 @@ public class SQLHandler extends StorageImpl {
 
                 Value value = values[0];
 
-                if (value.type.equals("long")) {
+                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
 
-                    PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+                getStatement.setString(1, name);
 
-                    getStatement.setString(1, name);
+                ResultSet result = getStatement.executeQuery();
 
-                    ResultSet result = getStatement.executeQuery();
+                if (result.next()) {
 
-                    if (result.next()) {
+                    byte[] bytesOut = new byte[0];
 
-                        long storedLong = Longs.fromByteArray(result.getBytes("data"));
+                    byte[] bytesFrom = result.getBytes("data");
+
+                    if (value.type.equals("long")) {
+
+                        long storedLong = Longs.fromByteArray(bytesFrom);
                         long givenLong = Longs.fromByteArray(value.data);
 
-                        byte[] bytesOut = Longs.toByteArray(storedLong + givenLong);
+                        bytesOut = Longs.toByteArray(storedLong + givenLong);
 
-                        PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    } else if (value.type.equals("double")) {
 
-                        setStatement.setString(1, name);
-                        setStatement.setString(2, value.type);
-                        setStatement.setBytes(3, bytesOut);
+                        if (result.getString("type").equals("long")) {
 
-                        setStatement.setBytes(4, bytesOut);
-                        setStatement.setString(5, value.type);
+                            long storedLong = Longs.fromByteArray(bytesFrom);
 
-                        setStatement.executeUpdate();
+                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
+
+                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedLong + givenDouble).array();
+
+                        } else {
+
+                            double storedDouble = ByteBuffer.wrap(bytesFrom).getDouble();
+
+                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
+
+                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedDouble + givenDouble).array();
+                        }
 
                     }
+
+                    PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+
+                    setStatement.setString(1, name);
+                    setStatement.setString(2, value.type);
+                    setStatement.setBytes(3, bytesOut);
+
+                    setStatement.setBytes(4, bytesOut);
+                    setStatement.setString(5, value.type);
+
+                    setStatement.executeUpdate();
 
                 }
 
@@ -332,33 +359,56 @@ public class SQLHandler extends StorageImpl {
 
                 Value value = values[0];
 
-                if (value.type.equals("long")) {
+                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
 
-                    PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+                getStatement.setString(1, name);
 
-                    getStatement.setString(1, name);
+                ResultSet result = getStatement.executeQuery();
 
-                    ResultSet result = getStatement.executeQuery();
+                if (result.next()) {
 
-                    if (result.next()) {
+                    byte[] bytesOut = new byte[0];
 
-                        long storedLong = Longs.fromByteArray(result.getBytes("data"));
+                    byte[] bytesFrom = result.getBytes("data");
+
+                    if (value.type.equals("long")) {
+
+                        long storedLong = Longs.fromByteArray(bytesFrom);
                         long givenLong = Longs.fromByteArray(value.data);
 
-                        byte[] bytesOut = Longs.toByteArray(storedLong - givenLong);
+                        bytesOut = Longs.toByteArray(storedLong - givenLong);
 
-                        PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    } else if (value.type.equals("double")) {
 
-                        setStatement.setString(1, name);
-                        setStatement.setString(2, value.type);
-                        setStatement.setBytes(3, bytesOut);
+                        if (result.getString("type").equals("long")) {
 
-                        setStatement.setBytes(4, bytesOut);
-                        setStatement.setString(5, value.type);
+                            long storedLong = Longs.fromByteArray(bytesFrom);
 
-                        setStatement.executeUpdate();
+                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
+
+                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedLong + givenDouble).array();
+
+                        } else {
+
+                            double storedDouble = ByteBuffer.wrap(bytesFrom).getDouble();
+
+                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
+
+                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedDouble + givenDouble).array();
+                        }
 
                     }
+
+                    PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+
+                    setStatement.setString(1, name);
+                    setStatement.setString(2, value.type);
+                    setStatement.setBytes(3, bytesOut);
+
+                    setStatement.setBytes(4, bytesOut);
+                    setStatement.setString(5, value.type);
+
+                    setStatement.executeUpdate();
 
                 }
 

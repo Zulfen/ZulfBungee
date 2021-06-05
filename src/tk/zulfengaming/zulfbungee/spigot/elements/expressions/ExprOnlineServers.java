@@ -35,11 +35,16 @@ public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
             if (request.isPresent()) {
                 Packet packet = request.get();
 
-                return Stream.of(packet.getDataArray())
-                        .filter(Objects::nonNull)
-                        .filter(ProxyServer.class::isInstance)
-                        .map(ProxyServer.class::cast)
-                        .toArray(ProxyServer[]::new);
+                if (packet.getDataArray() != null) {
+
+                    return Stream.of(packet.getDataArray())
+                            .filter(Objects::nonNull)
+                            .filter(ProxyServer.class::isInstance)
+                            .map(ProxyServer.class::cast)
+                            .toArray(ProxyServer[]::new);
+
+                }
+
             }
 
         } catch (InterruptedException e) {

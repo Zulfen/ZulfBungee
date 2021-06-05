@@ -36,11 +36,15 @@ public class ExprBungeePlayers extends SimpleExpression<ProxyPlayer> {
             if (request.isPresent()) {
                 Packet packet = request.get();
 
-                return Stream.of(packet.getDataArray())
-                        .filter(Objects::nonNull)
-                        .filter(ProxyPlayer.class::isInstance)
-                        .map(ProxyPlayer.class::cast)
-                        .toArray(ProxyPlayer[]::new);
+                if (packet.getDataArray() != null) {
+
+                    return Stream.of(packet.getDataArray())
+                            .filter(Objects::nonNull)
+                            .filter(ProxyPlayer.class::isInstance)
+                            .map(ProxyPlayer.class::cast)
+                            .toArray(ProxyPlayer[]::new);
+
+                }
 
             }
 

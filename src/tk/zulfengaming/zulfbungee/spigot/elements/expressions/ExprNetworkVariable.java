@@ -48,14 +48,19 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
             Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, networkVariable.getName().toString(event)));
 
             if (response.isPresent()) {
+
                 Packet packetIn = response.get();
 
-                NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
+                if (packetIn.getDataSingle() != null) {
 
-                return Stream.of(variable.getValueArray())
-                        .filter(Objects::nonNull)
-                        .map(value -> Classes.deserialize(value.type, value.data))
-                        .toArray(Object[]::new);
+                    NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
+
+                    return Stream.of(variable.getValueArray())
+                            .filter(Objects::nonNull)
+                            .map(value -> Classes.deserialize(value.type, value.data))
+                            .toArray(Object[]::new);
+
+                }
 
             }
 

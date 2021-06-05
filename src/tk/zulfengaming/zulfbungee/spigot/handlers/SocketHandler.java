@@ -40,5 +40,9 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
         return Optional.empty();
 
     }
+
+    public int getTimeout() {
+        return timeout;
+    }
 }
 

@@ -123,6 +123,10 @@ public class ClientListenerManager implements Runnable {
         return listeners;
     }
 
+    public int getSocketTimeout() {
+        return socketHandler.getTimeout();
+    }
+
     @Override
     public void run() {
 

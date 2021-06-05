@@ -8,18 +8,19 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
+import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
-public class EvtPlayerServerDisconnect extends SkriptEvent {
+public class EvtPlayerServerConnect extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Player Proxy Disconnect", EvtPlayerServerDisconnect.class, EventPlayerServerDisconnect.class, "(proxy|bungeecord) player disconnect");
+        Skript.registerEvent("Player Proxy Connect", EvtPlayerServerConnect.class, EventPlayerServerConnect.class, "(proxy|bungeecord) player connect");
 
-        EventValues.registerEventValue(EventPlayerServerDisconnect.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerDisconnect>() {
+        EventValues.registerEventValue(EventPlayerServerConnect.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerConnect>() {
+
             @Override
-            public ProxyPlayer get(EventPlayerServerDisconnect eventPlayerServerDisconnect) {
-                return eventPlayerServerDisconnect.getPlayer();
+            public ProxyPlayer get(EventPlayerServerConnect eventPlayerServerConnect) {
+                return eventPlayerServerConnect.getPlayer();
             }
         }, 0);
     }

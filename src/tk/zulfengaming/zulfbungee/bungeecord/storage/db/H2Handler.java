@@ -19,7 +19,7 @@ public class H2Handler extends SQLHandler {
         HikariConfig hikariConfig = new HikariConfig();
 
         File path = new File(getMainServer().getPluginInstance().getDataFolder(), getDatabase() + ".db");
-        String jdbcUrl = "jdbc:h2:" + path.getAbsolutePath();
+        String jdbcUrl = "jdbc:h2:" + path.getAbsolutePath() + ";mode=MySQL";
 
         hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
         hikariConfig.addDataSourceProperty("URL", jdbcUrl);

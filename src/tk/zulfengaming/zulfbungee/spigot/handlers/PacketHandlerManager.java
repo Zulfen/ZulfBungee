@@ -7,23 +7,24 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class PacketHandlerManager {
 
-    private final ArrayList<PacketHandler> handlers = new ArrayList<>();
+    private final LinkedList<PacketHandler> handlers = new LinkedList<>();
 
     public PacketHandlerManager(ClientConnection connectionIn) {
-        handlers.add(new Heartbeat(connectionIn));
-        handlers.add(new ClientHandshake(connectionIn));
-        handlers.add(new ServerSwitchEvent(connectionIn));
-        handlers.add(new ServerMessageEvent(connectionIn));
-        handlers.add(new PlayerDisconnectEvent(connectionIn));
-        handlers.add(new InvalidConfiguration(connectionIn));
+        handlers.addLast(new Heartbeat(connectionIn));
+        handlers.addLast(new ClientHandshake(connectionIn));
+        handlers.addLast(new ServerSwitchEvent(connectionIn));
+        handlers.addLast(new ServerMessageEvent(connectionIn));
+        handlers.addLast(new PlayerDisconnectEvent(connectionIn));
+        handlers.addLast(new PlayerConnectEvent(connectionIn));
+        handlers.addLast(new InvalidConfiguration(connectionIn));
     }
 
-    public ArrayList<PacketHandler> getHandlers() {
+    public LinkedList<PacketHandler> getHandlers() {
         return handlers;
     }
 
