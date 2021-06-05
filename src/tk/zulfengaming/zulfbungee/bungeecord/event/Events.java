@@ -44,7 +44,7 @@ public class Events implements Listener {
 
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
-            ProxyPlayer playerOut = null;
+            ProxyPlayer playerOut;
 
             if (fromServer != null) {
 

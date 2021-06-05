@@ -7,7 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
-import java.util.Collection;
 
 public class ServerOnline extends PacketHandler {
 

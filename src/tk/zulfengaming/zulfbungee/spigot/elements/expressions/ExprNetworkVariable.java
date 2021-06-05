@@ -106,10 +106,6 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        if (mode == null) {
-            return;
-        }
-
         LinkedList<Value> valuesOut = new LinkedList<>();
 
         if (delta != null && !mode.equals(Changer.ChangeMode.DELETE)) {
@@ -136,7 +132,8 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.ADD) {
+
+        if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) {
             return CollectionUtils.array(isSingle() ? Object.class : Object[].class);
         }
 

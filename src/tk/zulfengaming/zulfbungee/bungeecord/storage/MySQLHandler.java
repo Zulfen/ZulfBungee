@@ -9,6 +9,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Optional;
 
@@ -70,7 +71,7 @@ public class MySQLHandler extends StorageImpl {
 
                     //getMainServer().getPluginInstance().logDebug("Got value " + name);
 
-                    return Optional.ofNullable(new NetworkVariable(name, null, value));
+                    return Optional.of(new NetworkVariable(name, null, value));
 
                 }
             }
@@ -280,10 +281,21 @@ public class MySQLHandler extends StorageImpl {
 
                 ResultSet result = getStatement.executeQuery();
 
-                int querySize = 0;
-
                 while (result.next()) {
-                    querySize++;
+
+                    for (Value value : values) {
+
+                        if (Arrays.equals(value.data, result.getBytes("data"))) {
+
+                            PreparedStatement deleteStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name=?");
+                            deleteStatement.setString(1, result.getString("name"));
+
+                            deleteStatement.executeUpdate();
+
+                        }
+
+                    }
+
                 }
 
 
