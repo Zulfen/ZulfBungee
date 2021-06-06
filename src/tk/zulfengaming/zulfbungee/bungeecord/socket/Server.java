@@ -224,7 +224,9 @@ public class Server implements Runnable {
 
         serverSocket.close();
 
-        storage.shutdown();
+        if (storage != null) {
+            storage.shutdown();
+        }
 
     }
 
