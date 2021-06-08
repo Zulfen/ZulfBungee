@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.io.IOException;
@@ -39,6 +40,8 @@ public class ServerConnection implements Runnable {
 
     // tracking
     private final HashMap<UUID, ProxyPlayer> players = new HashMap<>();
+
+    private ClientInfo clientInfo;
 
     private Packet packetInBuffer;
 
@@ -150,6 +153,14 @@ public class ServerConnection implements Runnable {
 
     public HashMap<UUID, ProxyPlayer> getPlayers() {
         return players;
+    }
+
+    public ClientInfo getClientInfo() {
+        return clientInfo;
+    }
+
+    public void setClientInfo(ClientInfo clientInfo) {
+        this.clientInfo = clientInfo;
     }
 
     public String getId() {

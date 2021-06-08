@@ -31,7 +31,7 @@ public class PlayerServer extends PacketHandler {
             HashMap<UUID, ProxyPlayer> players = entry.getValue().getPlayers();
 
             if (players.containsValue(playerIn)) {
-                serverOut = new ProxyServer(entry.getKey(), players.values().toArray(new ProxyPlayer[0]));
+                serverOut = new ProxyServer(entry.getKey(), entry.getValue().getClientInfo());
             }
         }
 

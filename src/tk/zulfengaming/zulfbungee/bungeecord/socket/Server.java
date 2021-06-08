@@ -65,6 +65,8 @@ public class Server implements Runnable {
                storage.setupDatabase();
             }, "SetupStorageThread");
 
+            pluginInstance.logDebug(ChatColor.GREEN + "Currently using StorageImpl: " + storage.getClass().toString());
+
         }
 
     }

@@ -13,36 +13,62 @@ import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ExprBungeePlayers extends SimpleExpression<ProxyPlayer> {
+public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
 
     static {
-        Skript.registerExpression(ExprBungeePlayers.class, ProxyPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] bungeecord players");
+        Skript.registerExpression(ExprProxyPlayers.class, ProxyPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] bungeecord players [on %-proxyservers%]");
     }
+
+    private Expression<ProxyServer> servers;
 
     @Override
     protected ProxyPlayer[] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
+        LinkedList<ProxyPlayer> playersOut = new LinkedList<>();
+
         try {
-            Optional<Packet> request = connection.send(new Packet(PacketTypes.GLOBAL_PLAYERS,
-                    true, false, null));
+
+            Optional<Packet> request;
+
+            if (servers != null) {
+
+                ProxyServer[] serversOut = servers.getArray(event);
+                
+                request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
+                            true, false, serversOut));
+
+
+            } else {
+
+                request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
+                        true, false, null));
+
+            }
 
             if (request.isPresent()) {
+
                 Packet packet = request.get();
 
                 if (packet.getDataArray() != null) {
 
-                    return Stream.of(packet.getDataArray())
+                    List<ProxyPlayer> playersFrom = Stream.of(packet.getDataArray())
                             .filter(Objects::nonNull)
                             .filter(ProxyPlayer.class::isInstance)
                             .map(ProxyPlayer.class::cast)
-                            .toArray(ProxyPlayer[]::new);
+                            .collect(Collectors.toList());
+
+                    playersOut.addAll(playersFrom);
 
                 }
 
@@ -51,10 +77,9 @@ public class ExprBungeePlayers extends SimpleExpression<ProxyPlayer> {
         } catch (InterruptedException e) {
             e.printStackTrace();
 
-            return null;
         }
 
-        return null;
+        return playersOut.toArray(new ProxyPlayer[0]);
     }
 
     @Override
@@ -74,6 +99,7 @@ public class ExprBungeePlayers extends SimpleExpression<ProxyPlayer> {
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+        servers = (Expression<ProxyServer>) expressions[0];
         return true;
     }
 }

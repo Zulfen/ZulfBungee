@@ -33,15 +33,21 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
             Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
 
             if (send.isPresent()) {
+
                 Packet packetIn = send.get();
 
-                return (ProxyServer) packetIn.getDataSingle();
+                if (packetIn.getDataArray() != null) {
+
+                    return (ProxyServer) packetIn.getDataSingle();
+
+                }
 
             }
 
         } catch (InterruptedException ignored) {
 
         }
+
 
         return null;
     }

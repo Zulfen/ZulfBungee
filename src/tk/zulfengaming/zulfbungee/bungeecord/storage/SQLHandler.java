@@ -48,6 +48,7 @@ public class SQLHandler extends StorageImpl {
 
             getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Done setting up the database!");
 
+
         } catch (SQLException e) {
             getMainServer().getPluginInstance().error("There was an error setting up/connecting to the database!");
             e.printStackTrace();

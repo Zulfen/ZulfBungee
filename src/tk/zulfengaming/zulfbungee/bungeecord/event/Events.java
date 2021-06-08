@@ -27,11 +27,16 @@ public class Events implements Listener {
 
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
+
         server.getPluginInstance().getTaskManager().newTask(() -> {
+
             ProxiedPlayer eventPlayer = event.getPlayer();
+
             server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
                     new ProxyPlayer(eventPlayer.getName(), event.getPlayer().getUniqueId())));
+
         }, event.toString());
+
     }
 
     @EventHandler
@@ -58,13 +63,14 @@ public class Events implements Listener {
 
             String toServerName = toServer.getInfo().getName();
 
-            HashMap<UUID, ProxyPlayer> toPlayers = server.getActiveConnections().get(toServerName).getPlayers();
+            ServerConnection connection = server.getActiveConnections().get(toServerName);
+            HashMap<UUID, ProxyPlayer> toPlayers = connection.getPlayers();
 
             playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
 
             toPlayers.put(eventPlayer.getUniqueId(), playerOut);
 
-            playerOut.setServer(new ProxyServer(toServerName, toPlayers.values().toArray(new ProxyPlayer[0])));
+            playerOut.setServer(new ProxyServer(toServerName, connection.getClientInfo()));
 
             server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 

@@ -3,10 +3,12 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 public enum PacketTypes {
 
     PLAYER_SEND_MESSAGE,
-    GLOBAL_PLAYERS,
+    PROXY_PLAYERS,
+    PROXY_SERVER,
     PLAYER_SERVER,
     HEARTBEAT,
     CLIENT_HANDSHAKE,
+    CLIENT_INFO,
     NETWORK_VARIABLE_MODIFY,
     NETWORK_VARIABLE_GET,
     SERVER_ONLINE,

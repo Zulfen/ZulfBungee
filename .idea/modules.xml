@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../ZulfBungeeMaven/BungeeSkMaven.iml" filepath="$PROJECT_DIR$/../ZulfBungeeMaven/BungeeSkMaven.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ZulfBungeeMaven/Maven.iml" filepath="$PROJECT_DIR$/../ZulfBungeeMaven/Maven.iml" />
       <module fileurl="file://$PROJECT_DIR$/ZulfBungee.iml" filepath="$PROJECT_DIR$/ZulfBungee.iml" />
       <module fileurl="file://$PROJECT_DIR$/../BungeeSkMaven/BungeeSkMaven/ZulfBungeeMaven.iml" filepath="$PROJECT_DIR$/../BungeeSkMaven/BungeeSkMaven/ZulfBungeeMaven.iml" />
     </modules>

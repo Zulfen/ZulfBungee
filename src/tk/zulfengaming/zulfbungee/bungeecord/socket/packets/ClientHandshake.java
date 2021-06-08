@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -23,6 +24,8 @@ public class ClientHandshake extends PacketHandler {
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
         ServerConnection connection = getMainServer().getSocketConnections().get(address);
+
+        connection.setClientInfo((ClientInfo) packetIn.getDataSingle());
 
         InetAddress addressIn = ((InetSocketAddress) address).getAddress();
 

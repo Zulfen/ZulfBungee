@@ -15,13 +15,14 @@ public class PacketHandlerManager {
 
     public PacketHandlerManager(Server serverIn) {
         handlers.addLast(new Heartbeat(serverIn));
-        handlers.addLast(new GlobalPlayers(serverIn));
+        handlers.addLast(new ProxyPlayers(serverIn));
         handlers.addLast(new PlayerSendMessage(serverIn));
         handlers.addLast(new ClientHandshake(serverIn));
         handlers.addLast(new NetworkVariableModify(serverIn));
         handlers.addLast(new NetworkVariableGet(serverIn));
         handlers.addLast(new ServerOnline(serverIn));
         handlers.addLast(new GlobalServers(serverIn));
+        handlers.addLast(new ClientInfo(serverIn));
         handlers.addLast(new ServerSendMessage(serverIn));
         handlers.addLast(new PlayerServer(serverIn));
     }

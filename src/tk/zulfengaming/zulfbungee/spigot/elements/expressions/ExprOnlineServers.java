@@ -33,6 +33,7 @@ public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
                     true, false, null));
 
             if (request.isPresent()) {
+
                 Packet packet = request.get();
 
                 if (packet.getDataArray() != null) {

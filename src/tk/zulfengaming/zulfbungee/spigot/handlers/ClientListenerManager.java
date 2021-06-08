@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -163,7 +164,9 @@ public class ClientListenerManager implements Runnable {
 
                         pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
 
-                        connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, true, true, null));
+                        ClientInfo clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers());
+
+                        connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, true, true, clientInfo));
 
                     }
 
