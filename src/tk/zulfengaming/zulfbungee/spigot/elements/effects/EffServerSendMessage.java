@@ -29,10 +29,17 @@ public class EffServerSendMessage extends Effect {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event));
+        if (connection.getServerName().isPresent()) {
 
-        connection.send_direct(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
-                false, false, messageOut));
+            String name = connection.getServerName().get();
+
+            ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event),
+                    new ProxyServer(name, connection.getClientInfo()));
+
+            connection.send_direct(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
+                    false, false, messageOut));
+
+        }
 
     }
 

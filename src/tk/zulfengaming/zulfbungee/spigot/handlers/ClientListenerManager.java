@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +40,9 @@ public class ClientListenerManager implements Runnable {
 
     private final AtomicBoolean socketConnected = new AtomicBoolean(false);
 
-    private final ArrayList<ClientListener> listeners = new ArrayList<>();
+    private final LinkedList<ClientListener> listeners = new LinkedList<>();
+
+    private ClientInfo clientInfo;
 
     public ClientListenerManager(ClientConnection connectionIn) {
 
@@ -81,7 +83,7 @@ public class ClientListenerManager implements Runnable {
 
     public void addListener(ClientListener listener) {
         pluginInstance.logDebug("New listener added: " + listener.getClass().toString());
-        listeners.add(listener);
+        listeners.addLast(listener);
     }
 
     public ZulfBungeeSpigot getPluginInstance() {
@@ -120,12 +122,12 @@ public class ClientListenerManager implements Runnable {
         return socketBarrier;
     }
 
-    public ArrayList<ClientListener> getListeners() {
+    public LinkedList<ClientListener> getListeners() {
         return listeners;
     }
 
-    public int getSocketTimeout() {
-        return socketHandler.getTimeout();
+    public ClientInfo getClientInfo() {
+        return clientInfo;
     }
 
     @Override
@@ -164,7 +166,7 @@ public class ClientListenerManager implements Runnable {
 
                         pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
 
-                        ClientInfo clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers());
+                        clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers());
 
                         connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, true, true, clientInfo));
 

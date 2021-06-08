@@ -9,6 +9,7 @@ import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.task.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -179,6 +180,10 @@ public class ClientConnection implements Runnable {
 
     public AtomicBoolean isConnected() {
         return clientListenerManager.isSocketConnected();
+    }
+
+    public ClientInfo getClientInfo() {
+        return clientListenerManager.getClientInfo();
     }
 
     public void shutdown() throws IOException {

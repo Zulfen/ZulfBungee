@@ -9,10 +9,11 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventMessage;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class EvtServerMessage extends SkriptEvent {
 
-    Literal<String> title;
+    private Literal<String> title;
 
     static {
         Skript.registerEvent("Server Message", EvtServerMessage.class, EventMessage.class, "server message %string%");
@@ -21,6 +22,13 @@ public class EvtServerMessage extends SkriptEvent {
             @Override
             public String get(EventMessage eventMessage) {
                 return eventMessage.getMessage().getText();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMessage.class, ProxyServer.class, new Getter<ProxyServer, EventMessage>() {
+            @Override
+            public ProxyServer get(EventMessage eventMessage) {
+                return eventMessage.getMessage().getFrom();
             }
         }, 0);
     }

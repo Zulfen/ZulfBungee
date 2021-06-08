@@ -10,10 +10,13 @@ public class ServerMessage implements Serializable {
 
     private final ProxyServer[] servers;
 
-    public ServerMessage(String titleIn, String messageIn, ProxyServer[] serversIn) {
+    private final ProxyServer from;
+
+    public ServerMessage(String titleIn, String messageIn, ProxyServer[] serversIn, ProxyServer fromIn) {
         this.title = titleIn;
         this.message = messageIn;
         this.servers = serversIn;
+        this.from = fromIn;
     }
 
     public String getTitle() {
@@ -27,4 +30,9 @@ public class ServerMessage implements Serializable {
     public ProxyServer[] getServers() {
         return servers;
     }
+
+    public ProxyServer getFrom() {
+        return from;
+    }
+
 }
