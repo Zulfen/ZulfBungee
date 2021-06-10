@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class CondIsServerOnline extends Condition {
 
-    Expression<ProxyServer> server;
+    private Expression<ProxyServer> server;
 
     static {
         Skript.registerCondition(CondIsServerOnline.class, "%-proxyserver% (1¦is|2¦is(n't| not)) online");
