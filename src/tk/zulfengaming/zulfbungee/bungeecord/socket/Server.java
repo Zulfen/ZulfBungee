@@ -11,6 +11,8 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Handler;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -205,7 +207,13 @@ public class Server implements Runnable {
 
         socketConnections.remove(connection.getAddress());
 
-        activeConnections.remove(activeConnections.inverse().get(connection));
+        String name = activeConnections.inverse().get(connection);
+
+        sendToAllClients(new Packet(PacketTypes.CLIENT_DISCONNECT, false, true, new ProxyServer(
+                name, connection.getClientInfo())
+        ));
+
+        activeConnections.remove(name);
 
     }
 

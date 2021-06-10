@@ -19,7 +19,7 @@ public class CondIsServerOnline extends Condition {
     Expression<ProxyServer> server;
 
     static {
-        Skript.registerCondition(CondIsServerOnline.class, "proxy server %-proxyserver% (1¦is|2¦is(n't| not)) online");
+        Skript.registerCondition(CondIsServerOnline.class, "%-proxyserver% (1¦is|2¦is(n't| not)) online");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CondIsServerOnline extends Condition {
 
         try {
 
-            Optional<Packet> response = connection.send(new Packet(PacketTypes.SERVER_ONLINE, true, false, server));
+            Optional<Packet> response = connection.send(new Packet(PacketTypes.SERVER_ONLINE, true, false, server.getSingle(event)));
 
             if (response.isPresent()) {
 
