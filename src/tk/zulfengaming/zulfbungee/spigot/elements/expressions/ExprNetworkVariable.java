@@ -44,8 +44,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         try {
 
-            // not returnable as response sent async from packet handler
-            Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, networkVariable.getName().toString(event)));
+            Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, networkVariable.getName().toString(event)));
 
             if (response.isPresent()) {
 
@@ -125,9 +124,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         try {
 
-            // makes the thread wait for a response that a modification has been done on the proxy before continuing
-            // prevents consistency issues
-            connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, variableOut));
+            connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
 
         } catch (InterruptedException ignored) {
 
