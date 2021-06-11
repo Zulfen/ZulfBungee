@@ -9,7 +9,6 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 
 import java.net.SocketAddress;
 import java.util.Optional;
-import java.util.UUID;
 
 public class NetworkVariableGet extends PacketHandler {
 
@@ -29,20 +28,15 @@ public class NetworkVariableGet extends PacketHandler {
 
             StorageImpl storage = getStorage.get();
 
-            getMainServer().getPluginInstance().getTaskManager().newTask(() -> {
+            Optional<NetworkVariable> storedVariable = storage.getVariables(variableName);
+            NetworkVariable variable = null;
 
-                Optional<NetworkVariable> storedVariable = storage.getVariables(variableName);
-                NetworkVariable variable = null;
+            if (storedVariable.isPresent()) {
+                variable = storedVariable.get();
 
-                if (storedVariable.isPresent()) {
-                    variable = storedVariable.get();
+            }
 
-                }
-
-                // sent async instead of from main ServerConnection thread to prevent it locking up.
-                getMainServer().getSocketConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable));
-
-            }, "StorageOperation@" + UUID.randomUUID());
+            return new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable);
 
         }
 

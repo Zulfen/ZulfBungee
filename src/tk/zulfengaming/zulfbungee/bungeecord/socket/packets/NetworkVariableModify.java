@@ -10,7 +10,6 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.SkriptChangeMode;
 
 import java.net.SocketAddress;
 import java.util.Optional;
-import java.util.UUID;
 
 public class NetworkVariableModify extends PacketHandler {
 
@@ -31,30 +30,28 @@ public class NetworkVariableModify extends PacketHandler {
             StorageImpl storage = getStorage.get();
 
             if (variable.getChangeMode().isPresent()) {
-                getMainServer().getPluginInstance().getTaskManager().newTask(() -> {
 
-                    SkriptChangeMode mode = variable.getChangeMode().get();
+                SkriptChangeMode mode = variable.getChangeMode().get();
 
-                    switch (mode) {
+                switch (mode) {
 
-                        case SET:
-                            storage.setVariables(variable);
-                            break;
-                        case DELETE:
-                            storage.deleteVariables(variable.getName());
-                            break;
-                        case ADD:
-                            storage.addToVariable(variable.getName(), variable.getValueArray());
-                            break;
-                        case REMOVE:
-                            storage.removeFromVariable(variable.getName(), variable.getValueArray());
-                            break;
+                    case SET:
+                        storage.setVariables(variable);
+                        break;
+                    case DELETE:
+                        storage.deleteVariables(variable.getName());
+                        break;
+                    case ADD:
+                        storage.addToVariable(variable.getName(), variable.getValueArray());
+                        break;
+                    case REMOVE:
+                        storage.removeFromVariable(variable.getName(), variable.getValueArray());
+                        break;
 
-                    }
+                }
 
-                    getMainServer().getSocketConnections().get(address).send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, null));
+                return new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, null);
 
-                }, "StorageOperation@" + UUID.randomUUID());
             }
 
         }
