@@ -50,8 +50,8 @@ public class ClientListenerManager implements Runnable {
         this.pluginInstance = connectionIn.getPluginInstance();
 
         try {
-            this.serverAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("server-address"));
-            this.clientAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("client-address"));
+            this.serverAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("server-host"));
+            this.clientAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("client-host"));
         } catch (UnknownHostException e) {
 
             pluginInstance.error("Could not get the name of the host in the config!:");

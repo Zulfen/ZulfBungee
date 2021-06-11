@@ -25,7 +25,6 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
 
             Socket socket = new Socket();
             socket.setReuseAddress(true);
-            socket.setSoTimeout(timeout);
 
             socket.bind(new InetSocketAddress(getClientListenerManager().getClientAddress(), getClientListenerManager().getClientPort()));
             socket.connect(new InetSocketAddress(getClientListenerManager().getServerAddress(), getClientListenerManager().getServerPort()));
