@@ -10,6 +10,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class EvtPlayerServerConnect extends SkriptEvent {
 
@@ -21,6 +22,13 @@ public class EvtPlayerServerConnect extends SkriptEvent {
             @Override
             public ProxyPlayer get(EventPlayerServerConnect eventPlayerServerConnect) {
                 return eventPlayerServerConnect.getPlayer();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventPlayerServerConnect.class, ProxyServer.class, new Getter<ProxyServer, EventPlayerServerConnect>() {
+            @Override
+            public ProxyServer get(EventPlayerServerConnect eventPlayerServerConnect) {
+                return eventPlayerServerConnect.getPlayer().getServer();
             }
         }, 0);
     }

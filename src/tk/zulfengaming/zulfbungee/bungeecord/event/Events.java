@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.event;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -26,14 +26,16 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onPostLogin(PostLoginEvent event) {
+    public void onServerConnected(ServerConnectedEvent event) {
 
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
             ProxiedPlayer eventPlayer = event.getPlayer();
 
+            ProxyServer proxyServer = new ProxyServer(event.getServer().getInfo().getName());
+
             server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
-                    new ProxyPlayer(eventPlayer.getName(), event.getPlayer().getUniqueId())));
+                    new ProxyPlayer(eventPlayer.getName(), event.getPlayer().getUniqueId(), proxyServer)));
 
         }, event.toString());
 
@@ -70,7 +72,7 @@ public class Events implements Listener {
 
             toPlayers.put(eventPlayer.getUniqueId(), playerOut);
 
-            playerOut.setServer(new ProxyServer(toServerName, connection.getClientInfo()));
+            playerOut.setServer(new ProxyServer(toServerName));
 
             server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
