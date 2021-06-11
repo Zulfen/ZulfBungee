@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Optional;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientConnection implements Runnable {
@@ -32,7 +29,7 @@ public class ClientConnection implements Runnable {
     private Socket socket;
 
     // the latest packet from the queue coming in.
-    private final BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> skriptPacketQueue = new LinkedBlockingQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
