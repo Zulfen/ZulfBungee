@@ -77,7 +77,9 @@ public class ClientListenerManager implements Runnable {
 
         listeners.clear();
 
-        socket.close();
+        if (socket != null) {
+            socket.close();
+        }
 
     }
 
