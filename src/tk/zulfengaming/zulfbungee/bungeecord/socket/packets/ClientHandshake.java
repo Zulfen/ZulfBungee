@@ -46,7 +46,7 @@ public class ClientHandshake extends PacketHandler {
                 String name = info.getKey();
                 getMainServer().addActiveConnection(connection, name);
 
-                ProxyServer serverOut = new ProxyServer(name, connection.getClientInfo());
+                ProxyServer serverOut = new ProxyServer(name, clientInfo);
                 getMainServer().sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, serverOut));
 
                 return new Packet(PacketTypes.CLIENT_HANDSHAKE, false, true, name);
