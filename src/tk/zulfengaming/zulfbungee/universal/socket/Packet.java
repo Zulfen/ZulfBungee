@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Packet implements Serializable {
 
-    private static final long serialVersionUID = 45_737_538_534_983L;
+    private static final long serialVersionUID = 38_573_475_842L;
 
     private final PacketTypes type;
 
@@ -41,6 +41,25 @@ public class Packet implements Serializable {
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
         this.id = UUID.randomUUID();
+
+        this.data[0] = dataIn;
+    }
+
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn, UUID uuidIn) {
+
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+        this.id = uuidIn;
+
+        this.data = dataIn;
+    }
+
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object dataIn, UUID uuidIn) {
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+        this.id = uuidIn;
 
         this.data[0] = dataIn;
     }

@@ -6,11 +6,18 @@ public class ClientInfo implements Serializable {
 
     private final int maxPlayers;
 
-    public ClientInfo(int maxPlayersIn) {
+    private final int minecraftPort;
+
+    public ClientInfo(int maxPlayersIn, int minecraftPortIn) {
         this.maxPlayers = maxPlayersIn;
+        this.minecraftPort = minecraftPortIn;
     }
 
     public int getMaxPlayers() {
         return maxPlayers;
+    }
+
+    public int getMinecraftPort() {
+        return minecraftPort;
     }
 }

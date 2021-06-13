@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 // issue must be here
 
@@ -17,9 +17,7 @@ public class DataInHandler implements Runnable {
 
     private final ServerConnection connection;
 
-    private final Socket socket;
-
-    private final BlockingQueue<Packet> queueIn = new ArrayBlockingQueue<>(10);
+    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
 
     private final ObjectInputStream inputStream;
 
@@ -27,7 +25,7 @@ public class DataInHandler implements Runnable {
     public DataInHandler(ServerConnection connectionIn) throws IOException {
         this.connection = connectionIn;
 
-        this.socket = connectionIn.getSocket();
+        Socket socket = connectionIn.getSocket();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
 
     }

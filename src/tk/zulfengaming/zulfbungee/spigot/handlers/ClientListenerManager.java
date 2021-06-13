@@ -168,7 +168,7 @@ public class ClientListenerManager implements Runnable {
 
                         pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
 
-                        clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers());
+                        clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
                         connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, true, true, clientInfo));
 

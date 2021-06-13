@@ -29,7 +29,7 @@ public class ClientConnection implements Runnable {
     private Socket socket;
 
     // the latest packet from the queue coming in.
-    private final BlockingQueue<Packet> skriptPacketQueue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -132,7 +132,7 @@ public class ClientConnection implements Runnable {
 
         if (clientListenerManager.isSocketConnected().get()) {
 
-            return Optional.ofNullable(skriptPacketQueue.poll(5, TimeUnit.SECONDS));
+            return Optional.ofNullable(skriptPacketQueue.poll(3, TimeUnit.SECONDS));
 
         } else {
 

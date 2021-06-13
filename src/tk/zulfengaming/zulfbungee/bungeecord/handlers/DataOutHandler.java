@@ -8,24 +8,21 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 public class DataOutHandler implements Runnable {
 
     private final ServerConnection connection;
 
-    private final Socket socket;
-
-    private final BlockingQueue<Packet> queueOut = new ArrayBlockingQueue<>(10);
+    private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
 
     private final ObjectOutputStream outputStream;
-
 
     public DataOutHandler(ServerConnection connectionIn) throws IOException {
         this.connection = connectionIn;
 
-        this.socket = connectionIn.getSocket();
+        Socket socket = connectionIn.getSocket();
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
 
     }

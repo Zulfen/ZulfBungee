@@ -26,17 +26,22 @@ public class ClientHandshake extends PacketHandler {
 
         ServerConnection connection = getMainServer().getSocketConnections().get(address);
 
-        connection.setClientInfo((ClientInfo) packetIn.getDataSingle());
+        ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
+
+        connection.setClientInfo(clientInfo);
 
         InetAddress addressIn = ((InetSocketAddress) address).getAddress();
+        int portIn = clientInfo.getMinecraftPort();
 
         for (Map.Entry<String, ServerInfo> info : getProxy().getServersCopy().entrySet()) {
 
-            SocketAddress infoSockAddr = info.getValue().getSocketAddress();
+            InetSocketAddress infoSockAddr = (InetSocketAddress) info.getValue().getSocketAddress();
 
-            InetAddress infoInetAddr = ((InetSocketAddress) infoSockAddr).getAddress();
+            int infoPort = infoSockAddr.getPort();
 
-            if (infoInetAddr.equals(addressIn)) {
+            InetAddress infoInetAddr = infoSockAddr.getAddress();
+
+            if (infoInetAddr.equals(addressIn) && portIn == infoPort) {
 
                 String name = info.getKey();
                 getMainServer().addActiveConnection(connection, name);

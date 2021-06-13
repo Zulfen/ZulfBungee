@@ -85,7 +85,7 @@ public class ServerConnection implements Runnable {
                     if (packetIn != null) {
                         Packet handledPacket = packetManager.handlePacket(packetIn, address);
 
-                        if (packetIn.isReturnable()) {
+                        if (packetIn.isReturnable() && handledPacket != null) {
                             send(handledPacket);
                         }
                     }
