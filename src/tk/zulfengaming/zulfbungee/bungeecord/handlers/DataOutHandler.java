@@ -9,13 +9,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataOutHandler implements Runnable {
 
     private final ServerConnection connection;
 
-    private final BlockingQueue<Packet> queueOut = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueOut = new LinkedBlockingQueue<>();
 
     private final ObjectOutputStream outputStream;
 

@@ -11,14 +11,14 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Phaser;
-import java.util.concurrent.SynchronousQueue;
 
 public class DataInHandler extends ClientListener implements Runnable {
 
     private final ClientConnection connection;
 
-    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
 
     private final Phaser socketBarrier;
 

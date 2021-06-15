@@ -1,21 +1,15 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
-import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.util.HashMap;
-import java.util.UUID;
 
 public class Events implements Listener {
 
@@ -32,49 +26,32 @@ public class Events implements Listener {
 
             ProxiedPlayer eventPlayer = event.getPlayer();
 
-            ProxyServer proxyServer = new ProxyServer(event.getServer().getInfo().getName());
+            String toName = event.getServer().getInfo().getName();
 
-            server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
-                    new ProxyPlayer(eventPlayer.getName(), event.getPlayer().getUniqueId(), proxyServer)));
+            if (eventPlayer.getServer() == null) {
 
-        }, event.toString());
+                ProxyServer proxyServer = new ProxyServer(event.getServer().getInfo().getName());
+                ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId(), proxyServer);
 
-    }
+                server.getActiveConnections().get(toName).getPlayers().put(eventPlayer.getUniqueId(), playerOut);
 
-    @EventHandler
-    public void onServerSwitch(ServerSwitchEvent event) {
+                server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
+                        playerOut));
 
-        ProxiedPlayer eventPlayer = event.getPlayer();
+            } else if (event.getServer() != null) {
 
-        ServerInfo fromServer = event.getFrom();
-        net.md_5.bungee.api.connection.Server toServer = eventPlayer.getServer();
+                String fromName = eventPlayer.getServer().getInfo().getName();
 
-        server.getPluginInstance().getTaskManager().newTask(() -> {
+                server.getActiveConnections().get(fromName).getPlayers().remove(eventPlayer.getUniqueId());
 
-            ProxyPlayer playerOut;
+                ProxyServer serverOut = new ProxyServer(toName);
+                ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId(), serverOut);
 
-            if (fromServer != null) {
+                server.getActiveConnections().get(toName).getPlayers().put(eventPlayer.getUniqueId(), playerOut);
 
-                String fromServerName = fromServer.getName();
-
-                HashMap<UUID, ProxyPlayer> fromPlayers = server.getActiveConnections().get(fromServerName).getPlayers();
-
-                fromPlayers.remove(eventPlayer.getUniqueId());
+                server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
             }
-
-            String toServerName = toServer.getInfo().getName();
-
-            ServerConnection connection = server.getActiveConnections().get(toServerName);
-            HashMap<UUID, ProxyPlayer> toPlayers = connection.getPlayers();
-
-            playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId());
-
-            toPlayers.put(eventPlayer.getUniqueId(), playerOut);
-
-            playerOut.setServer(new ProxyServer(toServerName));
-
-            server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
         }, event.toString());
 
@@ -87,12 +64,16 @@ public class Events implements Listener {
 
             ProxiedPlayer player = event.getPlayer();
 
-            for (ServerConnection connection : server.getActiveConnections().values()) {
-                connection.getPlayers().remove(player.getUniqueId());
-            }
+            if (player.getServer() != null) {
 
-            server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
-                    new ProxyPlayer(player.getName(), player.getUniqueId())));
+                String serverName = player.getServer().getInfo().getName();
+
+                server.getActiveConnections().get(serverName).getPlayers().remove(player.getUniqueId());
+
+                server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
+                        new ProxyPlayer(player.getName(), player.getUniqueId())));
+
+            }
 
         }, event.toString());
 

@@ -29,7 +29,7 @@ public class ClientConnection implements Runnable {
     private Socket socket;
 
     // the latest packet from the queue coming in.
-    private final BlockingQueue<Packet> skriptPacketQueue = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> skriptPacketQueue = new LinkedBlockingQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 

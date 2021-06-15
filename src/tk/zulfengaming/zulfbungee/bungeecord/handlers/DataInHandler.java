@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 // issue must be here
 
@@ -17,7 +17,7 @@ public class DataInHandler implements Runnable {
 
     private final ServerConnection connection;
 
-    private final BlockingQueue<Packet> queueIn = new SynchronousQueue<>();
+    private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
 
     private final ObjectInputStream inputStream;
 

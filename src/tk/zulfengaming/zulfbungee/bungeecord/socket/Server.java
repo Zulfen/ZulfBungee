@@ -201,6 +201,10 @@ public class Server implements Runnable {
         activeConnections.put(name, connection);
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
+        ProxyServer serverOut = new ProxyServer(name, connection.getClientInfo());
+
+        sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, serverOut));
+
     }
 
     public void removeServerConnection(ServerConnection connection) {

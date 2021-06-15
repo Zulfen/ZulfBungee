@@ -1,5 +1,5 @@
 name: ZulfBungee
 main: tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot
-version: 0.5.11
+version: 0.5.12
 author: zulfen
 depend: [Skript]
