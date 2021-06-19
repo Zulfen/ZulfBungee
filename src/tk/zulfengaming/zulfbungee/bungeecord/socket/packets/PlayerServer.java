@@ -30,7 +30,7 @@ public class PlayerServer extends PacketHandler {
             Collection<ProxyPlayer> players = entry.getValue().playerList();
 
             if (players.contains(playerIn)) {
-                serverOut = new ProxyServer(entry.getKey(), entry.getValue().getClientInfo());
+                serverOut = new ProxyServer(entry.getKey());
             }
         }
 
