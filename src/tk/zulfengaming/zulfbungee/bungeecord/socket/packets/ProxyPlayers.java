@@ -36,7 +36,7 @@ public class ProxyPlayers extends PacketHandler {
 
                 ServerConnection connection = getMainServer().getActiveConnections().get(server.getName());
 
-                for (ProxyPlayer player : connection.getPlayers().values()) {
+                for (ProxyPlayer player : connection.playerList()) {
                     playersOut.addLast(player);
                 }
 
@@ -46,7 +46,7 @@ public class ProxyPlayers extends PacketHandler {
         } else {
 
             for (ServerConnection connection : getMainServer().getActiveConnections().values()) {
-                for (ProxyPlayer player : connection.getPlayers().values()) {
+                for (ProxyPlayer player : connection.playerList()) {
                     playersOut.addLast(player);
                 }
             }
