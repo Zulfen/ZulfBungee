@@ -68,10 +68,14 @@ public class Events implements Listener {
 
                 String serverName = player.getServer().getInfo().getName();
 
-                server.getActiveConnections().get(serverName).removePlayer(player.getUniqueId());
+                if (server.getActiveConnections().get(serverName) != null) {
 
-                server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
-                        new ProxyPlayer(player.getName(), player.getUniqueId())));
+                    server.getActiveConnections().get(serverName).removePlayer(player.getUniqueId());
+
+                    server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
+                            new ProxyPlayer(player.getName(), player.getUniqueId())));
+
+                }
 
             }
 
