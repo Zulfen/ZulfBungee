@@ -29,7 +29,7 @@ public class ClientConnection implements Runnable {
     private Socket socket;
 
     // the latest packet from the queue coming in.
-    private final BlockingQueue<Packet> skriptPacketQueue = new LinkedBlockingQueue<>();
+    private final TransferQueue<Packet> skriptPacketQueue = new LinkedTransferQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -107,7 +107,7 @@ public class ClientConnection implements Runnable {
                             packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
 
                         } else {
-                            skriptPacketQueue.put(packetIn);
+                            skriptPacketQueue.tryTransfer(packetIn);
                         }
 
                     }
