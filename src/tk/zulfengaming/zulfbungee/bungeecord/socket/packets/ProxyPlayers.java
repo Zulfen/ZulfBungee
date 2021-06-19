@@ -19,7 +19,6 @@ public class ProxyPlayers extends PacketHandler {
 
     }
 
-    // not implemented
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
