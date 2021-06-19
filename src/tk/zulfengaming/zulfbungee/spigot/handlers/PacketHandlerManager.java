@@ -24,6 +24,7 @@ public class PacketHandlerManager {
         handlers.addLast(new InvalidConfiguration(connectionIn));
         handlers.addLast(new ClientInfo(connectionIn));
         handlers.addLast(new ClientDisconnect(connectionIn));
+        handlers.addLast(new ServerKickEvent(connectionIn));
     }
 
     public LinkedList<PacketHandler> getHandlers() {
