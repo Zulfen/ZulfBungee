@@ -14,7 +14,8 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyKick;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Events implements Listener {
 
@@ -83,9 +84,13 @@ public class Events implements Listener {
                 ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId());
 
 
-                String[] messages = Stream.of(event.getKickReasonComponent())
-                        .map(BaseComponent::toLegacyText)
-                        .toArray(String[]::new);
+                List<String> list = new ArrayList<>();
+                for (BaseComponent component : event.getKickReasonComponent()) {
+                    String toLegacyText = component.toLegacyText();
+                    list.add(toLegacyText);
+                }
+
+                String[] messages = list.toArray(new String[0]);
 
 
                 server.sendToAllClients(new Packet(PacketTypes.KICK_EVENT, false, true,
