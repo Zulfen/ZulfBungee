@@ -12,9 +12,10 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,7 +40,7 @@ public class ServerConnection implements Runnable {
     private DataOutHandler dataOutHandler;
 
     // tracking
-    private final HashMap<UUID, ProxyPlayer> players = new HashMap<>();
+    private final ConcurrentHashMap<UUID, ProxyPlayer> players = new ConcurrentHashMap<>();
 
     private ClientInfo clientInfo;
 
@@ -151,8 +152,20 @@ public class ServerConnection implements Runnable {
         return server;
     }
 
-    public HashMap<UUID, ProxyPlayer> getPlayers() {
-        return players;
+    public void addPlayer(UUID bungee, ProxyPlayer proxy) {
+        players.put(bungee, proxy);
+    }
+
+    public void removePlayer(UUID bungee) {
+        players.remove(bungee);
+    }
+
+    public ProxyPlayer getPlayer(UUID bungee) {
+        return players.get(bungee);
+    }
+
+    public Collection<ProxyPlayer> playerList() {
+        return players.values();
     }
 
     public ClientInfo getClientInfo() {

@@ -9,9 +9,8 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
-import java.util.UUID;
 
 public class PlayerServer extends PacketHandler {
 
@@ -28,9 +27,9 @@ public class PlayerServer extends PacketHandler {
 
         for (Map.Entry<String, ServerConnection> entry : getMainServer().getActiveConnections().entrySet()) {
 
-            HashMap<UUID, ProxyPlayer> players = entry.getValue().getPlayers();
+            Collection<ProxyPlayer> players = entry.getValue().playerList();
 
-            if (players.containsValue(playerIn)) {
+            if (players.contains(playerIn)) {
                 serverOut = new ProxyServer(entry.getKey(), entry.getValue().getClientInfo());
             }
         }

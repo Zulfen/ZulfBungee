@@ -33,7 +33,7 @@ public class Events implements Listener {
                 ProxyServer proxyServer = new ProxyServer(event.getServer().getInfo().getName());
                 ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId(), proxyServer);
 
-                server.getActiveConnections().get(toName).getPlayers().put(eventPlayer.getUniqueId(), playerOut);
+                server.getActiveConnections().get(toName).addPlayer(eventPlayer.getUniqueId(), playerOut);
 
                 server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
                         playerOut));
@@ -42,12 +42,12 @@ public class Events implements Listener {
 
                 String fromName = eventPlayer.getServer().getInfo().getName();
 
-                server.getActiveConnections().get(fromName).getPlayers().remove(eventPlayer.getUniqueId());
+                server.getActiveConnections().get(fromName).removePlayer(eventPlayer.getUniqueId());
 
                 ProxyServer serverOut = new ProxyServer(toName);
                 ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId(), serverOut);
 
-                server.getActiveConnections().get(toName).getPlayers().put(eventPlayer.getUniqueId(), playerOut);
+                server.getActiveConnections().get(toName).addPlayer(eventPlayer.getUniqueId(), playerOut);
 
                 server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
@@ -68,7 +68,7 @@ public class Events implements Listener {
 
                 String serverName = player.getServer().getInfo().getName();
 
-                server.getActiveConnections().get(serverName).getPlayers().remove(player.getUniqueId());
+                server.getActiveConnections().get(serverName).removePlayer(player.getUniqueId());
 
                 server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
                         new ProxyPlayer(player.getName(), player.getUniqueId())));
