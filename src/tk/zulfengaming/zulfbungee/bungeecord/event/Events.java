@@ -34,8 +34,6 @@ public class Events implements Listener {
 
             String toName = event.getServer().getInfo().getName();
 
-            server.getPluginInstance().logDebug("ServerConnected Player: " + eventPlayer.getName());
-            server.getPluginInstance().logDebug("To server: " + event.getServer().getInfo().getName());
 
             if (eventPlayer.getServer() == null) {
 
@@ -48,8 +46,6 @@ public class Events implements Listener {
                         playerOut));
 
             } else if (event.getServer() != null) {
-
-                server.getPluginInstance().logDebug("From server: " + eventPlayer.getServer().getInfo().getName());
 
                 String fromName = eventPlayer.getServer().getInfo().getName();
 
