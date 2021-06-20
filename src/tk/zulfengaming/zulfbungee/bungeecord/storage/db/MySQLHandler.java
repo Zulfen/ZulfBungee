@@ -28,11 +28,11 @@ public class MySQLHandler extends SQLHandler {
 
         } else if (!verifyCertificate) {
 
-            jdbcUrl += "&verifyServerCertificate=false";
+            jdbcUrl += "?&verifyServerCertificate=false";
 
         } else {
 
-            jdbcUrl += "&verifyServerCertificate=true";
+            jdbcUrl += "?&verifyServerCertificate=true";
 
         }
 
