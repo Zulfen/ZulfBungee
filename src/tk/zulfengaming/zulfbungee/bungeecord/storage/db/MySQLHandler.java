@@ -19,8 +19,21 @@ public class MySQLHandler extends SQLHandler {
 
         String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
 
-        if (!getMainServer().getPluginInstance().getConfig().getBoolean("mysql-useSSL")) {
+        boolean useSSL = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-useSSL");
+        boolean verifyCertificate = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-verifyCertificate");
+
+        if (!useSSL) {
+
             jdbcUrl += "?&useSSL=false";
+
+        } else if (!verifyCertificate) {
+
+            jdbcUrl += "&verifyServerCertificate=false";
+
+        } else {
+
+            jdbcUrl += "&verifyServerCertificate=true";
+
         }
 
         getDataSource().setJdbcUrl(jdbcUrl);

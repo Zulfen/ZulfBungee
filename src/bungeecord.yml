@@ -38,6 +38,7 @@ storage-database: "database"
 
 # If you get errors in console because of SSL, disable it here, but it's better to set up SSL on the MySQL server.
 mysql-useSSL: true
+mysql-verifyCertificate: true
 
 # - Security -
 
