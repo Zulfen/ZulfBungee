@@ -31,8 +31,6 @@ public class Events implements Listener {
 
         ProxiedPlayer eventPlayer = event.getPlayer();
 
-        String toName = event.getServer().getInfo().getName();
-
         server.getPluginInstance().getTaskManager().newTask(() -> {
 
             if (eventPlayer.getServer() == null) {
