@@ -2,15 +2,12 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
-import java.util.Collection;
-import java.util.Map;
 
 public class PlayerServer extends PacketHandler {
 
@@ -25,14 +22,8 @@ public class PlayerServer extends PacketHandler {
         ProxyPlayer playerIn = (ProxyPlayer) packetIn.getDataSingle();
         ProxyServer serverOut = null;
 
-        for (Map.Entry<String, ServerConnection> entry : getMainServer().getActiveConnections().entrySet()) {
-
-            Collection<ProxyPlayer> players = entry.getValue().playerList();
-
-            if (players.contains(playerIn)) {
-                serverOut = new ProxyServer(entry.getKey());
-            }
-        }
+        if (getProxy().getPlayer(playerIn.getUuid()).getServer() != null)
+            serverOut = new ProxyServer(getProxy().getPlayer(playerIn.getUuid()).getServer().getInfo().getName());
 
         return new Packet(PacketTypes.PLAYER_SERVER, false, false, serverOut);
     }

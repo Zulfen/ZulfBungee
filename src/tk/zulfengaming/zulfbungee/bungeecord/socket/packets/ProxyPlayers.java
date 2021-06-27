@@ -1,14 +1,15 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
@@ -33,10 +34,10 @@ public class ProxyPlayers extends PacketHandler {
 
             for (ProxyServer server : servers) {
 
-                ServerConnection connection = getMainServer().getActiveConnections().get(server.getName());
+                Collection<ProxiedPlayer> players = getProxy().getServersCopy().get(server.getName()).getPlayers();
 
-                for (ProxyPlayer player : connection.playerList()) {
-                    playersOut.addLast(player);
+                for (ProxiedPlayer player : players) {
+                    playersOut.addLast(new ProxyPlayer(player.getName(), player.getUniqueId()));
                 }
 
             }
@@ -44,10 +45,8 @@ public class ProxyPlayers extends PacketHandler {
 
         } else {
 
-            for (ServerConnection connection : getMainServer().getActiveConnections().values()) {
-                for (ProxyPlayer player : connection.playerList()) {
-                    playersOut.addLast(player);
-                }
+            for (ProxiedPlayer player : getProxy().getPlayers()) {
+                playersOut.addLast(new ProxyPlayer(player.getName(), player.getUniqueId()));
             }
 
         }

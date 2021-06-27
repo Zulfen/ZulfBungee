@@ -177,8 +177,6 @@ public class Server implements Runnable {
 
             }
 
-            return false;
-
         }
 
         return false;
