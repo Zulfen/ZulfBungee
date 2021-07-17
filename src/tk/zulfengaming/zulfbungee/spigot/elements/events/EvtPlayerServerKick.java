@@ -14,7 +14,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 public class EvtPlayerServerKick extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Player Proxy Kick", EvtPlayerServerKick.class, EventPlayerServerKick.class, "(proxy|bungeecord) player kick");
+        Skript.registerEvent("Player Proxy Kick", EvtPlayerServerKick.class, EventPlayerServerKick.class, "(proxy|bungeecord|bungee) player kick");
 
         EventValues.registerEventValue(EventPlayerServerKick.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerKick>() {
             @Override

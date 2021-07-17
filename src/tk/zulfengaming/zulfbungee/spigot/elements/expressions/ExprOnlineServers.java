@@ -7,52 +7,19 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
-import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ClientInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
 
     static {
-        Skript.registerExpression(ExprOnlineServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] online servers");
+        Skript.registerExpression(ExprOnlineServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] online [(proxy|bungeecord|bungee)] servers");
     }
 
     @Override
     protected ProxyServer[] get(Event event) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-
-        try {
-            Optional<Packet> request = connection.send(new Packet(PacketTypes.GLOBAL_SERVERS,
-                    true, false, null));
-
-            if (request.isPresent()) {
-
-                Packet packet = request.get();
-
-                if (packet.getDataArray() != null) {
-
-                    return Stream.of(packet.getDataArray())
-                            .filter(Objects::nonNull)
-                            .filter(ProxyServer.class::isInstance)
-                            .map(ProxyServer.class::cast)
-                            .toArray(ProxyServer[]::new);
-
-                }
-
-            }
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return ClientInfoManager.getServers().toArray(new ProxyServer[0]);
 
     }
 
@@ -68,7 +35,7 @@ public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
 
     @Override
     public String toString(Event event, boolean b) {
-        return null;
+        return "online servers";
     }
 
     @Override

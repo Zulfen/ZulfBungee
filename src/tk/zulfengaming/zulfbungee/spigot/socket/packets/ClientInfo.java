@@ -8,6 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.net.SocketAddress;
+import java.util.stream.Stream;
 
 public class ClientInfo extends PacketHandler {
 
@@ -19,9 +20,12 @@ public class ClientInfo extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        ProxyServer serverIn = (ProxyServer) packetIn.getDataSingle();
+        ProxyServer[] serversIn = Stream.of(packetIn.getDataArray())
+                .filter(ProxyServer.class::isInstance)
+                .map(ProxyServer.class::cast)
+                .toArray(ProxyServer[]::new);
 
-        ClientInfoManager.addClientInfo(serverIn.getName(), serverIn.getClientInfo());
+        ClientInfoManager.setServers(serversIn);
 
         return null;
 

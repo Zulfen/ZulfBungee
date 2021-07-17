@@ -14,7 +14,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 public class EvtPlayerServerDisconnect extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Player Proxy Disconnect", EvtPlayerServerDisconnect.class, EventPlayerServerDisconnect.class, "(proxy|bungeecord) player disconnect");
+        Skript.registerEvent("Player Proxy Disconnect", EvtPlayerServerDisconnect.class, EventPlayerServerDisconnect.class, "(proxy|bungeecord|bungee) player disconnect");
 
         EventValues.registerEventValue(EventPlayerServerDisconnect.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerDisconnect>() {
             @Override

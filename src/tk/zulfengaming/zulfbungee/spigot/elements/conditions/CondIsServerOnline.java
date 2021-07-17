@@ -6,13 +6,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
-import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ClientInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.util.Optional;
 
 public class CondIsServerOnline extends Condition {
 
@@ -25,25 +20,8 @@ public class CondIsServerOnline extends Condition {
     @Override
     public boolean check(Event event) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+        return ClientInfoManager.getServers().contains(server.getSingle(event));
 
-        try {
-
-            Optional<Packet> response = connection.send(new Packet(PacketTypes.SERVER_ONLINE, true, false, server.getSingle(event)));
-
-            if (response.isPresent()) {
-
-                Packet packetIn = response.get();
-
-                return (boolean) packetIn.getDataSingle();
-
-            }
-
-        } catch (InterruptedException ignored) {
-
-        }
-
-        return false;
     }
 
     @Override

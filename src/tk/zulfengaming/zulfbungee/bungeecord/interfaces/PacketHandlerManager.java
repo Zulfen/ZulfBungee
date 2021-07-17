@@ -6,30 +6,33 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
-import java.util.LinkedList;
+import java.util.EnumMap;
 
 
 public class PacketHandlerManager {
 
-    private final LinkedList<PacketHandler> handlers = new LinkedList<>();
+    private final EnumMap<PacketTypes, PacketHandler> handlers = new EnumMap<>(PacketTypes.class);
 
     public PacketHandlerManager(Server serverIn) {
-        handlers.addLast(new Heartbeat(serverIn));
-        handlers.addLast(new ProxyPlayers(serverIn));
-        handlers.addLast(new PlayerSendMessage(serverIn));
-        handlers.addLast(new ClientHandshake(serverIn));
-        handlers.addLast(new NetworkVariableModify(serverIn));
-        handlers.addLast(new NetworkVariableGet(serverIn));
-        handlers.addLast(new ServerOnline(serverIn));
-        handlers.addLast(new GlobalServers(serverIn));
-        handlers.addLast(new ServerSendMessage(serverIn));
-        handlers.addLast(new PlayerServer(serverIn));
+        addHandler(new Heartbeat(serverIn));
+        addHandler(new ProxyPlayers(serverIn));
+        addHandler(new PlayerSendMessage(serverIn));
+        addHandler(new ClientHandshake(serverIn));
+        addHandler(new NetworkVariableModify(serverIn));
+        addHandler(new NetworkVariableGet(serverIn));
+        addHandler(new ServerSendMessage(serverIn));
+        addHandler(new PlayerServer(serverIn));
+        addHandler(new ProxyPlayerOnline(serverIn));
+    }
+
+    public void addHandler(PacketHandler handlerIn) {
+        for (PacketTypes type : handlerIn.getTypes()) {
+            handlers.put(type, handlerIn);
+        }
     }
 
     public PacketHandler getHandler(Packet packetIn) {
-        for (PacketHandler packetHandler : handlers)
-            for (PacketTypes type : packetHandler.getTypes()) if (type == packetIn.getType()) return packetHandler;
-        return null;
+        return handlers.get(packetIn.getType());
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time

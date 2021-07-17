@@ -21,9 +21,12 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
     @Override
     public Optional<Socket> call() throws InterruptedException {
 
+        // Fixes potential memory leak
+
+        Socket socket = new Socket();
+
         try {
 
-            Socket socket = new Socket();
             socket.setReuseAddress(true);
             socket.setSoTimeout(timeout);
 
@@ -35,6 +38,15 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
         } catch (IOException e) {
             // TODO: Hm... improve this.
             Thread.sleep(2000);
+        }
+
+        if (!socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                getClientListenerManager().getPluginInstance().error("Error closing unused socket:");
+                e.printStackTrace();
+            }
         }
 
         return Optional.empty();

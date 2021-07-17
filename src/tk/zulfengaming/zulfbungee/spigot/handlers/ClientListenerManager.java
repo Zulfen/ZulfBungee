@@ -154,7 +154,7 @@ public class ClientListenerManager implements Runnable {
 
                 try {
 
-                    Optional<Socket> futureSocket = connect().get(5, TimeUnit.SECONDS);
+                    Optional<Socket> futureSocket = connect().get();
 
                     if (futureSocket.isPresent()) {
 
@@ -174,7 +174,7 @@ public class ClientListenerManager implements Runnable {
 
                     }
 
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     pluginInstance.error("Error getting socket:");
                     e.printStackTrace();
                 }

@@ -7,40 +7,33 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
-import java.util.LinkedList;
+import java.util.EnumMap;
 
 
 public class PacketHandlerManager {
 
-    private final LinkedList<PacketHandler> handlers = new LinkedList<>();
+    private final EnumMap<PacketTypes, PacketHandler> handlers = new EnumMap<>(PacketTypes.class);
 
     public PacketHandlerManager(ClientConnection connectionIn) {
-        handlers.addLast(new Heartbeat(connectionIn));
-        handlers.addLast(new ClientHandshake(connectionIn));
-        handlers.addLast(new ServerSwitchEvent(connectionIn));
-        handlers.addLast(new ServerMessageEvent(connectionIn));
-        handlers.addLast(new PlayerDisconnectEvent(connectionIn));
-        handlers.addLast(new PlayerConnectEvent(connectionIn));
-        handlers.addLast(new InvalidConfiguration(connectionIn));
-        handlers.addLast(new ClientInfo(connectionIn));
-        handlers.addLast(new ClientDisconnect(connectionIn));
-        handlers.addLast(new ServerKickEvent(connectionIn));
+        addHandler(new Heartbeat(connectionIn));
+        addHandler(new ClientHandshake(connectionIn));
+        addHandler(new ServerSwitchEvent(connectionIn));
+        addHandler(new ServerMessageEvent(connectionIn));
+        addHandler(new PlayerDisconnectEvent(connectionIn));
+        addHandler(new PlayerConnectEvent(connectionIn));
+        addHandler(new InvalidConfiguration(connectionIn));
+        addHandler(new ClientInfo(connectionIn));
+        addHandler(new ServerKickEvent(connectionIn));
     }
 
-    public LinkedList<PacketHandler> getHandlers() {
-        return handlers;
+    public void addHandler(PacketHandler handlerIn) {
+        for (PacketTypes type : handlerIn.getTypes()) {
+            handlers.put(type, handlerIn);
+        }
     }
 
     public PacketHandler getHandler(Packet packetIn) {
-
-        for (PacketHandler packetHandler : handlers) {
-            for (PacketTypes type : packetHandler.getTypes()) {
-                if (type == packetIn.getType()) {
-                    return packetHandler;
-                }
-            }
-        }
-        return null;
+        return handlers.get(packetIn.getType());
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time

@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
 
     static {
-        Skript.registerExpression(ExprProxyPlayers.class, ProxyPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] bungeecord players [on %-proxyservers%]");
+        Skript.registerExpression(ExprProxyPlayers.class, ProxyPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]");
     }
 
     private Expression<ProxyServer> servers;

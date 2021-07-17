@@ -16,7 +16,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     private Expression<String> serverName;
 
     static {
-        Skript.registerExpression(ExprProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord) server %string%");
+        Skript.registerExpression(ExprProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) server %string%");
     }
 
     @Override

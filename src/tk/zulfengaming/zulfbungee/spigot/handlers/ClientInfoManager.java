@@ -1,8 +1,11 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
 import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class ClientInfoManager {
 
@@ -12,12 +15,26 @@ public class ClientInfoManager {
         return servers.get(nameIn);
     }
 
-    public static void addClientInfo(String nameIn, ClientInfo clientInfoIn) {
-        servers.put(nameIn, clientInfoIn);
+    public static void setServers(ProxyServer[] serverList) {
+
+        servers.clear();
+
+        for (ProxyServer server : serverList) {
+            servers.put(server.getName(), server.getClientInfo());
+        }
+
     }
 
-    public static void removeClientInfo(String nameIn, ClientInfo clientInfoIn) {
-        servers.remove(nameIn, clientInfoIn);
+    public static Collection<ProxyServer> getServers() {
+
+        LinkedList<ProxyServer> serversOut = new LinkedList<>();
+
+        for (String name : servers.keySet()) {
+            serversOut.addLast(new ProxyServer(name));
+        }
+
+        return serversOut;
+
     }
 
 }

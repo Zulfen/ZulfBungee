@@ -199,9 +199,7 @@ public class Server implements Runnable {
         activeConnections.put(name, connection);
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
-        ProxyServer serverOut = new ProxyServer(name, connection.getClientInfo());
-
-        sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, serverOut));
+        sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, getProxyServerList()));
 
     }
 
@@ -211,11 +209,9 @@ public class Server implements Runnable {
 
         String name = activeConnections.inverse().get(connection);
 
-        sendToAllClients(new Packet(PacketTypes.CLIENT_DISCONNECT, false, true, new ProxyServer(
-                name, connection.getClientInfo())
-        ));
-
         activeConnections.remove(name);
+
+        sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, getProxyServerList()));
 
     }
 
@@ -261,6 +257,12 @@ public class Server implements Runnable {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public ProxyServer[] getProxyServerList() {
+        return activeConnections.entrySet().stream()
+                .map(stringServerConnectionEntry -> new ProxyServer(stringServerConnectionEntry.getKey(), stringServerConnectionEntry.getValue().getClientInfo()))
+                .toArray(ProxyServer[]::new);
     }
 
     public PacketHandlerManager getPacketManager() {

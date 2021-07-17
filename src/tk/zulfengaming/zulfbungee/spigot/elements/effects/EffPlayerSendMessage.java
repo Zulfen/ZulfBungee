@@ -23,7 +23,7 @@ public class EffPlayerSendMessage extends Effect {
     private Expression<String> message;
 
     static {
-        Skript.registerEffect(EffPlayerSendMessage.class, "message (proxy|network|bungeecord) player %-proxyplayers% [the message] %string%");
+        Skript.registerEffect(EffPlayerSendMessage.class, "message (proxy|network|bungeecord|bungee) player %-proxyplayers% [the message] %string%");
     }
 
     @Override
