@@ -39,7 +39,6 @@ public class ZulfBungeeSpigot extends JavaPlugin {
             debug = true;
         }
 
-
         try {
             connection = new ClientConnection(this);
 

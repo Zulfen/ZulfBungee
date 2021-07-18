@@ -5,6 +5,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
+import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -21,6 +22,13 @@ public class ZulfBungeecord extends Plugin {
 
     private TaskManager taskManager;
 
+    private CheckUpdateTask updater;
+
+    // represents the full version, so like
+    // version[0] = 0, version[1] = 6, version[2] = 7
+    // there is probably a better way to do this but hey
+    private final int[] version = new int[3];
+
     private boolean isDebug = false;
 
     public void onEnable() {
@@ -34,6 +42,7 @@ public class ZulfBungeecord extends Plugin {
         if (config.getBoolean("debug")) isDebug = true;
 
         try {
+
             server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
             getProxy().getPluginManager().registerListener(this, new Events(server));
@@ -45,6 +54,18 @@ public class ZulfBungeecord extends Plugin {
             e.printStackTrace();
 
         }
+
+        // gets the version from plugin.yml and converts it to an integer array
+
+        String[] versionString = getDescription().getVersion().split("\\.");
+
+        for (int i = 0; i < version.length; i++) {
+            version[i] = Integer.parseInt(versionString[i]);
+        }
+
+        updater = new CheckUpdateTask(this);
+
+        taskManager.newTask(updater, "UpdateTask");
 
     }
 
@@ -91,5 +112,13 @@ public class ZulfBungeecord extends Plugin {
 
     public boolean isDebug() {
         return isDebug;
+    }
+
+    public int[] getVersion() {
+        return version;
+    }
+
+    public CheckUpdateTask getUpdater() {
+        return updater;
     }
 }

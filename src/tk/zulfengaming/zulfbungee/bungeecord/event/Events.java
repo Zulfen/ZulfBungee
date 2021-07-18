@@ -1,6 +1,9 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -9,6 +12,7 @@ import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyKick;
@@ -44,6 +48,25 @@ public class Events implements Listener {
             }
 
         }, event.toString());
+
+        if (eventPlayer.hasPermission("zulfen.admin") && !server.getPluginInstance().getUpdater().isUpToDate()) {
+
+            CheckUpdateTask updater = server.getPluginInstance().getUpdater();
+
+            eventPlayer.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
+                    .color(ChatColor.AQUA)
+                    .italic(true)
+                    .append(" (Version " + updater.getLatestVersion() + ")")
+                    .color(ChatColor.YELLOW)
+                    .create());
+
+            eventPlayer.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
+                    .color(ChatColor.DARK_AQUA)
+                    .underlined(true)
+                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, updater.getDownloadURL()))
+                    .create());
+
+        }
 
     }
 
@@ -84,7 +107,6 @@ public class Events implements Listener {
 
                 ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId());
 
-
                 List<String> list = new ArrayList<>();
                 for (BaseComponent component : event.getKickReasonComponent()) {
                     String toLegacyText = component.toLegacyText();
@@ -92,7 +114,6 @@ public class Events implements Listener {
                 }
 
                 String[] messages = list.toArray(new String[0]);
-
 
                 server.sendToAllClients(new Packet(PacketTypes.KICK_EVENT, false, true,
                             new ProxyKick(messages, playerOut)));
