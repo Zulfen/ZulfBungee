@@ -41,7 +41,7 @@ public class CheckUpdateTask implements Runnable {
                     .getAsJsonObject().get("browser_download_url").getAsString();
 
             int[] latestIntVersion = new int[3];
-            String[] latestVersionSplit = latestVersion.split("\\.");
+            String[] latestVersionSplit = latestVersion.split("v")[1].split("\\.");
 
             for (int i = 0; i < latestIntVersion.length; i++) {
                 latestIntVersion[i] = Integer.parseInt(latestVersionSplit[i]);
