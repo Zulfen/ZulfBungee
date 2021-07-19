@@ -49,7 +49,8 @@ public class Events implements Listener {
 
         }, event.toString());
 
-        if (eventPlayer.hasPermission("zulfen.admin") && !server.getPluginInstance().getUpdater().isUpToDate()) {
+        if (eventPlayer.hasPermission("zulfen.admin") && !server.getPluginInstance().getUpdater().isUpToDate() &&
+        eventPlayer.getServer() == null) {
 
             CheckUpdateTask updater = server.getPluginInstance().getUpdater();
 
