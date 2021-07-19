@@ -56,8 +56,8 @@ public class Events implements Listener {
 
             eventPlayer.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
                     .color(ChatColor.AQUA)
-                    .italic(true)
                     .append(" (Version " + updater.getLatestVersion() + ")")
+                    .italic(true)
                     .color(ChatColor.YELLOW)
                     .create());
 

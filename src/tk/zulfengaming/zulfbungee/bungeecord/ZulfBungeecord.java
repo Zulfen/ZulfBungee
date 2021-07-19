@@ -59,7 +59,7 @@ public class ZulfBungeecord extends Plugin {
 
         String[] versionString = getDescription().getVersion().split("\\.");
 
-        for (int i = 0; i < version.length; i++) {
+        for (int i = 0; i < versionString.length; i++) {
             version[i] = Integer.parseInt(versionString[i]);
         }
 
