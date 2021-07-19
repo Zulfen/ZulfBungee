@@ -1,6 +1,6 @@
 name: ZulfBungee
 main: tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot
-version: 0.6.85
+version: 0.6.86
 author: zulfen
 website: https://github.com/Zulfen/ZulfBungee
 description: A Skript addon which adds Bungeecord / Proxy intergration to your server!
