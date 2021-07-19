@@ -58,6 +58,10 @@ public class CheckUpdateTask implements Runnable {
 
                 pluginInstance.logInfo(ChatColor.AQUA + "Plugin is up to date! Current version: " + ChatColor.YELLOW + ChatColor.UNDERLINE + pluginInstance.getDescription().getVersion());
 
+            } else {
+
+                pluginInstance.logInfo(ChatColor.AQUA + "Plugin is not up to date! A notice will be displayed to admins in-game to update the plugin!");
+
             }
 
         } catch (IOException e) {
