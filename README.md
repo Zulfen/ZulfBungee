@@ -12,7 +12,7 @@ Inspired by Limeglass' work on Skungee, but custom coded for my network.
 
 - message (proxy|network|bungeecord|bungee) player %-proxyplayers% [the message] %string%
 
-- message (proxy|network|bungeecord|bungee) server %-proxyservers% [the message] %string%
+- message (proxy|network|bungeecord|bungee) server %-proxyservers% [the message] %string% (named|called|with title) %string%
 
 **Events:**
 
