@@ -8,21 +8,43 @@ Inspired by Limeglass' work on Skungee, but custom coded for my network.
 
 **Supported Syntax:**
 
-message bungeecord player %-proxyplayers% [the message] %string% **(effect)**
+**Effect:**
 
-message (proxy|network|bungeecord) server %-proxyservers% [the message] %string% **(effect)**
+- message (proxy|network|bungeecord|bungee) player %-proxyplayers% [the message] %string%
 
-player switch server **(event)**
+- message (proxy|network|bungeecord|bungee) server %-proxyservers% [the message] %string% (named|called|with title) %string%
 
-server message %string% **(event)**
+**Events:**
 
-[(all [[of] the]|the)] bungeecord players **(expression)**
+- on (proxy|bungeecord|bungee) player connect
 
-(proxy|network|bungeecord) variable %objects% **(expression)**
+- on (proxy|bungeecord|bungee) player switch server
 
-[(all [[of] the]|the)] online servers **(expression)**
+- on (bungeecord|bungee|proxy) server message %string%
 
-[the] name of this [script's] server **(expression)**
+- on (proxy|bungeecord|bungee) player disconnect
 
+- on (proxy|bungeecord|bungee) player kick
 
-proxy server %-proxyserver% (1¦is|2¦is(n't| not)) online **(condition)**
+**Expressions:**
+
+- [(all [[of] the]|the)] online [(proxy|bungeecord|bungee)] servers
+
+- (proxy|network|bungeecord|bungee) variable %objects%
+
+- proxyplayer's [(current|connected)] server[s]
+
+- [(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]
+
+- (proxy|bungeecord|bungee) server %string%
+
+- proxyserver's (player limit|max player count)
+
+- [the] name of this [script's] server
+
+**Conditions:**
+
+- if (proxy|bungeecord|bungee) player %-proxyplayer% (1¦is|2¦is(n't| not)) online
+
+- if %-proxyserver% (1¦is|2¦is(n't| not)) online
+
