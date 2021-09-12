@@ -36,6 +36,6 @@ public class EvtPlayerServerDisconnect extends SkriptEvent {
 
     @Override
     public String toString(Event event, boolean b) {
-        return null;
+        return "event proxy player disconnect";
     }
 }

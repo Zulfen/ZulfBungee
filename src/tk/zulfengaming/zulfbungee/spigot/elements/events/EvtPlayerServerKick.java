@@ -43,6 +43,6 @@ public class EvtPlayerServerKick extends SkriptEvent {
 
     @Override
     public String toString(Event event, boolean b) {
-        return null;
+        return "event proxy player kick";
     }
 }

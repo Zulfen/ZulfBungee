@@ -23,13 +23,13 @@ public class DataInHandler implements Runnable {
 
 
     public DataInHandler(ServerConnection connectionIn) throws IOException {
+
         this.connection = connectionIn;
 
         Socket socket = connectionIn.getSocket();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
 
     }
-
 
     @Override
     public void run() {

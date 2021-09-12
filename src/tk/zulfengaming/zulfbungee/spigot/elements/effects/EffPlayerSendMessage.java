@@ -14,6 +14,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,7 +42,8 @@ public class EffPlayerSendMessage extends Effect {
         ProxyPlayer[] playersArray = players.getArray(event);
 
         List<String> data = Stream.of(playersArray)
-                .map(ProxyPlayer::getName)
+                .map(ProxyPlayer::getUuid)
+                .map(UUID::toString)
                 .collect(Collectors.toList());
 
         data.add(message.getSingle(event));
@@ -52,6 +54,6 @@ public class EffPlayerSendMessage extends Effect {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return null;
+        return "effect message proxy player " + players.toString(event, b) + " with message " + message.toString(event, b);
     }
 }

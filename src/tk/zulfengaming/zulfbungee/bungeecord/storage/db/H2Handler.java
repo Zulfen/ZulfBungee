@@ -26,9 +26,9 @@ public class H2Handler extends SQLHandler {
         hikariConfig.addDataSourceProperty("user", getUsername());
         hikariConfig.addDataSourceProperty("password", getPassword());
 
-        setDataSource(new HikariDataSource(hikariConfig));
+        dataSource = new HikariDataSource(hikariConfig);
 
-        getDataSource().setMaximumPoolSize(10);
+        dataSource.setMaximumPoolSize(10);
 
     }
 }

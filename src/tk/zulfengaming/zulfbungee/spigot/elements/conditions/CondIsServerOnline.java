@@ -26,7 +26,7 @@ public class CondIsServerOnline extends Condition {
 
     @Override
     public String toString(Event event, boolean b) {
-        return null;
+        return "condition proxy server " + server.toString(event, b) + " online";
     }
 
     @Override

@@ -50,6 +50,6 @@ public class EvtServerMessage extends SkriptEvent {
 
     @Override
     public String toString(Event event, boolean b) {
-        return null;
+        return "server message event with title " + title.toString(event, b);
     }
 }

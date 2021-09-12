@@ -41,7 +41,7 @@ public class ExprCurrentServer extends SimpleExpression<String> {
 
     @Override
     public String toString(Event event, boolean b) {
-        return null;
+        return "current proxy server name";
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class SQLHandler extends StorageImpl {
 
-    private HikariDataSource dataSource;
+    protected HikariDataSource dataSource;
 
     public SQLHandler(Server serverIn) {
         super(serverIn);
@@ -427,14 +427,6 @@ public class SQLHandler extends StorageImpl {
         getMainServer().getPluginInstance().logDebug("Shutting down database connection...");
         dataSource.close();
 
-    }
-
-    public HikariDataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(HikariDataSource dataSource) {
-        this.dataSource = dataSource;
     }
 
 }

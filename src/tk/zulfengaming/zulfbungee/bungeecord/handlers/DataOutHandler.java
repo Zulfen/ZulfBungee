@@ -27,9 +27,9 @@ public class DataOutHandler implements Runnable {
 
     }
 
-
     @Override
     public void run() {
+
         do {
 
             try {

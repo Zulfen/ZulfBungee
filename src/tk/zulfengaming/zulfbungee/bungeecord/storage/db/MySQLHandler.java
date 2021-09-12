@@ -13,9 +13,9 @@ public class MySQLHandler extends SQLHandler {
     @Override
     public void initialise() {
 
-        setDataSource(new HikariDataSource());
+        dataSource = new HikariDataSource();
 
-        getDataSource().setMaximumPoolSize(10);
+        dataSource.setMaximumPoolSize(10);
 
         String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
 
@@ -36,9 +36,9 @@ public class MySQLHandler extends SQLHandler {
 
         }
 
-        getDataSource().setJdbcUrl(jdbcUrl);
-        getDataSource().setUsername(getUsername());
-        getDataSource().setPassword(getPassword());
+        dataSource.setJdbcUrl(jdbcUrl);
+        dataSource.setUsername(getUsername());
+        dataSource.setPassword(getPassword());
 
     }
 }

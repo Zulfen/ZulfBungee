@@ -16,7 +16,7 @@ public class TaskManager {
 
     private final TaskScheduler scheduler;
 
-    // keeps track of running shit
+    // keeps track of running stuff
     private final HashMap<String, ScheduledTask> tasks = new HashMap<>();
 
     public TaskManager(ZulfBungeecord instanceIn) {

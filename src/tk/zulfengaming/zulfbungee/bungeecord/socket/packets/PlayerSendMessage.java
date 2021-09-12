@@ -9,6 +9,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
+import java.util.UUID;
 
 public class PlayerSendMessage extends PacketHandler {
 
@@ -25,8 +26,8 @@ public class PlayerSendMessage extends PacketHandler {
 
         for (int i = 0; i < data.length - 1; i++) {
 
-            String skriptPlayerName = (String) data[i];
-            ProxiedPlayer bungeecordPlayer = getProxy().getPlayer(skriptPlayerName);
+            UUID skriptPlayerUUID = UUID.fromString((String) data[i]);
+            ProxiedPlayer bungeecordPlayer = getProxy().getPlayer(skriptPlayerUUID);
 
             if (bungeecordPlayer != null) {
                 bungeecordPlayer.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));

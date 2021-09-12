@@ -48,7 +48,7 @@ public class CondIsProxyPlayerOnline extends Condition {
 
     @Override
     public String toString(Event event, boolean b) {
-        return "proxy player " + player.toString(event, b) + " status";
+        return "condition proxy player " + player.toString(event, b) + " status";
     }
 
     @Override

@@ -20,7 +20,7 @@ debug: true
 # Currently supported databases: MySQL, H2
 
 # If you have no clue what this does, just leave this as the default.
-storage-type: "none"
+storage-type: "h2"
 
 # Each option should be self-explanatory if you know what you are doing.
 
