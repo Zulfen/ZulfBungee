@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -18,10 +19,16 @@ public class ProxyPlayerOnline extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        ProxyPlayer player = (ProxyPlayer) packetIn.getDataSingle();
+        ProxyPlayer skriptPlayer = (ProxyPlayer) packetIn.getDataSingle();
 
-        if (getProxy().getPlayer(player.getUuid()) != null) {
-            return new Packet(PacketTypes.PLAYER_ONLINE, false, false, true);
+        if (skriptPlayer != null) {
+
+            ProxiedPlayer proxiedPlayer = getProxy().getPlayer(skriptPlayer.getUuid());
+
+            if (proxiedPlayer != null) {
+                return new Packet(PacketTypes.PLAYER_ONLINE, false, false, true);
+            }
+
         }
 
         return new Packet(PacketTypes.PLAYER_ONLINE, false, false, false);
