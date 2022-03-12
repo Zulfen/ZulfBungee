@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.storage;
 import com.google.common.primitives.Longs;
 import com.zaxxer.hikari.HikariDataSource;
 import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
@@ -13,15 +14,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Optional;
 
-public class SQLHandler extends StorageImpl {
+// TODO: Make byte to long / double (and reverse) a static function somewhere else for re-usability.
+public class HikariSQLHandler extends StorageImpl {
 
     protected HikariDataSource dataSource;
 
-    public SQLHandler(Server serverIn) {
+    public HikariSQLHandler(Server serverIn) {
         super(serverIn);
 
     }
@@ -57,7 +59,7 @@ public class SQLHandler extends StorageImpl {
     }
 
     @Override
-    public Optional<NetworkVariable> getVariables(String name) {
+    public Optional<NetworkVariable> getVariables(@NotNull String name) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -72,14 +74,14 @@ public class SQLHandler extends StorageImpl {
 
                 ResultSet result = preparedStatement.executeQuery();
 
-                LinkedList<Value> values = new LinkedList<>();
+                ArrayList<Value> values = new ArrayList<>();
 
                 while (result.next()) {
                     String type = result.getString("type");
                     byte[] data = result.getBytes("data");
 
                     //getMainServer().getPluginInstance().logDebug("Got value " + valueName);
-                    values.addLast(new Value(type, data));
+                    values.add(new Value(type, data));
 
                 }
 
@@ -105,7 +107,7 @@ public class SQLHandler extends StorageImpl {
 
                     //getMainServer().getPluginInstance().logDebug("Got value " + name);
 
-                    return Optional.of(new NetworkVariable(name, null, value));
+                    return Optional.of(new NetworkVariable(name, value));
 
                 }
             }
@@ -120,7 +122,7 @@ public class SQLHandler extends StorageImpl {
     }
 
     @Override
-    public void setVariables(NetworkVariable variable) {
+    public void setVariables(@NotNull NetworkVariable variable) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -177,7 +179,7 @@ public class SQLHandler extends StorageImpl {
     }
 
     @Override
-    public void addToVariable(String name, Value[] values) {
+    public void addToVariable(@NotNull String name, Value[] values) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -203,10 +205,10 @@ public class SQLHandler extends StorageImpl {
 
                 for (int i = 0; i < values.length; i++) {
 
-                    int listIndex = querySize + (i + 1);
+                    int storedListIndex = querySize + (i + 1);
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
-                    String variableNameOut = listName + "::" + listIndex;
+                    String variableNameOut = listName + "::" + storedListIndex;
 
                     setStatement.setString(1, variableNameOut);
                     setStatement.setString(2, values[valueArrayIndex].type);
@@ -288,7 +290,7 @@ public class SQLHandler extends StorageImpl {
     }
 
     @Override
-    public void deleteVariables(String name) {
+    public void deleteVariables(@NotNull String name) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -322,7 +324,7 @@ public class SQLHandler extends StorageImpl {
     }
 
     @Override
-    public void removeFromVariable(String name, Value[] values) {
+    public void removeFromVariable(@NotNull String name, Value[] values) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 

@@ -3,11 +3,11 @@ package tk.zulfengaming.zulfbungee.bungeecord.storage.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.storage.SQLHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.HikariSQLHandler;
 
 import java.io.File;
 
-public class H2Handler extends SQLHandler {
+public class H2Handler extends HikariSQLHandler {
 
     public H2Handler(Server serverIn) {
         super(serverIn);

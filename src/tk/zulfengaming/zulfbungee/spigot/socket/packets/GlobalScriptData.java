@@ -4,24 +4,24 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdate;
 
 import java.net.SocketAddress;
 
-public class ClientHandshake extends PacketHandler {
+public class GlobalScriptData extends PacketHandler {
 
-    public ClientHandshake(ClientConnection connectionIn) {
-        super(connectionIn, PacketTypes.CLIENT_UPDATE);
-
+    public GlobalScriptData(ClientConnection connectionIn) {
+        super(connectionIn, PacketTypes.GLOBAL_SCRIPT_DATA);
     }
 
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        ClientUpdate info = (ClientUpdate) packetIn.getDataSingle();
+        Object[] packetData = packetIn.getDataArray();
+        byte[] scriptData = new byte[packetData.length];
 
-        getConnection().setClientUpdate(info);
-        getConnection().requestGlobalScripts();
+        for(int i = 0; i < packetData.length; i++) scriptData[i] = (byte) packetData[i];
+
+        getConnection().getGlobalScriptManager().getDataQueue().offer(scriptData);
 
         return null;
 

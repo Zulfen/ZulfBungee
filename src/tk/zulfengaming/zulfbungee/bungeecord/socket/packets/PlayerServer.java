@@ -2,12 +2,11 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.net.SocketAddress;
 
 public class PlayerServer extends PacketHandler {
 
@@ -17,7 +16,7 @@ public class PlayerServer extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
 
         ProxyPlayer playerIn = (ProxyPlayer) packetIn.getDataSingle();
         ProxyServer serverOut = null;

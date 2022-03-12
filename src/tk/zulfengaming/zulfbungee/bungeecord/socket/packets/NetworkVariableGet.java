@@ -3,11 +3,11 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 
-import java.net.SocketAddress;
 import java.util.Optional;
 
 public class NetworkVariableGet extends PacketHandler {
@@ -18,7 +18,7 @@ public class NetworkVariableGet extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
 
         String variableName = (String) packetIn.getDataSingle();
 

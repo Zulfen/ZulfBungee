@@ -17,7 +17,7 @@ public class Packet implements Serializable {
 
     private Object[] data = new Object[1];
 
-    // these arguments should be self explanatory, but the field shouldHandle could be
+    // these arguments should be self-explanatory, but the field shouldHandle could be
     // seen as misleading.
 
     // that field is used to determine whether it automatically gets handled as soon

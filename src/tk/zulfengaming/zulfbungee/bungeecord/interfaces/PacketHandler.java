@@ -2,10 +2,9 @@ package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
 
 import net.md_5.bungee.api.ProxyServer;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-
-import java.net.SocketAddress;
 
 public abstract class PacketHandler {
 
@@ -13,7 +12,7 @@ public abstract class PacketHandler {
 
     private final Server mainServer;
 
-    public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
+    public abstract Packet handlePacket(Packet packetIn, BaseServerConnection connection);
 
     public PacketTypes[] getTypes() {
         return types;

@@ -12,12 +12,20 @@ host: "0.0.0.0"
 
 # This will toggle the display of detailed messages about what is going to the console.
 # When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!
-debug: true
+debug: false
+
+# Enables or disables global scripts.
+global-scripts: true
+
+# WARNING! It is not advised to change this option unless you know what you are doing!
+# Changes how many bytes of the global script are sent with each packet.
+script-buffer-size: 8192
+
 
 # - Storage -
 
 # What kind of database should be used to store network variables.
-# Currently supported databases: MySQL, H2
+# Currently, supported databases: MySQL, H2
 
 # If you have no clue what this does, just leave this as the default.
 storage-type: "h2"
@@ -37,8 +45,9 @@ storage-database: "database"
 # [MySQL Setup]
 
 # If you get errors in console because of SSL, disable it here, but it's better to set up SSL on the MySQL server.
-mysql-useSSL: true
-mysql-verifyCertificate: true
+mysql-use-ssl: true
+mysql-verify-certificate: true
+
 
 # - Security -
 
@@ -49,7 +58,7 @@ mysql-verifyCertificate: true
 
 port-whitelist: false
 
-# The ports you want to allow to connect should be defined here:
+# The ports you want to allow connecting should be defined here:
 
 ports:
   - 8000

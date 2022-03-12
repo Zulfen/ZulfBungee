@@ -1,11 +1,11 @@
 package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
 
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.packets.*;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
-import java.net.SocketAddress;
 import java.util.EnumMap;
 
 
@@ -23,6 +23,7 @@ public class PacketHandlerManager {
         addHandler(new ServerSendMessage(serverIn));
         addHandler(new PlayerServer(serverIn));
         addHandler(new ProxyPlayerOnline(serverIn));
+        addHandler(new GlobalScriptsHeader(serverIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {
@@ -36,7 +37,7 @@ public class PacketHandlerManager {
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
-        return getHandler(packetIn).handlePacket(packetIn, address);
+    public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
+        return getHandler(packetIn).handlePacket(packetIn, connection);
     }
 }

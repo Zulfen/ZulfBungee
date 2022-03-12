@@ -2,9 +2,9 @@ package tk.zulfengaming.zulfbungee.bungeecord.storage.db;
 
 import com.zaxxer.hikari.HikariDataSource;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.storage.SQLHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.HikariSQLHandler;
 
-public class MySQLHandler extends SQLHandler {
+public class MySQLHandler extends HikariSQLHandler {
 
     public MySQLHandler(Server serverIn) {
         super(serverIn);
@@ -19,8 +19,8 @@ public class MySQLHandler extends SQLHandler {
 
         String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
 
-        boolean useSSL = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-useSSL");
-        boolean verifyCertificate = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-verifyCertificate");
+        boolean useSSL = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-use-ssl");
+        boolean verifyCertificate = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-verify-certificate");
 
         if (!useSSL) {
 

@@ -17,7 +17,7 @@ public class NetworkVariable implements Serializable {
 
     }
 
-    public NetworkVariable(String nameIn, String modeIn, Value value) {
+    public NetworkVariable(String nameIn, Value value) {
         this.name = nameIn;
 
         this.values[0] = value;

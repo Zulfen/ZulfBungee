@@ -5,10 +5,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
-import java.net.SocketAddress;
 import java.util.UUID;
 
 public class PlayerSendMessage extends PacketHandler {
@@ -19,7 +19,7 @@ public class PlayerSendMessage extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
 
         Object[] data = packetIn.getDataArray();
         String message = (String) data[data.length - 1];

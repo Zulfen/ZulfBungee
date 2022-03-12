@@ -6,14 +6,12 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.LinkedList;
-import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,13 +34,11 @@ public class ClientListenerManager implements Runnable {
     private final TransferQueue<Socket> socketHandoff = new LinkedTransferQueue<>();
     private final Phaser socketBarrier = new Phaser();
 
-    private volatile Socket socket;
+    private Socket socket;
 
     private final AtomicBoolean socketConnected = new AtomicBoolean(false);
 
-    private final LinkedList<ClientListener> listeners = new LinkedList<>();
-
-    private ClientInfo clientInfo;
+    private ServerInfo serverInfo;
 
     public ClientListenerManager(ClientConnection connectionIn) {
 
@@ -67,15 +63,11 @@ public class ClientListenerManager implements Runnable {
 
     }
 
-    private Future<Optional<Socket>> connect() {
-
+    private Future<Socket> connect() {
         return pluginInstance.getTaskManager().getExecutorService().submit(socketHandler);
     }
 
-
     public void shutdown() throws IOException {
-
-        listeners.clear();
 
         if (socket != null) {
             socket.close();
@@ -85,7 +77,6 @@ public class ClientListenerManager implements Runnable {
 
     public void addListener(ClientListener listener) {
         pluginInstance.logDebug("New listener added: " + listener.getClass().toString());
-        listeners.addLast(listener);
     }
 
     public ZulfBungeeSpigot getPluginInstance() {
@@ -124,12 +115,8 @@ public class ClientListenerManager implements Runnable {
         return socketBarrier;
     }
 
-    public LinkedList<ClientListener> getListeners() {
-        return listeners;
-    }
-
-    public ClientInfo getClientInfo() {
-        return clientInfo;
+    public ServerInfo getClientInfo() {
+        return serverInfo;
     }
 
     @Override
@@ -138,6 +125,8 @@ public class ClientListenerManager implements Runnable {
         while (connection.isRunning().get()) {
 
             socketBarrier.arriveAndAwaitAdvance();
+
+            pluginInstance.warning("Connection lost with proxy, attempting to connect every 2 seconds...");
 
             if (socket != null && !socketConnected.get()) {
                 try {
@@ -148,37 +137,29 @@ public class ClientListenerManager implements Runnable {
                 }
             }
 
-            while (!socketConnected.get() && connection.isRunning().get()) {
+            try {
 
-                pluginInstance.warning("Not connected to the proxy! Trying to connect...");
+                socket = connect().get();
 
-                try {
-
-                    Optional<Socket> futureSocket = connect().get();
-
-                    if (futureSocket.isPresent()) {
-
-                        socket = futureSocket.get();
-
-                        while (socketHandoff.hasWaitingConsumer()) {
-                            socketHandoff.transfer(socket);
-                        }
-
-                        socketConnected.compareAndSet(false, true);
-
-                        pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
-
-                        clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
-
-                        connection.send_direct(new Packet(PacketTypes.CLIENT_HANDSHAKE, true, true, clientInfo));
-
-                    }
-
-                } catch (InterruptedException | ExecutionException e) {
-                    pluginInstance.error("Error getting socket:");
-                    e.printStackTrace();
+                while (socketHandoff.hasWaitingConsumer()) {
+                    socketHandoff.transfer(socket);
                 }
+
+                socketConnected.compareAndSet(false, true);
+
+                pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
+
+                serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
+
+                connection.send_direct(new Packet(PacketTypes.CLIENT_UPDATE, true, true, serverInfo));
+
+            } catch (InterruptedException ignored) {
+
+            } catch (ExecutionException e) {
+                pluginInstance.error("Error during the socket getting process!");
+                e.printStackTrace();
             }
+
         }
     }
 }

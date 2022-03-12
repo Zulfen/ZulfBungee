@@ -24,6 +24,7 @@ public class PacketHandlerManager {
         addHandler(new InvalidConfiguration(connectionIn));
         addHandler(new ClientInfo(connectionIn));
         addHandler(new ServerKickEvent(connectionIn));
+        addHandler(new GlobalScriptData(connectionIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {

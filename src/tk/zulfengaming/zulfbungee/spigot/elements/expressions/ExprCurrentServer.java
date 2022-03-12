@@ -7,8 +7,10 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdate;
 
 import java.util.Optional;
 
@@ -19,13 +21,13 @@ public class ExprCurrentServer extends SimpleExpression<String> {
     }
 
     @Override
-    protected String[] get(Event event) {
+    protected String @NotNull [] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        Optional<String> serverName = connection.getServerName();
+        Optional<ClientUpdate> clientUpdate = connection.getClientUpdate();
 
-        return serverName.map(s -> new String[]{s}).orElse(null);
+        return clientUpdate.map(update -> new String[]{update.getGivenName()}).orElse(null);
 
     }
 
@@ -35,17 +37,17 @@ public class ExprCurrentServer extends SimpleExpression<String> {
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
+    public @NotNull Class<? extends String> getReturnType() {
         return String.class;
     }
 
     @Override
-    public String toString(Event event, boolean b) {
+    public @NotNull String toString(Event event, boolean b) {
         return "current proxy server name";
     }
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         return true;
     }
 }

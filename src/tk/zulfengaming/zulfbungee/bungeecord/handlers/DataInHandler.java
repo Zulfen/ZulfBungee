@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.handlers;
 
-import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 
 import java.io.EOFException;
@@ -15,14 +15,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataInHandler implements Runnable {
 
-    private final ServerConnection connection;
+    private final BaseServerConnection connection;
 
     private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
 
     private final ObjectInputStream inputStream;
 
 
-    public DataInHandler(ServerConnection connectionIn) throws IOException {
+    public DataInHandler(BaseServerConnection connectionIn) throws IOException {
 
         this.connection = connectionIn;
 

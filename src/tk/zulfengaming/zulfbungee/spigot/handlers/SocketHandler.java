@@ -5,10 +5,9 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 
-public class SocketHandler extends ClientListener implements Callable<Optional<Socket>> {
+public class SocketHandler extends ClientListener implements Callable<Socket> {
 
     private final int timeout;
 
@@ -19,37 +18,42 @@ public class SocketHandler extends ClientListener implements Callable<Optional<S
     }
 
     @Override
-    public Optional<Socket> call() throws InterruptedException {
+    public Socket call() throws InterruptedException {
 
         // Fixes potential memory leak
 
         Socket socket = new Socket();
+        boolean connected = false;
 
-        try {
+        while (!connected) {
 
-            socket.setReuseAddress(true);
-            socket.setSoTimeout(timeout);
-
-            socket.bind(new InetSocketAddress(getClientListenerManager().getClientAddress(), getClientListenerManager().getClientPort()));
-            socket.connect(new InetSocketAddress(getClientListenerManager().getServerAddress(), getClientListenerManager().getServerPort()));
-
-            return Optional.of(socket);
-
-        } catch (IOException e) {
-            // TODO: Hm... improve this.
-            Thread.sleep(2000);
-        }
-
-        if (!socket.isClosed()) {
             try {
-                socket.close();
-            } catch (IOException e) {
-                getClientListenerManager().getPluginInstance().error("Error closing unused socket:");
-                e.printStackTrace();
+
+                socket.setReuseAddress(true);
+                socket.setSoTimeout(timeout);
+
+                socket.bind(new InetSocketAddress(getClientListenerManager().getClientAddress(), getClientListenerManager().getClientPort()));
+                socket.connect(new InetSocketAddress(getClientListenerManager().getServerAddress(), getClientListenerManager().getServerPort()));
+
+                connected = true;
+
+            } catch (IOException connect) {
+
+                try {
+                    socket.close();
+                } catch (IOException closing) {
+                    getClientListenerManager().getPluginInstance().error("Error closing unused socket:");
+                    closing.printStackTrace();
+
+                }
+
+                // gives it time between connection attempts
+                Thread.sleep(2000);
             }
+
         }
 
-        return Optional.empty();
+        return socket;
 
     }
 }

@@ -16,14 +16,14 @@ public class TaskManager {
 
     private final ExecutorService executorService;
 
-    // keeps track of running shit
+    // keeps track of running stuff
     private final HashMap<String, BukkitTask> bukkitTasks = new HashMap<>();
 
-    public TaskManager(ZulfBungeeSpigot instanceIn ) {
+    public TaskManager(ZulfBungeeSpigot instanceIn) {
         this.instance = instanceIn;
         this.scheduler = instanceIn.getServer().getScheduler();
 
-        this.executorService = Executors.newFixedThreadPool(10);
+        this.executorService = Executors.newFixedThreadPool(3);
     }
 
     public BukkitTask newTask(Runnable taskIn, String name) {
@@ -50,12 +50,7 @@ public class TaskManager {
     public void endTask(String name) {
         BukkitTask theTask = bukkitTasks.get(name);
         bukkitTasks.remove(name);
-
         theTask.cancel();
-    }
-
-    public BukkitTask getTask(String name) {
-        return bukkitTasks.get(name);
     }
 
     public ExecutorService getExecutorService() {

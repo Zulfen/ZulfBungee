@@ -104,7 +104,7 @@ public class Events implements Listener {
 
             String serverName = event.getKickedFrom().getName();
 
-            if (server.getActiveConnections().get(serverName) != null) {
+            if (server.getServerNames().contains(serverName)) {
 
                 ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId());
 
@@ -136,7 +136,7 @@ public class Events implements Listener {
 
                 String serverName = player.getServer().getInfo().getName();
 
-                if (server.getActiveConnections().get(serverName) != null) {
+                if (server.getServerNames().contains(serverName)) {
 
                     server.sendToAllClients(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
                             new ProxyPlayer(player.getName(), player.getUniqueId())));

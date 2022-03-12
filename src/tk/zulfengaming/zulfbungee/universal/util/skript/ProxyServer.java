@@ -1,5 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.util.skript;
 
+import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,15 +9,15 @@ public class ProxyServer implements Serializable {
 
     private final String name;
 
-    private ClientInfo clientInfo = null;
+    private ServerInfo serverInfo = null;
 
     public ProxyServer(String nameIn) {
         this.name = nameIn;
     }
 
-    public ProxyServer(String nameIn, ClientInfo infoIn) {
+    public ProxyServer(String nameIn, ServerInfo infoIn) {
         this.name = nameIn;
-        this.clientInfo = infoIn;
+        this.serverInfo = infoIn;
 
     }
 
@@ -24,19 +26,19 @@ public class ProxyServer implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProxyServer server = (ProxyServer) o;
-        return Objects.equals(name, server.name) && Objects.equals(clientInfo, server.clientInfo);
+        return Objects.equals(name, server.name) && Objects.equals(serverInfo, server.serverInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, clientInfo);
+        return Objects.hash(name, serverInfo);
     }
 
     public String getName() {
         return name;
     }
 
-    public ClientInfo getClientInfo() {
-        return clientInfo;
+    public ServerInfo getClientInfo() {
+        return serverInfo;
     }
 }

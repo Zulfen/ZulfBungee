@@ -7,11 +7,16 @@ import net.md_5.bungee.config.YamlConfiguration;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class YamlConfig {
 
     private final File configFile;
+    private Path scriptsFolderPath;
+
+    private final LinkedHashMap<String, Long> availableScripts = new LinkedHashMap<>();
 
     private ConfigurationProvider configObject;
 
@@ -23,9 +28,13 @@ public class YamlConfig {
         this.configFile = new File(instanceIn.getDataFolder(), "config.yml");
 
         try {
+
             if (!instanceIn.getDataFolder().exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 instanceIn.getDataFolder().mkdir();
+
+
+
             }
 
             // Thank you https://www.spigotmc.org/members/tux.2180/ <3
@@ -52,12 +61,45 @@ public class YamlConfig {
 
             this.loadedConfig = configObject.load(configFile);
 
+            File scriptsFolder = new File(instanceIn.getDataFolder().getAbsolutePath(), "scripts");
+            this.scriptsFolderPath = scriptsFolder.toPath();
+
+            if (!scriptsFolder.exists()) {
+
+                boolean directoryCreation = scriptsFolder.mkdir();
+
+                if (!directoryCreation) {
+                    instanceIn.error("Error creating scripts folder! Global scripts will not work.");
+                }
+
+            }
+
+            if (scriptsFolder.exists()) {
+
+                for (File file : scriptsFolder.listFiles(File::isFile)) {
+
+                    String name = file.getName();
+
+                    if (name.endsWith(".sk")) {
+                        availableScripts.put(name, file.length());
+                    }
+                }
+            }
+
         } catch (IOException e) {
             instanceIn.error("There was an error getting the config!");
 
             e.printStackTrace();
         }
 
+    }
+
+    public LinkedHashMap<String, Long> getAvailableScripts() {
+        return availableScripts;
+    }
+
+    public Path getScriptsFolderPath() {
+        return scriptsFolderPath;
     }
 
     public void save(String node, Object value) throws IOException {

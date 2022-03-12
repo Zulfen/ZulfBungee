@@ -3,11 +3,10 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-
-import java.net.SocketAddress;
 
 public class ProxyPlayerOnline extends PacketHandler {
 
@@ -17,7 +16,7 @@ public class ProxyPlayerOnline extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
 
         ProxyPlayer skriptPlayer = (ProxyPlayer) packetIn.getDataSingle();
 

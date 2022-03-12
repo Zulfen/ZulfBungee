@@ -1,38 +1,39 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
-import net.md_5.bungee.api.config.ServerInfo;
+
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.ServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdate;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.Map;
 
 public class ClientHandshake extends PacketHandler {
 
     public ClientHandshake(Server serverIn) {
-        super(serverIn, PacketTypes.CLIENT_HANDSHAKE);
+        super(serverIn, PacketTypes.CLIENT_UPDATE);
 
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
 
-        ServerConnection connection = getMainServer().getSocketConnections().get(address);
+        ServerInfo serverInfo = (ServerInfo) packetIn.getDataSingle();
 
-        ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
+        // potentially update this atomically.
+        connection.setClientInfo(serverInfo);
 
-        connection.setClientInfo(clientInfo);
+        InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
-        InetAddress addressIn = ((InetSocketAddress) address).getAddress();
-        int portIn = clientInfo.getMinecraftPort();
+        InetAddress inetAddressIn = socketAddressIn.getAddress();
+        int portIn = serverInfo.getMinecraftPort();
 
-        for (Map.Entry<String, ServerInfo> info : getProxy().getServersCopy().entrySet()) {
+        for (Map.Entry<String, net.md_5.bungee.api.config.ServerInfo> info : getProxy().getServersCopy().entrySet()) {
 
             InetSocketAddress infoSockAddr = (InetSocketAddress) info.getValue().getSocketAddress();
 
@@ -40,12 +41,18 @@ public class ClientHandshake extends PacketHandler {
 
             InetAddress infoInetAddr = infoSockAddr.getAddress();
 
-            if (infoInetAddr.equals(addressIn) && portIn == infoPort) {
+            if (infoInetAddr.equals(inetAddressIn) && portIn == infoPort) {
 
                 String name = info.getKey();
                 getMainServer().addActiveConnection(connection, name);
 
-                return new Packet(PacketTypes.CLIENT_HANDSHAKE, false, true, name);
+                Long[] scriptSizes = getMainServer().getPluginInstance().
+                        getConfig().getAvailableScripts().values().toArray(new Long[0]);
+
+                String[] scriptNames = getMainServer().getPluginInstance().getConfig()
+                        .getAvailableScripts().keySet().toArray(new String[0]);
+
+                return new Packet(PacketTypes.CLIENT_UPDATE, false, true, new ClientUpdate(name, scriptSizes, scriptNames));
 
             }
         }

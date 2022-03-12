@@ -1,7 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket;
 
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -17,10 +16,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Server implements Runnable {
     // plugin instance !!!
@@ -38,10 +34,9 @@ public class Server implements Runnable {
     private ServerSocket serverSocket;
     private Socket socket;
 
-    // keeping track
-    private final BiMap<SocketAddress, ServerConnection> socketConnections = HashBiMap.create();
+    private final ArrayList<BaseServerConnection> socketConnections = new ArrayList<>();
 
-    private final BiMap<String, ServerConnection> activeConnections = HashBiMap.create();
+    private final HashBiMap<String, BaseServerConnection> activeConnections = HashBiMap.create();
 
     // quite neat
     private final PacketHandlerManager packetManager;
@@ -143,27 +138,25 @@ public class Server implements Runnable {
 
     private void acceptConnection() throws IOException {
 
-        UUID identifier = UUID.randomUUID();
+        BaseServerConnection connection = new BaseServerConnection(this);
 
-        ServerConnection connection = new ServerConnection(this, identifier.toString());
-        SocketAddress connectionAddress = connection.getAddress();
+        pluginInstance.getTaskManager().newTask(connection, String.valueOf(UUID.randomUUID()));
+        addServerConnection(connection);
 
-        pluginInstance.getTaskManager().newTask(connection, String.valueOf(identifier));
-        addServerConnection(connectionAddress, connection);
-
-        pluginInstance.logInfo(ChatColor.GREEN + "Connection established with address: " + connectionAddress);
+        pluginInstance.logInfo(ChatColor.GREEN + "Connection established with address: " + connection.getAddress());
 
     }
 
     private boolean isValidClient(SocketAddress addressIn) {
+
         Map<String, ServerInfo> servers = pluginInstance.getProxy().getServersCopy();
 
-        final boolean portWhitelistEnabled = pluginInstance.getConfig().getBoolean("port-whitelist");
+        boolean portWhitelistEnabled = pluginInstance.getConfig().getBoolean("port-whitelist");
         List<Integer> ports = pluginInstance.getConfig().getIntList("ports");
 
         for (ServerInfo server : servers.values()) {
-            final InetSocketAddress inetServerAddr = (InetSocketAddress) server.getSocketAddress();
-            final InetSocketAddress inetAddrIn = (InetSocketAddress) addressIn;
+            InetSocketAddress inetServerAddr = (InetSocketAddress) server.getSocketAddress();
+            InetSocketAddress inetAddrIn = (InetSocketAddress) addressIn;
 
             if (inetServerAddr.getAddress().equals(inetAddrIn.getAddress())) {
 
@@ -185,31 +178,29 @@ public class Server implements Runnable {
     public void sendToAllClients(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
 
-        for (ServerConnection connection : activeConnections.values()) {
+        for (BaseServerConnection connection : socketConnections) {
             connection.send(packetIn);
         }
     }
 
-    private void addServerConnection(SocketAddress addressIn, ServerConnection connection) {
-        socketConnections.put(addressIn, connection);
+    private void addServerConnection(BaseServerConnection connection) {
+        socketConnections.add(connection);
     }
 
-    public void addActiveConnection(ServerConnection connection, String name) {
+    public void addActiveConnection(BaseServerConnection connection, String name) {
 
         activeConnections.put(name, connection);
+
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
         sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, getProxyServerList()));
 
     }
 
-    public void removeServerConnection(ServerConnection connection) {
+    public void removeServerConnection(BaseServerConnection connection) {
 
-        socketConnections.remove(connection.getAddress());
-
-        String name = activeConnections.inverse().get(connection);
-
-        activeConnections.remove(name);
+        socketConnections.remove(connection);
+        activeConnections.inverse().remove(connection);
 
         sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, getProxyServerList()));
 
@@ -219,7 +210,7 @@ public class Server implements Runnable {
 
         running = false;
 
-        for (ServerConnection connection : socketConnections.values()) {
+        for (BaseServerConnection connection : socketConnections) {
             connection.shutdown();
         }
 
@@ -255,13 +246,21 @@ public class Server implements Runnable {
 
     }
 
-    public Socket getSocket() {
+    public Socket getCurrentSocket() {
         return socket;
+    }
+
+    public Set<String> getServerNames() {
+        return activeConnections.keySet();
+    }
+
+    public BaseServerConnection getFromName(String name) {
+        return activeConnections.get(name);
     }
 
     public ProxyServer[] getProxyServerList() {
         return activeConnections.entrySet().stream()
-                .map(stringServerConnectionEntry -> new ProxyServer(stringServerConnectionEntry.getKey(), stringServerConnectionEntry.getValue().getClientInfo()))
+                .map(proxyServerList -> new ProxyServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
                 .toArray(ProxyServer[]::new);
     }
 
@@ -271,14 +270,6 @@ public class Server implements Runnable {
 
     public Optional<StorageImpl> getStorage() {
         return Optional.ofNullable(storage);
-    }
-
-    public BiMap<String, ServerConnection> getActiveConnections() {
-        return activeConnections;
-    }
-
-    public BiMap<SocketAddress, ServerConnection> getSocketConnections() {
-        return socketConnections;
     }
 
     public ZulfBungeecord getPluginInstance() {
