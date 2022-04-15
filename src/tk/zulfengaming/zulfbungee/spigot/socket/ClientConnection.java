@@ -9,9 +9,9 @@ import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.task.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.task.tasks.HeartbeatTask;
+import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdateData;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdate;
 import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 
 import java.io.File;
@@ -64,7 +64,7 @@ public class ClientConnection implements Runnable {
 
     // misc. info
 
-    private ClientUpdate clientUpdate;
+    private volatile ClientUpdateData clientUpdateData;
 
     public ClientConnection(ZulfBungeeSpigot pluginInstanceIn) throws UnknownHostException {
 
@@ -215,9 +215,9 @@ public class ClientConnection implements Runnable {
 
         }
 
-        if (clientUpdate != null) {
+        if (clientUpdateData != null) {
 
-            for (String scriptName : clientUpdate.getScriptNames()) {
+            for (String scriptName : clientUpdateData.getScriptNames()) {
 
                 File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
                         scriptName);
@@ -240,11 +240,14 @@ public class ClientConnection implements Runnable {
     }
 
 
-    public void setClientUpdate(ClientUpdate clientUpdate) {
-        this.clientUpdate = clientUpdate;
+    public void setClientUpdate(ClientUpdateData clientUpdateData) {
+        pluginInstance.logDebug("Client update set");
+        this.clientUpdateData = clientUpdateData;
+
     }
 
-    public Optional<ClientUpdate> getClientUpdate() {
-        return Optional.ofNullable(clientUpdate);
+
+    public Optional<ClientUpdateData> getClientUpdate() {
+        return Optional.ofNullable(clientUpdateData);
     }
 }

@@ -126,7 +126,7 @@ public class Server implements Runnable {
             } catch (IOException e) {
                 pluginInstance.error("An error occurred while running the server!");
                 pluginInstance.error("Please report this error on GitHub or directly to the devs:");
-                pluginInstance.error("(insert url)");
+                pluginInstance.error("https://github.com/Zulfen/ZulfBungee/issues");
                 pluginInstance.error("");
 
                 e.printStackTrace();

@@ -43,20 +43,28 @@ public class CheckUpdateTask implements Runnable {
             int[] latestIntVersion = new int[3];
             String[] latestVersionSplit = latestVersion.split("v")[1].split("\\.");
 
+
             for (int i = 0; i < latestVersionSplit.length; i++) {
                 latestIntVersion[i] = Integer.parseInt(latestVersionSplit[i]);
             }
 
             for (int i = 0; i < latestVersionSplit.length; i++) {
-                if (latestIntVersion[i] > pluginInstance.getVersion()[i]) {
+
+                int minorVer = pluginInstance.getVersion()[i];
+
+                if (latestIntVersion[i] > minorVer) {
                     isUpToDate = false;
                     break;
+                } else if (latestIntVersion[i] < minorVer) {
+                    isUpToDate = true;
+                    break;
                 }
+
             }
 
             if (isUpToDate) {
 
-                pluginInstance.logInfo(ChatColor.AQUA + "Plugin is up to date! Current version: " + ChatColor.YELLOW + ChatColor.UNDERLINE + pluginInstance.getDescription().getVersion());
+                pluginInstance.logInfo(ChatColor.AQUA + "Plugin is up to date! Current version: " + ChatColor.YELLOW + ChatColor.UNDERLINE + pluginInstance.getDescription().getVersion() + ChatColor.RESET);
 
             } else {
 

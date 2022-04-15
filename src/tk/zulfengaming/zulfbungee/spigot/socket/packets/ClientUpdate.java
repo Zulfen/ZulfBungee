@@ -4,13 +4,13 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdate;
+import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdateData;
 
 import java.net.SocketAddress;
 
-public class ClientHandshake extends PacketHandler {
+public class ClientUpdate extends PacketHandler {
 
-    public ClientHandshake(ClientConnection connectionIn) {
+    public ClientUpdate(ClientConnection connectionIn) {
         super(connectionIn, PacketTypes.CLIENT_UPDATE);
 
     }
@@ -18,7 +18,7 @@ public class ClientHandshake extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        ClientUpdate info = (ClientUpdate) packetIn.getDataSingle();
+        ClientUpdateData info = (ClientUpdateData) packetIn.getDataSingle();
 
         getConnection().setClientUpdate(info);
         getConnection().requestGlobalScripts();

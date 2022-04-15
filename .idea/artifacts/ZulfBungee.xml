@@ -7,8 +7,8 @@
       </element>
       <element id="module-output" name="ZulfBungee" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/zaxxer/HikariCP/4.0.3/HikariCP-4.0.3.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.0-alpha1/slf4j-api-2.0.0-alpha1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/h2database/h2/1.4.200/h2-1.4.200.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/h2database/h2/2.1.212/h2-2.1.212.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -8,7 +8,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 public class YamlConfig {
@@ -16,7 +16,7 @@ public class YamlConfig {
     private final File configFile;
     private Path scriptsFolderPath;
 
-    private final LinkedHashMap<String, Long> availableScripts = new LinkedHashMap<>();
+    private final ArrayList<String> availableScripts = new ArrayList<>();
 
     private ConfigurationProvider configObject;
 
@@ -32,8 +32,6 @@ public class YamlConfig {
             if (!instanceIn.getDataFolder().exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 instanceIn.getDataFolder().mkdir();
-
-
 
             }
 
@@ -81,7 +79,7 @@ public class YamlConfig {
                     String name = file.getName();
 
                     if (name.endsWith(".sk")) {
-                        availableScripts.put(name, file.length());
+                        availableScripts.add(name);
                     }
                 }
             }
@@ -94,7 +92,7 @@ public class YamlConfig {
 
     }
 
-    public LinkedHashMap<String, Long> getAvailableScripts() {
+    public ArrayList<String> getAvailableScripts() {
         return availableScripts;
     }
 

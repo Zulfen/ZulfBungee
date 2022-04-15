@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
 import org.bukkit.ChatColor;
+import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
@@ -31,6 +32,7 @@ public class ClientListenerManager implements Runnable {
 
     private final int clientPort;
 
+    private final SynchronousQueue<Socket> socketWaitQueue = new SynchronousQueue<>();
     private final TransferQueue<Socket> socketHandoff = new LinkedTransferQueue<>();
     private final Phaser socketBarrier = new Phaser();
 
@@ -46,14 +48,17 @@ public class ClientListenerManager implements Runnable {
         this.pluginInstance = connectionIn.getPluginInstance();
 
         try {
+
             this.serverAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("server-host"));
             this.clientAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("client-host"));
+
         } catch (UnknownHostException e) {
 
             pluginInstance.error("Could not get the name of the host in the config!:");
             e.printStackTrace();
 
         }
+
         this.serverPort = pluginInstance.getYamlConfig().getInt("server-port");
         this.clientPort = pluginInstance.getYamlConfig().getInt("client-port");
 
@@ -63,8 +68,9 @@ public class ClientListenerManager implements Runnable {
 
     }
 
-    private Future<Socket> connect() {
-        return pluginInstance.getTaskManager().getExecutorService().submit(socketHandler);
+    private BukkitTask connect() {
+        // tries to retrieve usable socket every 40 ticks, or two seconds
+        return pluginInstance.getTaskManager().newRepeatingTask(socketHandler, "SocketHandler", 40);
     }
 
     public void shutdown() throws IOException {
@@ -119,6 +125,10 @@ public class ClientListenerManager implements Runnable {
         return serverInfo;
     }
 
+    public SynchronousQueue<Socket> getSocketWaitQueue() {
+        return socketWaitQueue;
+    }
+
     @Override
     public void run() {
 
@@ -139,7 +149,11 @@ public class ClientListenerManager implements Runnable {
 
             try {
 
-                socket = connect().get();
+                BukkitTask connectTask = connect();
+
+                socket = socketWaitQueue.take();
+
+                connectTask.cancel();
 
                 while (socketHandoff.hasWaitingConsumer()) {
                     socketHandoff.transfer(socket);
@@ -151,13 +165,10 @@ public class ClientListenerManager implements Runnable {
 
                 serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
-                connection.send_direct(new Packet(PacketTypes.CLIENT_UPDATE, true, true, serverInfo));
+                connection.send_direct(new Packet(PacketTypes.CLIENT_INFO, true, true, serverInfo));
 
             } catch (InterruptedException ignored) {
 
-            } catch (ExecutionException e) {
-                pluginInstance.error("Error during the socket getting process!");
-                e.printStackTrace();
             }
 
         }

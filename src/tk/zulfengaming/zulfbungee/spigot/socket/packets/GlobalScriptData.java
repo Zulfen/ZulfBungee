@@ -16,12 +16,12 @@ public class GlobalScriptData extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, SocketAddress address) {
 
-        Object[] packetData = packetIn.getDataArray();
-        byte[] scriptData = new byte[packetData.length];
+        // send this to another thread to deal with just in-case it takes ages
+        try {
+            getConnection().getGlobalScriptManager().getDataQueue().put(packetIn.getDataArray());
+        } catch (InterruptedException ignored) {
 
-        for(int i = 0; i < packetData.length; i++) scriptData[i] = (byte) packetData[i];
-
-        getConnection().getGlobalScriptManager().getDataQueue().offer(scriptData);
+        }
 
         return null;
 

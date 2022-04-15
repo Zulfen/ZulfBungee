@@ -16,7 +16,7 @@ public class PacketHandlerManager {
 
     public PacketHandlerManager(ClientConnection connectionIn) {
         addHandler(new Heartbeat(connectionIn));
-        addHandler(new ClientHandshake(connectionIn));
+        addHandler(new ClientUpdate(connectionIn));
         addHandler(new ServerSwitchEvent(connectionIn));
         addHandler(new ServerMessageEvent(connectionIn));
         addHandler(new PlayerDisconnectEvent(connectionIn));

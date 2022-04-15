@@ -6,16 +6,15 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class GlobalScriptsHeader extends PacketHandler {
 
-    private final LinkedHashMap<String, Long> scripts;
+    private final ArrayList<String> scripts;
 
     public GlobalScriptsHeader(Server serverIn) {
         super(serverIn, PacketTypes.GLOBAL_SCRIPT_HEADER);
@@ -30,36 +29,32 @@ public class GlobalScriptsHeader extends PacketHandler {
 
         getMainServer().getPluginInstance().getTaskManager().newTask(() -> {
 
-            if (scripts.containsKey(scriptName)) {
+            if (scripts.contains(scriptName)) {
 
-                File scriptFile = getMainServer().getPluginInstance().getConfig().
-                        getScriptsFolderPath().resolve(scriptName).toFile();
-
-                byte[] buffer = new byte[4 * 1024];
-                long totalRead = 0;
+                Path scriptPath = getMainServer().getPluginInstance().getConfig().
+                        getScriptsFolderPath().resolve(scriptName);
 
                 try {
 
-                    FileInputStream scriptStream = new FileInputStream(scriptFile);
+                    byte[] data = Files.readAllBytes(scriptPath);
+                    Byte[] dataAsObj = new Byte[data.length];
 
-                    long currentRead;
-                    while ((currentRead = scriptStream.read(buffer)) != -1) {
-                        totalRead += currentRead;
-                        connection.send(new Packet(PacketTypes.GLOBAL_SCRIPT_DATA, false, true, buffer));
-                    }
+                    int i = 0;
 
-                    if (!(totalRead >= scriptFile.length())) {
-                        getMainServer().getPluginInstance().logDebug("Script file " + scriptFile + " not sent properly?");
-                        getMainServer().getPluginInstance().logDebug(totalRead + "/" + scriptFile.length());
-                    }
+                    // bungeecord doesn't come bundled with apache commons, so just doing byte autoboxing manually
+                    for(byte b: data)
+                        dataAsObj[i++] = b;  // Autoboxing.
 
-                } catch (FileNotFoundException e) {
-                    connection.getPluginInstance().error("Error opening script stream for: " +  scriptFile.getName());
-                    e.printStackTrace();
+                    connection.send(new Packet(PacketTypes.GLOBAL_SCRIPT_DATA,  false, true, dataAsObj));
+
                 } catch (IOException e) {
-                    connection.getPluginInstance().error("Error reading script stream for: " + scriptFile.getName());
+                    getMainServer().getPluginInstance().error(String.format("Error while parsing script %s!", scriptName));
+                    e.printStackTrace();
                 }
 
+            } else {
+                // sends an empty array if it doesn't exist for whatever reason
+                connection.send(new Packet(PacketTypes.GLOBAL_SCRIPT_DATA,  false, true, new Object[0]));
             }
 
         }, UUID.randomUUID().toString());

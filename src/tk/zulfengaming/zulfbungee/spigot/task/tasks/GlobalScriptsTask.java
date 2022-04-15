@@ -1,24 +1,24 @@
 package tk.zulfengaming.zulfbungee.spigot.task.tasks;
 
 import ch.njol.skript.Skript;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdate;
+import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdateData;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.SynchronousQueue;
 
 public class GlobalScriptsTask implements Runnable {
 
     private final ClientConnection connection;
 
-    private final Queue<byte[]> dataQueue = new LinkedList<>();
+    private final SynchronousQueue<Object[]> dataQueue = new SynchronousQueue<>();
 
     private final ArrayList<String> scriptFilesProcessed = new ArrayList<>();
 
@@ -31,73 +31,58 @@ public class GlobalScriptsTask implements Runnable {
 
         if (connection.getClientUpdate().isPresent()) {
 
-            ClientUpdate clientUpdate = connection.getClientUpdate().get();
+            connection.getPluginInstance().logDebug("Global Script Task started!");
 
-            int currentScriptIndex = 0;
+            ClientUpdateData clientUpdateData = connection.getClientUpdate().get();
 
-            String[] scriptNames = clientUpdate.getScriptNames();
-            Long[] scriptSizes = clientUpdate.getScriptSizes();
+            String[] scriptNames = clientUpdateData.getScriptNames();
 
-            while (currentScriptIndex < scriptNames.length) {
-
-                String scriptName = scriptNames[currentScriptIndex];
+            for (String name : scriptNames) {
 
                 File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
-                        scriptName);
+                        name);
 
                 if (!scriptFile.exists()) {
-                    scriptFilesProcessed.add(scriptName);
+
+                    scriptFilesProcessed.add(name);
 
                 } else {
 
                     boolean deleted = scriptFile.delete();
 
                     if (deleted) {
-                        scriptFilesProcessed.add(scriptName);
+                        scriptFilesProcessed.add(name);
                     }
 
                 }
 
-                connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, scriptName));
+                connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, name));
 
                 try {
 
+                    Object[] rawData = dataQueue.take();
 
-                    if (scriptFile.createNewFile()) {
+                    int dataLen = rawData.length;
 
-                        int bytesRead = 0;
-                        long scriptSize = scriptSizes[currentScriptIndex];
+                    if (dataLen != 0) {
 
-                        FileOutputStream outputStream = new FileOutputStream(scriptFile);
+                        Byte[] primitiveBytesIn = new Byte[dataLen];
 
-                        while (bytesRead < scriptSize) {
-
-                            byte[] data = dataQueue.poll();
-
-                            if (data != null) {
-                                outputStream.write(data);
-                                bytesRead += data.length;
-
-                            }
+                        for (int i = 0; i < dataLen; i++) {
+                            primitiveBytesIn[i] = (Byte) rawData[i];
                         }
 
-                        if (bytesRead >= scriptSize) {
-
-                            connection.getPluginInstance().logDebug("Script " + scriptName + " processed!");
-                            currentScriptIndex += 1;
-                            outputStream.close();
-
-                        } else {
-                            connection.getPluginInstance().logDebug("Not enough bytes read?");
-                        }
+                        Files.write(scriptFile.toPath(), ArrayUtils.toPrimitive(primitiveBytesIn));
 
                     }
 
+                } catch (InterruptedException ignored) {
 
                 } catch (IOException e) {
-                    connection.getPluginInstance().error("There was an error while processing a global script!");
+                    connection.getPluginInstance().error(String.format("There was an error trying to save script %s:", scriptFile.getName()));
                     e.printStackTrace();
                 }
+
 
             }
 
@@ -109,7 +94,7 @@ public class GlobalScriptsTask implements Runnable {
 
     }
 
-    public Queue<byte[]> getDataQueue() {
+    public SynchronousQueue<Object[]> getDataQueue() {
         return dataQueue;
     }
 
