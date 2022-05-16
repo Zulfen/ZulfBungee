@@ -17,7 +17,7 @@ public class PlayerDisconnectEvent extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn, SocketAddress address) {
 
         ProxyPlayer player = (ProxyPlayer) packetIn.getDataSingle();
 
@@ -25,7 +25,6 @@ public class PlayerDisconnectEvent extends PacketHandler {
                 new EventPlayerServerDisconnect(player)
         );
 
-        return null;
 
     }
 }

@@ -32,7 +32,7 @@ public class ClientListenerManager implements Runnable {
 
     private final int clientPort;
 
-    private final SynchronousQueue<Socket> socketWaitQueue = new SynchronousQueue<>();
+    private final SynchronousQueue<Socket> socketRetrieve = new SynchronousQueue<>();
     private final TransferQueue<Socket> socketHandoff = new LinkedTransferQueue<>();
     private final Phaser socketBarrier = new Phaser();
 
@@ -68,12 +68,13 @@ public class ClientListenerManager implements Runnable {
 
     }
 
-    private BukkitTask connect() {
-        // tries to retrieve usable socket every 40 ticks, or two seconds
+    private BukkitTask connect() throws ExecutionException, InterruptedException {
         return pluginInstance.getTaskManager().newRepeatingTask(socketHandler, "SocketHandler", 40);
     }
 
     public void shutdown() throws IOException {
+
+        socketBarrier.arriveAndDeregister();
 
         if (socket != null) {
             socket.close();
@@ -113,7 +114,11 @@ public class ClientListenerManager implements Runnable {
         return clientPort;
     }
 
-    public BlockingQueue<Socket> getSocketHandoff() {
+    public SynchronousQueue<Socket> getSocketRetrieve() {
+        return socketRetrieve;
+    }
+
+    public TransferQueue<Socket> getSocketHandoff() {
         return socketHandoff;
     }
 
@@ -123,10 +128,6 @@ public class ClientListenerManager implements Runnable {
 
     public ServerInfo getClientInfo() {
         return serverInfo;
-    }
-
-    public SynchronousQueue<Socket> getSocketWaitQueue() {
-        return socketWaitQueue;
     }
 
     @Override
@@ -149,28 +150,32 @@ public class ClientListenerManager implements Runnable {
 
             try {
 
-                BukkitTask connectTask = connect();
+                BukkitTask socketAwaitTask = connect();
 
-                socket = socketWaitQueue.take();
+                socket = socketRetrieve.take();
 
-                connectTask.cancel();
+                socketAwaitTask.cancel();
+
+                socketConnected.compareAndSet(false, true);
 
                 while (socketHandoff.hasWaitingConsumer()) {
                     socketHandoff.transfer(socket);
                 }
 
-                socketConnected.compareAndSet(false, true);
-
                 pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
 
                 serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
-                connection.send_direct(new Packet(PacketTypes.CLIENT_INFO, true, true, serverInfo));
+                connection.send_direct(new Packet(PacketTypes.PROXY_SERVER_INFO, true, true, serverInfo));
 
             } catch (InterruptedException ignored) {
 
+            } catch (ExecutionException e) {
+                pluginInstance.error("Error during the socket getting process!");
+                e.printStackTrace();
             }
 
         }
+
     }
 }

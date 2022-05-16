@@ -12,7 +12,7 @@ public abstract class PacketHandler {
 
     private final ClientConnection connection;
 
-    public abstract Packet handlePacket(Packet packetIn, SocketAddress address);
+    public abstract void handlePacket(Packet packetIn, SocketAddress address);
 
     public PacketTypes[] getTypes() {
         return types;

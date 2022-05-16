@@ -76,7 +76,6 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
         } while (connection.isRunning().get());
 
-        socketBarrier.arriveAndDeregister();
     }
 
     public BlockingQueue<Packet> getDataQueue() {

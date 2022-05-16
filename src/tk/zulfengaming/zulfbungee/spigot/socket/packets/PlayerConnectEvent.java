@@ -17,15 +17,13 @@ public class PlayerConnectEvent extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn, SocketAddress address) {
 
         ProxyPlayer player = (ProxyPlayer) packetIn.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
                 new EventPlayerServerConnect(player)
         );
-
-        return null;
 
     }
 }

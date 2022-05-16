@@ -7,15 +7,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.spigot.task.TaskManager;
+import tk.zulfengaming.zulfbungee.spigot.handlers.TaskManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 public class ZulfBungeeSpigot extends JavaPlugin {
 
+    // static reference so we can access it via Skript
     private static ZulfBungeeSpigot plugin;
-    private SkriptAddon addon;
 
     private boolean debug = false;
 
@@ -23,8 +23,6 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     private YamlConfig config;
 
     private ClientConnection connection;
-
-    // other
 
     public void onEnable() {
 
@@ -40,6 +38,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         }
 
         try {
+
             connection = new ClientConnection(this);
 
             taskManager.newTask(connection, "MainConnection");
@@ -49,7 +48,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
             e.printStackTrace();
         }
 
-        addon = Skript.registerAddon(this);
+        SkriptAddon addon = Skript.registerAddon(this);
 
         // Registers the addon
         try {
@@ -100,14 +99,6 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         return config;
     }
 
-    public SkriptAddon getAddon() {
-        return addon;
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
     public TaskManager getTaskManager() {
         return taskManager;
     }
@@ -116,6 +107,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         return connection;
     }
 
+    // static reference for Skript only
     public static ZulfBungeeSpigot getPlugin() {
         return plugin;
     }

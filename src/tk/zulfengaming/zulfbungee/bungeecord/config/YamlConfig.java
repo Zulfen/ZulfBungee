@@ -15,8 +15,7 @@ public class YamlConfig {
 
     private final File configFile;
     private Path scriptsFolderPath;
-
-    private final ArrayList<String> availableScripts = new ArrayList<>();
+    private File scriptsFolder;
 
     private ConfigurationProvider configObject;
 
@@ -59,7 +58,7 @@ public class YamlConfig {
 
             this.loadedConfig = configObject.load(configFile);
 
-            File scriptsFolder = new File(instanceIn.getDataFolder().getAbsolutePath(), "scripts");
+            this.scriptsFolder = new File(instanceIn.getDataFolder().getAbsolutePath(), "scripts");
             this.scriptsFolderPath = scriptsFolder.toPath();
 
             if (!scriptsFolder.exists()) {
@@ -72,17 +71,6 @@ public class YamlConfig {
 
             }
 
-            if (scriptsFolder.exists()) {
-
-                for (File file : scriptsFolder.listFiles(File::isFile)) {
-
-                    String name = file.getName();
-
-                    if (name.endsWith(".sk")) {
-                        availableScripts.add(name);
-                    }
-                }
-            }
 
         } catch (IOException e) {
             instanceIn.error("There was an error getting the config!");
@@ -92,8 +80,23 @@ public class YamlConfig {
 
     }
 
-    public ArrayList<String> getAvailableScripts() {
-        return availableScripts;
+    public ArrayList<String> getScriptNames() {
+
+        ArrayList<String> cachedScripts = new ArrayList<>();
+
+        if (scriptsFolderPath.toFile().exists()) {
+
+            for (File file : scriptsFolder.listFiles(File::isFile)) {
+
+                String name = file.getName();
+
+                if (name.endsWith(".sk")) {
+                    cachedScripts.add(name);
+                }
+            }
+        }
+
+        return cachedScripts;
     }
 
     public Path getScriptsFolderPath() {

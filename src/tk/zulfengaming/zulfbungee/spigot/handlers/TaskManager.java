@@ -1,10 +1,10 @@
-package tk.zulfengaming.zulfbungee.spigot.task;
+package tk.zulfengaming.zulfbungee.spigot.handlers;
 
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class TaskManager {
 
@@ -12,8 +12,7 @@ public class TaskManager {
 
     private final BukkitScheduler scheduler;
 
-    // keeps track of running stuff
-    private final HashMap<String, BukkitTask> bukkitTasks = new HashMap<>();
+    private final ArrayList<BukkitTask> tasks = new ArrayList<>();
 
     public TaskManager(ZulfBungeeSpigot instanceIn) {
         this.instance = instanceIn;
@@ -23,8 +22,7 @@ public class TaskManager {
     public BukkitTask newTask(Runnable taskIn, String name) {
 
         BukkitTask theTask = scheduler.runTaskAsynchronously(instance, taskIn);
-
-        bukkitTasks.put(name, theTask);
+        tasks.add(theTask);
 
         return theTask;
 
@@ -33,19 +31,15 @@ public class TaskManager {
     public BukkitTask newRepeatingTask(Runnable taskIn, String name, int ticks) {
 
         BukkitTask theTask = scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
-
-        bukkitTasks.put(name, theTask);
+        tasks.add(theTask);
 
         return theTask;
     }
 
 
     public void shutdown() {
-
-        for (BukkitTask task : bukkitTasks.values()) {
+        for (BukkitTask task : tasks) {
             task.cancel();
         }
-
-
     }
 }

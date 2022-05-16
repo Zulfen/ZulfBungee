@@ -17,13 +17,11 @@ public class ServerMessageEvent extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn, SocketAddress address) {
 
         ServerMessage message = (ServerMessage) packetIn.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(new EventMessage(message));
-
-        return null;
 
     }
 }

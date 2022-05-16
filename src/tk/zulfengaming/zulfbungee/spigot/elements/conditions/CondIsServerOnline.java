@@ -6,7 +6,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientInfoManager;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class CondIsServerOnline extends Condition {
@@ -20,7 +20,7 @@ public class CondIsServerOnline extends Condition {
     @Override
     public boolean check(Event event) {
 
-        return ClientInfoManager.getServers().contains(server.getSingle(event));
+        return ProxyServerInfoManager.getServers().contains(server.getSingle(event));
 
     }
 

@@ -1,23 +1,25 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
-import ch.njol.skript.Skript;
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.spigot.task.tasks.GlobalScriptsTask;
-import tk.zulfengaming.zulfbungee.spigot.task.tasks.HeartbeatTask;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdateData;
+import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
+import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.ScriptInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.Phaser;
@@ -37,6 +39,9 @@ public class ClientConnection implements Runnable {
 
     private BukkitTask globalScriptsThread;
 
+    private final BukkitTask dataInThread;
+    private final BukkitTask dataOutThread;
+
     private Socket socket;
 
     // the latest packet from the queue coming in.
@@ -46,11 +51,11 @@ public class ClientConnection implements Runnable {
 
     // managers
 
+    private GlobalScriptsTask globalScriptHandler;
+
     private final PacketHandlerManager packetHandlerManager;
 
     private final ClientListenerManager clientListenerManager;
-
-    private final GlobalScriptsTask globalScriptManager;
 
     // other tasks
 
@@ -64,7 +69,9 @@ public class ClientConnection implements Runnable {
 
     // misc. info
 
-    private volatile ClientUpdateData clientUpdateData;
+    private String connectionName;
+
+    private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
 
     public ClientConnection(ZulfBungeeSpigot pluginInstanceIn) throws UnknownHostException {
 
@@ -82,8 +89,6 @@ public class ClientConnection implements Runnable {
 
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", heartbeatTicks);
 
-        this.globalScriptManager = new GlobalScriptsTask(this);
-
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
 
@@ -91,8 +96,8 @@ public class ClientConnection implements Runnable {
 
         socketDaemon = pluginInstance.getTaskManager().newTask(clientListenerManager, "ClientListenerManager");
 
-        pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
-        pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOut");
+        this.dataInThread = pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
+        this.dataOutThread = pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOut");
 
 
     }
@@ -131,21 +136,10 @@ public class ClientConnection implements Runnable {
 
         } while (running.get());
 
-        socketBarrier.arriveAndDeregister();
-
     }
 
     public Optional<Packet> read() throws InterruptedException {
-
-        if (clientListenerManager.isSocketConnected().get()) {
-
-            return Optional.ofNullable(skriptPacketQueue.poll(1, TimeUnit.SECONDS));
-
-        } else {
-
-            return Optional.empty();
-
-        }
+        return clientListenerManager.isSocketConnected().get() ? Optional.ofNullable(skriptPacketQueue.poll(1, TimeUnit.SECONDS)) : Optional.empty();
     }
 
     public void send_direct(Packet packetIn) {
@@ -175,16 +169,13 @@ public class ClientConnection implements Runnable {
 
     }
 
-    public void requestGlobalScripts() {
-        globalScriptsThread = pluginInstance.getTaskManager().newTask(globalScriptManager, "GlobalScriptsTask");
+    public void requestGlobalScripts(ScriptInfo[] infoIn) {
+        globalScriptHandler = new GlobalScriptsTask(this, infoIn);
+        globalScriptsThread = pluginInstance.getTaskManager().newTask(globalScriptHandler, "GlobalScriptHandler");
     }
 
-    public int getHeartbeatTicks() {
-        return heartbeatTicks;
-    }
-
-    public GlobalScriptsTask getGlobalScriptManager() {
-        return globalScriptManager;
+    public Optional<GlobalScriptsTask> getGlobalScriptHandler() {
+        return Optional.ofNullable(globalScriptHandler);
     }
 
     public AtomicBoolean isRunning() {
@@ -201,7 +192,24 @@ public class ClientConnection implements Runnable {
 
     public void shutdown() throws IOException {
 
+        for (File scriptFile : scriptFiles) {
+
+            boolean deleted = scriptFile.delete();
+
+            if (deleted) {
+                pluginInstance.logDebug("Deleted script file " + scriptFile.getName() + " successfully.");
+            } else {
+                pluginInstance.warning("Failed to delete script file " + scriptFile.getName() + ". Does it exist?");
+            }
+
+        }
+
         if (running.compareAndSet(true, false)) {
+
+            dataInThread.cancel();
+            dataOutThread.cancel();
+
+            clientListenerManager.shutdown();
 
             heartbeatThread.cancel();
 
@@ -211,43 +219,25 @@ public class ClientConnection implements Runnable {
 
             socketDaemon.cancel();
 
-            clientListenerManager.shutdown();
-
         }
 
-        if (clientUpdateData != null) {
-
-            for (String scriptName : clientUpdateData.getScriptNames()) {
-
-                File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
-                        scriptName);
-
-                boolean deleted = scriptFile.delete();
-
-                if (deleted) {
-                    pluginInstance.logDebug("Deleted script file " + scriptName + " successfully.");
-                } else {
-                    pluginInstance.warning("Failed to delete script file " + scriptName + ". Does it exist?");
-                }
-
-            }
-
-        }
     }
 
     public ZulfBungeeSpigot getPluginInstance() {
         return pluginInstance;
     }
 
-
-    public void setClientUpdate(ClientUpdateData clientUpdateData) {
-        pluginInstance.logDebug("Client update set");
-        this.clientUpdateData = clientUpdateData;
+    public void setConnectionName(String connectionNameIn) {
+        this.connectionName = connectionNameIn;
 
     }
 
-
-    public Optional<ClientUpdateData> getClientUpdate() {
-        return Optional.ofNullable(clientUpdateData);
+    public Optional<String> getConnectionName() {
+        return Optional.ofNullable(connectionName);
     }
+
+    public List<File> getScripts() {
+        return scriptFiles;
+    }
+
 }

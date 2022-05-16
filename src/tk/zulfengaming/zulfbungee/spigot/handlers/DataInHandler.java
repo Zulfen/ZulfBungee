@@ -88,7 +88,6 @@ public class DataInHandler extends ClientListener implements Runnable {
 
         } while (connection.isRunning().get());
 
-        socketBarrier.arriveAndDeregister();
     }
 
     public BlockingQueue<Packet> getDataQueue() {

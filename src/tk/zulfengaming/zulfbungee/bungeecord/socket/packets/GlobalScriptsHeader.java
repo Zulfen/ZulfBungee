@@ -9,16 +9,12 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class GlobalScriptsHeader extends PacketHandler {
 
-    private final ArrayList<String> scripts;
-
     public GlobalScriptsHeader(Server serverIn) {
         super(serverIn, PacketTypes.GLOBAL_SCRIPT_HEADER);
-        this.scripts = serverIn.getPluginInstance().getConfig().getAvailableScripts();
 
     }
 
@@ -29,7 +25,7 @@ public class GlobalScriptsHeader extends PacketHandler {
 
         getMainServer().getPluginInstance().getTaskManager().newTask(() -> {
 
-            if (scripts.contains(scriptName)) {
+            if (getMainServer().getPluginInstance().getConfig().getScriptNames().contains(scriptName)) {
 
                 Path scriptPath = getMainServer().getPluginInstance().getConfig().
                         getScriptsFolderPath().resolve(scriptName);

@@ -4,19 +4,16 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdateData;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.*;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-public class ClientHandshake extends PacketHandler {
+public class ProxyServerInfo extends PacketHandler {
 
-    public ClientHandshake(Server serverIn) {
-        super(serverIn, PacketTypes.CLIENT_INFO);
+    public ProxyServerInfo(Server serverIn) {
+        super(serverIn, PacketTypes.PROXY_SERVER_INFO);
 
     }
 
@@ -46,10 +43,13 @@ public class ClientHandshake extends PacketHandler {
                 String name = info.getKey();
                 getMainServer().addActiveConnection(connection, name);
 
-                String[] scriptNames = getMainServer().getPluginInstance().getConfig()
-                        .getAvailableScripts().toArray(new String[0]);
+                if (getMainServer().getPluginInstance().getConfig().getBoolean("global-scripts")) {
+                    connection.send(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, new ScriptInfo(ScriptAction.NEW,
+                            getMainServer().getPluginInstance().getConfig()
+                                    .getScriptNames().toArray(new String[0]))));
+                }
 
-                return new Packet(PacketTypes.CLIENT_UPDATE, false, true, new ClientUpdateData(name, scriptNames));
+                return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
 
             }
         }

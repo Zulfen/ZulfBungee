@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataOutHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
@@ -40,8 +40,8 @@ public class BaseServerConnection implements Runnable {
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    public BaseServerConnection(Server serverIn) throws IOException {
-        this.socket = serverIn.getCurrentSocket();
+    public BaseServerConnection(Server serverIn, Socket socketIn) throws IOException {
+        this.socket = socketIn;
 
         this.packetManager = serverIn.getPacketManager();
 
@@ -64,7 +64,7 @@ public class BaseServerConnection implements Runnable {
 
             try {
 
-                if (isSocketConnected().get()) {
+                if (socketConnected.get()) {
 
                     Packet packetIn = dataInHandler.getQueue().poll(5, TimeUnit.SECONDS);
                     packetInBuffer = packetIn;

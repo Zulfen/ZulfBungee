@@ -7,14 +7,19 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
 
-public class Heartbeat extends PacketHandler {
+public class ConnectionName extends PacketHandler {
 
-    public Heartbeat(ClientConnection connectionIn) {
-        super(connectionIn, PacketTypes.HEARTBEAT);
+    public ConnectionName(ClientConnection connectionIn) {
+        super(connectionIn, PacketTypes.CONNECTION_NAME);
 
     }
 
     @Override
     public void handlePacket(Packet packetIn, SocketAddress address) {
+
+        String name = (String) packetIn.getDataSingle();
+
+        getConnection().setConnectionName(name);
+
     }
 }

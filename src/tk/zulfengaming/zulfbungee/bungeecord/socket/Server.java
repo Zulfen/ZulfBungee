@@ -5,7 +5,7 @@ import com.google.common.collect.HashBiMap;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
-import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Handler;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLHandler;
@@ -76,13 +76,14 @@ public class Server implements Runnable {
             try {
 
                 if (serverSocketAvailable) {
+
                     socket = serverSocket.accept();
 
                     SocketAddress remoteAddress = socket.getRemoteSocketAddress();
 
                     if (isValidClient(remoteAddress)) {
 
-                        acceptConnection();
+                        acceptConnection(socket);
 
                     } else {
 
@@ -111,7 +112,6 @@ public class Server implements Runnable {
                         pluginInstance.error("");
                         pluginInstance.error(e.toString());
 
-                        running = false;
                         break;
                     }
 
@@ -131,14 +131,16 @@ public class Server implements Runnable {
 
                 e.printStackTrace();
 
+                break;
+
             }
 
         } while (running);
     }
 
-    private void acceptConnection() throws IOException {
+    private void acceptConnection(Socket socketIn) throws IOException {
 
-        BaseServerConnection connection = new BaseServerConnection(this);
+        BaseServerConnection connection = new BaseServerConnection(this, socketIn);
 
         pluginInstance.getTaskManager().newTask(connection, String.valueOf(UUID.randomUUID()));
         addServerConnection(connection);
@@ -193,7 +195,7 @@ public class Server implements Runnable {
 
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
-        sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, getProxyServerList()));
+        sendToAllClients(new Packet(PacketTypes.PROXY_SERVER_INFO, false, true, getProxyServerList()));
 
     }
 
@@ -202,7 +204,7 @@ public class Server implements Runnable {
         socketConnections.remove(connection);
         activeConnections.inverse().remove(connection);
 
-        sendToAllClients(new Packet(PacketTypes.CLIENT_INFO, false, true, getProxyServerList()));
+        sendToAllClients(new Packet(PacketTypes.PROXY_SERVER_INFO, false, true, getProxyServerList()));
 
     }
 
@@ -244,10 +246,6 @@ public class Server implements Runnable {
         return Optional.ofNullable(newStorage);
 
 
-    }
-
-    public Socket getCurrentSocket() {
-        return socket;
     }
 
     public Set<String> getServerNames() {

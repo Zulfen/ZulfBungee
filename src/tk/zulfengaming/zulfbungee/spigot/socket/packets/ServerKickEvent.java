@@ -17,15 +17,13 @@ public class ServerKickEvent extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn, SocketAddress address) {
 
         ProxyKick kick = (ProxyKick) packetIn.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
                 new EventPlayerServerKick(kick.getReason(), kick.getPlayer())
         );
-
-        return null;
 
     }
 }

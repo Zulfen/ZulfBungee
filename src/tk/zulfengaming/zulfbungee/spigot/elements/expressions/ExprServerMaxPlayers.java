@@ -1,7 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientInfoManager;
+import org.jetbrains.annotations.NotNull;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class ExprServerMaxPlayers extends SimplePropertyExpression<ProxyServer, Number> {
@@ -11,17 +12,17 @@ public class ExprServerMaxPlayers extends SimplePropertyExpression<ProxyServer, 
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "player limit";
     }
 
     @Override
     public Number convert(ProxyServer proxyServer) {
-        return ClientInfoManager.getClientInfo(proxyServer.getName()).getMaxPlayers();
+        return ProxyServerInfoManager.getClientInfo(proxyServer.getName()).getMaxPlayers();
     }
 
     @Override
-    public Class<? extends Number> getReturnType() {
+    public @NotNull Class<? extends Number> getReturnType() {
         return Number.class;
     }
 }

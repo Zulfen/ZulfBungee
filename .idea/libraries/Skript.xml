@@ -1,8 +1,6 @@
 <component name="libraryTable">
   <library name="Skript">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Minecraft Server/Server Copies/Debug/plugins/Skript.jar!/" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES />
   </library>

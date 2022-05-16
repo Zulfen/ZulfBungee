@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.spigot.task.tasks;
+package tk.zulfengaming.zulfbungee.spigot.tasks;
 
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;

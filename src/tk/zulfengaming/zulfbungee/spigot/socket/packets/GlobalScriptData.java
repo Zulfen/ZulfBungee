@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
@@ -14,16 +15,24 @@ public class GlobalScriptData extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn, SocketAddress address) {
 
-        // send this to another thread to deal with just in-case it takes ages
-        try {
-            getConnection().getGlobalScriptManager().getDataQueue().put(packetIn.getDataArray());
-        } catch (InterruptedException ignored) {
+        if (getConnection().getGlobalScriptHandler().isPresent()) {
 
+            GlobalScriptsTask globalScriptsTask = getConnection().getGlobalScriptHandler().get();
+
+            try {
+
+               globalScriptsTask.getDataQueue().put(packetIn.getDataArray());
+
+            } catch (InterruptedException ignored) {
+
+                getConnection().getPluginInstance().warning(String.format("The script %s failed to fully process and may be corrupted!",
+                        globalScriptsTask.getCurrentScriptName()));
+
+            }
         }
 
-        return null;
 
     }
 }

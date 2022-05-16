@@ -16,15 +16,16 @@ public class PacketHandlerManager {
 
     public PacketHandlerManager(ClientConnection connectionIn) {
         addHandler(new Heartbeat(connectionIn));
-        addHandler(new ClientUpdate(connectionIn));
+        addHandler(new ConnectionName(connectionIn));
         addHandler(new ServerSwitchEvent(connectionIn));
         addHandler(new ServerMessageEvent(connectionIn));
         addHandler(new PlayerDisconnectEvent(connectionIn));
         addHandler(new PlayerConnectEvent(connectionIn));
         addHandler(new InvalidConfiguration(connectionIn));
-        addHandler(new ClientInfo(connectionIn));
+        addHandler(new ProxyServerInfo(connectionIn));
         addHandler(new ServerKickEvent(connectionIn));
         addHandler(new GlobalScriptData(connectionIn));
+        addHandler(new GlobalScriptHeader(connectionIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {

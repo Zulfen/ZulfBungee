@@ -1,5 +1,6 @@
-package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
+package tk.zulfengaming.zulfbungee.bungeecord.handlers;
 
+import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.packets.*;
@@ -17,7 +18,7 @@ public class PacketHandlerManager {
         addHandler(new Heartbeat(serverIn));
         addHandler(new ProxyPlayers(serverIn));
         addHandler(new PlayerSendMessage(serverIn));
-        addHandler(new ClientHandshake(serverIn));
+        addHandler(new ProxyServerInfo(serverIn));
         addHandler(new NetworkVariableModify(serverIn));
         addHandler(new NetworkVariableGet(serverIn));
         addHandler(new ServerSendMessage(serverIn));

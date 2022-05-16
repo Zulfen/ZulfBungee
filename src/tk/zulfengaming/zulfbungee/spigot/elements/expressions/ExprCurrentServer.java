@@ -10,7 +10,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.ClientUpdateData;
 
 import java.util.Optional;
 
@@ -25,9 +24,9 @@ public class ExprCurrentServer extends SimpleExpression<String> {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        Optional<ClientUpdateData> clientUpdate = connection.getClientUpdate();
+        Optional<String> name = connection.getConnectionName();
 
-        return clientUpdate.map(update -> new String[]{update.getGivenName()}).orElse(null);
+        return name.map(update -> new String[]{name.get()}).orElse(null);
 
     }
 

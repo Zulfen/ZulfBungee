@@ -3,12 +3,9 @@ package tk.zulfengaming.zulfbungee.spigot.handlers;
 import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
-public class ClientInfoManager {
+public class ProxyServerInfoManager {
 
     private static final HashMap<String, ServerInfo> servers = new HashMap<>();
 
@@ -23,10 +20,10 @@ public class ClientInfoManager {
 
     public static Collection<ProxyServer> getServers() {
 
-        LinkedList<ProxyServer> serversOut = new LinkedList<>();
+        ArrayList<ProxyServer> serversOut = new ArrayList<>();
 
         for (String name : servers.keySet()) {
-            serversOut.addLast(new ProxyServer(name));
+            serversOut.add(new ProxyServer(name));
         }
 
         return serversOut;
