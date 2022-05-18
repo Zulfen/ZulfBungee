@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot.tasks;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Config;
+import ch.njol.util.OpenCloseable;
 import org.apache.commons.lang.ArrayUtils;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -88,7 +89,7 @@ public class GlobalScriptsTask implements Runnable {
                             connection.getScripts().add(scriptFile);
 
                             Config config = ScriptLoader.loadStructure(scriptFile);
-                            ScriptLoader.loadScripts(Collections.singletonList(config));
+                            ScriptLoader.loadScripts(Collections.singletonList(config), OpenCloseable.EMPTY);
 
                         }
 
