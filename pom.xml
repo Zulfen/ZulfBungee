@@ -6,14 +6,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>tk.zulfengaming</groupId>
-    <artifactId>ZulfBungeeMaven</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>ZulfBungee</artifactId>
+    <version>0.7.0-ALPHA</version>
 
     <repositories>
         <repository>
             <id>skript-releases</id>
             <name>Skript Repository</name>
             <url>https://repo.skriptlang.org/releases</url>
+        </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -22,7 +26,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
+            <version>5.0.1</version>
         </dependency>
 
         <dependency>
@@ -35,6 +39,20 @@
             <groupId>com.github.SkriptLang</groupId>
             <artifactId>Skript</artifactId>
             <version>2.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.waterfallmc</groupId>
+            <artifactId>waterfall-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
