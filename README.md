@@ -2,6 +2,8 @@
 
 Inspired by Limeglass' work on Skungee, but custom coded for my network.
 
+*The project is currently based around Minecraft 1.12.2 and Java 8 to ensure legacy support, but will be dropped soon.*
+
 ## **Known Bugs:**
 
 * None right now.
