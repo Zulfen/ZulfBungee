@@ -1,0 +1,70 @@
+# Small tests to confirm things are working.
+
+command /zulfbungeetest:
+   trigger:
+
+      broadcast "&c&lWelcome to the ZulfBungee test script!"
+      broadcast "&c&oExecution will begin in stages. Please report the values!"
+      
+      wait 3 seconds
+
+      broadcast "&aPrinting all players on the bungeecord network..."
+      broadcast "&b%all bungeecord players%"
+
+      wait 3 seconds
+
+      broadcast "&aPrinting the name of this client:"
+      broadcast the name of this script's server
+
+      wait 3 seconds
+
+      broadcast "&aSending all players on the network a message through iteration..."
+
+      loop all of the bungeecord players:
+         message bungeecord player loop-proxyplayer the message "&b&oWhy hello there! I am a message!"
+
+      wait 3 seconds
+     
+      broadcast "&aPrinting all the servers connected to the proxy..."
+      set {_servers::*} to all of the online servers
+
+      broadcast "&b%{_servers::*}%"
+
+      broadcast "&aSending all servers a message (this is used for inter-server communication)..."
+
+      loop {_servers::*}:
+         message proxy server loop-value the message "Sample Text" called "Sample Title"
+
+      wait 3 seconds
+
+      broadcast "&aSetting a network variable..."
+      set network variable {zulfbungee::test::*} to 1, 2, 3, 4 and 5
+
+      wait 3 seconds
+
+      broadcast "&a...adding to it..."
+      
+      add 6 to network variable {zulfbungee::test::*}
+
+      wait 3 seconds
+      
+      broadcast "&a...and printing it! Expected values should be 1 through 6."
+      broadcast "%network variable {zulfbungee::test::*}%"
+
+      wait 3 seconds
+      
+      broadcast "&aDeleting that variable... :("
+      
+      delete network variable {zulfbungee::test::*}
+
+      broadcast "&c&lCongrats! The test is done! Please send results back!"
+
+
+on player switch server:
+   broadcast "&a&lPlayer server switch event fired:"
+   broadcast "&a&lPlayer involved: %event-player%"
+   broadcast "&a&lServer involved: %event-proxyserver%"
+
+on server message "Sample Title":
+   broadcast "&a&lServer message event was fired:"
+   broadcast "&a&lMessage: %event-text%"
