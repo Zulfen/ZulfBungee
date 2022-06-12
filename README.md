@@ -1,32 +1,32 @@
-**ZulfBungee - a bungeecord Skript addon!**
+# **ZulfBungee - a bungeecord Skript addon!**
 
 Inspired by Limeglass' work on Skungee, but custom coded for my network.
 
-**Known Bugs:**
+## **Known Bugs:**
 
 * None right now.
 
-**Supported Syntax:**
+## **Supported Syntax:**
 
-**Effect:**
+## **Effects:**
 
 - message (proxy|network|bungeecord|bungee) player %-proxyplayers% [the message] %string%
 
 - message (proxy|network|bungeecord|bungee) server %-proxyservers% [the message] %string% (named|called|with title) %string%
 
-**Events:**
+## **Events:**
 
 - on (proxy|bungeecord|bungee) player connect
 
 - on (proxy|bungeecord|bungee) player switch server
 
-- on (bungeecord|bungee|proxy) server message %string%
+- on (bungeecord|bungee|proxy) server message [(titled|called)] %string%
 
 - on (proxy|bungeecord|bungee) player disconnect
 
 - on (proxy|bungeecord|bungee) player kick
 
-**Expressions:**
+## **Expressions:**
 
 - [(all [[of] the]|the)] online [(proxy|bungeecord|bungee)] servers
 
@@ -42,7 +42,7 @@ Inspired by Limeglass' work on Skungee, but custom coded for my network.
 
 - [the] name of this [script's] server
 
-**Conditions:**
+## **Conditions:**
 
 - if (proxy|bungeecord|bungee) player %-proxyplayer% (1¦is|2¦is(n't| not)) online
 
