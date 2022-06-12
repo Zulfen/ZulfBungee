@@ -4,14 +4,15 @@ import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.*;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -124,13 +125,45 @@ public class BaseServerConnection implements Runnable {
             dataOutHandler.getQueue().put(packetIn);
 
         } catch (InterruptedException e) {
-            pluginInstance.error("That packet failed to send.");
-            e.printStackTrace();
+            pluginInstance.error("That packet failed to send due to thread interruption?:");
+            pluginInstance.error(packetIn.toString());
         }
 
         if (packetIn.getType() != PacketTypes.HEARTBEAT) {
             pluginInstance.logDebug("Sent packet " + packetIn.getType().toString() + "...");
         }
+
+    }
+
+    // returns true if it exists, and false if not.
+    public void sendScript(String scriptNameIn) {
+
+        Path scriptPath = pluginInstance.getConfig().
+                getScriptsFolderPath().resolve(scriptNameIn);
+
+        boolean exists = scriptPath.toFile().exists();
+
+        pluginInstance.getTaskManager().newTask(() -> {
+
+            try {
+
+                byte[] data = null;
+                ScriptAction action = ScriptAction.DELETE;
+
+                if (exists) {
+                    data = Files.readAllBytes(scriptPath);
+                    action = ScriptAction.NEW;
+                }
+
+                send(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new ScriptInfo(action,
+                        scriptNameIn, data)));
+
+            } catch (IOException e) {
+                pluginInstance.error(String.format("Error while parsing script %s!", scriptNameIn));
+                e.printStackTrace();
+            }
+
+        }, UUID.randomUUID().toString());
 
     }
 

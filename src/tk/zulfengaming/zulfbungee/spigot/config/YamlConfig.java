@@ -15,11 +15,6 @@ public class YamlConfig {
 
     }
 
-    public void addDefault(String node, Object value) {
-        configObject.addDefault(node, value);
-
-    }
-
     public String getString(String node) {
         return configObject.getString(node);
     }

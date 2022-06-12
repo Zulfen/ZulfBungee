@@ -17,11 +17,6 @@ debug: false
 # Enables or disables global scripts.
 global-scripts: true
 
-# WARNING! It is not advised to change this option unless you know what you are doing!
-# Changes how many bytes of the global script are sent with each packet.
-script-buffer-size: 8192
-
-
 # - Storage -
 
 # What kind of database should be used to store network variables.

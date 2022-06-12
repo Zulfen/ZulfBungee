@@ -35,8 +35,4 @@ public class TaskManager {
 
     }
 
-    public ScheduledTask getTask(String name) {
-        return tasks.get(name);
-    }
-
 }

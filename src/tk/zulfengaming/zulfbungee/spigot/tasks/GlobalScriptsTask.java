@@ -4,118 +4,88 @@ import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Config;
 import ch.njol.util.OpenCloseable;
-import org.apache.commons.lang.ArrayUtils;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
-import tk.zulfengaming.zulfbungee.universal.socket.ScriptInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.SynchronousQueue;
+import java.util.function.Supplier;
 
-public class GlobalScriptsTask implements Runnable {
+public class GlobalScriptsTask implements Supplier<File> {
 
     private final ClientConnection connection;
 
-    private final SynchronousQueue<Object[]> dataQueue = new SynchronousQueue<>();
+    private final byte[] data;
 
-    private final ScriptInfo[] scriptInfos;
+    private final String scriptName;
+    private final ScriptAction scriptAction;
 
-    private String currentScriptName = "";
-
-    public GlobalScriptsTask(ClientConnection connectionIn, ScriptInfo[] scriptInfoIn) {
+    public GlobalScriptsTask(ClientConnection connectionIn, String scriptNameIn, ScriptAction scriptActionIn, byte[] dataIn) {
         this.connection = connectionIn;
-        this.scriptInfos = scriptInfoIn;
+        this.scriptName = scriptNameIn;
+        this.scriptAction = scriptActionIn;
+        this.data = dataIn;
     }
 
+
     @Override
-    public void run() {
+    public File get() {
 
-        for (ScriptInfo scriptInfo : scriptInfos) {
+        File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
+                    scriptName);
 
-            List<String> scriptNames = Arrays.asList(scriptInfo.getScriptNames());
+        switch (scriptAction) {
 
-            if (scriptInfo.getScriptAction() == ScriptAction.DELETE || scriptInfo.getScriptAction() == ScriptAction.RELOAD)  {
+            case NEW:
+                // just in case of a reload
+                removeScript(scriptFile);
+                newScript(scriptFile);
+                break;
+            case DELETE:
+                removeScript(scriptFile);
+                break;
 
-                for (File scriptFile : connection.getScripts()) {
-                    ScriptLoader.unloadScript(scriptFile);
-                    //noinspection ResultOfMethodCallIgnored
-                    scriptFile.delete();
-                }
+        }
 
-                connection.getScripts().removeIf(file -> (scriptNames.contains(file.getName())));
+        return scriptFile;
 
-            }
+    }
 
-            for (String name : scriptInfo.getScriptNames()) {
+    private void newScript(File fileInstance) {
 
-                currentScriptName = name;
+        try {
 
-                File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
-                        name);
+            boolean created = fileInstance.createNewFile();
 
-                if (scriptInfo.getScriptAction() == ScriptAction.RELOAD || scriptInfo.getScriptAction() == ScriptAction.NEW) {
+            if (created) {
 
-                    connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, name));
+                Files.write(fileInstance.toPath(), data);
 
-                    try {
-
-                        boolean created = scriptFile.createNewFile();
-
-                        if (created) {
-
-                            Object[] rawData = dataQueue.take();
-
-                            int dataLen = rawData.length;
-
-                            if (dataLen != 0) {
-
-                                Byte[] primitiveBytesIn = new Byte[dataLen];
-
-                                for (int i = 0; i < dataLen; i++) {
-                                    primitiveBytesIn[i] = (Byte) rawData[i];
-                                }
-
-                                Files.write(scriptFile.toPath(), ArrayUtils.toPrimitive(primitiveBytesIn));
-
-                            }
-
-                            connection.getScripts().add(scriptFile);
-
-                            Config config = ScriptLoader.loadStructure(scriptFile);
-                            ScriptLoader.loadScripts(Collections.singletonList(config), OpenCloseable.EMPTY);
-
-                        }
-
-                    } catch (InterruptedException ignored) {
-
-                    } catch (IOException e) {
-                        connection.getPluginInstance().error(String.format("There was an error trying to save script %s:", scriptFile.getName()));
-                        e.printStackTrace();
-                    }
-
-                }
+                Config config = ScriptLoader.loadStructure(fileInstance);
+                ScriptLoader.loadScripts(Collections.singletonList(config), OpenCloseable.EMPTY);
 
             }
 
+        } catch (IOException e) {
+            connection.getPluginInstance().error(String.format("There was an error trying to save script %s:", fileInstance.getName()));
+            e.printStackTrace();
         }
 
     }
 
-    public String getCurrentScriptName() {
-        return currentScriptName;
-    }
+    private void removeScript(File fileInstance) {
 
-    public SynchronousQueue<Object[]> getDataQueue() {
-        return dataQueue;
-    }
+        ScriptLoader.unloadScript(fileInstance);
 
+        if (fileInstance.exists()) {
+            if (!fileInstance.delete()) {
+                connection.getPluginInstance().warning(String.format("Script file %s could not be deleted.", fileInstance.getName()));
+            }
+        }
+
+    }
 }
 
 

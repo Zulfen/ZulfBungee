@@ -16,7 +16,7 @@ public class EvtServerMessage extends SkriptEvent {
     private Literal<String> title;
 
     static {
-        Skript.registerEvent("Server Message", EvtServerMessage.class, EventMessage.class, "[(bungeecord|bungee|proxy)] server message %string%");
+        Skript.registerEvent("Server Message", EvtServerMessage.class, EventMessage.class, "[(bungeecord|bungee|proxy)] server message [(titled|called)] %string%");
 
         EventValues.registerEventValue(EventMessage.class, String.class, new Getter<String, EventMessage>() {
             @Override

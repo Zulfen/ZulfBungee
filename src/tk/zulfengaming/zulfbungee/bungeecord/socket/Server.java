@@ -11,6 +11,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Handler;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.io.EOFException;
@@ -183,6 +184,20 @@ public class Server implements Runnable {
         for (BaseServerConnection connection : socketConnections) {
             connection.send(packetIn);
         }
+    }
+
+    public void syncScripts(List<String> scriptNamesIn) {
+
+        for (BaseServerConnection connection : socketConnections) {
+
+            for (String scriptName : scriptNamesIn) {
+
+                connection.sendScript(scriptName);
+
+            }
+
+        }
+
     }
 
     private void addServerConnection(BaseServerConnection connection) {

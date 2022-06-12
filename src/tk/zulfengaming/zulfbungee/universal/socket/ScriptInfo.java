@@ -6,18 +6,25 @@ public class ScriptInfo implements Serializable {
 
     private final ScriptAction scriptAction;
 
-    private final String[] scriptNames;
+    private final String scriptName;
 
-    public ScriptInfo(ScriptAction scriptActionIn, String[] scriptNamesIn) {
+    private byte[] scriptData;
+
+    public ScriptInfo(ScriptAction scriptActionIn, String scriptNameIn, byte[] dataIn) {
         this.scriptAction = scriptActionIn;
-        this.scriptNames = scriptNamesIn;
+        this.scriptName = scriptNameIn;
+        this.scriptData = dataIn;
+    }
+
+    public byte[] getScriptData() {
+        return scriptData;
     }
 
     public ScriptAction getScriptAction() {
         return scriptAction;
     }
 
-    public String[] getScriptNames() {
-        return scriptNames;
+    public String getScriptName() {
+        return scriptName;
     }
 }

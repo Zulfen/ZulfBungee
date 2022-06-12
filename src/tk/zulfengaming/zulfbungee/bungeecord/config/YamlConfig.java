@@ -80,7 +80,7 @@ public class YamlConfig {
 
     }
 
-    public ArrayList<String> getScriptNames() {
+    public List<String> getScriptNames() {
 
         ArrayList<String> cachedScripts = new ArrayList<>();
 

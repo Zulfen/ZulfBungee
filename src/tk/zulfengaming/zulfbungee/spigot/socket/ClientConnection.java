@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
@@ -8,10 +9,7 @@ import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ScriptInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TransferQueue;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientConnection implements Runnable {
@@ -36,9 +31,6 @@ public class ClientConnection implements Runnable {
     private final BukkitTask heartbeatThread;
 
     private final BukkitTask socketDaemon;
-
-    private BukkitTask globalScriptsThread;
-
     private final BukkitTask dataInThread;
     private final BukkitTask dataOutThread;
 
@@ -50,8 +42,6 @@ public class ClientConnection implements Runnable {
     private final AtomicBoolean running = new AtomicBoolean(true);
 
     // managers
-
-    private GlobalScriptsTask globalScriptHandler;
 
     private final PacketHandlerManager packetHandlerManager;
 
@@ -65,8 +55,6 @@ public class ClientConnection implements Runnable {
 
     private final DataInHandler dataInHandler;
 
-    private final int heartbeatTicks;
-
     // misc. info
 
     private String connectionName;
@@ -76,24 +64,20 @@ public class ClientConnection implements Runnable {
     public ClientConnection(ZulfBungeeSpigot pluginInstanceIn) throws UnknownHostException {
 
         this.pluginInstance = pluginInstanceIn;
-
         this.clientListenerManager = new ClientListenerManager(this);
 
         this.packetHandlerManager = new PacketHandlerManager(this);
-
-        this.heartbeatTicks = pluginInstance.getYamlConfig().getInt("heartbeat-ticks");
+        int heartbeatTicks = pluginInstance.getYamlConfig().getInt("heartbeat-ticks");
 
         socketBarrier = clientListenerManager.getSocketBarrier();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", heartbeatTicks);
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
 
         socketBarrier.register();
-
         socketDaemon = pluginInstance.getTaskManager().newTask(clientListenerManager, "ClientListenerManager");
 
         this.dataInThread = pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
@@ -156,7 +140,8 @@ public class ClientConnection implements Runnable {
             }
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            pluginInstance.error("That packet failed to send due to thread interruption?:");
+            pluginInstance.error(packetIn.toString());
         }
 
     }
@@ -169,13 +154,24 @@ public class ClientConnection implements Runnable {
 
     }
 
-    public void requestGlobalScripts(ScriptInfo[] infoIn) {
-        globalScriptHandler = new GlobalScriptsTask(this, infoIn);
-        globalScriptsThread = pluginInstance.getTaskManager().newTask(globalScriptHandler, "GlobalScriptHandler");
-    }
+    public void processGlobalScript(@NotNull ScriptInfo infoIn) {
 
-    public Optional<GlobalScriptsTask> getGlobalScriptHandler() {
-        return Optional.ofNullable(globalScriptHandler);
+        ScriptAction action = infoIn.getScriptAction();
+
+        CompletableFuture.supplyAsync(new GlobalScriptsTask(this, infoIn.getScriptName(), action, infoIn.getScriptData()))
+                .thenAccept(file -> {
+                    switch (action) {
+                        case NEW:
+                            if (!scriptFiles.contains(file)) {
+                                scriptFiles.add(file);
+                            }
+                            break;
+                        case DELETE:
+                            scriptFiles.remove(file);
+                            break;
+                    }
+                });
+
     }
 
     public AtomicBoolean isRunning() {
@@ -212,10 +208,6 @@ public class ClientConnection implements Runnable {
             clientListenerManager.shutdown();
 
             heartbeatThread.cancel();
-
-            if (globalScriptsThread != null) {
-                globalScriptsThread.cancel();
-            }
 
             socketDaemon.cancel();
 

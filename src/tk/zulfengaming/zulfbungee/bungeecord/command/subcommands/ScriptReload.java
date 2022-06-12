@@ -6,14 +6,12 @@ import net.md_5.bungee.api.chat.TextComponent;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
-import tk.zulfengaming.zulfbungee.universal.socket.ScriptInfo;
-
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScriptReload extends CommandHandler {
 
@@ -44,21 +42,20 @@ public class ScriptReload extends CommandHandler {
     @Override
     public void handleCommand(CommandSender sender, String[] separateArgs) {
 
-        ArrayList<String> newScripts = getMainServer().getPluginInstance().getConfig().getScriptNames();
+        List<String> newScripts = new ArrayList<>();
 
         if (watchKey != null) {
 
             for (WatchEvent<?> event : watchKey.pollEvents()) {
 
-                WatchEvent.Kind<?> kind = event.kind();
                 WatchEvent<Path> pathWatchEvent = (WatchEvent<Path>) event;
 
                 String scriptName = pathWatchEvent.context().getFileName().toString();
 
-                if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind) || StandardWatchEventKinds.ENTRY_MODIFY.equals(kind)) {
-                    newScripts.add(scriptName);
-                } else if (StandardWatchEventKinds.ENTRY_DELETE.equals(kind)) {
-                    newScripts.remove(scriptName);
+                if (scriptName.endsWith(".sk")) {
+                    if (!newScripts.contains(scriptName)) {
+                        newScripts.add(scriptName);
+                    }
                 }
 
             }
@@ -67,55 +64,46 @@ public class ScriptReload extends CommandHandler {
 
         if (separateArgs[0].equals("all") && separateArgs.length == 1) {
 
-            getMainServer().sendToAllClients(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, newScripts.toArray(new String[0])));
+            if (newScripts.isEmpty()) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                        ('&', ZulfBungeeCommand.COMMAND_PREFIX + "No scripts have been updated, as they haven't been modified.")));
+            } else {
+                getMainServer().syncScripts(newScripts);
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                        ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("%s script(s) have been updated: %s", newScripts.size(), newScripts))));
+            }
 
         } else {
 
-            ScriptInfo infoOut;
-
-            StringBuilder scriptName = new StringBuilder();
+            StringBuilder scriptNameBuilder = new StringBuilder();
 
             for (int i = 0; i < separateArgs.length; i++) {
 
-                scriptName.append(separateArgs[i]);
+                scriptNameBuilder.append(separateArgs[i]);
 
                 if (i != separateArgs.length - 1) {
-                    scriptName.append(" ");
+                    scriptNameBuilder.append(" ");
                 }
 
             }
 
-            scriptName.append(".sk");
+            scriptNameBuilder.append(".sk");
 
-            if (newScripts.contains(scriptName.toString())) {
+            String scriptName = scriptNameBuilder.toString();
 
-                infoOut = new ScriptInfo(ScriptAction.RELOAD, new String[]{scriptName.toString()});
-                getMainServer().sendToAllClients(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, infoOut));
+            if (getMainServer().getPluginInstance().getConfig().getScriptNames().contains(scriptName)) {
+
+                getMainServer().syncScripts(Collections.singletonList(scriptName));
 
             } else {
 
-
-                if (newScripts.contains(scriptName.toString())) {
-
-                    infoOut = new ScriptInfo(ScriptAction.NEW, new String[]{scriptName.toString()});
-                    getMainServer().sendToAllClients(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, infoOut));
-
-                } else {
-
-                    String logName = scriptName.toString().split(".sk")[0];
-                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", logName))));
-
-                }
+                String logName = scriptName.split(".sk")[0];
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                        ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", logName))));
 
             }
 
         }
 
-
-
-
     }
-
-
 }

@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Packet implements Serializable {
@@ -12,8 +13,6 @@ public class Packet implements Serializable {
     private final boolean returnable;
 
     private final boolean shouldHandle;
-
-    private final UUID id;
 
     private Object[] data = new Object[1];
 
@@ -31,7 +30,6 @@ public class Packet implements Serializable {
         this.type = packetType;
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
-        this.id = UUID.randomUUID();
 
         this.data = dataIn;
     }
@@ -40,29 +38,10 @@ public class Packet implements Serializable {
         this.type = packetType;
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
-        this.id = UUID.randomUUID();
 
         this.data[0] = dataIn;
     }
 
-    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn, UUID uuidIn) {
-
-        this.type = packetType;
-        this.returnable = isReturnable;
-        this.shouldHandle = handleIn;
-        this.id = uuidIn;
-
-        this.data = dataIn;
-    }
-
-    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object dataIn, UUID uuidIn) {
-        this.type = packetType;
-        this.returnable = isReturnable;
-        this.shouldHandle = handleIn;
-        this.id = uuidIn;
-
-        this.data[0] = dataIn;
-    }
 
     public PacketTypes getType() {
         return type;
@@ -84,8 +63,13 @@ public class Packet implements Serializable {
         return shouldHandle;
     }
 
-    public UUID getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "Packet{" +
+                "type=" + type +
+                ", returnable=" + returnable +
+                ", shouldHandle=" + shouldHandle +
+                ", data=" + Arrays.toString(data) +
+                '}';
     }
-
 }

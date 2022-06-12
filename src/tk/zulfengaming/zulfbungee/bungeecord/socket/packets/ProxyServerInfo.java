@@ -43,12 +43,6 @@ public class ProxyServerInfo extends PacketHandler {
                 String name = info.getKey();
                 getMainServer().addActiveConnection(connection, name);
 
-                if (getMainServer().getPluginInstance().getConfig().getBoolean("global-scripts")) {
-                    connection.send(new Packet(PacketTypes.GLOBAL_SCRIPT_HEADER, false, true, new ScriptInfo(ScriptAction.NEW,
-                            getMainServer().getPluginInstance().getConfig()
-                                    .getScriptNames().toArray(new String[0]))));
-                }
-
                 return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
 
             }

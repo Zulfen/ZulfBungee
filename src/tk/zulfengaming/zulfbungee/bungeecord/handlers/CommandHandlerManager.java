@@ -1,6 +1,5 @@
 package tk.zulfengaming.zulfbungee.bungeecord.handlers;
 
-import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.ScriptDelete;
 import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.ScriptReload;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
@@ -18,7 +17,6 @@ public class CommandHandlerManager {
     public CommandHandlerManager(Server serverIn) {
         this.server = serverIn;
         handlers.add(new ScriptReload(serverIn));
-        handlers.add(new ScriptDelete(serverIn));
     }
 
     public Server getMainServer() {

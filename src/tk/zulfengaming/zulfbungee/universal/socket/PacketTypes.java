@@ -18,6 +18,6 @@ public enum PacketTypes {
     KICK_EVENT,
     INVALID_CONFIGURATION, // unused for now
     GLOBAL_SCRIPT_DATA,
-    GLOBAL_SCRIPT_HEADER,
+    GLOBAL_SCRIPT,
 
 }
