@@ -14,18 +14,15 @@ import java.util.List;
 
 public class YamlConfig {
 
-    private final File configFile;
     private Path scriptsFolderPath;
     private File scriptsFolder;
-
-    private ConfigurationProvider configObject;
 
     private Configuration loadedConfig;
 
     @SuppressWarnings("UnstableApiUsage")
     public YamlConfig(ZulfBungeecord instanceIn) {
 
-        this.configFile = new File(instanceIn.getDataFolder(), "config.yml");
+        File configFile = new File(instanceIn.getDataFolder(), "config.yml");
 
         try {
 
@@ -55,7 +52,7 @@ public class YamlConfig {
                     e.printStackTrace();
                 }
 
-            this.configObject = ConfigurationProvider.getProvider(YamlConfiguration.class);
+            ConfigurationProvider configObject = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
             this.loadedConfig = configObject.load(configFile);
 
@@ -102,11 +99,6 @@ public class YamlConfig {
 
     public Path getScriptsFolderPath() {
         return scriptsFolderPath;
-    }
-
-    public void save(String node, Object value) throws IOException {
-        loadedConfig.set(node, value);
-        configObject.save(loadedConfig, configFile);
     }
 
     public String getString(String node) {
