@@ -50,9 +50,9 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                     socketBarrier.arriveAndAwaitAdvance();
 
-                    Socket newSocket = getClientListenerManager().getSocketHandoff().take();
-
-                    outputStream = new ObjectOutputStream(newSocket.getOutputStream());
+                    try (Socket newSocket = getClientListenerManager().getSocketHandoff().take()) {
+                        outputStream = new ObjectOutputStream(newSocket.getOutputStream());
+                    }
 
                 }
 

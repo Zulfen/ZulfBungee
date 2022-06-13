@@ -7,6 +7,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     }
 
     @Override
-    protected ProxyServer[] get(Event event) {
+    protected ProxyServer @NotNull [] get(@NotNull Event event) {
         return new ProxyServer[] {new ProxyServer(serverName.getSingle(event))};
     }
 
@@ -30,17 +31,17 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     }
 
     @Override
-    public Class<? extends ProxyServer> getReturnType() {
+    public @NotNull Class<? extends ProxyServer> getReturnType() {
         return ProxyServer.class;
     }
 
     @Override
-    public String toString(Event event, boolean b) {
-        return "proxy server(s) " + Arrays.toString(serverName.getArray(event));
+    public @NotNull String toString(Event event, boolean b) {
+        return "proxy server(s): " + Arrays.toString(serverName.getArray(event));
     }
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         serverName = (Expression<String>) expressions[0];
         return true;
     }

@@ -15,10 +15,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,11 +28,11 @@ public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
     private Expression<ProxyServer> servers;
 
     @Override
-    protected ProxyPlayer[] get(@NotNull Event event) {
+    protected ProxyPlayer @NotNull [] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        LinkedList<ProxyPlayer> playersOut = new LinkedList<>();
+        ArrayList<ProxyPlayer> playersOut = new ArrayList<>();
 
         try {
 
@@ -93,12 +90,12 @@ public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
     }
 
     @Override
-    public String toString(Event event, boolean b) {
+    public @NotNull String toString(Event event, boolean b) {
         return "all bungeecord players";
     }
 
     @Override
-    public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         servers = (Expression<ProxyServer>) expressions[0];
         return true;
     }

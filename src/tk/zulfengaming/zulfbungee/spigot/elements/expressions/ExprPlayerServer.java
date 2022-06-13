@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -19,7 +20,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "current server";
     }
 
@@ -53,7 +54,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
     }
 
     @Override
-    public Class<? extends ProxyServer> getReturnType() {
+    public @NotNull Class<? extends ProxyServer> getReturnType() {
         return ProxyServer.class;
     }
 }

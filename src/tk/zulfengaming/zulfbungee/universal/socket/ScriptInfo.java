@@ -8,7 +8,7 @@ public class ScriptInfo implements Serializable {
 
     private final String scriptName;
 
-    private byte[] scriptData;
+    private final byte[] scriptData;
 
     public ScriptInfo(ScriptAction scriptActionIn, String scriptNameIn, byte[] dataIn) {
         this.scriptAction = scriptActionIn;
