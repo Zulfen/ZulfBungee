@@ -7,6 +7,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class YamlConfig {
 
                     if (created) {
                         try (InputStream is = instanceIn.getResourceAsStream("bungeecord.yml");
-                             OutputStream os = new FileOutputStream(configFile)) {
+                             OutputStream os = Files.newOutputStream(configFile.toPath())) {
                             ByteStreams.copy(is, os);
                         }
                     }
