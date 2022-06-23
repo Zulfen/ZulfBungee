@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class ScriptReload extends CommandHandler {
 
-    private WatchKey watchKey;
+    private final WatchKey watchKey;
 
     public ScriptReload(Server serverIn) {
 
@@ -38,6 +38,7 @@ public class ScriptReload extends CommandHandler {
         } catch (IOException e) {
             getMainServer().getPluginInstance().error("There was an error creating a watch service for the scripts folder!");
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
@@ -75,51 +76,56 @@ public class ScriptReload extends CommandHandler {
         }
 
 
-        if (separateArgs[0].equals("all") && separateArgs.length == 1) {
+        if (separateArgs.length == 1) {
 
-            if (scriptsMap.isEmpty()) {
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                        ('&', ZulfBungeeCommand.COMMAND_PREFIX + "No scripts have been updated, as they haven't been modified.")));
+            if (separateArgs[0].equals("all")) {
+
+                if (scriptsMap.isEmpty()) {
+                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + "No scripts have been updated, as they haven't been modified.")));
+                } else {
+                    getMainServer().syncScriptsFolder(scriptsMap);
+                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()))));
+                }
+
             } else {
-                getMainServer().syncScriptsFolder(scriptsMap);
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                        ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()))));
+
+                StringBuilder scriptNameBuilder = new StringBuilder();
+
+                for (int i = 0; i < separateArgs.length; i++) {
+
+                    scriptNameBuilder.append(separateArgs[i]);
+
+                    if (i != separateArgs.length - 1) {
+                        scriptNameBuilder.append(" ");
+                    }
+
+                }
+
+                scriptNameBuilder.append(".sk");
+
+                String scriptName = scriptNameBuilder.toString();
+
+                if (getMainServer().getPluginInstance().getConfig().getScriptNames().contains(scriptName)) {
+
+                    HashMap<String, ScriptAction> tempScriptsMap = new HashMap<>(scriptsMap);
+                    tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptName));
+
+                    getMainServer().syncScriptsFolder(tempScriptsMap);
+
+                } else {
+
+                    String logName = scriptName.split(".sk")[0];
+                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", logName))));
+
+                }
             }
 
         } else {
-
-            StringBuilder scriptNameBuilder = new StringBuilder();
-
-            for (int i = 0; i < separateArgs.length; i++) {
-
-                scriptNameBuilder.append(separateArgs[i]);
-
-                if (i != separateArgs.length - 1) {
-                    scriptNameBuilder.append(" ");
-                }
-
-            }
-
-            scriptNameBuilder.append(".sk");
-
-            String scriptName = scriptNameBuilder.toString();
-
-            if (getMainServer().getPluginInstance().getConfig().getScriptNames().contains(scriptName)) {
-
-                HashMap<String, ScriptAction> tempScriptsMap = new HashMap<>(scriptsMap);
-                tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptName));
-
-                getMainServer().syncScriptsFolder(tempScriptsMap);
-
-            } else {
-
-                String logName = scriptName.split(".sk")[0];
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                        ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", logName))));
-
-            }
-
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                    ('&', ZulfBungeeCommand.COMMAND_PREFIX + "Please specify a script to reload.")));
         }
-
     }
 }
