@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
@@ -11,10 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerKick;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
-public class EvtPlayerServerKick extends SkriptEvent {
+@Name("Proxy Player Kick")
+@Description("When a proxy player gets kicked from the proxy. (e.g. a ban)")
+public class EvtPlayerProxyKick extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Player Proxy Kick", EvtPlayerServerKick.class, EventPlayerServerKick.class, "(proxy|bungeecord|bungee) player kick");
+        Skript.registerEvent("Proxy Player Kick", EvtPlayerProxyKick.class, EventPlayerServerKick.class, "(proxy|bungeecord|bungee) player kick");
 
         EventValues.registerEventValue(EventPlayerServerKick.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerKick>() {
             @Override
@@ -26,7 +30,7 @@ public class EvtPlayerServerKick extends SkriptEvent {
         EventValues.registerEventValue(EventPlayerServerKick.class, String.class, new Getter<String, EventPlayerServerKick>() {
             @Override
             public String get(EventPlayerServerKick eventPlayerServerKick) {
-                return String.join(" ", eventPlayerServerKick.getReason());
+                return eventPlayerServerKick.getReason();
             }
         }, 0);
     }
@@ -37,12 +41,12 @@ public class EvtPlayerServerKick extends SkriptEvent {
     }
 
     @Override
-    public boolean check(Event event) {
+    public boolean check(@NotNull Event event) {
         return true;
     }
 
     @Override
-    public String toString(Event event, boolean b) {
+    public @NotNull String toString(Event event, boolean b) {
         return "event proxy player kick";
     }
 }

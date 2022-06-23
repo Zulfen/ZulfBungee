@@ -11,7 +11,6 @@ public class NetworkVariable implements Serializable {
 
     public NetworkVariable(String nameIn, String modeIn, Value[] values) {
         this.name = nameIn;
-
         this.changeModeAsString = modeIn;
         this.values = values;
 
@@ -19,16 +18,11 @@ public class NetworkVariable implements Serializable {
 
     public NetworkVariable(String nameIn, Value value) {
         this.name = nameIn;
-
         this.values[0] = value;
     }
 
     public Optional<SkriptChangeMode> getChangeMode() {
         return Optional.ofNullable(SkriptChangeMode.valueOf(changeModeAsString));
-    }
-
-    public boolean isDataValid() {
-        return values != null && values.length != 0;
     }
 
     public String getName() {

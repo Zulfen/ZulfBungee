@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket;
 
 
+import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -17,6 +18,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
+import java.nio.file.Path;
 import java.util.*;
 
 public class Server implements Runnable {
@@ -186,13 +188,15 @@ public class Server implements Runnable {
         }
     }
 
-    public void syncScripts(List<String> scriptNamesIn) {
+    public void syncScriptsFolder(Map<String, ScriptAction> scriptNamesIn) {
 
         for (BaseServerConnection connection : socketConnections) {
 
-            for (String scriptName : scriptNamesIn) {
+            for (Map.Entry<String, ScriptAction> script : scriptNamesIn.entrySet()) {
 
-                connection.sendScript(scriptName);
+                Path scriptPath = pluginInstance.getConfig().getScriptPath(script.getKey());
+
+                connection.sendScript(scriptPath, script.getValue());
 
             }
 
@@ -210,16 +214,20 @@ public class Server implements Runnable {
 
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
-        sendToAllClients(new Packet(PacketTypes.PROXY_SERVER_INFO, false, true, getProxyServerList()));
+        sendToAllClients(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerList()));
 
     }
 
     public void removeServerConnection(BaseServerConnection connection) {
 
-        socketConnections.remove(connection);
-        activeConnections.inverse().remove(connection);
+        BiMap<BaseServerConnection, String> inverse = activeConnections.inverse();
 
-        sendToAllClients(new Packet(PacketTypes.PROXY_SERVER_INFO, false, true, getProxyServerList()));
+        pluginInstance.logInfo(String.format("Disconnecting client %s (%s)", connection.getAddress(), inverse.get(connection)));
+
+        socketConnections.remove(connection);
+        inverse.remove(connection);
+
+        sendToAllClients(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerList()));
 
     }
 
@@ -276,6 +284,7 @@ public class Server implements Runnable {
                 .map(proxyServerList -> new ProxyServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
                 .toArray(ProxyServer[]::new);
     }
+
 
     public PacketHandlerManager getPacketManager() {
         return packetManager;

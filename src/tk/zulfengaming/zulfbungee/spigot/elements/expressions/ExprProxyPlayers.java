@@ -28,51 +28,45 @@ public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
     private Expression<ProxyServer> servers;
 
     @Override
-    protected ProxyPlayer @NotNull [] get(@NotNull Event event) {
+    protected ProxyPlayer[] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
         ArrayList<ProxyPlayer> playersOut = new ArrayList<>();
 
-        try {
+        Optional<Packet> request;
 
-            Optional<Packet> request;
+        if (servers != null) {
 
-            if (servers != null) {
+            ProxyServer[] serversOut = servers.getArray(event);
 
-                ProxyServer[] serversOut = servers.getArray(event);
-                
-                request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                            true, false, serversOut));
+            request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
+                        true, false, serversOut));
 
 
-            } else {
+        } else {
 
-                request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                        true, false, null));
+            request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
+                    true, false, null));
 
-            }
+        }
 
-            if (request.isPresent()) {
+        if (request.isPresent()) {
 
-                Packet packet = request.get();
+            Packet packet = request.get();
 
-                if (packet.getDataArray() != null) {
+            if (packet.getDataArray() != null) {
 
-                    List<ProxyPlayer> playersFrom = Stream.of(packet.getDataArray())
-                            .filter(Objects::nonNull)
-                            .filter(ProxyPlayer.class::isInstance)
-                            .map(ProxyPlayer.class::cast)
-                            .collect(Collectors.toList());
+                List<ProxyPlayer> playersFrom = Stream.of(packet.getDataArray())
+                        .filter(Objects::nonNull)
+                        .filter(ProxyPlayer.class::isInstance)
+                        .map(ProxyPlayer.class::cast)
+                        .collect(Collectors.toList());
 
-                    playersOut.addAll(playersFrom);
+                playersOut.addAll(playersFrom);
 
-                }
 
             }
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
 
         }
 

@@ -55,10 +55,9 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                     socketBarrier.arriveAndAwaitAdvance();
 
-                    try (Socket newSocket = getClientListenerManager().getSocketHandoff().take()) {
-                        inputStream = new ObjectInputStream(newSocket.getInputStream());
-                    }
+                    Socket newSocket = getClientListenerManager().getSocketHandoff().take();
 
+                    inputStream = new ObjectInputStream(newSocket.getInputStream());
 
                 }
 

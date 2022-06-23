@@ -12,6 +12,7 @@ import ch.njol.skript.variables.SerializedVariable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -19,6 +20,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,28 +45,22 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        try {
+        Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, networkVariable.getName().toString(event)));
 
-            Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, networkVariable.getName().toString(event)));
+        if (response.isPresent()) {
 
-            if (response.isPresent()) {
+            Packet packetIn = response.get();
 
-                Packet packetIn = response.get();
+            if (packetIn.getDataSingle() != null) {
 
-                if (packetIn.getDataSingle() != null) {
+                NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
 
-                    NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
-
-                    return Stream.of(variable.getValueArray())
-                            .filter(Objects::nonNull)
-                            .map(value -> Classes.deserialize(value.type, value.data))
-                            .toArray(Object[]::new);
-
-                }
+                return Stream.of(variable.getValueArray())
+                        .filter(Objects::nonNull)
+                        .map(value -> Classes.deserialize(value.type, value.data))
+                        .toArray(Object[]::new);
 
             }
-
-        } catch (InterruptedException ignored) {
 
         }
 
@@ -77,21 +73,23 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?> getReturnType() {
+    public @NotNull Class<?> getReturnType() {
         return Object.class;
     }
 
     @Override
-    public String toString(Event event, boolean b) {
+    public @NotNull String toString(Event event, boolean b) {
         return networkVariable.toString(event, b);
     }
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         Expression<?> expression = expressions[0];
 
         if (expression instanceof Variable) {
             networkVariable = (Variable<?>) expressions[0];
+        } else {
+            return false;
         }
 
         if (networkVariable == null) {
@@ -107,29 +105,21 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     }
 
     @Override
-    public void change(Event e, Object[] delta, Changer.ChangeMode mode) {
+    public void change(@NotNull Event e, Object[] delta, Changer.ChangeMode mode) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        LinkedList<Value> valuesOut = new LinkedList<>();
+        ArrayList<Value> valuesOut = new ArrayList<>();
 
         if (delta != null && !mode.equals(Changer.ChangeMode.DELETE)) {
             for (Object o : delta) {
                 SerializedVariable.Value value = Classes.serialize(o);
-                valuesOut.addLast(new Value(value.type, value.data));
+                valuesOut.add(new Value(value.type, value.data));
             }
         }
-
         NetworkVariable variableOut = new NetworkVariable(networkVariable.getName().toString(e), mode.name(), valuesOut.toArray(new Value[0]));
 
-
-        try {
-
-            connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
-
-        } catch (InterruptedException ignored) {
-
-        }
+        connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
 
     }
 

@@ -10,9 +10,9 @@ public class EventPlayerServerKick extends Event {
 
     private final ProxyPlayer player;
 
-    private final String[] reason;
+    private final String reason;
 
-    public EventPlayerServerKick(String[] reason, ProxyPlayer player) {
+    public EventPlayerServerKick(String reason, ProxyPlayer player) {
         this.player = player;
         this.reason = reason;
     }
@@ -30,7 +30,7 @@ public class EventPlayerServerKick extends Event {
         return player;
     }
 
-    public String[] getReason() {
+    public String getReason() {
         return reason;
     }
 }

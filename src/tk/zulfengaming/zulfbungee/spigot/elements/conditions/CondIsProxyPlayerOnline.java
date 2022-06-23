@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.conditions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -15,12 +17,14 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.util.Optional;
 
+@Name("Proxy Player Online")
+@Description("Checks if a proxy player is online on the network.")
 public class CondIsProxyPlayerOnline extends Condition {
 
     private Expression<ProxyPlayer> player;
 
     static {
-        Skript.registerCondition(CondIsProxyPlayerOnline.class, "(proxy|bungeecord|bungee) player %-proxyplayer% (1¦is|2¦is(n't| not)) online");
+        Skript.registerCondition(CondIsProxyPlayerOnline.class, "%-proxyplayer% (1¦is|2¦is(n't| not)) online");
     }
 
     @Override
@@ -28,19 +32,12 @@ public class CondIsProxyPlayerOnline extends Condition {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        try {
+        Optional<Packet> response = connection.send(new Packet(PacketTypes.PLAYER_ONLINE, true, false, player.getSingle(event)));
 
-            Optional<Packet> response = connection.send(new Packet(PacketTypes.PLAYER_ONLINE, true, false, player.getSingle(event)));
+        if (response.isPresent()) {
 
-            if (response.isPresent()) {
-
-                Packet packetIn = response.get();
-
-                return (boolean) packetIn.getDataSingle();
-
-            }
-
-        } catch (InterruptedException ignored) {
+            Packet packetIn = response.get();
+            return (boolean) packetIn.getDataSingle();
 
         }
 
@@ -49,7 +46,7 @@ public class CondIsProxyPlayerOnline extends Condition {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "condition proxy player " + player.toString(event, b) + " status";
+        return "proxy player " + player.toString(event, b) + " status";
     }
 
     @Override

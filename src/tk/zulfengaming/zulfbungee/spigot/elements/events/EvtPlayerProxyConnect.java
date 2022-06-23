@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
@@ -12,10 +14,12 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-public class EvtPlayerServerConnect extends SkriptEvent {
+@Name("Proxy Player Connect")
+@Description("When a proxy player joins the proxy.")
+public class EvtPlayerProxyConnect extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Player Proxy Connect", EvtPlayerServerConnect.class, EventPlayerServerConnect.class, "(proxy|bungeecord|bungee) player connect");
+        Skript.registerEvent("Proxy Player Connect", EvtPlayerProxyConnect.class, EventPlayerServerConnect.class, "(proxy|bungeecord|bungee) player connect");
 
         EventValues.registerEventValue(EventPlayerServerConnect.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerConnect>() {
 

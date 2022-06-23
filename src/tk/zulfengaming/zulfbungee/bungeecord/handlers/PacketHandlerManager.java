@@ -18,11 +18,13 @@ public class PacketHandlerManager {
         addHandler(new Heartbeat(serverIn));
         addHandler(new ProxyPlayers(serverIn));
         addHandler(new PlayerSendMessage(serverIn));
-        addHandler(new ProxyServerInfo(serverIn));
+        addHandler(new PlayerSwitchServer(serverIn));
+        addHandler(new ProxyClientInfo(serverIn));
         addHandler(new NetworkVariableModify(serverIn));
         addHandler(new NetworkVariableGet(serverIn));
         addHandler(new ServerSendMessage(serverIn));
         addHandler(new PlayerServer(serverIn));
+        addHandler(new ProxyPlayerUUID(serverIn));
         addHandler(new ProxyPlayerOnline(serverIn));
         addHandler(new GlobalScript(serverIn));
     }

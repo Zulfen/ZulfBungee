@@ -4,6 +4,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProxyServerInfoManager {
 
@@ -13,21 +14,21 @@ public class ProxyServerInfoManager {
         return servers.get(nameIn);
     }
 
+    public static ProxyServer toProxyServer(String nameIn) {
+        return new ProxyServer(nameIn, servers.get(nameIn));
+    }
+
     public static void setServers(ProxyServer[] serverList) {
         servers.clear();
         Arrays.stream(serverList).forEach(server -> servers.put(server.getName(), server.getClientInfo()));
     }
 
-    public static Collection<ProxyServer> getServers() {
+    public static boolean contains(ProxyServer proxyServerIn) {
+        return servers.containsKey(proxyServerIn.getName());
+    }
 
-        ArrayList<ProxyServer> serversOut = new ArrayList<>();
-
-        for (String name : servers.keySet()) {
-            serversOut.add(new ProxyServer(name));
-        }
-
-        return serversOut;
-
+    public static List<ProxyServer> getServers() {
+        return servers.keySet().stream().map(ProxyServer::new).collect(Collectors.toList());
     }
 
 }

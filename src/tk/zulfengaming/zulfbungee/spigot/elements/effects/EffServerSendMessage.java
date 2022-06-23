@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -14,6 +16,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
 
+@Name("Proxy Server receive message")
+@Description("When a proxy server receives a message.")
 public class EffServerSendMessage extends Effect {
 
     private Expression<ProxyServer> servers;
@@ -21,7 +25,7 @@ public class EffServerSendMessage extends Effect {
     private Expression<String> title;
 
     static {
-        Skript.registerEffect(EffServerSendMessage.class, "message (proxy|bungeecord|bungee) server %-proxyservers% [the message] %string% (named|called|with title) %string%");
+        Skript.registerEffect(EffServerSendMessage.class, "proxy message %-proxyservers% [the message] %string% (named|called|with title) %string%");
     }
 
     @Override
@@ -49,7 +53,7 @@ public class EffServerSendMessage extends Effect {
     }
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         servers = (Expression<ProxyServer>) expressions[0];
         message = (Expression<String>) expressions[1];
         title = (Expression<String>) expressions[2];

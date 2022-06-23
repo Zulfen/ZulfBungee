@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
@@ -12,11 +14,13 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
+@Name("Proxy Player Switch Server")
+@Description("When a proxy player switches to another server.")
 public class EvtPlayerSwitchServer extends SkriptEvent {
 
     static {
 
-        Skript.registerEvent("Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "[(proxy|bungeecord|bungee)] player switch server");
+        Skript.registerEvent("Proxy Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "[(proxy|bungeecord|bungee)] player switch server");
 
         EventValues.registerEventValue(EventPlayerSwitchServer.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerSwitchServer>() {
             @Override

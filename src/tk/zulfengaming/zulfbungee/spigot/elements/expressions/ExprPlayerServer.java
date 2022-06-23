@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -29,26 +30,21 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        try {
+        Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
 
-            Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
+        if (send.isPresent()) {
 
-            if (send.isPresent()) {
+            Packet packetIn = send.get();
 
-                Packet packetIn = send.get();
+            if (packetIn.getDataArray().length != 0) {
 
-                if (packetIn.getDataArray() != null) {
+                String serverName = (String) packetIn.getDataSingle();
 
-                    return (ProxyServer) packetIn.getDataSingle();
-
-                }
+                return ProxyServerInfoManager.toProxyServer(serverName);
 
             }
 
-        } catch (InterruptedException ignored) {
-
         }
-
 
         return null;
     }

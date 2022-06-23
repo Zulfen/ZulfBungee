@@ -21,7 +21,7 @@ public class ProxyPlayers extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection connectionIn) {
 
         ArrayList<ProxyPlayer> playersOut = new ArrayList<>();
 

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class ProxyServerInfo extends PacketHandler {
 
     public ProxyServerInfo(ClientConnection connectionIn) {
-        super(connectionIn, PacketTypes.PROXY_SERVER_INFO);
+        super(connectionIn, PacketTypes.PROXY_CLIENT_INFO);
 
     }
 

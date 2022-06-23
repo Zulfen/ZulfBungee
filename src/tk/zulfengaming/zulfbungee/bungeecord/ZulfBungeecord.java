@@ -47,9 +47,9 @@ public class ZulfBungeecord extends Plugin {
 
             server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
-            getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(new CommandHandlerManager(server)));
+            CommandHandlerManager commandHandlerManager = new CommandHandlerManager(server);
 
-            getProxy().getPluginManager().registerListener(this, new Events(server));
+            getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(commandHandlerManager));
 
             taskManager.newTask(server, "MainServer");
 

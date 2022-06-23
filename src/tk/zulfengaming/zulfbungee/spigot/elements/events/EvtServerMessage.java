@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
@@ -11,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventMessage;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
+@Name("Proxy Server Switch Server")
+@Description("When a proxy player switches to another server.")
 public class EvtServerMessage extends SkriptEvent {
 
     private Literal<String> title;

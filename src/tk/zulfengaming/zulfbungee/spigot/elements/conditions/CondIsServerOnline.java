@@ -1,14 +1,19 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.conditions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
+@Name("Proxy Server Online")
+@Description("Checks if a proxy server is online on the network.")
 public class CondIsServerOnline extends Condition {
 
     private Expression<ProxyServer> server;
@@ -18,19 +23,18 @@ public class CondIsServerOnline extends Condition {
     }
 
     @Override
-    public boolean check(Event event) {
-
-        return ProxyServerInfoManager.getServers().contains(server.getSingle(event));
-
+    public boolean check(@NotNull Event event) {
+        return ProxyServerInfoManager.contains(server.getSingle(event));
     }
 
     @Override
-    public String toString(Event event, boolean b) {
+    public @NotNull String toString(Event event, boolean b) {
         return "condition proxy server " + server.toString(event, b) + " online";
     }
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    @SuppressWarnings("unchecked")
+    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         server = (Expression<ProxyServer>) expressions[0];
         return true;
     }

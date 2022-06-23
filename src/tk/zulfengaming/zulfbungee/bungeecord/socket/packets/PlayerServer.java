@@ -19,11 +19,18 @@ public class PlayerServer extends PacketHandler {
     public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
 
         ProxyPlayer playerIn = (ProxyPlayer) packetIn.getDataSingle();
-        ProxyServer serverOut = null;
 
-        if (getProxy().getPlayer(playerIn.getUuid()).getServer() != null)
-            serverOut = new ProxyServer(getProxy().getPlayer(playerIn.getUuid()).getServer().getInfo().getName());
+        net.md_5.bungee.api.connection.Server server = getProxy().getPlayer(playerIn.getUuid()).getServer();
 
-        return new Packet(PacketTypes.PLAYER_SERVER, false, false, serverOut);
+        if (server != null) {
+
+            String name = server.getInfo().getName();
+
+            return new Packet(PacketTypes.PLAYER_SERVER, false, false, name);
+
+        } else {
+            return new Packet(PacketTypes.PLAYER_SERVER, false, false, new Object[0]);
+        }
+
     }
 }

@@ -10,10 +10,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-public class ProxyServerInfo extends PacketHandler {
+public class ProxyClientInfo extends PacketHandler {
 
-    public ProxyServerInfo(Server serverIn) {
-        super(serverIn, PacketTypes.PROXY_SERVER_INFO);
+    public ProxyClientInfo(Server serverIn) {
+        super(serverIn, PacketTypes.PROXY_CLIENT_INFO);
 
     }
 

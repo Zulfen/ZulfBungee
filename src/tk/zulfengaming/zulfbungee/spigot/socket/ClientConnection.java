@@ -58,6 +58,7 @@ public class ClientConnection implements Runnable {
     // misc. info
 
     private String connectionName;
+    private final int heartbeatTicks;
 
     private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
 
@@ -73,6 +74,7 @@ public class ClientConnection implements Runnable {
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", heartbeatTicks);
+        this.heartbeatTicks = pluginInstanceIn.getYamlConfig().getInt("heartbeat-ticks");
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
@@ -146,12 +148,18 @@ public class ClientConnection implements Runnable {
 
     }
 
-    public Optional<Packet> send(Packet packetIn) throws InterruptedException {
+    public Optional<Packet> send(Packet packetIn) {
 
         send_direct(packetIn);
 
-        return read();
+        try {
+            return read();
+        } catch (InterruptedException e) {
+            pluginInstance.warning(String.format("Packet: %s", packetIn.toString()));
+            pluginInstance.warning("was interrupted being sent.");
+        }
 
+        return Optional.empty();
     }
 
     public void processGlobalScript(@NotNull ScriptInfo infoIn) {
@@ -184,6 +192,10 @@ public class ClientConnection implements Runnable {
 
     public ServerInfo getClientInfo() {
         return clientListenerManager.getClientInfo();
+    }
+
+    public int getHeartbeatTicks() {
+        return heartbeatTicks;
     }
 
     public void shutdown() throws IOException {

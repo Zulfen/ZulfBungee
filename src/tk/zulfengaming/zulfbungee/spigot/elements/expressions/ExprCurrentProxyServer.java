@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -9,24 +11,25 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.Optional;
 
-public class ExprCurrentServer extends SimpleExpression<String> {
+public class ExprCurrentProxyServer extends SimpleExpression<ProxyServer> {
 
     static {
-        Skript.registerExpression(ExprCurrentServer.class, String.class, ExpressionType.SIMPLE, "[the] name of this [script's] server");
+        Skript.registerExpression(ExprCurrentProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "this server");
     }
 
     @Override
-    protected String @NotNull [] get(@NotNull Event event) {
+    protected ProxyServer[] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-
         Optional<String> name = connection.getConnectionName();
 
-        return name.map(update -> new String[]{name.get()}).orElse(null);
+        return name.map(s -> new ProxyServer[]{ProxyServerInfoManager.toProxyServer(s)}).orElse(null);
 
     }
 
@@ -36,8 +39,8 @@ public class ExprCurrentServer extends SimpleExpression<String> {
     }
 
     @Override
-    public @NotNull Class<? extends String> getReturnType() {
-        return String.class;
+    public @NotNull Class<? extends ProxyServer> getReturnType() {
+        return ProxyServer.class;
     }
 
     @Override

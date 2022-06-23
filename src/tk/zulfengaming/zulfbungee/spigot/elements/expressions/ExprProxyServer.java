@@ -8,6 +8,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.Arrays;
@@ -21,8 +22,12 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     }
 
     @Override
-    protected ProxyServer @NotNull [] get(@NotNull Event event) {
-        return new ProxyServer[] {new ProxyServer(serverName.getSingle(event))};
+    protected ProxyServer[] get(@NotNull Event event) {
+        String nameString = serverName.getSingle(event);
+        if (ProxyServerInfoManager.getClientInfo(nameString) != null) {
+            return new ProxyServer[] {ProxyServerInfoManager.toProxyServer(nameString)};
+        }
+        return null;
     }
 
     @Override

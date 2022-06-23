@@ -9,8 +9,11 @@ import java.net.Socket;
 
 public class SocketHandler extends ClientListener implements Runnable {
 
+    private final int timeout;
+
     public SocketHandler(ClientListenerManager clientListenerManagerIn) {
         super(clientListenerManagerIn);
+        this.timeout = (int) Math.ceil((clientListenerManagerIn.getConnection().getHeartbeatTicks() / 20f) * 1000);
     }
 
     @Override
@@ -21,11 +24,12 @@ public class SocketHandler extends ClientListener implements Runnable {
         try {
 
             socket.setReuseAddress(true);
+            socket.setSoTimeout(timeout);
 
             socket.bind(new InetSocketAddress(getClientListenerManager().getClientAddress(), getClientListenerManager().getClientPort()));
             socket.connect(new InetSocketAddress(getClientListenerManager().getServerAddress(), getClientListenerManager().getServerPort()));
 
-            getClientListenerManager().getSocketRetrieve().offer(socket);
+            getClientListenerManager().getSocketRetrieve().put(socket);
 
         } catch (IOException connecting) {
 
@@ -37,6 +41,8 @@ public class SocketHandler extends ClientListener implements Runnable {
                 getClientListenerManager().getPluginInstance().error("Error closing unused socket:");
                 closing.printStackTrace();
             }
+
+        } catch (InterruptedException ignored) {
 
         }
     }

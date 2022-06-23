@@ -4,13 +4,15 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class ZulfBungeeCommand extends Command {
+public class ZulfBungeeCommand extends Command implements TabExecutor {
 
     private final CommandHandlerManager commandHandlerManager;
 
@@ -35,9 +37,9 @@ public class ZulfBungeeCommand extends Command {
 
                 String[] extraArgs = new String[0];
 
-                if (argsIn.length > handler.getLabels().length) {
+                if (argsIn.length > handler.getRequiredLabels().length) {
 
-                    int lenDifference = argsIn.length - handler.getLabels().length;
+                    int lenDifference = argsIn.length - handler.getRequiredLabels().length;
 
                     extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
 
@@ -54,6 +56,33 @@ public class ZulfBungeeCommand extends Command {
             commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
                     ('&', COMMAND_PREFIX + "That sub command does not exist! Please read the documentation.")));
         }
+
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender commandSender, String[] strings) {
+
+        ArrayList<String> newArgs = new ArrayList<>();
+        int index = strings.length - 1;
+
+        for (CommandHandler commandHandler : commandHandlerManager.getHandlers()) {
+
+            int size = commandHandler.getRequiredLabels().length;
+
+            if (index < size) {
+
+                newArgs.add(commandHandler.getRequiredLabels()[index]);
+
+            } else if (index < size + commandHandler.getSuggestedLabels().length) {
+
+                int newIndex = index - size;
+                newArgs.add(commandHandler.getSuggestedLabels()[newIndex]);
+
+            }
+
+        }
+
+        return newArgs;
 
     }
 }

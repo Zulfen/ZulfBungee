@@ -16,12 +16,11 @@ import java.util.Arrays;
 public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
 
     static {
-        Skript.registerExpression(ExprOnlineServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] online [(proxy|bungeecord|bungee)] servers");
+        Skript.registerExpression(ExprOnlineServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
     }
 
     @Override
     protected ProxyServer @NotNull [] get(@NotNull Event event) {
-
         return ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]);
 
     }

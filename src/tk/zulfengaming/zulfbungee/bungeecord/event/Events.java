@@ -1,25 +1,23 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
-import net.md_5.bungee.api.event.ServerKickEvent;
-import net.md_5.bungee.api.event.ServerSwitchEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyKick;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Events implements Listener {
@@ -35,9 +33,9 @@ public class Events implements Listener {
 
         ProxiedPlayer eventPlayer = event.getPlayer();
 
-        server.getPluginInstance().getTaskManager().newTask(() -> {
+        if (eventPlayer.getServer() == null) {
 
-            if (eventPlayer.getServer() == null) {
+            server.getPluginInstance().getTaskManager().newTask(() -> {
 
                 ProxyServer proxyServer = new ProxyServer(event.getServer().getInfo().getName());
                 ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId(), proxyServer);
@@ -45,9 +43,9 @@ public class Events implements Listener {
                 server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
                         playerOut));
 
-            }
+            }, event.toString());
 
-        }, event.toString());
+        }
 
         if (eventPlayer.hasPermission("zulfen.admin") && !server.getPluginInstance().getUpdater().isUpToDate() &&
         eventPlayer.getServer() == null) {
@@ -76,21 +74,20 @@ public class Events implements Listener {
 
         ProxiedPlayer eventPlayer = event.getPlayer();
 
-        server.getPluginInstance().getTaskManager().newTask(() -> {
+        if (event.getFrom() != null) {
 
-            if (event.getFrom() != null) {
+            server.getPluginInstance().getTaskManager().newTask(() -> {
 
                 String toName = eventPlayer.getServer().getInfo().getName();
 
                 ProxyServer serverOut = new ProxyServer(toName);
                 ProxyPlayer playerOut = new ProxyPlayer(eventPlayer.getName(), eventPlayer.getUniqueId(), serverOut);
 
-
                 server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
-            }
+            }, event.toString());
 
-        }, event.toString());
+        }
 
     }
 
@@ -98,41 +95,39 @@ public class Events implements Listener {
     @EventHandler
     public void onServerKick(ServerKickEvent event) {
 
-        server.getPluginInstance().getTaskManager().newTask(() -> {
+        if (event.getCause() == ServerKickEvent.Cause.SERVER) {
 
-            ProxiedPlayer player = event.getPlayer();
+            server.getPluginInstance().getTaskManager().newTask(() -> {
 
-            String serverName = event.getKickedFrom().getName();
+                ProxiedPlayer player = event.getPlayer();
 
-            if (server.getServerNames().contains(serverName)) {
+                String serverName = event.getKickedFrom().getName();
 
-                ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId());
+                if (server.getServerNames().contains(serverName)) {
 
-                List<String> list = new ArrayList<>();
-                for (BaseComponent component : event.getKickReasonComponent()) {
-                    String toLegacyText = component.toLegacyText();
-                    list.add(toLegacyText);
+                    ProxyPlayer playerOut = new ProxyPlayer(player.getName(), player.getUniqueId());
+
+                    String legacyText = TextComponent.toLegacyText(event.getKickReasonComponent());
+
+                    server.sendToAllClients(new Packet(PacketTypes.KICK_EVENT, false, true,
+                            new ProxyPlayerDataContainer(legacyText, new ProxyPlayer[]{playerOut})));
+
                 }
 
-                String[] messages = list.toArray(new String[0]);
+            }, event.toString());
 
-                server.sendToAllClients(new Packet(PacketTypes.KICK_EVENT, false, true,
-                            new ProxyKick(messages, playerOut)));
-
-            }
-
-        }, event.toString());
+        }
 
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
 
-        server.getPluginInstance().getTaskManager().newTask(() -> {
+        ProxiedPlayer player = event.getPlayer();
 
-            ProxiedPlayer player = event.getPlayer();
+        if (player.getServer() != null) {
 
-            if (player.getServer() != null) {
+            server.getPluginInstance().getTaskManager().newTask(() -> {
 
                 String serverName = player.getServer().getInfo().getName();
 
@@ -143,9 +138,9 @@ public class Events implements Listener {
 
                 }
 
-            }
+            }, event.toString());
 
-        }, event.toString());
+        }
 
     }
 }

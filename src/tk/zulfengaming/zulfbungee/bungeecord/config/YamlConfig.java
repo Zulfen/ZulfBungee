@@ -101,6 +101,10 @@ public class YamlConfig {
         return scriptsFolderPath;
     }
 
+    public Path getScriptPath(String scriptNameIn) {
+        return scriptsFolderPath.resolve(scriptNameIn);
+    }
+
     public String getString(String node) {
         return loadedConfig.getString(node);
     }

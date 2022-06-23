@@ -96,8 +96,6 @@ public class BaseServerConnection implements Runnable {
 
         if (running.compareAndSet(true, false)) {
 
-            pluginInstance.logInfo("Disconnecting client " + address);
-
             server.removeServerConnection(this);
 
             try {
@@ -135,31 +133,21 @@ public class BaseServerConnection implements Runnable {
 
     }
 
-    // returns true if it exists, and false if not.
-    public void sendScript(String scriptNameIn) {
-
-        Path scriptPath = pluginInstance.getConfig().
-                getScriptsFolderPath().resolve(scriptNameIn);
-
-        boolean exists = scriptPath.toFile().exists();
+    public void sendScript(Path scriptPathIn, ScriptAction actionIn) {
 
         pluginInstance.getTaskManager().newTask(() -> {
 
+            String scriptName = scriptPathIn.getFileName().toString();
+
             try {
 
-                byte[] data = null;
-                ScriptAction action = ScriptAction.DELETE;
+                byte[] data = Files.readAllBytes(scriptPathIn);
 
-                if (exists) {
-                    data = Files.readAllBytes(scriptPath);
-                    action = ScriptAction.NEW;
-                }
-
-                send(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new ScriptInfo(action,
-                        scriptNameIn, data)));
+                send(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new ScriptInfo(actionIn,
+                        scriptName, data)));
 
             } catch (IOException e) {
-                pluginInstance.error(String.format("Error while parsing script %s!", scriptNameIn));
+                pluginInstance.error(String.format("Error while parsing script %s!", scriptName));
                 e.printStackTrace();
             }
 

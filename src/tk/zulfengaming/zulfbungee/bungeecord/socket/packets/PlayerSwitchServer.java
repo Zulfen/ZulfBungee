@@ -1,34 +1,37 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PlayerSendMessage extends PacketHandler {
+public class PlayerSwitchServer extends PacketHandler {
 
-    public PlayerSendMessage(Server serverIn) {
-        super(serverIn, PacketTypes.PLAYER_SEND_MESSAGE);
+    public PlayerSwitchServer(Server serverIn) {
+        super(serverIn, PacketTypes.PLAYER_SWITCH_SERVER);
 
     }
 
     @Override
     public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
 
-        ProxyPlayerDataContainer message = (ProxyPlayerDataContainer) packetIn.getDataSingle();
+        ProxyPlayerDataContainer switchEvent = (ProxyPlayerDataContainer) packetIn.getDataSingle();
 
-        List<UUID> uuids = Stream.of(message.getPlayers())
+        ProxyServer proxyServer = (ProxyServer) switchEvent.getData();
+        ServerInfo serverInfo = getProxy().getServersCopy().get(proxyServer.getName());
+
+        List<UUID> uuids = Stream.of(switchEvent.getPlayers())
                 .map(ProxyPlayer::getUuid)
                 .collect(Collectors.toList());
 
@@ -36,9 +39,10 @@ public class PlayerSendMessage extends PacketHandler {
 
             ProxiedPlayer bungeecordPlayer = getProxy().getPlayer(uuid);
 
-            if (bungeecordPlayer != null) {
-                bungeecordPlayer.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', (String) message.getData())));
-            }
+            if (serverInfo != null)
+                if (bungeecordPlayer != null) {
+                    bungeecordPlayer.connect(serverInfo);
+                }
 
         }
 

@@ -15,22 +15,23 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
-@Name("Send Proxy Player message")
-@Description("Sends proxy player(s) a message.")
-public class EffPlayerSendMessage extends Effect {
+@Name("Send Proxy Player to Proxy Server")
+@Description("Sends a proxy player to another given proxy server.")
+public class EffPlayerChangeServer extends Effect {
 
     private Expression<ProxyPlayer> players;
-    private Expression<String> message;
+    private Expression<ProxyServer> server;
 
     static {
-        Skript.registerEffect(EffPlayerSendMessage.class, "proxy message %-proxyplayers% [the message] %string%");
+        Skript.registerEffect(EffPlayerChangeServer.class, "proxy (send|transfer) %-proxyplayers% to %-proxyserver%");
     }
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
-        message = (Expression<String>) expressions[1];
         players = (Expression<ProxyPlayer>) expressions[0];
+        server = (Expression<ProxyServer>) expressions[1];
         return true;
     }
 
@@ -39,12 +40,13 @@ public class EffPlayerSendMessage extends Effect {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        connection.send_direct(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
-                        false, false, new ProxyPlayerDataContainer(message.getSingle(event), players.getArray(event))));
+        connection.send_direct(new Packet(PacketTypes.PLAYER_SWITCH_SERVER,
+                            true, true, new ProxyPlayerDataContainer(server.getSingle(event), players.getArray(event))));
+
     }
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "effect message proxy player " + players.toString(event, b) + " with message " + message.toString(event, b);
+        return "effect send proxy player " + players.toString(event, b) + " to server " + server.toString(event, b);
     }
 }

@@ -23,6 +23,10 @@ public class CommandHandlerManager {
         return server;
     }
 
+    public ArrayList<CommandHandler> getHandlers() {
+        return handlers;
+    }
+
     // TODO: Make it case insensitive.
 
     public Optional<CommandHandler> getHandler(String[] argsIn) {
@@ -32,11 +36,11 @@ public class CommandHandlerManager {
 
             String[] argCheck = argsIn;
 
-            if (argsIn.length != handler.getLabels().length) {
-                argCheck = Arrays.copyOfRange(argsIn, 0, handler.getLabels().length);
+            if (argsIn.length != handler.getRequiredLabels().length) {
+                argCheck = Arrays.copyOfRange(argsIn, 0, handler.getRequiredLabels().length);
             }
 
-            if (Arrays.equals(handler.getLabels(), argCheck)) {
+            if (Arrays.equals(handler.getRequiredLabels(), argCheck)) {
                 return Optional.of(handler);
             }
 

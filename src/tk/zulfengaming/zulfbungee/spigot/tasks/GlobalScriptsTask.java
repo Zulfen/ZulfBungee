@@ -39,12 +39,14 @@ public class GlobalScriptsTask implements Supplier<File> {
         switch (scriptAction) {
 
             case NEW:
-                // just in case of a reload
-                removeScript(scriptFile);
                 newScript(scriptFile);
                 break;
             case DELETE:
                 removeScript(scriptFile);
+                break;
+            case RELOAD:
+                removeScript(scriptFile);
+                newScript(scriptFile);
                 break;
 
         }

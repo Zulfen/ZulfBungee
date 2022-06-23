@@ -166,7 +166,7 @@ public class ClientListenerManager implements Runnable {
 
                 serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
-                connection.send_direct(new Packet(PacketTypes.PROXY_SERVER_INFO, true, true, serverInfo));
+                connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, serverInfo));
                 connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, null));
 
             } catch (InterruptedException ignored) {

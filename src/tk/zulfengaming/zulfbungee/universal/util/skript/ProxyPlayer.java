@@ -43,6 +43,15 @@ public class ProxyPlayer implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "ProxyPlayer{" +
+                "name='" + name + '\'' +
+                ", server=" + server +
+                ", uuid=" + uuid +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
