@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.bungeecord;
 import net.md_5.bungee.api.plugin.Plugin;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
-import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
@@ -69,8 +68,6 @@ public class ZulfBungeecord extends Plugin {
 
         updater = new CheckUpdateTask(this);
 
-        taskManager.newTask(updater, "UpdateTask");
-
     }
 
     @Override
@@ -112,10 +109,6 @@ public class ZulfBungeecord extends Plugin {
 
     public TaskManager getTaskManager() {
         return taskManager;
-    }
-
-    public boolean isDebug() {
-        return isDebug;
     }
 
     public int[] getVersion() {

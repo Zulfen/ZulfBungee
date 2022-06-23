@@ -11,6 +11,7 @@ import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
+import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
@@ -19,6 +20,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class Events implements Listener {
 
@@ -47,23 +49,32 @@ public class Events implements Listener {
 
         }
 
-        if (eventPlayer.hasPermission("zulfen.admin") && !server.getPluginInstance().getUpdater().isUpToDate() &&
-        eventPlayer.getServer() == null) {
+        if (eventPlayer.hasPermission("zulfen.admin") && eventPlayer.getServer() == null) {
 
             CheckUpdateTask updater = server.getPluginInstance().getUpdater();
 
-            eventPlayer.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
-                    .color(ChatColor.AQUA)
-                    .append(" (Version " + updater.getLatestVersion() + ")")
-                    .italic(true)
-                    .color(ChatColor.YELLOW)
-                    .create());
+            CompletableFuture.supplyAsync(updater)
+                    .thenAccept(updateResult -> {
 
-            eventPlayer.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
-                    .color(ChatColor.DARK_AQUA)
-                    .underlined(true)
-                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, updater.getDownloadURL()))
-                    .create());
+                        if (updateResult.isPresent()) {
+
+                            UpdateResult getUpdaterResult = updateResult.get();
+
+                            eventPlayer.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
+                                    .color(ChatColor.AQUA)
+                                    .append(" (Version " + getUpdaterResult.getLatestVersion() + ")")
+                                    .italic(true)
+                                    .color(ChatColor.YELLOW)
+                                    .create());
+
+                            eventPlayer.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
+                                    .color(ChatColor.DARK_AQUA)
+                                    .underlined(true)
+                                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
+                                    .create());
+                        }
+
+                    });
 
         }
 

@@ -2,29 +2,27 @@ package tk.zulfengaming.zulfbungee.bungeecord.task.tasks;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.md_5.bungee.api.ChatColor;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
+import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Supplier;
 
 
-public class CheckUpdateTask implements Runnable {
+public class CheckUpdateTask implements Supplier<Optional<UpdateResult>> {
 
     private final ZulfBungeecord pluginInstance;
-
-    private boolean isUpToDate = true;
-    private String downloadURL = "";
-    private String latestVersion = "";
 
     public CheckUpdateTask(ZulfBungeecord instanceIn) {
         this.pluginInstance = instanceIn;
     }
 
     @Override
-    public void run() {
+    public Optional<UpdateResult> get() {
 
         try (InputStream inputStream = new URL("https://api.github.com/repos/Zulfen/ZulfBungee/releases/latest").openStream(); Scanner scanner = new Scanner(inputStream)) {
 
@@ -36,17 +34,18 @@ public class CheckUpdateTask implements Runnable {
 
             JsonObject jsonObject = new JsonParser().parse(builder.toString()).getAsJsonObject();
 
-            latestVersion = jsonObject.get("tag_name").getAsString();
-            downloadURL = jsonObject.getAsJsonArray("assets").get(0)
+            String latestVersion = jsonObject.get("tag_name").getAsString();
+            String downloadURL = jsonObject.getAsJsonArray("assets").get(0)
                     .getAsJsonObject().get("browser_download_url").getAsString();
 
             int[] latestIntVersion = new int[3];
             String[] latestVersionSplit = latestVersion.split("v")[1].split("\\.");
 
-
             for (int i = 0; i < latestVersionSplit.length; i++) {
                 latestIntVersion[i] = Integer.parseInt(latestVersionSplit[i]);
             }
+
+            boolean isUpToDate = true;
 
             for (int i = 0; i < latestVersionSplit.length; i++) {
 
@@ -55,21 +54,12 @@ public class CheckUpdateTask implements Runnable {
                 if (latestIntVersion[i] > minorVer) {
                     isUpToDate = false;
                     break;
-                } else if (latestIntVersion[i] < minorVer) {
-                    isUpToDate = true;
-                    break;
                 }
 
             }
 
-            if (isUpToDate) {
-
-                pluginInstance.logInfo(ChatColor.AQUA + "Plugin is up to date! Current version: " + ChatColor.YELLOW + ChatColor.UNDERLINE + pluginInstance.getDescription().getVersion() + ChatColor.RESET);
-
-            } else {
-
-                pluginInstance.logInfo(ChatColor.AQUA + "Plugin is not up to date! A notice will be displayed to admins in-game to update the plugin!");
-
+            if (!isUpToDate) {
+               return Optional.of(new UpdateResult(latestVersion, downloadURL));
             }
 
         } catch (IOException e) {
@@ -78,17 +68,6 @@ public class CheckUpdateTask implements Runnable {
             e.printStackTrace();
         }
 
-    }
-
-    public String getDownloadURL() {
-        return downloadURL;
-    }
-
-    public String getLatestVersion() {
-        return latestVersion;
-    }
-
-    public boolean isUpToDate() {
-        return isUpToDate;
+        return Optional.empty();
     }
 }
