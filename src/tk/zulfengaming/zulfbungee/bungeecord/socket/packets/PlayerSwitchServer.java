@@ -29,20 +29,25 @@ public class PlayerSwitchServer extends PacketHandler {
         ProxyPlayerDataContainer switchEvent = (ProxyPlayerDataContainer) packetIn.getDataSingle();
 
         ProxyServer proxyServer = (ProxyServer) switchEvent.getData();
-        ServerInfo serverInfo = getProxy().getServersCopy().get(proxyServer.getName());
 
-        List<UUID> uuids = Stream.of(switchEvent.getPlayers())
-                .map(ProxyPlayer::getUuid)
-                .collect(Collectors.toList());
+        if (proxyServer != null) {
 
-        for (UUID uuid : uuids) {
+            ServerInfo serverInfo = getProxy().getServersCopy().get(proxyServer.getName());
 
-            ProxiedPlayer bungeecordPlayer = getProxy().getPlayer(uuid);
+            List<UUID> uuids = Stream.of(switchEvent.getPlayers())
+                    .map(ProxyPlayer::getUuid)
+                    .collect(Collectors.toList());
 
-            if (serverInfo != null)
-                if (bungeecordPlayer != null) {
-                    bungeecordPlayer.connect(serverInfo);
-                }
+            for (UUID uuid : uuids) {
+
+                ProxiedPlayer bungeecordPlayer = getProxy().getPlayer(uuid);
+
+                if (serverInfo != null)
+                    if (bungeecordPlayer != null) {
+                        bungeecordPlayer.connect(serverInfo);
+                    }
+
+            }
 
         }
 

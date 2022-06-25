@@ -11,6 +11,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class ProxyPlayers extends PacketHandler {
@@ -28,6 +29,7 @@ public class ProxyPlayers extends PacketHandler {
         if (packetIn.getDataArray() != null) {
 
             ProxyServer[] servers = Stream.of(packetIn.getDataArray())
+                    .filter(Objects::nonNull)
                     .filter(ProxyServer.class::isInstance)
                     .map(ProxyServer.class::cast)
                     .toArray(ProxyServer[]::new);

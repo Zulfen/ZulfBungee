@@ -59,6 +59,7 @@ public class ClientConnection implements Runnable {
 
     private String connectionName;
     private final int heartbeatTicks;
+    private final int packetResponseTime;
 
     private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
 
@@ -68,13 +69,14 @@ public class ClientConnection implements Runnable {
         this.clientListenerManager = new ClientListenerManager(this);
 
         this.packetHandlerManager = new PacketHandlerManager(this);
-        int heartbeatTicks = pluginInstance.getYamlConfig().getInt("heartbeat-ticks");
+        this.heartbeatTicks = pluginInstanceIn.getYamlConfig().getInt("heartbeat-ticks");
+        this.packetResponseTime = pluginInstanceIn.getYamlConfig().getInt("packet-response-time");
 
         socketBarrier = clientListenerManager.getSocketBarrier();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
         this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", heartbeatTicks);
-        this.heartbeatTicks = pluginInstanceIn.getYamlConfig().getInt("heartbeat-ticks");
+
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
@@ -125,7 +127,7 @@ public class ClientConnection implements Runnable {
     }
 
     public Optional<Packet> read() throws InterruptedException {
-        return clientListenerManager.isSocketConnected().get() ? Optional.ofNullable(skriptPacketQueue.poll(1, TimeUnit.SECONDS)) : Optional.empty();
+        return clientListenerManager.isSocketConnected().get() ? Optional.ofNullable(skriptPacketQueue.poll(packetResponseTime, TimeUnit.MILLISECONDS)) : Optional.empty();
     }
 
     public void send_direct(Packet packetIn) {
@@ -238,10 +240,6 @@ public class ClientConnection implements Runnable {
 
     public Optional<String> getConnectionName() {
         return Optional.ofNullable(connectionName);
-    }
-
-    public List<File> getScripts() {
-        return scriptFiles;
     }
 
 }

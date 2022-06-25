@@ -22,6 +22,11 @@ client-host: "0.0.0.0"
 # Change this to match your network conditions / server performance.
 heartbeat-ticks: 100
 
+# Time in milliseconds that Skript will wait from a response from the proxy in each, condition, effect and expression.
+# Decreasing this will improve overall performance, but make sure this doesn't go below the ping between the client and the proxy -
+# as it will drop the packet!
+packet-response-time: 1000
+
 
 # This will toggle the display of detailed messages about what is going to the console.
 # When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!

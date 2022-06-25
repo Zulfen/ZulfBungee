@@ -23,8 +23,8 @@ public class ProxyServerInfoManager {
         Arrays.stream(serverList).forEach(server -> servers.put(server.getName(), server.getClientInfo()));
     }
 
-    public static boolean contains(ProxyServer proxyServerIn) {
-        return servers.containsKey(proxyServerIn.getName());
+    public static boolean contains(String proxyServerNameIn) {
+        return servers.containsKey(proxyServerNameIn);
     }
 
     public static List<ProxyServer> getServers() {

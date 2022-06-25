@@ -50,32 +50,7 @@ public class Events implements Listener {
         }
 
         if (eventPlayer.hasPermission("zulfen.admin") && eventPlayer.getServer() == null) {
-
-            CheckUpdateTask updater = server.getPluginInstance().getUpdater();
-
-            CompletableFuture.supplyAsync(updater)
-                    .thenAccept(updateResult -> {
-
-                        if (updateResult.isPresent()) {
-
-                            UpdateResult getUpdaterResult = updateResult.get();
-
-                            eventPlayer.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
-                                    .color(ChatColor.AQUA)
-                                    .append(" (Version " + getUpdaterResult.getLatestVersion() + ")")
-                                    .italic(true)
-                                    .color(ChatColor.YELLOW)
-                                    .create());
-
-                            eventPlayer.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
-                                    .color(ChatColor.DARK_AQUA)
-                                    .underlined(true)
-                                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
-                                    .create());
-                        }
-
-                    });
-
+            server.getPluginInstance().checkUpdate(eventPlayer);
         }
 
     }

@@ -24,7 +24,7 @@ public class CondIsServerOnline extends Condition {
 
     @Override
     public boolean check(@NotNull Event event) {
-        return ProxyServerInfoManager.contains(server.getSingle(event));
+        return ProxyServerInfoManager.contains(server.getSingle(event).getName());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CondIsServerOnline extends Condition {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         server = (Expression<ProxyServer>) expressions[0];
         return true;
     }

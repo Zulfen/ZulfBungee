@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+// TODO: Make this use a Future instead of a queue with a runnable.
 public class ClientListenerManager implements Runnable {
 
     private final ZulfBungeeSpigot pluginInstance;

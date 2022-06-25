@@ -24,7 +24,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     @Override
     protected ProxyServer[] get(@NotNull Event event) {
         String nameString = serverName.getSingle(event);
-        if (ProxyServerInfoManager.getClientInfo(nameString) != null) {
+        if (ProxyServerInfoManager.contains(nameString)) {
             return new ProxyServer[] {ProxyServerInfoManager.toProxyServer(nameString)};
         }
         return null;

@@ -1,16 +1,23 @@
 package tk.zulfengaming.zulfbungee.bungeecord;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Plugin;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
+import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
 import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
+import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 public class ZulfBungeecord extends Plugin {
@@ -48,6 +55,7 @@ public class ZulfBungeecord extends Plugin {
 
             CommandHandlerManager commandHandlerManager = new CommandHandlerManager(server);
 
+            getProxy().getPluginManager().registerListener(this, new Events(server));
             getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(commandHandlerManager));
 
             taskManager.newTask(server, "MainServer");
@@ -67,6 +75,8 @@ public class ZulfBungeecord extends Plugin {
         }
 
         updater = new CheckUpdateTask(this);
+
+        checkUpdate(getProxy().getConsole());
 
     }
 
@@ -115,7 +125,31 @@ public class ZulfBungeecord extends Plugin {
         return version;
     }
 
-    public CheckUpdateTask getUpdater() {
-        return updater;
+    public void checkUpdate(CommandSender sender) {
+
+        CompletableFuture.supplyAsync(updater)
+                .thenAccept(updateResult -> {
+
+                    if (updateResult.isPresent()) {
+
+                        UpdateResult getUpdaterResult = updateResult.get();
+
+                        sender.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
+                                .color(ChatColor.AQUA)
+                                .append(" (Version " + getUpdaterResult.getLatestVersion() + ")")
+                                .italic(true)
+                                .color(ChatColor.YELLOW)
+                                .create());
+
+                        sender.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
+                                .color(ChatColor.DARK_AQUA)
+                                .underlined(true)
+                                .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
+                                .create());
+                    }
+
+                });
+
     }
+
 }

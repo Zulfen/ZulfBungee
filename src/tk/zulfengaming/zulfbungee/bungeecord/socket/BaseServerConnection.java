@@ -71,11 +71,24 @@ public class BaseServerConnection implements Runnable {
                     packetInBuffer = packetIn;
 
                     if (packetIn != null) {
-                        Packet handledPacket = packetManager.handlePacket(packetIn, this);
 
-                        if (packetIn.isReturnable() && handledPacket != null) {
-                            send(handledPacket);
+                        try {
+
+                            Packet handledPacket = packetManager.handlePacket(packetIn, this);
+
+                            if (packetIn.isReturnable() && handledPacket != null) {
+                                send(handledPacket);
+                            }
+
+                        } catch (Exception e) {
+
+                            // Used if unhandled exception occurs
+                            pluginInstance.error(String.format("Unhandled exception occurred in connection with address %s", socket.getRemoteSocketAddress()));
+                            e.printStackTrace();
+
+                            end();
                         }
+
                     }
                 }
 
