@@ -26,11 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-// Just wanted to put a little comment here to show appreciation for LimeGlass' work on Skungee 2.0.
-// Some code I have written here has been referenced from their project, which I will link accordingly:
+
+// Some code I have written here has been referenced from Skungee 2.0.0:
 // https://github.com/Skungee/Skungee-2.0.0/blob/master/src/main/java/com/skungee/spigot/elements/expressions/ExprNetworkVariable.java
-
-
 
 public class ExprNetworkVariable extends SimpleExpression<Object> {
 
