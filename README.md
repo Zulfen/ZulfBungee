@@ -42,7 +42,9 @@ Some portions of this plugin were referenced from another plugin ([Skungee by Li
 
 - proxyserver's (player limit|max player count)
 
-- [the] name of this [script's] server
+- this server
+
+- this server's name
 
 ## **Conditions:**
 
