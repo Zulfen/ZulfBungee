@@ -50,7 +50,7 @@ public class NetworkVariableModify extends PacketHandler {
 
                 }
 
-                return new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, null);
+                return new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, new Object[0]);
 
             }
 

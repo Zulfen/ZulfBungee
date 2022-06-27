@@ -47,7 +47,7 @@ public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
         } else {
 
             request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                    true, false, null));
+                    true, false, new ProxyServer[0]));
 
         }
 
@@ -75,7 +75,7 @@ public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
 
     @Override
     public boolean isSingle() {
-        return false;
+        return servers.isSingle();
     }
 
     @Override

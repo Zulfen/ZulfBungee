@@ -23,7 +23,7 @@ public class ExprProxyPlayer extends SimpleExpression<ProxyPlayer> {
     private Expression<String> playerName;
 
     static {
-        Skript.registerExpression(ExprProxyPlayer.class, ProxyPlayer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) player %string%");
+        Skript.registerExpression(ExprProxyPlayer.class, ProxyPlayer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) player [(named|called)] %string%");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ExprProxyPlayer extends SimpleExpression<ProxyPlayer> {
 
     @Override
     public boolean isSingle() {
-        return true;
+        return playerName.isSingle();
     }
 
     @Override

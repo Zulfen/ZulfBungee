@@ -87,6 +87,7 @@ public class BaseServerConnection implements Runnable {
                             e.printStackTrace();
 
                             end();
+
                         }
 
                     }

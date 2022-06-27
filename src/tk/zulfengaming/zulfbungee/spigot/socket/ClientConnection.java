@@ -75,17 +75,17 @@ public class ClientConnection implements Runnable {
         socketBarrier = clientListenerManager.getSocketBarrier();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, "Heartbeat", heartbeatTicks);
+        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, heartbeatTicks);
 
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
         this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
 
         socketBarrier.register();
-        socketDaemon = pluginInstance.getTaskManager().newTask(clientListenerManager, "ClientListenerManager");
+        socketDaemon = pluginInstance.getTaskManager().newTask(clientListenerManager);
 
-        this.dataInThread = pluginInstance.getTaskManager().newTask(dataInHandler, "DataIn");
-        this.dataOutThread = pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOut");
+        this.dataInThread = pluginInstance.getTaskManager().newTask(dataInHandler);
+        this.dataOutThread = pluginInstance.getTaskManager().newTask(dataOutHandler);
 
 
     }
@@ -158,7 +158,7 @@ public class ClientConnection implements Runnable {
             return read();
         } catch (InterruptedException e) {
             pluginInstance.warning(String.format("Packet: %s", packetIn.toString()));
-            pluginInstance.warning("was interrupted being sent.");
+            pluginInstance.warning("was interrupted being read.");
         }
 
         return Optional.empty();

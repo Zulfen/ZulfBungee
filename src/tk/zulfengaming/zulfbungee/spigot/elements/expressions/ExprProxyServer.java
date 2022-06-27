@@ -18,7 +18,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     private Expression<String> serverName;
 
     static {
-        Skript.registerExpression(ExprProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) server %string%");
+        Skript.registerExpression(ExprProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) server [(named|called)] %string%");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
 
     @Override
     public boolean isSingle() {
-        return true;
+        return serverName.isSingle();
     }
 
     @Override

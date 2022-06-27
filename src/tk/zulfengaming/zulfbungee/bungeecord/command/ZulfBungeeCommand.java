@@ -32,7 +32,6 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
         if (handlerOptional.isPresent()) {
 
             CommandHandler handler = handlerOptional.get();
-
             if (commandSender.hasPermission(handler.getPermission())) {
 
                 String[] extraArgs = new String[0];
@@ -67,16 +66,20 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
         for (CommandHandler commandHandler : commandHandlerManager.getHandlers()) {
 
-            int size = commandHandler.getRequiredLabels().length;
+            if (commandSender.hasPermission(commandHandler.getPermission())) {
 
-            if (index < size) {
+                int size = commandHandler.getRequiredLabels().length;
 
-                newArgs.add(commandHandler.getRequiredLabels()[index]);
+                if (index < size) {
 
-            } else if (index < size + commandHandler.getSuggestedLabels().length) {
+                    newArgs.add(commandHandler.getRequiredLabels()[index]);
 
-                int newIndex = index - size;
-                newArgs.add(commandHandler.getSuggestedLabels()[newIndex]);
+                } else if (index < size + commandHandler.getSuggestedLabels().length) {
+
+                    int newIndex = index - size;
+                    newArgs.add(commandHandler.getSuggestedLabels()[newIndex]);
+
+                }
 
             }
 

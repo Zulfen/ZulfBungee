@@ -82,6 +82,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
+
         Expression<?> expression = expressions[0];
 
         if (expression instanceof Variable) {
@@ -115,6 +116,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
                 valuesOut.add(new Value(value.type, value.data));
             }
         }
+
         NetworkVariable variableOut = new NetworkVariable(networkVariable.getName().toString(e), mode.name(), valuesOut.toArray(new Value[0]));
 
         connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));

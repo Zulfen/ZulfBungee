@@ -70,7 +70,7 @@ public class ClientListenerManager implements Runnable {
     }
 
     private BukkitTask connect() throws ExecutionException, InterruptedException {
-        return pluginInstance.getTaskManager().newRepeatingTask(socketHandler, "SocketHandler", 40);
+        return pluginInstance.getTaskManager().newRepeatingTask(socketHandler, 40);
     }
 
     public void shutdown() throws IOException {

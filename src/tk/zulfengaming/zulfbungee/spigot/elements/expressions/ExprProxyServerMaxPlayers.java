@@ -17,7 +17,7 @@ public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ProxySer
 
     @Override
     public Number convert(ProxyServer proxyServer) {
-        return proxyServer.getClientInfo().getMaxPlayers();
+        return proxyServer.getServerInfo().getMaxPlayers();
     }
 
     @Override

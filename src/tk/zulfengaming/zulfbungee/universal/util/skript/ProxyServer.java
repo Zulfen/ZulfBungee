@@ -38,7 +38,7 @@ public class ProxyServer implements Serializable {
         return name;
     }
 
-    public ServerInfo getClientInfo() {
+    public ServerInfo getServerInfo() {
         return serverInfo;
     }
 }

@@ -19,7 +19,7 @@ public class TaskManager {
         this.scheduler = instanceIn.getServer().getScheduler();
     }
 
-    public BukkitTask newTask(Runnable taskIn, String name) {
+    public BukkitTask newTask(Runnable taskIn) {
 
         BukkitTask theTask = scheduler.runTaskAsynchronously(instance, taskIn);
         tasks.add(theTask);
@@ -28,7 +28,7 @@ public class TaskManager {
 
     }
 
-    public BukkitTask newRepeatingTask(Runnable taskIn, String name, int ticks) {
+    public BukkitTask newRepeatingTask(Runnable taskIn, int ticks) {
 
         BukkitTask theTask = scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
         tasks.add(theTask);

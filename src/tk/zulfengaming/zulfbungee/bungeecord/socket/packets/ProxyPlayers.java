@@ -26,7 +26,7 @@ public class ProxyPlayers extends PacketHandler {
 
         ArrayList<ProxyPlayer> playersOut = new ArrayList<>();
 
-        if (packetIn.getDataArray() != null) {
+        if (packetIn.getDataArray().length != 0) {
 
             ProxyServer[] servers = Stream.of(packetIn.getDataArray())
                     .filter(Objects::nonNull)

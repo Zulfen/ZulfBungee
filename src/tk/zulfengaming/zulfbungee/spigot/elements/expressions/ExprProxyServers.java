@@ -13,21 +13,22 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.Arrays;
 
-public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
+public class ExprProxyServers extends SimpleExpression<ProxyServer> {
+
+    private ProxyServer[] servers = new ProxyServer[0];
 
     static {
-        Skript.registerExpression(ExprOnlineServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
+        Skript.registerExpression(ExprProxyServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
     }
 
     @Override
     protected ProxyServer @NotNull [] get(@NotNull Event event) {
-        return ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]);
-
+        return servers;
     }
 
     @Override
     public boolean isSingle() {
-        return false;
+       return servers.length == 1;
     }
 
     @Override
@@ -37,11 +38,12 @@ public class ExprOnlineServers extends SimpleExpression<ProxyServer> {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "all online servers: " + Arrays.toString(ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]));
+        return "all online servers: " + Arrays.toString(servers);
     }
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
+        servers = ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]);
         return true;
     }
 }

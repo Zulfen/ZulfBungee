@@ -41,7 +41,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
             connection = new ClientConnection(this);
 
-            taskManager.newTask(connection, "MainConnection");
+            taskManager.newTask(connection);
 
         } catch (UnknownHostException e) {
             error("Error launching connection task!");
