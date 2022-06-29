@@ -12,9 +12,9 @@ Some portions of this plugin were referenced from another plugin ([Skungee by Li
 
 ## **Effects:**
 
-- message (proxy|network|bungeecord|bungee) player %-proxyplayers% [the message] %string%
+- message player %-proxyplayers% [the message] %string%
 
-- message (proxy|network|bungeecord|bungee) server %-proxyservers% [the message] %string% (named|called|with title) %string%
+- message server %-proxyservers% [the message] %string% (named|called|with title) %string%
 
 ## **Events:**
 
@@ -48,7 +48,7 @@ Some portions of this plugin were referenced from another plugin ([Skungee by Li
 
 ## **Conditions:**
 
-- if (proxy|bungeecord|bungee) player %-proxyplayer% (1¦is|2¦is(n't| not)) online
+- if player %-proxyplayer% (1¦is|2¦is(n't| not)) online
 
 - if %-proxyserver% (1¦is|2¦is(n't| not)) online
 
