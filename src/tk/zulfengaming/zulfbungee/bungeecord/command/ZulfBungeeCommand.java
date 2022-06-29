@@ -10,6 +10,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class ZulfBungeeCommand extends Command implements TabExecutor {
@@ -74,10 +75,13 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
                     newArgs.add(commandHandler.getRequiredLabels()[index]);
 
-                } else if (index < size + commandHandler.getSuggestedLabels().length) {
+                } else {
 
                     int newIndex = index - size;
-                    newArgs.add(commandHandler.getSuggestedLabels()[newIndex]);
+
+                    List<String> optionalArgs = commandHandler.onTab(newIndex);
+
+                    newArgs.addAll(optionalArgs);
 
                 }
 

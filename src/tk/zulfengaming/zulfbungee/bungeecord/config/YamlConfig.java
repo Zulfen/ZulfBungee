@@ -78,7 +78,7 @@ public class YamlConfig {
 
     }
 
-    public List<String> getScriptNames() {
+    public ArrayList<String> getScripts() {
 
         ArrayList<String> cachedScripts = new ArrayList<>();
 

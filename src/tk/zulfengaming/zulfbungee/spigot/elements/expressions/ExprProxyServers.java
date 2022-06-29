@@ -28,7 +28,7 @@ public class ExprProxyServers extends SimpleExpression<ProxyServer> {
 
     @Override
     public boolean isSingle() {
-       return servers.length == 1;
+       return false;
     }
 
     @Override

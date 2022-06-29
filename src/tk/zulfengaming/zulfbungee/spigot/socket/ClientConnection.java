@@ -192,7 +192,7 @@ public class ClientConnection implements Runnable {
         return clientListenerManager.isSocketConnected();
     }
 
-    public ServerInfo getClientInfo() {
+    public ClientInfo getClientInfo() {
         return clientListenerManager.getClientInfo();
     }
 

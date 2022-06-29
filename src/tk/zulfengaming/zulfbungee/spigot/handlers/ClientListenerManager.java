@@ -7,7 +7,7 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.ClientInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -41,7 +41,7 @@ public class ClientListenerManager implements Runnable {
 
     private final AtomicBoolean socketConnected = new AtomicBoolean(false);
 
-    private ServerInfo serverInfo;
+    private ClientInfo clientInfo;
 
     public ClientListenerManager(ClientConnection connectionIn) {
 
@@ -127,8 +127,8 @@ public class ClientListenerManager implements Runnable {
         return socketBarrier;
     }
 
-    public ServerInfo getClientInfo() {
-        return serverInfo;
+    public ClientInfo getClientInfo() {
+        return clientInfo;
     }
 
     @Override
@@ -165,9 +165,9 @@ public class ClientListenerManager implements Runnable {
 
                 pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
 
-                serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
+                clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
-                connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, serverInfo));
+                connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
                 connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, null));
 
             } catch (InterruptedException ignored) {

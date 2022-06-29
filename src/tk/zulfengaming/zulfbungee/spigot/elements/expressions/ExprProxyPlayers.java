@@ -75,7 +75,7 @@ public class ExprProxyPlayers extends SimpleExpression<ProxyPlayer> {
 
     @Override
     public boolean isSingle() {
-        return servers.isSingle();
+        return false;
     }
 
     @Override

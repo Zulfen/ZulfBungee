@@ -10,8 +10,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 public class ScriptReload extends CommandHandler {
 
@@ -21,8 +20,7 @@ public class ScriptReload extends CommandHandler {
 
         super(serverIn,
                 "zulfen.admin.script.reload",
-                new String[]{"scripts", "reload"},
-                new String[]{"all"});
+                "scripts", "reload");
 
         try {
 
@@ -95,19 +93,23 @@ public class ScriptReload extends CommandHandler {
 
                 for (int i = 0; i < separateArgs.length; i++) {
 
-                    scriptNameBuilder.append(separateArgs[i]);
+                    String arg = separateArgs[i];
+
+                    scriptNameBuilder.append(arg);
 
                     if (i != separateArgs.length - 1) {
                         scriptNameBuilder.append(" ");
+                    } else {
+                        if (!arg.endsWith(".sk")) {
+                            scriptNameBuilder.append(".sk");
+                        }
                     }
 
                 }
 
-                scriptNameBuilder.append(".sk");
-
                 String scriptName = scriptNameBuilder.toString();
 
-                if (getMainServer().getPluginInstance().getConfig().getScriptNames().contains(scriptName)) {
+                if (getMainServer().getPluginInstance().getConfig().getScripts().contains(scriptName)) {
 
                     HashMap<String, ScriptAction> tempScriptsMap = new HashMap<>(scriptsMap);
                     tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptName));
@@ -123,9 +125,8 @@ public class ScriptReload extends CommandHandler {
 
                 } else {
 
-                    String logName = scriptName.split(".sk")[0];
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", logName))));
+                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", scriptName))));
 
                 }
             }
@@ -135,4 +136,23 @@ public class ScriptReload extends CommandHandler {
                     ('&', ZulfBungeeCommand.COMMAND_PREFIX + "Please specify a script to reload.")));
         }
     }
+
+    @Override
+    public List<String> onTab(int index) {
+
+        if (index == 0) {
+
+            ArrayList<String> suggestions = new ArrayList<>(getMainServer().getPluginInstance().getConfig().getScripts());
+
+            if (!suggestions.isEmpty()) {
+                suggestions.add("all");
+                return suggestions;
+            }
+
+        }
+
+        return Collections.emptyList();
+
+    }
+
 }

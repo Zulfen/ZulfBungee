@@ -21,7 +21,7 @@ public class GlobalScript extends PacketHandler {
 
         if (getMainServer().getPluginInstance().getConfig().getBoolean("global-scripts")) {
 
-            for (String scriptName : getMainServer().getPluginInstance().getConfig().getScriptNames()) {
+            for (String scriptName : getMainServer().getPluginInstance().getConfig().getScripts()) {
 
                connection.sendScript(getMainServer().getPluginInstance().getConfig().getScriptPath(scriptName), ScriptAction.NEW);
 

@@ -35,7 +35,7 @@ public class BaseServerConnection implements Runnable {
     private final DataInHandler dataInHandler;
     private final DataOutHandler dataOutHandler;
 
-    private ServerInfo serverInfo;
+    private ClientInfo clientInfo;
 
     private Packet packetInBuffer;
 
@@ -173,12 +173,12 @@ public class BaseServerConnection implements Runnable {
         return server;
     }
 
-    public ServerInfo getClientInfo() {
-        return serverInfo;
+    public ClientInfo getClientInfo() {
+        return clientInfo;
     }
 
-    public void setClientInfo(ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
+    public void setClientInfo(ClientInfo clientInfo) {
+        this.clientInfo = clientInfo;
     }
 
     public Socket getSocket() {

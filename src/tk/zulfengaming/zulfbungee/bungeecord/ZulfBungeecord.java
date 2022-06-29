@@ -4,6 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
@@ -141,11 +142,25 @@ public class ZulfBungeecord extends Plugin {
                                 .color(ChatColor.YELLOW)
                                 .create());
 
-                        sender.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
-                                .color(ChatColor.DARK_AQUA)
-                                .underlined(true)
-                                .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
-                                .create());
+                        if (sender instanceof ProxiedPlayer) {
+
+                            sender.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
+                                    .color(ChatColor.DARK_AQUA)
+                                    .underlined(true)
+                                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
+                                    .create());
+                        } else {
+
+                            sender.sendMessage(new ComponentBuilder("Copy this link into a browser for a direct download!")
+                                    .color(ChatColor.AQUA)
+                                    .create());
+                            sender.sendMessage(new ComponentBuilder(getUpdaterResult.getDownloadURL())
+                                    .color(ChatColor.DARK_AQUA)
+                                    .underlined(true)
+                                    .create());
+
+                        }
+
                     }
 
                 });
