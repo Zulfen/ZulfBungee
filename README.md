@@ -12,9 +12,11 @@ Some portions of this plugin were referenced from another plugin ([Skungee by Li
 
 ## **Effects:**
 
-- message player %-proxyplayers% [the message] %string%
+- (proxy|bungeecord|bungee) message player %-proxyplayers% [the message] %string%
 
-- message server %-proxyservers% [the message] %string% (named|called|with title) %string%
+- (proxy|bungeecord|bungee) message server %-proxyservers% [the message] %string% (named|called|with title) %string%
+
+- (proxy|bungeecord|bungee) (send|transfer) %-proxyplayers% to %-proxyserver%
 
 ## **Events:**
 
