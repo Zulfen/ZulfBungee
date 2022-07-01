@@ -14,7 +14,7 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventMessage;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 @Name("Proxy Server Switch Server")
-@Description("When a proxy player switches to another server.")
+@Description("When a server messages another server.")
 public class EvtServerMessage extends SkriptEvent {
 
     private Literal<String> title;
@@ -35,6 +35,7 @@ public class EvtServerMessage extends SkriptEvent {
                 return eventMessage.getMessage().getFrom();
             }
         }, 0);
+
     }
 
     @Override

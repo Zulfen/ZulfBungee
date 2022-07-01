@@ -18,7 +18,7 @@ public class DataInHandler extends ClientListener implements Runnable {
 
     private final ClientConnection connection;
 
-    private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
 
     private final Phaser socketBarrier;
 

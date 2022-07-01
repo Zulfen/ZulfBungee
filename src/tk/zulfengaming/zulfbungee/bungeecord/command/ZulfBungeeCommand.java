@@ -80,7 +80,6 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
                     int newIndex = index - size;
 
                     List<String> optionalArgs = commandHandler.onTab(newIndex);
-
                     newArgs.addAll(optionalArgs);
 
                 }
