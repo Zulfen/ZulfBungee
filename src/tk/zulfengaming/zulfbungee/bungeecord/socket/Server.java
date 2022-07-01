@@ -222,7 +222,7 @@ public class Server implements Runnable {
 
         BiMap<BaseServerConnection, String> inverse = activeConnections.inverse();
 
-        pluginInstance.logInfo(String.format("Disconnecting client %s (%s)", connection.getAddress(), inverse.get(connection)));
+        pluginInstance.logInfo(String.format(ChatColor.YELLOW + "Disconnecting client %s (%s)", connection.getAddress(), inverse.get(connection)));
 
         socketConnections.remove(connection);
         inverse.remove(connection);
