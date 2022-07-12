@@ -59,7 +59,7 @@ public class ClientConnection implements Runnable {
     // misc. info
 
     private String connectionName;
-    private final int heartbeatTicks;
+    private final int connectionTimeout;
     private final int packetResponseTime;
 
     private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
@@ -70,13 +70,13 @@ public class ClientConnection implements Runnable {
         this.clientListenerManager = new ClientListenerManager(this);
 
         this.packetHandlerManager = new PacketHandlerManager(this);
-        this.heartbeatTicks = pluginInstanceIn.getYamlConfig().getInt("heartbeat-ticks");
+        this.connectionTimeout = pluginInstanceIn.getYamlConfig().getInt("connection-timeout");
         this.packetResponseTime = pluginInstanceIn.getYamlConfig().getInt("packet-response-time");
 
         socketBarrier = clientListenerManager.getSocketBarrier();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, heartbeatTicks);
+        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, connectionTimeout);
 
 
         this.dataInHandler = new DataInHandler(clientListenerManager, this);
@@ -119,8 +119,8 @@ public class ClientConnection implements Runnable {
                     socket = clientListenerManager.getSocketHandoff().take();
                 }
 
-            } catch (InterruptedException ignored) {
-
+            } catch (InterruptedException e) {
+                shutdown();
             }
 
         } while (running.get());
@@ -176,7 +176,7 @@ public class ClientConnection implements Runnable {
 
         ScriptAction action = infoIn.getScriptAction();
 
-        CompletableFuture.supplyAsync(new GlobalScriptsTask(this, infoIn.getScriptName(), action, infoIn.getScriptData()))
+        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(this, infoIn.getScriptName(), action, infoIn.getScriptData()))
                 .thenAccept(file -> {
                     switch (action) {
                         case NEW:
@@ -204,34 +204,33 @@ public class ClientConnection implements Runnable {
         return clientListenerManager.getClientInfo();
     }
 
-    public int getHeartbeatTicks() {
-        return heartbeatTicks;
+    public int getConnectionTimeout() {
+        return connectionTimeout;
     }
 
-    public void shutdown() throws IOException {
-
-        for (File scriptFile : scriptFiles) {
-
-            boolean deleted = scriptFile.delete();
-
-            if (deleted) {
-                pluginInstance.logDebug("Deleted script file " + scriptFile.getName() + " successfully.");
-            } else {
-                pluginInstance.warning("Failed to delete script file " + scriptFile.getName() + ". Does it exist?");
-            }
-
-        }
+    public synchronized void shutdown() {
 
         if (running.compareAndSet(true, false)) {
+
+            for (File scriptFile : scriptFiles) {
+
+                boolean deleted = scriptFile.delete();
+
+                if (deleted) {
+                    pluginInstance.logDebug("Deleted script file " + scriptFile.getName() + " successfully.");
+                } else {
+                    pluginInstance.warning("Failed to delete script file " + scriptFile.getName() + ". Does it exist?");
+                }
+
+            }
+
+            heartbeatThread.cancel();
 
             dataInThread.cancel();
             dataOutThread.cancel();
 
-            clientListenerManager.shutdown();
-
-            heartbeatThread.cancel();
-
             socketDaemon.cancel();
+            clientListenerManager.shutdown();
 
         }
 

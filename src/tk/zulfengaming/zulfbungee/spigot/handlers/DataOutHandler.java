@@ -56,9 +56,10 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 }
 
-            } catch (SocketException e) {
+            } catch (InterruptedException e) {
 
                 getClientListenerManager().isSocketConnected().compareAndSet(true, false);
+                break;
 
             } catch (IOException e) {
 
@@ -71,7 +72,6 @@ public class DataOutHandler extends ClientListener implements Runnable {
 
                 getClientListenerManager().isSocketConnected().compareAndSet(true, false);
 
-            } catch (InterruptedException ignored) {
             }
 
         } while (connection.isRunning().get());

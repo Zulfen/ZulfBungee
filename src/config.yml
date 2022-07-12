@@ -16,11 +16,9 @@ client-host: "0.0.0.0"
 
 # - Options -
 
-# How many ticks this client will wait before sending a heartbeat packet -
-# This is used to make sure that there is still a proxy on the other side.
+# How many milliseconds it will wait for a connection.
 # A timeout will be pronounced if the server does not respond in this time.
-# Change this to match your network conditions / server performance.
-heartbeat-ticks: 100
+connection-timeout: 2000
 
 # Time in milliseconds that Skript will wait from a response from the proxy in each, condition, effect and expression.
 # Decreasing this will improve overall performance, but make sure this doesn't go below the ping between the client and the proxy -

@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 
 import java.util.ArrayList;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 public class TaskManager {
 
@@ -13,27 +14,42 @@ public class TaskManager {
 
     private final BukkitScheduler scheduler;
 
-    private final ExecutorService executorService;
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+
+    private final ArrayList<BukkitTask> bukkitTasks = new ArrayList<>();
 
     public TaskManager(ZulfBungeeSpigot instanceIn) {
         this.instance = instanceIn;
         this.scheduler = instanceIn.getServer().getScheduler();
-        this.executorService = Executors.newSingleThreadExecutor();
     }
 
     public BukkitTask newTask(Runnable taskIn) {
-        return scheduler.runTaskAsynchronously(instance, taskIn);
+        BukkitTask bukkitTask = scheduler.runTaskAsynchronously(instance, taskIn);
+        bukkitTasks.add(bukkitTask);
+        return bukkitTask;
     }
 
     public BukkitTask newRepeatingTask(Runnable taskIn, int ticks) {
-        return scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
+        BukkitTask bukkitTask = scheduler.runTaskTimerAsynchronously(instance, taskIn, 0, ticks);
+        bukkitTasks.add(bukkitTask);
+        return bukkitTask;
     }
 
     public <T> T submitCallable(Callable<T> callableIn) throws ExecutionException, InterruptedException {
-        return executorService.submit(callableIn).get();
+        return !executorService.isShutdown() ? executorService.submit(callableIn).get() : null;
+    }
+
+    public <T> CompletableFuture<T> submitSupplier(Supplier<T> supplierIn) {
+        return CompletableFuture.supplyAsync(supplierIn, executorService);
     }
 
     public void shutdown() {
+
         executorService.shutdown();
+
+        for (BukkitTask task : bukkitTasks) {
+            task.cancel();
+        }
+
     }
 }

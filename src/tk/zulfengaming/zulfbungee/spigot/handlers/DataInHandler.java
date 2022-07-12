@@ -78,6 +78,8 @@ public class DataInHandler extends ClientListener implements Runnable {
 
             } catch (InterruptedException ignored) {
 
+                getClientListenerManager().isSocketConnected().compareAndSet(true, false);
+                break;
 
             } catch (ClassNotFoundException e) {
                 getClientListenerManager().getPluginInstance().error("Packet received was not recognised!");
@@ -86,6 +88,8 @@ public class DataInHandler extends ClientListener implements Runnable {
             }
 
         } while (connection.isRunning().get());
+
+        socketBarrier.arriveAndDeregister();
 
     }
 

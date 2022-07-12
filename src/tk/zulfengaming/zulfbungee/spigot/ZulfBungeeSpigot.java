@@ -63,18 +63,8 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     }
 
     public void onDisable() {
-
-        try {
-
-            connection.shutdown();
-
-        } catch (IOException e) {
-            error("Error disabling the plugin! Please report this to the devs!");
-            e.printStackTrace();
-        }
-
+        connection.shutdown();
         taskManager.shutdown();
-
     }
 
     public void logDebug(String message) {

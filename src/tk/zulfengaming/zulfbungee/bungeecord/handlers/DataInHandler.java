@@ -49,7 +49,7 @@ public class DataInHandler implements Runnable {
 
                 }
 
-            } catch (SocketException | EOFException e) {
+            } catch (InterruptedException e) {
                 disconnect();
 
             } catch (IOException | ClassNotFoundException e) {
@@ -58,8 +58,6 @@ public class DataInHandler implements Runnable {
                 disconnect();
 
                 e.printStackTrace();
-
-            } catch (InterruptedException ignored) {
 
             }
 

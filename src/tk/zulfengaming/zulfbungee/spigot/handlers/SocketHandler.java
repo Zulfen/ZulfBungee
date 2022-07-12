@@ -1,15 +1,12 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
-import org.bukkit.ChatColor;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 public class SocketHandler extends ClientListener implements Callable<Socket> {
 
@@ -17,7 +14,7 @@ public class SocketHandler extends ClientListener implements Callable<Socket> {
 
     public SocketHandler(ClientListenerManager clientListenerManagerIn) {
         super(clientListenerManagerIn);
-        this.timeout = (int) Math.ceil((clientListenerManagerIn.getConnection().getHeartbeatTicks() / 20f) * 1000);
+        this.timeout = clientListenerManagerIn.getConnection().getConnectionTimeout();
     }
 
 

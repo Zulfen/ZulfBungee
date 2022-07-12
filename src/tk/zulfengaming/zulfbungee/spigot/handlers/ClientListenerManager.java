@@ -69,12 +69,16 @@ public class ClientListenerManager implements Runnable {
 
     }
 
-    public void shutdown() throws IOException {
+    public void shutdown() {
 
         socketBarrier.arriveAndDeregister();
 
         if (socket != null) {
-            socket.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                pluginInstance.error("Error closing socket on shutdown!");
+            }
         }
 
     }
@@ -145,36 +149,52 @@ public class ClientListenerManager implements Runnable {
                 }
             }
 
-            try {
+            boolean failed = true;
 
-                boolean failed = true;
+            try {
 
                 do {
 
                     try {
                         socket = pluginInstance.getTaskManager().submitCallable(socketHandler);
                         failed = false;
+                    } catch (InterruptedException e) {
+                        break;
                     } catch (ExecutionException e) {
                         pluginInstance.error(e.getMessage());
+                        TimeUnit.SECONDS.sleep(2);
                     }
 
-                } while (failed && connection.isRunning().get());
+                } while (failed);
 
-                socketConnected.compareAndSet(false, true);
+                if (!failed) {
 
-                while (socketHandoff.hasWaitingConsumer()) {
-                    socketHandoff.transfer(socket);
+                    socketConnected.compareAndSet(false, true);
+
+                    while (socketHandoff.hasWaitingConsumer()) {
+                        socketHandoff.transfer(socket);
+                    }
+
+                    pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
+
+                    clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
+
+                    connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
+                    connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, null));
+
+
+
+                    pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
+
+                    clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
+
+                    connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
+                    connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, null));
+
                 }
 
-                pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
-
-                clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
-
-                connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
-                connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, null));
-
             } catch (InterruptedException ignored) {
-
+                break;
             }
 
         }
