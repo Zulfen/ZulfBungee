@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -126,9 +127,6 @@ public class ClientConnection implements Runnable {
 
     }
 
-    public Optional<Packet> read() throws InterruptedException {
-        return clientListenerManager.isSocketConnected().get() ? Optional.ofNullable(skriptPacketQueue.poll(packetResponseTime, TimeUnit.MILLISECONDS)) : Optional.empty();
-    }
 
     public void send_direct(Packet packetIn) {
 
@@ -155,7 +153,17 @@ public class ClientConnection implements Runnable {
         send_direct(packetIn);
 
         try {
-            return read();
+
+            Packet poll = skriptPacketQueue.poll(packetResponseTime, TimeUnit.MILLISECONDS);
+
+            if (poll == null) {
+                pluginInstance.logDebug(ChatColor.YELLOW + packetIn.toString());
+                pluginInstance.logDebug(ChatColor.YELLOW + "was dropped! This could have been caused by the server skipping ticks.");
+                pluginInstance.logDebug(ChatColor.YELLOW + "Please try adjusting your packet response time in the config.");
+            }
+
+            return Optional.ofNullable(poll);
+
         } catch (InterruptedException e) {
             pluginInstance.warning(String.format("Packet: %s", packetIn.toString()));
             pluginInstance.warning("was interrupted being read.");

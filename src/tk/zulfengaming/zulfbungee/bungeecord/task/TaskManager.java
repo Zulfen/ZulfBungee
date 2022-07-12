@@ -4,6 +4,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -14,23 +15,21 @@ public class TaskManager {
     private final TaskScheduler scheduler;
 
     // keeps track of running stuff
-    private final HashMap<String, ScheduledTask> tasks = new HashMap<>();
+    private final ArrayList<ScheduledTask> tasks = new ArrayList<>();
 
     public TaskManager(ZulfBungeecord instanceIn) {
         this.instance = instanceIn;
         this.scheduler = instanceIn.getProxy().getScheduler();
     }
 
-    public void newTask(Runnable taskIn, String name) {
+    public void newTask(Runnable taskIn) {
         ScheduledTask theTask = scheduler.runAsync(instance, taskIn);
-
-        tasks.put(name, theTask);
-
+        tasks.add(theTask);
     }
 
     public void shutdown() {
 
-        for (ScheduledTask task : tasks.values()) {
+        for (ScheduledTask task : tasks) {
             task.cancel();
         }
 

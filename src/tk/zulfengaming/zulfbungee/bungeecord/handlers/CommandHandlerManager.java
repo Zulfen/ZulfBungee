@@ -7,6 +7,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 
 public class CommandHandlerManager {
@@ -27,20 +28,32 @@ public class CommandHandlerManager {
         return handlers;
     }
 
-    // TODO: Make it case insensitive.
-
     public Optional<CommandHandler> getHandler(String[] argsIn) {
 
         // args from base command I call labels instead
         for (CommandHandler handler : handlers) {
 
+            String[] requiredLabels = handler.getRequiredLabels();
             String[] argCheck = argsIn;
 
-            if (argsIn.length != handler.getRequiredLabels().length) {
-                argCheck = Arrays.copyOfRange(argsIn, 0, handler.getRequiredLabels().length);
+            if (argsIn.length != requiredLabels.length) {
+                argCheck = Arrays.copyOfRange(argsIn, 0, requiredLabels.length);
             }
 
-            if (Arrays.equals(handler.getRequiredLabels(), argCheck)) {
+            int counter = 0;
+
+            for (int i = 0; i < requiredLabels.length; i++) {
+
+                String requiredLabel = requiredLabels[i];
+                String argIn = argsIn[i];
+
+                if (requiredLabel.equalsIgnoreCase(argIn)) {
+                    counter += 1;
+                }
+
+            }
+
+            if (requiredLabels.length == counter) {
                 return Optional.of(handler);
             }
 

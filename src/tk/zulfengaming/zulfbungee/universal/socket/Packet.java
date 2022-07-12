@@ -1,8 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.socket;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.UUID;
 
 public class Packet implements Serializable {
 
@@ -69,7 +67,7 @@ public class Packet implements Serializable {
                 "type=" + type +
                 ", returnable=" + returnable +
                 ", shouldHandle=" + shouldHandle +
-                ", data=" + Arrays.toString(data) +
+                ", size=" + data.length +
                 '}';
     }
 }

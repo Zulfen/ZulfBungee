@@ -63,7 +63,7 @@ public class Server implements Runnable {
             instanceIn.getTaskManager().newTask(() -> {
                storage.initialise();
                storage.setupDatabase();
-            }, "SetupStorageThread");
+            });
 
             pluginInstance.logDebug(ChatColor.GREEN + "Currently using StorageImpl: " + storage.getClass().toString());
 
@@ -145,7 +145,7 @@ public class Server implements Runnable {
 
         BaseServerConnection connection = new BaseServerConnection(this, socketIn);
 
-        pluginInstance.getTaskManager().newTask(connection, String.valueOf(UUID.randomUUID()));
+        pluginInstance.getTaskManager().newTask(connection);
         addServerConnection(connection);
 
         pluginInstance.logInfo(ChatColor.GREEN + "Connection established with address: " + connection.getAddress());

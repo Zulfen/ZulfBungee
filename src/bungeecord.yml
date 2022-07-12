@@ -31,7 +31,7 @@ storage-type: "h2"
 storage-host: "localhost"
 storage-port: 3306
 
-# Change these from the default to improve security.
+# !! Change these from the default to improve security !!
 storage-username: "username"
 storage-password: "password"
 

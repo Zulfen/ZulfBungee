@@ -1,13 +1,17 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
-public class SocketHandler extends ClientListener implements Runnable {
+public class SocketHandler extends ClientListener implements Callable<Socket> {
 
     private final int timeout;
 
@@ -16,34 +20,21 @@ public class SocketHandler extends ClientListener implements Runnable {
         this.timeout = (int) Math.ceil((clientListenerManagerIn.getConnection().getHeartbeatTicks() / 20f) * 1000);
     }
 
+
     @Override
-    public void run() {
+    public Socket call() throws IOException {
+
+        InetAddress clientAddress = getClientListenerManager().getClientAddress();
+        int clientPort = getClientListenerManager().getClientPort();
+
+        InetAddress serverAddress = getClientListenerManager().getServerAddress();
+        int serverPort = getClientListenerManager().getServerPort();
 
         Socket socket = new Socket();
+        socket.bind(new InetSocketAddress(clientAddress, clientPort));
+        socket.connect(new InetSocketAddress(serverAddress, serverPort), timeout);
 
-        try {
+        return socket;
 
-            socket.setReuseAddress(true);
-            socket.setSoTimeout(timeout);
-
-            socket.bind(new InetSocketAddress(getClientListenerManager().getClientAddress(), getClientListenerManager().getClientPort()));
-            socket.connect(new InetSocketAddress(getClientListenerManager().getServerAddress(), getClientListenerManager().getServerPort()));
-
-            getClientListenerManager().getSocketRetrieve().put(socket);
-
-        } catch (IOException connecting) {
-
-            getClientListenerManager().getPluginInstance().logDebug(ChatColor.RED + "SocketHandler exception: " + connecting.getMessage());
-
-            try {
-                socket.close();
-            } catch (IOException closing) {
-                getClientListenerManager().getPluginInstance().error("Error closing unused socket:");
-                closing.printStackTrace();
-            }
-
-        } catch (InterruptedException ignored) {
-
-        }
     }
 }

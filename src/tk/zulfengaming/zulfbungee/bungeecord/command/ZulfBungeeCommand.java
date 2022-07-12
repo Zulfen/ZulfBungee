@@ -8,10 +8,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ZulfBungeeCommand extends Command implements TabExecutor {
 
@@ -40,7 +37,6 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
                 if (argsIn.length > handler.getRequiredLabels().length) {
 
                     int lenDifference = argsIn.length - handler.getRequiredLabels().length;
-
                     extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
 
                 }
@@ -78,9 +74,7 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
                 } else {
 
                     int newIndex = index - size;
-
-                    List<String> optionalArgs = commandHandler.onTab(newIndex);
-                    newArgs.addAll(optionalArgs);
+                    newArgs.addAll(commandHandler.onTab(newIndex));
 
                 }
 

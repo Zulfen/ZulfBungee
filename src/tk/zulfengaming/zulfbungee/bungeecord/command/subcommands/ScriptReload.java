@@ -67,6 +67,7 @@ public class ScriptReload extends CommandHandler {
                             scriptsMap.put(scriptName, ScriptAction.DELETE);
                         }
                     }
+
                 }
 
             }
@@ -74,7 +75,7 @@ public class ScriptReload extends CommandHandler {
         }
 
 
-        if (separateArgs.length > 0) {
+        if (separateArgs.length != 0) {
 
             if (separateArgs[0].equals("all")) {
 
@@ -126,7 +127,7 @@ public class ScriptReload extends CommandHandler {
                 } else {
 
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s does not exist! Please try retyping the command.", scriptName))));
+                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script &o%s&r does not exist! Please try retyping the command.", scriptName))));
 
                 }
             }
@@ -139,7 +140,7 @@ public class ScriptReload extends CommandHandler {
 
 
     @Override
-    public List<String> onTab(int index) {
+    public Collection<String> onTab(int index) {
 
         if (index == 0) {
 

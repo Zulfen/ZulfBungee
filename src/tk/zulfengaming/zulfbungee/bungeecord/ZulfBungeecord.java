@@ -59,7 +59,7 @@ public class ZulfBungeecord extends Plugin {
             getProxy().getPluginManager().registerListener(this, new Events(server));
             getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(commandHandlerManager));
 
-            taskManager.newTask(server, "MainServer");
+            taskManager.newTask(server);
 
         } catch (UnknownHostException e) {
             error("There was an error trying to initialise the server:");
@@ -149,6 +149,7 @@ public class ZulfBungeecord extends Plugin {
                                     .underlined(true)
                                     .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
                                     .create());
+
                         } else {
 
                             sender.sendMessage(new ComponentBuilder("Copy this link into a browser for a direct download!")

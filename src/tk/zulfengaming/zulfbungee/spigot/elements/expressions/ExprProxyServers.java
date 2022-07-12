@@ -15,15 +15,13 @@ import java.util.Arrays;
 
 public class ExprProxyServers extends SimpleExpression<ProxyServer> {
 
-    private ProxyServer[] servers = new ProxyServer[0];
-
     static {
         Skript.registerExpression(ExprProxyServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
     }
 
     @Override
     protected ProxyServer @NotNull [] get(@NotNull Event event) {
-        return servers;
+        return ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]);
     }
 
     @Override
@@ -38,12 +36,11 @@ public class ExprProxyServers extends SimpleExpression<ProxyServer> {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "all online servers: " + Arrays.toString(servers);
+        return "all online servers";
     }
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
-        servers = ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]);
         return true;
     }
 }

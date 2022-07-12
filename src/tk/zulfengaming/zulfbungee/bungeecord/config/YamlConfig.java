@@ -82,7 +82,7 @@ public class YamlConfig {
 
         ArrayList<String> cachedScripts = new ArrayList<>();
 
-        if (scriptsFolderPath.toFile().exists()) {
+        if (scriptsFolder.exists()) {
 
             for (File file : scriptsFolder.listFiles(File::isFile)) {
 

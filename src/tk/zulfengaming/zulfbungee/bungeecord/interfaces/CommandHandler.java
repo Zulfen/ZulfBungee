@@ -3,7 +3,9 @@ package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
 import net.md_5.bungee.api.CommandSender;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public abstract class CommandHandler {
@@ -16,7 +18,7 @@ public abstract class CommandHandler {
 
     public abstract void handleCommand(CommandSender sender, String[] separateArgs);
 
-    public List<String> onTab(int index) {
+    public Collection<String> onTab(int index) {
         return Collections.emptyList();
     }
 

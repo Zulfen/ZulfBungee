@@ -45,7 +45,7 @@ public class Events implements Listener {
                 server.sendToAllClients(new Packet(PacketTypes.CONNECT_EVENT, false, true,
                         playerOut));
 
-            }, event.toString());
+            });
 
         }
 
@@ -71,7 +71,7 @@ public class Events implements Listener {
 
                 server.sendToAllClients(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true, playerOut));
 
-            }, event.toString());
+            });
 
         }
 
@@ -100,7 +100,7 @@ public class Events implements Listener {
 
                 }
 
-            }, event.toString());
+            });
 
         }
 
@@ -124,7 +124,7 @@ public class Events implements Listener {
 
                 }
 
-            }, event.toString());
+            });
 
         }
 

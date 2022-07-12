@@ -54,8 +54,8 @@ public class BaseServerConnection implements Runnable {
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
 
-        pluginInstance.getTaskManager().newTask(dataInHandler, "DataInHandler");
-        pluginInstance.getTaskManager().newTask(dataOutHandler, "DataOutHandler");
+        pluginInstance.getTaskManager().newTask(dataInHandler);
+        pluginInstance.getTaskManager().newTask(dataOutHandler);
     }
 
 
@@ -165,7 +165,7 @@ public class BaseServerConnection implements Runnable {
                 e.printStackTrace();
             }
 
-        }, UUID.randomUUID().toString());
+        });
 
     }
 

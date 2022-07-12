@@ -69,10 +69,6 @@ public class ClientListenerManager implements Runnable {
 
     }
 
-    private BukkitTask connect() throws ExecutionException, InterruptedException {
-        return pluginInstance.getTaskManager().newRepeatingTask(socketHandler, 40);
-    }
-
     public void shutdown() throws IOException {
 
         socketBarrier.arriveAndDeregister();
@@ -151,11 +147,18 @@ public class ClientListenerManager implements Runnable {
 
             try {
 
-                BukkitTask socketAwaitTask = connect();
+                boolean failed = true;
 
-                socket = socketRetrieve.take();
+                do {
 
-                socketAwaitTask.cancel();
+                    try {
+                        socket = pluginInstance.getTaskManager().submitCallable(socketHandler);
+                        failed = false;
+                    } catch (ExecutionException e) {
+                        pluginInstance.error(e.getMessage());
+                    }
+
+                } while (failed && connection.isRunning().get());
 
                 socketConnected.compareAndSet(false, true);
 
@@ -172,9 +175,6 @@ public class ClientListenerManager implements Runnable {
 
             } catch (InterruptedException ignored) {
 
-            } catch (ExecutionException e) {
-                pluginInstance.error("Error during the socket getting process!");
-                e.printStackTrace();
             }
 
         }
