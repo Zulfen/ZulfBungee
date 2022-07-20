@@ -50,7 +50,7 @@ public class ExprProxyPlayer extends SimpleExpression<ProxyPlayer> {
 
     @Override
     public boolean isSingle() {
-        return playerName.isSingle();
+        return true;
     }
 
     @Override

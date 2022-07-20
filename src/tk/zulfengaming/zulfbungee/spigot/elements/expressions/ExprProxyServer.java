@@ -32,7 +32,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
 
     @Override
     public boolean isSingle() {
-        return false;
+        return true;
     }
 
     @Override
