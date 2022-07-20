@@ -8,7 +8,7 @@ Some portions of this plugin were referenced from another plugin ([Skungee by Li
 
 * None right now.
 
-## **Supported Syntax:**
+# **Supported Syntax:**
 
 ## **Effects:**
 
