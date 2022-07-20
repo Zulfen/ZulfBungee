@@ -1,26 +1,19 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.*;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.event.ServerKickEvent;
+import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
-import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class Events implements Listener {
 

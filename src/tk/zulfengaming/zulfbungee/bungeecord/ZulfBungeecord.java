@@ -62,7 +62,7 @@ public class ZulfBungeecord extends Plugin {
             taskManager.newTask(server);
 
         } catch (UnknownHostException e) {
-            error("There was an error trying to initialiseDataSource the server:");
+            error("There was an error trying to initialise the server:");
             e.printStackTrace();
 
         }
