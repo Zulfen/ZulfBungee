@@ -11,9 +11,9 @@ public class MySQLImpl extends HikariSQLImpl {
     }
 
     @Override
-    public void initialise() {
+    public HikariDataSource initialise() {
 
-        dataSource = new HikariDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
 
         dataSource.setMaximumPoolSize(10);
 
@@ -39,6 +39,8 @@ public class MySQLImpl extends HikariSQLImpl {
         dataSource.setJdbcUrl(jdbcUrl);
         dataSource.setUsername(getUsername());
         dataSource.setPassword(getPassword());
+
+        return dataSource;
 
     }
 }

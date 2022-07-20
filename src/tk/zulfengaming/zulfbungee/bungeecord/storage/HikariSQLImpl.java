@@ -20,19 +20,17 @@ import java.util.Optional;
 
 // TODO: Make byte to long / double (and reverse) a static function somewhere else for re-usability.
 
-public class HikariSQLImpl extends StorageImpl {
+public abstract class HikariSQLImpl extends StorageImpl {
 
-    protected HikariDataSource dataSource;
+    private final HikariDataSource dataSource;
 
     public HikariSQLImpl(Server serverIn) {
         super(serverIn);
+        this.dataSource = initialise();
 
     }
 
-    @Override
-    public void initialise() {
-
-    }
+    public abstract HikariDataSource initialise();
 
     @Override
     public void setupDatabase() {

@@ -44,9 +44,6 @@ public abstract class StorageImpl {
         return database;
     }
 
-
-    public abstract void initialise();
-
     public abstract void setupDatabase();
 
     public abstract Optional<NetworkVariable> getVariables(String name);

@@ -59,10 +59,7 @@ public class Server implements Runnable {
 
             storage = newStorage.get();
 
-            instanceIn.getTaskManager().newTask(() -> {
-               storage.initialise();
-               storage.setupDatabase();
-            });
+            instanceIn.getTaskManager().newTask(() -> storage.setupDatabase());
 
             pluginInstance.logDebug(ChatColor.GREEN + "Currently using StorageImpl: " + storage.getClass().toString());
 

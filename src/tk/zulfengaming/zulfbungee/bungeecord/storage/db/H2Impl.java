@@ -14,7 +14,7 @@ public class H2Impl extends HikariSQLImpl {
     }
 
     @Override
-    public void initialise() {
+    public HikariDataSource initialise() {
 
         HikariConfig hikariConfig = new HikariConfig();
 
@@ -26,9 +26,11 @@ public class H2Impl extends HikariSQLImpl {
         hikariConfig.addDataSourceProperty("user", getUsername());
         hikariConfig.addDataSourceProperty("password", getPassword());
 
-        dataSource = new HikariDataSource(hikariConfig);
+        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
         dataSource.setMaximumPoolSize(10);
+
+        return dataSource;
 
     }
 }
