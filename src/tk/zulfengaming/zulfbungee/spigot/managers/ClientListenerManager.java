@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-// TODO: Make this use a Future instead of a queue with a runnable.
 public class ClientListenerManager extends BukkitRunnable {
 
     private final ZulfBungeeSpigot pluginInstance;
