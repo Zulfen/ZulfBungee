@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 
@@ -12,16 +14,22 @@ public class TaskManager {
     private final ZulfBungeeSpigot instance;
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final BukkitScheduler scheduler;
 
     public TaskManager(ZulfBungeeSpigot instanceIn) {
         this.instance = instanceIn;
+        this.scheduler = instance.getServer().getScheduler();
     }
 
-    public void newTask(BukkitRunnable taskIn) {
+    public void newTask(Plugin pluginIn, Runnable taskIn) {
+        scheduler.runTask(pluginIn, taskIn);
+    }
+
+    public void newAsyncTask(BukkitRunnable taskIn) {
         taskIn.runTaskAsynchronously(instance);
     }
 
-    public BukkitTask newRepeatingTickTask(BukkitRunnable taskIn, int ticks) {
+    public BukkitTask newAsyncTickTask(BukkitRunnable taskIn, int ticks) {
         return taskIn.runTaskTimerAsynchronously(instance, 0, ticks);
     }
 

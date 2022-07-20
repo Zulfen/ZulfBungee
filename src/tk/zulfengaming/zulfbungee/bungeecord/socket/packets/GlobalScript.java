@@ -23,7 +23,7 @@ public class GlobalScript extends PacketHandler {
 
             for (String scriptName : getMainServer().getPluginInstance().getConfig().getScripts()) {
 
-               connection.sendScript(getMainServer().getPluginInstance().getConfig().getScriptPath(scriptName), ScriptAction.NEW);
+               connection.sendScript(getMainServer().getPluginInstance().getConfig().getScriptPath(scriptName), ScriptAction.NEW, null);
 
             }
 

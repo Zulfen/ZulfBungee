@@ -4,8 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
@@ -43,7 +41,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
             connection = new ClientConnection(this);
 
-            taskManager.newTask(connection);
+            taskManager.newAsyncTask(connection);
 
         } catch (UnknownHostException e) {
             error("Error launching connection task!");

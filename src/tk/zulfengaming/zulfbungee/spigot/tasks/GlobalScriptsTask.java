@@ -1,31 +1,33 @@
 package tk.zulfengaming.zulfbungee.spigot.tasks;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Config;
-import ch.njol.util.OpenCloseable;
+import org.bukkit.command.CommandSender;
+import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.function.Supplier;
 
 public class GlobalScriptsTask implements Supplier<File> {
 
     private final ClientConnection connection;
+    private final ZulfBungeeSpigot pluginInstance;
 
     private final byte[] data;
 
     private final String scriptName;
     private final ScriptAction scriptAction;
+    private final CommandSender sender;
 
-    public GlobalScriptsTask(ClientConnection connectionIn, String scriptNameIn, ScriptAction scriptActionIn, byte[] dataIn) {
+    public GlobalScriptsTask(ClientConnection connectionIn, String scriptNameIn, ScriptAction scriptActionIn, CommandSender senderIn, byte[] dataIn) {
         this.connection = connectionIn;
+        this.pluginInstance = connection.getPluginInstance();
         this.scriptName = scriptNameIn;
         this.scriptAction = scriptActionIn;
+        this.sender = senderIn;
         this.data = dataIn;
     }
 
@@ -51,6 +53,8 @@ public class GlobalScriptsTask implements Supplier<File> {
 
         }
 
+        skriptReload();
+
         return scriptFile;
 
     }
@@ -65,13 +69,10 @@ public class GlobalScriptsTask implements Supplier<File> {
 
                 Files.write(fileInstance.toPath(), data);
 
-                Config config = ScriptLoader.loadStructure(fileInstance);
-                ScriptLoader.loadScripts(Collections.singletonList(config), OpenCloseable.EMPTY);
-
             }
 
         } catch (IOException e) {
-            connection.getPluginInstance().error(String.format("There was an error trying to save script %s:", fileInstance.getName()));
+            pluginInstance.error(String.format("There was an error trying to save script %s:", fileInstance.getName()));
             e.printStackTrace();
         }
 
@@ -79,15 +80,18 @@ public class GlobalScriptsTask implements Supplier<File> {
 
     private void removeScript(File fileInstance) {
 
-        ScriptLoader.unloadScript(fileInstance);
-
         if (fileInstance.exists()) {
             if (!fileInstance.delete()) {
-                connection.getPluginInstance().warning(String.format("Script file %s could not be deleted.", fileInstance.getName()));
+                pluginInstance.warning(String.format("Script file %s could not be deleted.", fileInstance.getName()));
             }
         }
 
     }
+
+    private void skriptReload() {
+        pluginInstance.getTaskManager().newTask(Skript.getInstance(), () -> connection.getPluginInstance().getServer().dispatchCommand(sender, "sk reload " + scriptName));
+    }
+
 }
 
 

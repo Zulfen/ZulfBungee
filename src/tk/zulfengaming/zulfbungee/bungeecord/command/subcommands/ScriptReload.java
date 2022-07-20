@@ -83,7 +83,7 @@ public class ScriptReload extends CommandHandler {
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
                             ('&', ZulfBungeeCommand.COMMAND_PREFIX + "No scripts have been updated, as they haven't been modified.")));
                 } else {
-                    getMainServer().syncScriptsFolder(scriptsMap);
+                    getMainServer().syncScriptsFolder(scriptsMap, sender);
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
                             ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()))));
                 }
@@ -116,7 +116,7 @@ public class ScriptReload extends CommandHandler {
                     tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptName));
 
                     if (!tempScriptsMap.isEmpty()) {
-                        getMainServer().syncScriptsFolder(tempScriptsMap);
+                        getMainServer().syncScriptsFolder(tempScriptsMap, sender);
                         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
                                 ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("Script %s was updated.", scriptName))));
                     } else {

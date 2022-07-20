@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket;
 
 import com.google.common.collect.HashBiMap;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
@@ -185,7 +186,7 @@ public class Server implements Runnable {
         }
     }
 
-    public void syncScriptsFolder(Map<String, ScriptAction> scriptNamesIn) {
+    public void syncScriptsFolder(Map<String, ScriptAction> scriptNamesIn, CommandSender senderIn) {
 
         for (BaseServerConnection connection : socketConnections) {
 
@@ -193,7 +194,7 @@ public class Server implements Runnable {
 
                 Path scriptPath = pluginInstance.getConfig().getScriptPath(script.getKey());
 
-                connection.sendScript(scriptPath, script.getValue());
+                connection.sendScript(scriptPath, script.getValue(), senderIn);
 
             }
 

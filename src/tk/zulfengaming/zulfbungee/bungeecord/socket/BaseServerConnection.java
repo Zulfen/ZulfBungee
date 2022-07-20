@@ -1,10 +1,13 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket;
 
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.*;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -148,18 +151,28 @@ public class BaseServerConnection implements Runnable {
 
     }
 
-    public void sendScript(Path scriptPathIn, ScriptAction actionIn) {
+    // input null into senderIn to make the console reload the scripts, not a player.
+    public void sendScript(Path scriptPathIn, ScriptAction actionIn, CommandSender senderIn) {
 
         pluginInstance.getTaskManager().newTask(() -> {
 
             String scriptName = scriptPathIn.getFileName().toString();
+
+            ProxyPlayer playerOut = null;
+
+            if (senderIn != null) {
+                if (senderIn instanceof ProxiedPlayer) {
+                    ProxiedPlayer playerIn = (ProxiedPlayer) senderIn;
+                    playerOut = new ProxyPlayer(playerIn.getName(), playerIn.getUniqueId());
+                }
+            }
 
             try {
 
                 byte[] data = Files.readAllBytes(scriptPathIn);
 
                 send(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new ScriptInfo(actionIn,
-                        scriptName, data)));
+                        scriptName, playerOut, data)));
 
             } catch (IOException e) {
                 pluginInstance.error(String.format("Error while parsing script %s!", scriptName));

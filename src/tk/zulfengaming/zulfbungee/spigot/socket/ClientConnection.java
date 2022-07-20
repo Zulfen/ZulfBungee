@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.*;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 
 import java.io.File;
 import java.net.Socket;
@@ -74,16 +76,16 @@ public class ClientConnection extends BukkitRunnable {
         socketBarrier = clientListenerManager.getSocketBarrier();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTickTask(heartbeatTask, timeout);
+        this.heartbeatThread = pluginInstance.getTaskManager().newAsyncTickTask(heartbeatTask, timeout);
 
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
 
         socketBarrier.register();
 
-        pluginInstance.getTaskManager().newTask(clientListenerManager);
-        pluginInstance.getTaskManager().newTask(dataInHandler);
-        pluginInstance.getTaskManager().newTask(dataOutHandler);
+        pluginInstance.getTaskManager().newAsyncTask(clientListenerManager);
+        pluginInstance.getTaskManager().newAsyncTask(dataInHandler);
+        pluginInstance.getTaskManager().newAsyncTask(dataOutHandler);
 
 
     }
@@ -181,7 +183,14 @@ public class ClientConnection extends BukkitRunnable {
 
         ScriptAction action = infoIn.getScriptAction();
 
-        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(this, infoIn.getScriptName(), action, infoIn.getScriptData()))
+        CommandSender sender = pluginInstance.getServer().getConsoleSender();
+
+        if (infoIn.getSender() != null) {
+            ProxyPlayer playerIn = infoIn.getSender();
+            sender = pluginInstance.getServer().getPlayer(playerIn.getUuid());
+        }
+
+        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(this, infoIn.getScriptName(), action, sender, infoIn.getScriptData()))
                 .thenAccept(file -> {
                     switch (action) {
                         case NEW:
