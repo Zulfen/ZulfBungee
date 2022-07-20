@@ -40,13 +40,15 @@ Some portions of this plugin were referenced from another plugin ([Skungee by Li
 
 - [(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]
 
-- (proxy|bungeecord|bungee) server %string%
+- (proxy|bungeecord|bungee) server [(named|called)] %string%
+
+- (proxy|bungeecord|bungee) player [(named|called)] %string%
 
 - proxyserver's (player limit|max player count)
 
 - this server
 
-- this server's name
+- proxyserver's name
 
 ## **Conditions:**
 
