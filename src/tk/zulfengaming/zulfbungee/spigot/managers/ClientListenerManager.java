@@ -144,7 +144,6 @@ public class ClientListenerManager extends BukkitRunnable {
                     }
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                     socketBarrier.arriveAndDeregister();
                     break;
                 } catch (ExecutionException e) {
