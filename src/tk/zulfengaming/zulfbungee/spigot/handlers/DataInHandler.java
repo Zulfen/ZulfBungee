@@ -59,8 +59,6 @@ public class DataInHandler extends BukkitRunnable {
 
                 } else {
 
-                    pluginInstance.logDebug("DataIn");
-
                     socketBarrier.arriveAndAwaitAdvance();
 
                     Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();

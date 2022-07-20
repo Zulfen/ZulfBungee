@@ -130,7 +130,6 @@ public class ClientListenerManager extends BukkitRunnable {
 
                     if (!terminated.get()) {
 
-                        pluginInstance.logDebug(String.valueOf(socketBarrier.getRegisteredParties()));
                         // blocking call
                         Optional<Socket> socketOptional = pluginInstance.getTaskManager().submitCallable(socketHandler);
 
@@ -152,7 +151,7 @@ public class ClientListenerManager extends BukkitRunnable {
                     socketBarrier.arriveAndDeregister();
                     break;
                 } catch (ExecutionException e) {
-                    pluginInstance.error(e.getMessage());
+                    pluginInstance.error(String.format("Error while creating socket: %s", e.getCause()));
                 }
 
             } while (!gotSocket);

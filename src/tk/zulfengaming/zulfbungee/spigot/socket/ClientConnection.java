@@ -110,8 +110,6 @@ public class ClientConnection extends BukkitRunnable {
 
                 } else {
 
-                    pluginInstance.logDebug("Connection");
-
                     socketBarrier.arriveAndAwaitAdvance();
 
                     Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
