@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.bungeecord.handlers;
+package tk.zulfengaming.zulfbungee.bungeecord.managers;
 
 import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.ScriptReload;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
@@ -34,11 +34,6 @@ public class CommandHandlerManager {
         for (CommandHandler handler : handlers) {
 
             String[] requiredLabels = handler.getRequiredLabels();
-            String[] argCheck = argsIn;
-
-            if (argsIn.length != requiredLabels.length) {
-                argCheck = Arrays.copyOfRange(argsIn, 0, requiredLabels.length);
-            }
 
             int counter = 0;
 

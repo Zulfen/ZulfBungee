@@ -49,16 +49,13 @@ public class DataInHandler implements Runnable {
 
                 }
 
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | SocketException | EOFException e) {
                 disconnect();
 
             } catch (IOException | ClassNotFoundException e) {
-                connection.getPluginInstance().error("There was an error running the server! Disconnecting");
-
-                disconnect();
-
+                connection.getPluginInstance().error(String.format("There was an error handling data in the connection to address %s:", connection.getAddress()));
                 e.printStackTrace();
-
+                disconnect();
             }
 
 

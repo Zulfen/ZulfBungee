@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
-import tk.zulfengaming.zulfbungee.spigot.handlers.ProxyServerInfoManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;

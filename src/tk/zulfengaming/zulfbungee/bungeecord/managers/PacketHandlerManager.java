@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.bungeecord.handlers;
+package tk.zulfengaming.zulfbungee.bungeecord.managers;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;

@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.handlers.DataOutHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.bungeecord.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.*;
 
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,6 +46,7 @@ public class BaseServerConnection implements Runnable {
         this.packetManager = serverIn.getPacketManager();
 
         this.pluginInstance = serverIn.getPluginInstance();
+
         this.server = serverIn;
 
         this.address = socket.getRemoteSocketAddress();
@@ -56,6 +56,7 @@ public class BaseServerConnection implements Runnable {
 
         pluginInstance.getTaskManager().newTask(dataInHandler);
         pluginInstance.getTaskManager().newTask(dataOutHandler);
+
     }
 
 
@@ -93,8 +94,8 @@ public class BaseServerConnection implements Runnable {
                     }
                 }
 
-            } catch (InterruptedException ignored) {
-
+            } catch (InterruptedException e) {
+                break;
             }
 
         } while (running.get());

@@ -9,7 +9,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
-import tk.zulfengaming.zulfbungee.bungeecord.handlers.CommandHandlerManager;
+import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
 import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;

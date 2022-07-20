@@ -1,19 +1,20 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientListenerManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
-import tk.zulfengaming.zulfbungee.spigot.handlers.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.*;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -23,17 +24,13 @@ import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ClientConnection implements Runnable {
+public class ClientConnection extends BukkitRunnable {
 
     private final ZulfBungeeSpigot pluginInstance;
 
     // threads
 
     private final BukkitTask heartbeatThread;
-
-    private final BukkitTask socketDaemon;
-    private final BukkitTask dataInThread;
-    private final BukkitTask dataOutThread;
 
     private Socket socket;
 
@@ -55,11 +52,10 @@ public class ClientConnection implements Runnable {
     private final DataOutHandler dataOutHandler;
 
     private final DataInHandler dataInHandler;
-
-    // misc. info
+// misc. info
 
     private String connectionName;
-    private final int connectionTimeout;
+    private final int timeout;
     private final int packetResponseTime;
 
     private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
@@ -70,23 +66,22 @@ public class ClientConnection implements Runnable {
         this.clientListenerManager = new ClientListenerManager(this);
 
         this.packetHandlerManager = new PacketHandlerManager(this);
-        this.connectionTimeout = pluginInstanceIn.getYamlConfig().getInt("connection-timeout");
-        this.packetResponseTime = pluginInstanceIn.getYamlConfig().getInt("packet-response-time");
+        this.timeout = pluginInstance.getYamlConfig().getInt("connection-timeout");
+        this.packetResponseTime = pluginInstance.getYamlConfig().getInt("packet-response-time");
 
         socketBarrier = clientListenerManager.getSocketBarrier();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTask(heartbeatTask, connectionTimeout);
+        this.heartbeatThread = pluginInstance.getTaskManager().newRepeatingTickTask(heartbeatTask, timeout);
 
-
-        this.dataInHandler = new DataInHandler(clientListenerManager, this);
-        this.dataOutHandler = new DataOutHandler(clientListenerManager, this);
+        this.dataInHandler = new DataInHandler(this);
+        this.dataOutHandler = new DataOutHandler(this);
 
         socketBarrier.register();
-        socketDaemon = pluginInstance.getTaskManager().newTask(clientListenerManager);
 
-        this.dataInThread = pluginInstance.getTaskManager().newTask(dataInHandler);
-        this.dataOutThread = pluginInstance.getTaskManager().newTask(dataOutHandler);
+        pluginInstance.getTaskManager().newTask(clientListenerManager);
+        pluginInstance.getTaskManager().newTask(dataInHandler);
+        pluginInstance.getTaskManager().newTask(dataOutHandler);
 
 
     }
@@ -112,15 +107,25 @@ public class ClientConnection implements Runnable {
                         }
 
                     }
+
                 } else {
+
+                    pluginInstance.logDebug("Connection");
 
                     socketBarrier.arriveAndAwaitAdvance();
 
-                    socket = clientListenerManager.getSocketHandoff().take();
+                    Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
+
+                    if (clientListenerManager.isTerminated().get()) {
+
+                        socketBarrier.arriveAndDeregister();
+
+                    } else socketOptional.ifPresent(value -> socket = value);
+
                 }
 
             } catch (InterruptedException e) {
-                shutdown();
+                socketBarrier.arriveAndDeregister();
             }
 
         } while (running.get());
@@ -204,8 +209,8 @@ public class ClientConnection implements Runnable {
         return clientListenerManager.getClientInfo();
     }
 
-    public int getConnectionTimeout() {
-        return connectionTimeout;
+    public int getTimeout() {
+        return timeout;
     }
 
     public synchronized void shutdown() {
@@ -225,11 +230,6 @@ public class ClientConnection implements Runnable {
             }
 
             heartbeatThread.cancel();
-
-            dataInThread.cancel();
-            dataOutThread.cancel();
-
-            socketDaemon.cancel();
             clientListenerManager.shutdown();
 
         }
@@ -238,6 +238,10 @@ public class ClientConnection implements Runnable {
 
     public ZulfBungeeSpigot getPluginInstance() {
         return pluginInstance;
+    }
+
+    public ClientListenerManager getClientListenerManager() {
+        return clientListenerManager;
     }
 
     public void setConnectionName(String connectionNameIn) {

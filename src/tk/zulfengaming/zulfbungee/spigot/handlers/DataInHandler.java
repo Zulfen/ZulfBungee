@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.handlers;
 
-import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientListener;
+import org.bukkit.scheduler.BukkitRunnable;
+import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 
@@ -10,11 +12,11 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.BlockingQueue;
+import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Phaser;
 
-public class DataInHandler extends ClientListener implements Runnable {
+public class DataInHandler extends BukkitRunnable {
 
     private final ClientConnection connection;
 
@@ -22,14 +24,18 @@ public class DataInHandler extends ClientListener implements Runnable {
 
     private final Phaser socketBarrier;
 
+    private final ClientListenerManager clientListenerManager;
+    private final ZulfBungeeSpigot pluginInstance;
+
     private ObjectInputStream inputStream;
 
-    public DataInHandler(ClientListenerManager clientListenerManagerIn, ClientConnection connectionIn) {
-        super(clientListenerManagerIn);
+    public DataInHandler(ClientConnection connectionIn) {
 
         this.connection = connectionIn;
+        this.clientListenerManager = connection.getClientListenerManager();
+        this.pluginInstance = connection.getPluginInstance();
 
-        this.socketBarrier = clientListenerManagerIn.getSocketBarrier();
+        this.socketBarrier = clientListenerManager.getSocketBarrier();
 
         socketBarrier.register();
 
@@ -42,7 +48,7 @@ public class DataInHandler extends ClientListener implements Runnable {
         do {
             try {
 
-                if (getClientListenerManager().isSocketConnected().get()) {
+                if (clientListenerManager.isSocketConnected().get()) {
 
                     Object dataIn = inputStream.readObject();
 
@@ -53,47 +59,55 @@ public class DataInHandler extends ClientListener implements Runnable {
 
                 } else {
 
+                    pluginInstance.logDebug("DataIn");
+
                     socketBarrier.arriveAndAwaitAdvance();
 
-                    Socket newSocket = getClientListenerManager().getSocketHandoff().take();
+                    Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
 
-                    inputStream = new ObjectInputStream(newSocket.getInputStream());
+                    if (clientListenerManager.isTerminated().get()) {
+
+                        socketBarrier.arriveAndDeregister();
+
+                    } else if (socketOptional.isPresent()) {
+
+                        Socket newSocket = socketOptional.get();
+                        inputStream = new ObjectInputStream(newSocket.getInputStream());
+
+                    }
 
                 }
 
             } catch (EOFException | SocketException | SocketTimeoutException e) {
-                getClientListenerManager().getPluginInstance().warning("Proxy server appears to have disconnected!");
+                pluginInstance.warning("Proxy server appears to have disconnected!");
 
-                getClientListenerManager().isSocketConnected().compareAndSet(true, false);
+                clientListenerManager.isSocketConnected().compareAndSet(true, false);
 
             } catch (IOException e) {
-                getClientListenerManager().getPluginInstance().error("An unexpected error occurred!");
-                getClientListenerManager().getPluginInstance().error("This likely isn't your fault!");
-                getClientListenerManager().getPluginInstance().error("Please report this by making an issue on GitHub or contacting one of the devs so we can fix this issue!");
-                getClientListenerManager().getPluginInstance().error("");
+                pluginInstance.error("An unexpected error occurred!");
+                pluginInstance.error("This likely isn't your fault!");
+                pluginInstance.error("Please report this by making an issue on GitHub or contacting one of the devs so we can fix this issue!");
+                pluginInstance.error("");
 
                 e.printStackTrace();
 
-                getClientListenerManager().isSocketConnected().compareAndSet(true, false);
+                clientListenerManager.isSocketConnected().compareAndSet(true, false);
 
-            } catch (InterruptedException ignored) {
-
-                getClientListenerManager().isSocketConnected().compareAndSet(true, false);
-                break;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                socketBarrier.arriveAndDeregister();
 
             } catch (ClassNotFoundException e) {
-                getClientListenerManager().getPluginInstance().error("Packet received was not recognised!");
+                pluginInstance.error("Packet received was not recognised!");
 
                 e.printStackTrace();
             }
 
         } while (connection.isRunning().get());
 
-        socketBarrier.arriveAndDeregister();
-
     }
 
-    public BlockingQueue<Packet> getDataQueue() {
+    public LinkedBlockingQueue<Packet> getDataQueue() {
         return queueIn;
     }
 

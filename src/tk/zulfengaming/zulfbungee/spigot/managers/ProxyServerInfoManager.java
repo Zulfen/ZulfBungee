@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.spigot.handlers;
+package tk.zulfengaming.zulfbungee.spigot.managers;
 
 import tk.zulfengaming.zulfbungee.universal.socket.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;

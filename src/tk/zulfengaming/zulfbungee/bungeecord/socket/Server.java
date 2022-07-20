@@ -6,7 +6,7 @@ import com.google.common.collect.HashBiMap;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
-import tk.zulfengaming.zulfbungee.bungeecord.handlers.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.bungeecord.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Handler;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLHandler;
@@ -220,12 +220,12 @@ public class Server implements Runnable {
 
     public void removeServerConnection(BaseServerConnection connection) {
 
-        BiMap<BaseServerConnection, String> inverse = activeConnections.inverse();
+        String name = activeConnections.inverse().get(connection);
 
-        pluginInstance.logInfo(String.format(ChatColor.YELLOW + "Disconnecting client %s (%s)", connection.getAddress(), inverse.get(connection)));
+        pluginInstance.logInfo(String.format(ChatColor.YELLOW + "Disconnecting client %s (%s)", connection.getAddress(), name));
 
         socketConnections.remove(connection);
-        inverse.remove(connection);
+        activeConnections.remove(name);
 
         sendToAllClients(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
 
