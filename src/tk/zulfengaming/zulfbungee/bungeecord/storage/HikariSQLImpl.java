@@ -26,11 +26,11 @@ public abstract class HikariSQLImpl extends StorageImpl {
 
     public HikariSQLImpl(Server serverIn) {
         super(serverIn);
-        this.dataSource = initialise();
+        this.dataSource = initialiseDataSource();
 
     }
 
-    public abstract HikariDataSource initialise();
+    public abstract HikariDataSource initialiseDataSource();
 
     @Override
     public void setupDatabase() {

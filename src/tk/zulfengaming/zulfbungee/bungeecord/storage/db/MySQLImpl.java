@@ -11,7 +11,7 @@ public class MySQLImpl extends HikariSQLImpl {
     }
 
     @Override
-    public HikariDataSource initialise() {
+    public HikariDataSource initialiseDataSource() {
 
         HikariDataSource dataSource = new HikariDataSource();
 

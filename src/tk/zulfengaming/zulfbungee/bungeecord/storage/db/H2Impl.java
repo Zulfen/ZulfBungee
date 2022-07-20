@@ -14,7 +14,7 @@ public class H2Impl extends HikariSQLImpl {
     }
 
     @Override
-    public HikariDataSource initialise() {
+    public HikariDataSource initialiseDataSource() {
 
         HikariConfig hikariConfig = new HikariConfig();
 
