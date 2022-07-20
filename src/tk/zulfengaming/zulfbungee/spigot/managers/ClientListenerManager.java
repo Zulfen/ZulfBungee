@@ -134,8 +134,6 @@ public class ClientListenerManager extends BukkitRunnable {
 
                         socketOptional.ifPresent(value -> socket = value);
 
-                        pluginInstance.logDebug(socket.getRemoteSocketAddress().toString());
-
                         if (socket != null) {
                             gotSocket = true;
                         }
