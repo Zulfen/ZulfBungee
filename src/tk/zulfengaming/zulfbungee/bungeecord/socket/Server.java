@@ -151,6 +151,7 @@ public class Server implements Runnable {
 
     }
 
+    // TODO: Add address whitelist
     private boolean isValidClient(SocketAddress addressIn) {
 
         Map<String, ServerInfo> servers = pluginInstance.getProxy().getServersCopy();
