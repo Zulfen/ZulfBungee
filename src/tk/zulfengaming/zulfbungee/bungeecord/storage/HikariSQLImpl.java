@@ -57,7 +57,7 @@ public abstract class HikariSQLImpl extends StorageImpl {
     }
 
     @Override
-    public Optional<NetworkVariable> getVariables(@NotNull String name) {
+    public Optional<NetworkVariable> getVariable(@NotNull String name) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -120,7 +120,7 @@ public abstract class HikariSQLImpl extends StorageImpl {
     }
 
     @Override
-    public void setVariables(@NotNull NetworkVariable variable) {
+    public void setVariable(@NotNull NetworkVariable variable) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -288,7 +288,7 @@ public abstract class HikariSQLImpl extends StorageImpl {
     }
 
     @Override
-    public void deleteVariables(@NotNull String name) {
+    public void deleteVariable(@NotNull String name) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 

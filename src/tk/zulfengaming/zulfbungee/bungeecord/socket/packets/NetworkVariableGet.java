@@ -28,7 +28,7 @@ public class NetworkVariableGet extends PacketHandler {
 
             StorageImpl storage = getStorage.get();
 
-            Optional<NetworkVariable> storedVariable = storage.getVariables(variableName);
+            Optional<NetworkVariable> storedVariable = storage.getVariable(variableName);
             NetworkVariable variable = null;
 
             if (storedVariable.isPresent()) {

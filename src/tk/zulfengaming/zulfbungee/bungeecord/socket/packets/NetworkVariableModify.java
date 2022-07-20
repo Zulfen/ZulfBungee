@@ -36,10 +36,10 @@ public class NetworkVariableModify extends PacketHandler {
                 switch (mode) {
 
                     case SET:
-                        storage.setVariables(variable);
+                        storage.setVariable(variable);
                         break;
                     case DELETE:
-                        storage.deleteVariables(variable.getName());
+                        storage.deleteVariable(variable.getName());
                         break;
                     case ADD:
                         storage.addToVariable(variable.getName(), variable.getValueArray());

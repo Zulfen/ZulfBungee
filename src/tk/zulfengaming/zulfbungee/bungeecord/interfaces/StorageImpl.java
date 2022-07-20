@@ -46,13 +46,13 @@ public abstract class StorageImpl {
 
     public abstract void setupDatabase();
 
-    public abstract Optional<NetworkVariable> getVariables(String name);
+    public abstract Optional<NetworkVariable> getVariable(String name);
 
-    public abstract void setVariables(NetworkVariable variable);
+    public abstract void setVariable(NetworkVariable variable);
 
     public abstract void addToVariable(String name, Value[] values);
 
-    public abstract void deleteVariables(String name);
+    public abstract void deleteVariable(String name);
 
     public abstract void removeFromVariable(String name, Value[] values);
 
