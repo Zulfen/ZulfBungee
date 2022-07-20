@@ -2,11 +2,11 @@ package tk.zulfengaming.zulfbungee.bungeecord.storage.db;
 
 import com.zaxxer.hikari.HikariDataSource;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.storage.HikariSQLHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.HikariSQLImpl;
 
-public class MySQLHandler extends HikariSQLHandler {
+public class MySQLImpl extends HikariSQLImpl {
 
-    public MySQLHandler(Server serverIn) {
+    public MySQLImpl(Server serverIn) {
         super(serverIn);
     }
 

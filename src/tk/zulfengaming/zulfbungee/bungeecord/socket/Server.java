@@ -7,8 +7,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Handler;
-import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Impl;
+import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLImpl;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
@@ -261,9 +261,9 @@ public class Server implements Runnable {
         String storageChoice = pluginInstance.getConfig().getString("storage-type");
 
         if (storageChoice.matches("(?i)mysql")) {
-            newStorage = new MySQLHandler(this);
+            newStorage = new MySQLImpl(this);
         } else if (storageChoice.matches("(?i)h2")) {
-            newStorage = new H2Handler(this);
+            newStorage = new H2Impl(this);
         }
 
         return Optional.ofNullable(newStorage);
