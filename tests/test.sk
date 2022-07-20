@@ -3,7 +3,7 @@
 command /zulfbungeetest:
    trigger:
 
-      broadcast "&c&lWelcome to the ZulfBungee test script! (testing if it changes)"
+      broadcast "&c&lWelcome to the ZulfBungee test script!"
       broadcast "&c&oExecution will begin in stages. Please report the values!"
       
       wait 3 seconds
@@ -58,15 +58,10 @@ command /zulfbungeetest:
       delete network variable {zulfbungee::test::*}
 
       broadcast "&c&lCongrats! The test is done! Please send results back!"
-      broadcast "&c&lTest"
-
-      loop all of the bungeecord players:
-         proxy transfer loop-proxyplayer to bungeecord server "zulfbungee2" 
-
 
 command /sendtest:
    trigger:
-      proxy transfer proxy player "ZulfenFloof" to bungeecord server "zulfbungee2"
+      bungee send all of the bungeecord players to proxy server "zulfbungee2"
 
 
 on player switch server:
