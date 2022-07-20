@@ -148,7 +148,7 @@ public class ClientListenerManager extends BukkitRunnable {
                     socketBarrier.arriveAndDeregister();
                     break;
                 } catch (ExecutionException e) {
-                    pluginInstance.error(String.format("Error while creating socket: %s", e.getCause().getMessage()));
+                    pluginInstance.logDebug(ChatColor.RED + String.format("Error while creating socket: %s", e.getCause().getMessage()));
                 }
 
             } while (!gotSocket);
