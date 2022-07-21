@@ -17,6 +17,7 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 public class CondIsServerOnline extends Condition {
 
     private Expression<ProxyServer> server;
+    private int option;
 
     static {
         Skript.registerCondition(CondIsServerOnline.class, "%-proxyserver% (1¦is|2¦is(n't| not)) online");
@@ -24,7 +25,18 @@ public class CondIsServerOnline extends Condition {
 
     @Override
     public boolean check(@NotNull Event event) {
-        return ProxyServerInfoManager.contains(server.getSingle(event).getName());
+
+        boolean contains = ProxyServerInfoManager.contains(server.getSingle(event).getName());
+
+        switch (option) {
+            case 1:
+                return contains;
+            case 2:
+                return !contains;
+        }
+
+        return false;
+
     }
 
     @Override
@@ -36,6 +48,7 @@ public class CondIsServerOnline extends Condition {
     @SuppressWarnings("unchecked")
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         server = (Expression<ProxyServer>) expressions[0];
+        option = parseResult.mark;
         return true;
     }
 }
