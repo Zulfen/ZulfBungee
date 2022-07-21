@@ -5,7 +5,7 @@
 
 # **ZulfBungee - a bungeecord Skript addon!**
 
-*The project is currently based around Minecraft 1.12.2 and Java 8 to ensure legacy support, but will be dropped soon.*
+*The project is currently based around Minecraft 1.12.2 and Java 8 to ensure a level of legacy support, but will be dropped soon.*
 
 Small portions of this plugin were referenced from another addon to aid development ([Skungee by LimeGlass](https://github.com/Skungee/Skungee-2.0.0)), and code referenced will be credited accordingly.
 
