@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
@@ -52,8 +53,9 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
         // Registers the addon
         try {
+
             addon.loadClasses("tk.zulfengaming.zulfbungee.spigot", "elements");
-            logInfo("The addon loaded successfully!");
+            logInfo(ChatColor.GREEN + "The addon loaded successfully!");
 
         } catch (SkriptAPIException | IOException e) {
             error("The addon failed to register! :( please check the error!");

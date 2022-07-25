@@ -25,7 +25,7 @@ public class CondIsProxyPlayerOnline extends Condition {
     private int option;
 
     static {
-        Skript.registerCondition(CondIsProxyPlayerOnline.class, "%-proxyplayer% (1¦is|2¦is(n't| not)) online");
+        Skript.registerCondition(CondIsProxyPlayerOnline.class, "%-proxyplayer% (1¦is|2¦is(n't| not)) online on the (proxy|bungeecord|bungee)");
     }
 
     @Override
