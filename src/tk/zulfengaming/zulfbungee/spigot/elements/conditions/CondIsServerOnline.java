@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.managers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
+import java.util.Objects;
+
 @Name("Proxy Server Online")
 @Description("Checks if a proxy server is online on the network.")
 public class CondIsServerOnline extends Condition {
@@ -26,13 +28,20 @@ public class CondIsServerOnline extends Condition {
     @Override
     public boolean check(@NotNull Event event) {
 
-        boolean contains = ProxyServerInfoManager.contains(server.getSingle(event).getName());
+        ProxyServer proxyServer = server.getSingle(event);
 
-        switch (option) {
-            case 1:
-                return contains;
-            case 2:
-                return !contains;
+        if (proxyServer != null) {
+
+            boolean contains = ProxyServerInfoManager.contains(proxyServer.getName());
+
+            switch (option) {
+                case 1:
+                    return contains;
+                case 2:
+                    return !contains;
+            }
+
+
         }
 
         return false;
