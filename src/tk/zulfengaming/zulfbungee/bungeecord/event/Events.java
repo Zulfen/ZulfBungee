@@ -43,7 +43,7 @@ public class Events implements Listener {
         }
 
         if (eventPlayer.hasPermission("zulfen.admin") && eventPlayer.getServer() == null) {
-            server.getPluginInstance().checkUpdate(eventPlayer);
+            server.getPluginInstance().checkUpdate(eventPlayer, false);
         }
 
     }

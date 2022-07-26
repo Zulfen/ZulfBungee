@@ -13,6 +13,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
 import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
+import tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils;
 import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
 
 import java.io.IOException;
@@ -20,6 +21,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
+
+import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.sendMessage;
 
 public class ZulfBungeecord extends Plugin {
 
@@ -36,7 +39,7 @@ public class ZulfBungeecord extends Plugin {
     // represents the full version, so like
     // version[0] = 0, version[1] = 6, version[2] = 7
     // there is probably a better way to do this but hey
-    private final int[] version = new int[3];
+    private final int[] intVersion = new int[3];
 
     private boolean isDebug = false;
 
@@ -72,12 +75,12 @@ public class ZulfBungeecord extends Plugin {
         String[] versionString = getDescription().getVersion().split("\\.");
 
         for (int i = 0; i < versionString.length; i++) {
-            version[i] = Integer.parseInt(versionString[i]);
+            intVersion[i] = Integer.parseInt(versionString[i]);
         }
 
         updater = new CheckUpdateTask(this);
 
-        checkUpdate(getProxy().getConsole());
+        checkUpdate(getProxy().getConsole(), true);
 
     }
 
@@ -122,11 +125,11 @@ public class ZulfBungeecord extends Plugin {
         return taskManager;
     }
 
-    public int[] getVersion() {
-        return version;
+    public int[] getIntVersion() {
+        return intVersion;
     }
 
-    public void checkUpdate(CommandSender sender) {
+    public void checkUpdate(CommandSender sender, boolean notifySuccess) {
 
         CompletableFuture.supplyAsync(updater)
                 .thenAccept(updateResult -> {
@@ -135,8 +138,8 @@ public class ZulfBungeecord extends Plugin {
 
                         UpdateResult getUpdaterResult = updateResult.get();
 
-                        sender.sendMessage(new ComponentBuilder("A new update to ZulfBungee is available!")
-                                .color(ChatColor.AQUA)
+                        sendMessage(sender, new ComponentBuilder("A new update to ZulfBungee is available!")
+                                .color(ChatColor.WHITE)
                                 .append(" (Version " + getUpdaterResult.getLatestVersion() + ")")
                                 .italic(true)
                                 .color(ChatColor.YELLOW)
@@ -144,16 +147,16 @@ public class ZulfBungeecord extends Plugin {
 
                         if (sender instanceof ProxiedPlayer) {
 
-                            sender.sendMessage(new ComponentBuilder("Click this link to get a direct download!")
-                                    .color(ChatColor.DARK_AQUA)
+                            sendMessage(sender, new ComponentBuilder("Click this link to get a direct download!")
+                                    .color(ChatColor.WHITE)
                                     .underlined(true)
                                     .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
                                     .create());
 
                         } else {
 
-                            sender.sendMessage(new ComponentBuilder("Copy this link into a browser for a direct download!")
-                                    .color(ChatColor.AQUA)
+                            sendMessage(sender, new ComponentBuilder("Copy this link into a browser for a direct download!")
+                                    .color(ChatColor.WHITE)
                                     .create());
                             sender.sendMessage(new ComponentBuilder(getUpdaterResult.getDownloadURL())
                                     .color(ChatColor.DARK_AQUA)
@@ -162,6 +165,14 @@ public class ZulfBungeecord extends Plugin {
 
                         }
 
+                    } else if (notifySuccess) {
+
+                        sendMessage(sender, new ComponentBuilder("ZulfBungee is up to date!")
+                                .color(ChatColor.WHITE)
+                                .append(" (Version " + getDescription().getVersion() + ")")
+                                .italic(true)
+                                .color(ChatColor.YELLOW)
+                                .create());
                     }
 
                 });

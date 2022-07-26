@@ -1,21 +1,21 @@
 package tk.zulfengaming.zulfbungee.bungeecord.command;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
+import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
+import tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+
+import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.*;
 
 public class ZulfBungeeCommand extends Command implements TabExecutor {
 
     private final CommandHandlerManager commandHandlerManager;
-
-    // TODO: make this a TextComponent, so we don't have to bring out the legacy text stuff.
-    public static final String COMMAND_PREFIX = "&f&l[&b&lZulfBungee&f&l]&r ";
 
     public ZulfBungeeCommand(CommandHandlerManager handlerIn) {
         super("zulfbungee");
@@ -25,18 +25,21 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender commandSender, String[] argsIn) {
 
-        Optional<CommandHandler> handlerOptional = commandHandlerManager.getHandler(argsIn);
+        Optional<CommandHandler> handlerOptional = commandHandlerManager.getHandler(argsIn[0]);
 
         if (handlerOptional.isPresent()) {
 
             CommandHandler handler = handlerOptional.get();
             if (commandSender.hasPermission(handler.getPermission())) {
 
+                // + 1 includes main label.
+                int totalLabels = handler.getOtherLabels().length + 1;
+
                 String[] extraArgs = new String[0];
 
-                if (argsIn.length > handler.getRequiredLabels().length) {
+                if (argsIn.length > totalLabels) {
 
-                    int lenDifference = argsIn.length - handler.getRequiredLabels().length;
+                    int lenDifference = argsIn.length - totalLabels;
                     extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
 
                 }
@@ -44,13 +47,11 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
                 handler.handleCommand(commandSender, extraArgs);
 
             } else {
-                commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                        ('&', COMMAND_PREFIX + "You don't have permission to run this command!")));
+                sendMessage(commandSender, "You don't have permission to run this command!");
             }
 
         } else {
-            commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                    ('&', COMMAND_PREFIX + "That sub command does not exist! Please read the documentation.")));
+            sendMessage(commandSender, "That sub command does not exist! Please read the documentation.");
         }
 
     }
@@ -59,22 +60,38 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSender commandSender, String[] strings) {
 
         ArrayList<String> newArgs = new ArrayList<>();
-        int index = strings.length - 1;
 
-        for (CommandHandler commandHandler : commandHandlerManager.getHandlers()) {
+        String mainLabel = strings[0];
 
-            if (commandSender.hasPermission(commandHandler.getPermission())) {
+        if (mainLabel.isEmpty()) {
 
-                int size = commandHandler.getRequiredLabels().length;
+            newArgs.addAll(commandHandlerManager.getMainLabels());
 
-                if (index < size) {
+        } else {
 
-                    newArgs.add(commandHandler.getRequiredLabels()[index]);
+            // the - 2 accounts for the mainLabel
+            int index = strings.length - 2;
 
-                } else {
+            Optional<CommandHandler> commandHandlerOptional = commandHandlerManager.getHandler(mainLabel);
 
-                    int newIndex = index - size;
-                    newArgs.addAll(commandHandler.onTab(newIndex));
+            if (commandHandlerOptional.isPresent()) {
+
+                CommandHandler commandHandler = commandHandlerOptional.get();
+
+                if (commandSender.hasPermission(commandHandler.getPermission())) {
+
+                    int size = commandHandler.getOtherLabels().length;
+
+                    if (index < size) {
+
+                        newArgs.add(commandHandler.getOtherLabels()[index]);
+
+                    } else {
+
+                        int newIndex = index - size;
+                        newArgs.addAll(commandHandler.onTab(newIndex));
+
+                    }
 
                 }
 

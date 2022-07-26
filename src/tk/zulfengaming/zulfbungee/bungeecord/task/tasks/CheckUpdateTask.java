@@ -49,7 +49,7 @@ public class CheckUpdateTask implements Supplier<Optional<UpdateResult>> {
 
             for (int i = 0; i < latestVersionSplit.length; i++) {
 
-                int minorVer = pluginInstance.getVersion()[i];
+                int minorVer = pluginInstance.getIntVersion()[i];
 
                 if (minorVer >= latestIntVersion[i]) {
                     isUpToDate = true;

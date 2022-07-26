@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.bungeecord.command.subcommands;
+package tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.script;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -6,11 +6,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
+
+import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.*;
 
 public class ScriptReload extends CommandHandler {
 
@@ -19,7 +22,7 @@ public class ScriptReload extends CommandHandler {
     public ScriptReload(Server serverIn) {
 
         super(serverIn,
-                "zulfen.admin.script.reload",
+                "zulfen.bungee.admin.script.reload",
                 "scripts", "reload");
 
         try {
@@ -35,7 +38,6 @@ public class ScriptReload extends CommandHandler {
 
         } catch (IOException e) {
             getMainServer().getPluginInstance().error("There was an error creating a watch service for the scripts folder!");
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -80,12 +82,11 @@ public class ScriptReload extends CommandHandler {
             if (separateArgs[0].equals("all")) {
 
                 if (scriptsMap.isEmpty()) {
-                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + "No scripts have been updated, as they haven't been modified.")));
+                    sendMessage(sender, "No scripts have been updated, as they haven't been modified.");
                 } else {
                     getMainServer().syncScriptsFolder(scriptsMap, sender);
-                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()))));
+                    sendMessage(sender, String.format("%s script(s) have been updated: %s",
+                            scriptsMap.size(), scriptsMap.keySet()));
                 }
 
             } else {
@@ -117,24 +118,20 @@ public class ScriptReload extends CommandHandler {
 
                     if (!tempScriptsMap.isEmpty()) {
                         getMainServer().syncScriptsFolder(tempScriptsMap, sender);
-                        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                                ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("Script %s was updated.", scriptName))));
+                        sendMessage(sender, String.format("Script %s was updated.", scriptName));
                     } else {
-                        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                                ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script %s has not been updated!", scriptName))));
+                        sendMessage(sender, String.format("The script %s has not been updated!", scriptName));
                     }
 
                 } else {
 
-                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                            ('&', ZulfBungeeCommand.COMMAND_PREFIX + String.format("The script &o%s&r does not exist! Please try retyping the command.", scriptName))));
+                    sendMessage(sender, String.format("The script &o%s&r does not exist! Please try retyping the command.", scriptName));
 
                 }
             }
 
         } else {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
-                    ('&', ZulfBungeeCommand.COMMAND_PREFIX + "Please specify a script to reload.")));
+            sendMessage(sender, "Please specify a script to reload.");
         }
     }
 

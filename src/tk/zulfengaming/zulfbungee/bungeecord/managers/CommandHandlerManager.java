@@ -1,60 +1,40 @@
 package tk.zulfengaming.zulfbungee.bungeecord.managers;
 
-import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.ScriptReload;
+import tk.zulfengaming.zulfbungee.bungeecord.command.CheckUpdate;
+import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.script.ScriptReload;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Set;
 
 
 public class CommandHandlerManager {
 
     private final Server server;
-    private final ArrayList<CommandHandler> handlers = new ArrayList<>();
+
+    private final HashMap<String, CommandHandler> handlers = new HashMap<>();
 
     public CommandHandlerManager(Server serverIn) {
         this.server = serverIn;
-        handlers.add(new ScriptReload(serverIn));
+        addHandler(new ScriptReload(serverIn));
+        addHandler(new CheckUpdate(serverIn));
     }
 
     public Server getMainServer() {
         return server;
     }
 
-    public ArrayList<CommandHandler> getHandlers() {
-        return handlers;
+    public void addHandler(CommandHandler handlerIn) {
+        handlers.put(handlerIn.getMainLabel(), handlerIn);
     }
 
-    public Optional<CommandHandler> getHandler(String[] argsIn) {
+    public Set<String> getMainLabels() {
+        return handlers.keySet();
+    }
 
-        // args from base command I call labels instead
-        for (CommandHandler handler : handlers) {
-
-            String[] requiredLabels = handler.getRequiredLabels();
-
-            int counter = 0;
-
-            for (int i = 0; i < requiredLabels.length; i++) {
-
-                String requiredLabel = requiredLabels[i];
-                String argIn = argsIn[i];
-
-                if (requiredLabel.equalsIgnoreCase(argIn)) {
-                    counter += 1;
-                }
-
-            }
-
-            if (requiredLabels.length == counter) {
-                return Optional.of(handler);
-            }
-
-        }
-
-        return Optional.empty();
-
+    public Optional<CommandHandler> getHandler(String mainLabelIn) {
+        return Optional.ofNullable(handlers.get(mainLabelIn));
     }
 }

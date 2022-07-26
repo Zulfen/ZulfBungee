@@ -5,14 +5,13 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 public abstract class CommandHandler {
 
-    private final String[] requiredLabels;
+    private final String[] otherLabels;
 
     private final String permission;
+    private final String mainLabel;
 
     private final Server mainServer;
 
@@ -22,8 +21,12 @@ public abstract class CommandHandler {
         return Collections.emptyList();
     }
 
-    public String[] getRequiredLabels() {
-        return requiredLabels;
+    public String getMainLabel() {
+        return mainLabel;
+    }
+
+    public String[] getOtherLabels() {
+        return otherLabels;
     }
 
     public String getPermission() {
@@ -34,8 +37,9 @@ public abstract class CommandHandler {
         return mainServer;
     }
 
-    public CommandHandler(Server serverIn, String permissionIn, String... labelsIn) {
-        this.requiredLabels = labelsIn;
+    public CommandHandler(Server serverIn, String permissionIn, String mainLabel, String... otherLabels) {
+        this.mainLabel = mainLabel;
+        this.otherLabels = otherLabels;
         this.mainServer = serverIn;
         this.permission = permissionIn;
     }
