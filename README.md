@@ -59,7 +59,7 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 ## **Conditions:**
 
-- if player %-proxyplayer% (1¦is|2¦is(n't| not)) online
+- if player %-proxyplayer% (1¦is|2¦is(n't| not)) online on the (proxy|bungeecord|bungee|network)
 
 - if %-proxyserver% (1¦is|2¦is(n't| not)) online
 
