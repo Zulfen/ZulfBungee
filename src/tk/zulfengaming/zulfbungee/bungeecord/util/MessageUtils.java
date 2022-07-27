@@ -19,7 +19,7 @@ public class MessageUtils {
                 .bold(true)
                 .append(" ");
 
-        senderIn.sendMessage(messagePrefix.append(messageIn).color(ChatColor.WHITE).create());
+        senderIn.sendMessage(messagePrefix.append(messageIn).reset().color(ChatColor.WHITE).create());
     }
 
     public static void sendMessage(CommandSender senderIn, BaseComponent[] componentsIn) {
