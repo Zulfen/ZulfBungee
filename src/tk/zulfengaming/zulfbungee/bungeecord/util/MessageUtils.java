@@ -32,7 +32,6 @@ public class MessageUtils {
                 .append("]")
                 .color(ChatColor.WHITE)
                 .bold(true)
-                .reset()
                 .append(" ");
         senderIn.sendMessage(messagePrefix.append(componentsIn).create());
     }

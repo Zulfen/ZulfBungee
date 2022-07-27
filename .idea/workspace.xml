@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.7.4 - updater message added for user feedback">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2CGGN5WQkOtrRuoc3Pf9Hr3P1qg" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Java/ZulfBungee&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="tk.zulfengaming.zulfbungee.bungeecord.command.subcommands" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Maven" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Maven" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="" />
+      <created>1658421464722</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1658421464722</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Alpha v0.7.1 - fixed condition not accounting for choice and small error in CheckUpdateTask">
+      <created>1658427185818</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1658427185818</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Alpha v0.7.1 - fixed condition not accounting for choice and small error in CheckUpdateTask">
+      <created>1658427213887</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1658427213887</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Alpha v0.7.1 - .gitignore">
+      <created>1658432195325</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1658432195325</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Alpha v0.7.1 - .gitignore">
+      <created>1658432235765</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1658432235765</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Alpha v0.7.2 - made a slight syntax change">
+      <created>1658774362566</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1658774362566</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Alpha v0.7.2 - fixed tab completion being wrong and refactored message sending a little.">
+      <created>1658847008822</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1658847008823</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Alpha v0.7.2 - fixed tab completion being wrong and refactored message sending a little.">
+      <created>1658847024438</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1658847024438</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Alpha v0.7.2 - added network in condition">
+      <created>1658847143720</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1658847143720</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Alpha v0.7.2 - update pom.xml">
+      <created>1658851602173</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1658851602173</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Alpha v0.7.3 - added a null check to prevent NPE in server online condition">
+      <created>1658856643862</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1658856643862</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
+      <created>1658857895338</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1658857895338</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
+      <created>1658858007639</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1658858007639</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
+      <created>1658858115529</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1658858115529</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
+      <created>1658858607594</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1658858607594</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
+      <created>1658858765360</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1658858765360</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Alpha v0.7.3 - please.. please let this be the commit that fixes the updater...">
+      <created>1658859615191</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1658859615191</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Alpha v0.7.4 - fixed autocompletion showing even if the user didn't have the required permission, and MessageUtils fix.">
+      <created>1658935752378</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1658935752378</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Alpha v0.7.4 - updater message added for user feedback">
+      <created>1658935925396</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1658935925396</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Alpha v0.7.1 - fixed condition not accounting for choice and small error in CheckUpdateTask" />
+    <MESSAGE value="Alpha v0.7.1 - .gitignore" />
+    <MESSAGE value="Alpha v0.7.1 - made a slight syntax change" />
+    <MESSAGE value="Alpha v0.7.2 - made a slight syntax change" />
+    <MESSAGE value="Alpha v0.7.2 - fixed tab completion being wrong and refactored message sending a little." />
+    <MESSAGE value="Alpha v0.7.2 - added network in condition" />
+    <MESSAGE value="Alpha v0.7.2 - update pom.xml" />
+    <MESSAGE value="Alpha v0.7.3 - added a null check to prevent NPE in server online condition" />
+    <MESSAGE value="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully..." />
+    <MESSAGE value="Alpha v0.7.3 - please.. please let this be the commit that fixes the updater..." />
+    <MESSAGE value="Alpha v0.7.4 - fixed autocompletion showing even if the user didn't have the required permission, and MessageUtils fix." />
+    <MESSAGE value="Alpha v0.7.4 - updater message added for user feedback" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.7.4 - updater message added for user feedback" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/command/ZulfBungeeCommand.java</url>
+          <line>94</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
