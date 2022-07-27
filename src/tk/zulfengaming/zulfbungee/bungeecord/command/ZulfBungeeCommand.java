@@ -65,7 +65,11 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
         if (mainLabel.isEmpty()) {
 
-            newArgs.addAll(commandHandlerManager.getMainLabels());
+            for (CommandHandler handler : commandHandlerManager.getHandlers()) {
+                if (commandSender.hasPermission(handler.getPermission())) {
+                    newArgs.add(handler.getMainLabel());
+                }
+            }
 
         } else {
 

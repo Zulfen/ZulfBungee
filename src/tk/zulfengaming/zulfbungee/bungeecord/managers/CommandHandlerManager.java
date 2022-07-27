@@ -5,9 +5,9 @@ import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.script.ScriptRe
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.Set;
 
 
 public class CommandHandlerManager {
@@ -30,8 +30,8 @@ public class CommandHandlerManager {
         handlers.put(handlerIn.getMainLabel(), handlerIn);
     }
 
-    public Set<String> getMainLabels() {
-        return handlers.keySet();
+    public Collection<CommandHandler> getHandlers(){
+        return handlers.values();
     }
 
     public Optional<CommandHandler> getHandler(String mainLabelIn) {
