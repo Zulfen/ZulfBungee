@@ -17,9 +17,10 @@ public class MessageUtils {
                 .append("]")
                 .color(ChatColor.WHITE)
                 .bold(true)
-                .append(" ");
+                .append(" ")
+                .bold(false);
 
-        senderIn.sendMessage(messagePrefix.append(messageIn).reset().color(ChatColor.WHITE).create());
+        senderIn.sendMessage(messagePrefix.append(messageIn).color(ChatColor.WHITE).create());
     }
 
     public static void sendMessage(CommandSender senderIn, BaseComponent[] componentsIn) {
@@ -33,7 +34,8 @@ public class MessageUtils {
                 .color(ChatColor.WHITE)
                 .bold(true)
                 .append(" ")
-                .reset();
+                .bold(false);
+
         senderIn.sendMessage(messagePrefix.append(componentsIn).create());
     }
 

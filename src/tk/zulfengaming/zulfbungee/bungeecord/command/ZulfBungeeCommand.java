@@ -25,34 +25,42 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender commandSender, String[] argsIn) {
 
-        Optional<CommandHandler> handlerOptional = commandHandlerManager.getHandler(argsIn[0]);
+        if (argsIn.length > 0) {
 
-        if (handlerOptional.isPresent()) {
+            Optional<CommandHandler> handlerOptional = commandHandlerManager.getHandler(argsIn[0]);
 
-            CommandHandler handler = handlerOptional.get();
-            if (commandSender.hasPermission(handler.getPermission())) {
+            if (handlerOptional.isPresent()) {
 
-                // + 1 includes main label.
-                int totalLabels = handler.getOtherLabels().length + 1;
+                CommandHandler handler = handlerOptional.get();
+                if (commandSender.hasPermission(handler.getPermission())) {
 
-                String[] extraArgs = new String[0];
+                    // + 1 includes main label.
+                    int totalLabels = handler.getOtherLabels().length + 1;
 
-                if (argsIn.length > totalLabels) {
+                    String[] extraArgs = new String[0];
 
-                    int lenDifference = argsIn.length - totalLabels;
-                    extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
+                    if (argsIn.length > totalLabels) {
 
+                        int lenDifference = argsIn.length - totalLabels;
+                        extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
+
+                    }
+
+                    handler.handleCommand(commandSender, extraArgs);
+
+                } else {
+                    sendMessage(commandSender, "You don't have permission to run this command!");
                 }
 
-                handler.handleCommand(commandSender, extraArgs);
-
             } else {
-                sendMessage(commandSender, "You don't have permission to run this command!");
+                sendMessage(commandSender, "That sub command does not exist! Please read the documentation.");
             }
 
         } else {
-            sendMessage(commandSender, "That sub command does not exist! Please read the documentation.");
+            sendMessage(commandSender, "Please input a sub-command.");
         }
+
+
 
     }
 
