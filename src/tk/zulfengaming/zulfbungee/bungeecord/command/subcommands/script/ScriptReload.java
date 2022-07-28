@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.script;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
@@ -125,7 +126,15 @@ public class ScriptReload extends CommandHandler {
 
                 } else {
 
-                    sendMessage(sender, String.format("The script &o%s&r does not exist! Please try retyping the command.", scriptName));
+                    sendMessage(sender, new ComponentBuilder("The script ")
+                            .color(ChatColor.WHITE)
+                            .append(scriptName)
+                            .color(ChatColor.WHITE)
+                            .italic(true)
+                            .append(" does not exist! Please try retyping the command.")
+                            .italic(false)
+                            .color(ChatColor.WHITE)
+                            .create());
 
                 }
             }
