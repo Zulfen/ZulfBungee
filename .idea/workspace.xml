@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.7.4 - updater message added for user feedback">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.7.5 - jksdfsfksfsfksn slsf sf">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/command/ZulfBungeeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/command/ZulfBungeeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/command/subcommands/script/ScriptReload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/command/subcommands/script/ScriptReload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/interfaces/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/interfaces/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/managers/CommandHandlerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/managers/CommandHandlerManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +207,35 @@
       <option name="project" value="LOCAL" />
       <updated>1658935925396</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Alpha v0.7.4 - message fix lol">
+      <created>1658936307640</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1658936307640</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Alpha v0.7.4 - message fix lol">
+      <created>1658936775648</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1658936775648</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Alpha v0.7.4 - message fix lol">
+      <created>1658936942618</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1658936942618</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Alpha v0.7.5 - jksdfsfksfsfksn slsf sf">
+      <created>1658937429396</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1658937429396</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -230,14 +262,16 @@
     <MESSAGE value="Alpha v0.7.3 - please.. please let this be the commit that fixes the updater..." />
     <MESSAGE value="Alpha v0.7.4 - fixed autocompletion showing even if the user didn't have the required permission, and MessageUtils fix." />
     <MESSAGE value="Alpha v0.7.4 - updater message added for user feedback" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.7.4 - updater message added for user feedback" />
+    <MESSAGE value="Alpha v0.7.4 - message fix lol" />
+    <MESSAGE value="Alpha v0.7.5 - jksdfsfksfsfksn slsf sf" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.7.5 - jksdfsfksfsfksn slsf sf" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/command/ZulfBungeeCommand.java</url>
-          <line>94</line>
+          <line>103</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

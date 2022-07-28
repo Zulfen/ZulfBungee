@@ -8,10 +8,9 @@ import java.util.Collections;
 
 public abstract class CommandHandler {
 
-    private final String[] otherLabels;
+    private final String[] labels;
 
     private final String permission;
-    private final String mainLabel;
 
     private final Server mainServer;
 
@@ -22,14 +21,14 @@ public abstract class CommandHandler {
     }
 
     public String getMainLabel() {
-        return mainLabel;
+        return labels[0];
     }
 
-    public String[] getOtherLabels() {
-        return otherLabels;
+    public String[] getRequiredLabels() {
+        return labels;
     }
 
-    public String getPermission() {
+    public String getBasePermission() {
         return permission;
     }
 
@@ -37,9 +36,8 @@ public abstract class CommandHandler {
         return mainServer;
     }
 
-    public CommandHandler(Server serverIn, String permissionIn, String mainLabel, String... otherLabels) {
-        this.mainLabel = mainLabel;
-        this.otherLabels = otherLabels;
+    public CommandHandler(Server serverIn, String permissionIn, String... labels) {
+        this.labels = labels;
         this.mainServer = serverIn;
         this.permission = permissionIn;
     }

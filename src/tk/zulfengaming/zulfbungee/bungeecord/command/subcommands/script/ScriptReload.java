@@ -22,7 +22,7 @@ public class ScriptReload extends CommandHandler {
     public ScriptReload(Server serverIn) {
 
         super(serverIn,
-                "zulfen.bungee.admin.script.reload",
+                "zulfen.bungee.admin.script",
                 "scripts", "reload");
 
         try {

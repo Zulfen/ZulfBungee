@@ -5,7 +5,6 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
-import tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,23 +26,21 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
         if (argsIn.length > 0) {
 
-            Optional<CommandHandler> handlerOptional = commandHandlerManager.getHandler(argsIn[0]);
+            Optional<CommandHandler> handlerOptional = commandHandlerManager.matchToHandler(argsIn);
 
             if (handlerOptional.isPresent()) {
 
                 CommandHandler handler = handlerOptional.get();
-                if (commandSender.hasPermission(handler.getPermission())) {
+                String mainPermission = handler.getBasePermission();
 
-                    // + 1 includes main label.
-                    int totalLabels = handler.getOtherLabels().length + 1;
+                if (commandSender.hasPermission(mainPermission)) {
+
+                    int totalLabels = handler.getRequiredLabels().length;
 
                     String[] extraArgs = new String[0];
-
                     if (argsIn.length > totalLabels) {
-
                         int lenDifference = argsIn.length - totalLabels;
                         extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
-
                     }
 
                     handler.handleCommand(commandSender, extraArgs);
@@ -68,35 +65,32 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSender commandSender, String[] strings) {
 
         ArrayList<String> newArgs = new ArrayList<>();
-
         String mainLabel = strings[0];
 
         if (mainLabel.isEmpty()) {
 
             for (CommandHandler handler : commandHandlerManager.getHandlers()) {
-                if (commandSender.hasPermission(handler.getPermission())) {
+                if (commandSender.hasPermission(handler.getBasePermission())) {
                     newArgs.add(handler.getMainLabel());
                 }
             }
 
         } else {
 
-            // the - 2 accounts for the mainLabel
-            int index = strings.length - 2;
+            int index = strings.length - 1;
 
-            Optional<CommandHandler> commandHandlerOptional = commandHandlerManager.getHandler(mainLabel);
+            Optional<CommandHandler> commandHandlerOptional = commandHandlerManager.mainLabelToHandler(mainLabel);
 
             if (commandHandlerOptional.isPresent()) {
 
                 CommandHandler commandHandler = commandHandlerOptional.get();
+                if (commandSender.hasPermission(commandHandler.getBasePermission())) {
 
-                if (commandSender.hasPermission(commandHandler.getPermission())) {
-
-                    int size = commandHandler.getOtherLabels().length;
+                    int size = commandHandler.getRequiredLabels().length;
 
                     if (index < size) {
 
-                        newArgs.add(commandHandler.getOtherLabels()[index]);
+                        newArgs.add(commandHandler.getRequiredLabels()[index]);
 
                     } else {
 
