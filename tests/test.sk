@@ -33,7 +33,7 @@ command /zulfbungeetest:
       broadcast "&aSending all servers a message (this is used for inter-server communication)..."
 
       loop {_servers::*}:
-         proxy message proxy server loop-value the message "Sample Text" called "Sample Title"
+         proxy message loop-value the message "Sample Text" called "Sample Title"
 
       wait 3 seconds
 
