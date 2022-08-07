@@ -3,18 +3,18 @@ package tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.script;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
-import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
-import tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 
-import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.*;
+import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.sendMessage;
 
 public class ScriptReload extends CommandHandler {
 
@@ -22,19 +22,13 @@ public class ScriptReload extends CommandHandler {
 
     public ScriptReload(Server serverIn) {
 
-        super(serverIn,
-                "zulfen.bungee.admin.script",
-                "scripts", "reload");
+        super(serverIn, "zulfen.bungee.admin.script", "scripts", "reload");
 
         try {
 
             WatchService folderWatchService = FileSystems.getDefault().newWatchService();
 
-            this.watchKey = getMainServer().getPluginInstance().getConfig().getScriptsFolderPath()
-                    .register(folderWatchService,
-                            StandardWatchEventKinds.ENTRY_CREATE,
-                            StandardWatchEventKinds.ENTRY_DELETE,
-                            StandardWatchEventKinds.ENTRY_MODIFY);
+            this.watchKey = getMainServer().getPluginInstance().getConfig().getScriptsFolderPath().register(folderWatchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
 
 
         } catch (IOException e) {
@@ -86,8 +80,7 @@ public class ScriptReload extends CommandHandler {
                     sendMessage(sender, "No scripts have been updated, as they haven't been modified.");
                 } else {
                     getMainServer().syncScriptsFolder(scriptsMap, sender);
-                    sendMessage(sender, String.format("%s script(s) have been updated: %s",
-                            scriptsMap.size(), scriptsMap.keySet()));
+                    sendMessage(sender, String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()));
                 }
 
             } else {
@@ -126,15 +119,7 @@ public class ScriptReload extends CommandHandler {
 
                 } else {
 
-                    sendMessage(sender, new ComponentBuilder("The script ")
-                            .color(ChatColor.WHITE)
-                            .append(scriptName)
-                            .color(ChatColor.WHITE)
-                            .italic(true)
-                            .append(" does not exist! Please try retyping the command.")
-                            .italic(false)
-                            .color(ChatColor.WHITE)
-                            .create());
+                    sendMessage(sender, new ComponentBuilder("The script ").color(ChatColor.WHITE).append(scriptName).color(ChatColor.WHITE).italic(true).append(" does not exist! Please try retyping the command.").italic(false).color(ChatColor.WHITE).create());
 
                 }
             }

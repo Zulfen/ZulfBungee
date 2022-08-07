@@ -34,9 +34,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         taskManager = new TaskManager(this);
         config = new YamlConfig(this);
 
-        if (config.getBoolean("debug")) {
-            debug = true;
-        }
+        debug = config.getBoolean("debug");
 
         try {
 
@@ -71,12 +69,12 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
     public void logDebug(String message) {
         if (debug) {
-            getLogger().info(message);
+            getServer().getConsoleSender().sendMessage("[ZulfBungee] " + message);
         }
     }
 
     public void logInfo(String message) {
-        getLogger().info(message);
+        getServer().getConsoleSender().sendMessage("[ZulfBungee] " + message);
     }
 
     public void error(String message) {

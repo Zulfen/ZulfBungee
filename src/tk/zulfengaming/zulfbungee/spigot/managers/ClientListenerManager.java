@@ -31,7 +31,7 @@ public class ClientListenerManager extends BukkitRunnable {
 
     private final TransferQueue<Optional<Socket>> socketHandoff = new LinkedTransferQueue<>();
 
-    private final Phaser socketBarrier = new Phaser(1);
+    private final Phaser socketBarrier = new Phaser();
 
     private Socket socket;
 
@@ -63,11 +63,34 @@ public class ClientListenerManager extends BukkitRunnable {
 
         this.socketHandler = new SocketHandler(clientAddress, clientPort, serverAddress, serverPort, connection.getTimeout());
 
+        socketBarrier.register();
+
+    }
+
+    private void closeSocket() {
+
+        if (socket != null) {
+
+            try {
+
+                if (!socket.isClosed()) {
+                    socket.shutdownOutput();
+                    socket.shutdownInput();
+                    socket.close();
+                }
+
+            } catch (IOException e) {
+                pluginInstance.error("Error closing client socket:");
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void shutdown() {
         socketConnected.compareAndSet(true, false);
         terminated.compareAndSet(false, true);
+        closeSocket();
     }
 
     public ZulfBungeeSpigot getPluginInstance() {
@@ -106,20 +129,17 @@ public class ClientListenerManager extends BukkitRunnable {
     @Override
     public void run() {
 
+        Thread.currentThread().setName("ClientListenerManager");
+
         while (connection.isRunning().get()) {
+
+            pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
 
             socketBarrier.arriveAndAwaitAdvance();
 
             pluginInstance.warning("Connection lost with proxy, attempting to connect every 2 seconds...");
 
-            if (socket != null && !socketConnected.get()) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    pluginInstance.error("Error closing client socket:");
-                    e.printStackTrace();
-                }
-            }
+            closeSocket();
 
             boolean gotSocket = false;
 
@@ -139,12 +159,10 @@ public class ClientListenerManager extends BukkitRunnable {
                         }
 
                     } else {
-                        socketBarrier.arriveAndDeregister();
                         break;
                     }
 
                 } catch (InterruptedException e) {
-                    socketBarrier.arriveAndDeregister();
                     break;
                 } catch (ExecutionException e) {
                     pluginInstance.logDebug(ChatColor.RED + String.format("Error while creating socket: %s", e.getCause().getMessage()));
@@ -170,10 +188,17 @@ public class ClientListenerManager extends BukkitRunnable {
             } else {
 
                 while (socketHandoff.hasWaitingConsumer()) {
-                    socketHandoff.tryTransfer(Optional.empty());
+                    try {
+                        socketHandoff.transfer(Optional.empty());
+                    } catch (InterruptedException e) {
+                        break;
+                    }
                 }
 
             }
         }
+
+        socketBarrier.arriveAndDeregister();
+
     }
 }

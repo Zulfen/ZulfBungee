@@ -19,7 +19,6 @@ public class MessageUtils {
                 .bold(true)
                 .append(" ")
                 .bold(false);
-
         senderIn.sendMessage(messagePrefix.append(messageIn).color(ChatColor.WHITE).create());
     }
 
@@ -35,7 +34,6 @@ public class MessageUtils {
                 .bold(true)
                 .append(" ")
                 .bold(false);
-
         senderIn.sendMessage(messagePrefix.append(componentsIn).create());
     }
 

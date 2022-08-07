@@ -7,11 +7,12 @@ import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Phaser;
+import java.util.concurrent.TimeUnit;
 
 public class DataOutHandler extends BukkitRunnable {
 
@@ -42,12 +43,14 @@ public class DataOutHandler extends BukkitRunnable {
     @Override
     public void run() {
 
+        Thread.currentThread().setName("DataOut");
+
         do {
             try {
 
                 if (clientListenerManager.isSocketConnected().get()) {
 
-                    Packet packetOut = queueOut.poll(5, TimeUnit.SECONDS);
+                    Packet packetOut = queueOut.poll(1, TimeUnit.SECONDS);
 
                     if (packetOut != null) {
                         outputStream.writeObject(packetOut);
@@ -56,27 +59,23 @@ public class DataOutHandler extends BukkitRunnable {
                     
                 } else {
 
+                    pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
+
                     socketBarrier.arriveAndAwaitAdvance();
 
                     Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
 
                     if (clientListenerManager.isTerminated().get()) {
-
-                        socketBarrier.arriveAndDeregister();
-
+                        break;
                     } else if (socketOptional.isPresent()) {
-
                         Socket newSocket = socketOptional.get();
                         outputStream = new ObjectOutputStream(newSocket.getOutputStream());
-
                     }
 
                 }
 
             } catch (InterruptedException e) {
-
-                socketBarrier.arriveAndDeregister();
-
+                break;
             } catch (IOException e) {
 
                 pluginInstance.error("An unexpected error occurred!");
@@ -91,6 +90,8 @@ public class DataOutHandler extends BukkitRunnable {
             }
 
         } while (connection.isRunning().get());
+
+        socketBarrier.arriveAndDeregister();
 
     }
 

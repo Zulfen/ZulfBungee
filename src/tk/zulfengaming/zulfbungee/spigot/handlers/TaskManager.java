@@ -21,7 +21,7 @@ public class TaskManager {
         this.scheduler = instance.getServer().getScheduler();
     }
 
-    public void newTask(Plugin pluginIn, Runnable taskIn) {
+    public void newPluginTask(Plugin pluginIn, Runnable taskIn) {
         scheduler.runTask(pluginIn, taskIn);
     }
 

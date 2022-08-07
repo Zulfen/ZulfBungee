@@ -59,7 +59,7 @@ public class CheckUpdateTask implements Supplier<Optional<UpdateResult>> {
             }
 
             if (!isUpToDate) {
-               return Optional.of(new UpdateResult(latestVersion, downloadURL));
+                return Optional.of(new UpdateResult(latestVersion, downloadURL));
             }
 
         } catch (IOException e) {

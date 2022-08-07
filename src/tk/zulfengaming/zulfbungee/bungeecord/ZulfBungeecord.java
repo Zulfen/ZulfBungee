@@ -51,7 +51,7 @@ public class ZulfBungeecord extends Plugin {
 
         config = new YamlConfig(this);
 
-        if (config.getBoolean("debug")) isDebug = true;
+        isDebug = config.getBoolean("debug");
 
         try {
 

@@ -35,6 +35,8 @@ public class GlobalScriptsTask implements Supplier<File> {
     @Override
     public File get() {
 
+        Thread.currentThread().setName("GlobalScriptsTask");
+
         File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
                     scriptName);
 
@@ -89,7 +91,7 @@ public class GlobalScriptsTask implements Supplier<File> {
     }
 
     private void skriptReload() {
-        pluginInstance.getTaskManager().newTask(Skript.getInstance(), () -> connection.getPluginInstance().getServer().dispatchCommand(sender, "sk reload " + scriptName));
+        pluginInstance.getTaskManager().newPluginTask(Skript.getInstance(), () -> connection.getPluginInstance().getServer().dispatchCommand(sender, "sk reload " + scriptName));
     }
 
 }

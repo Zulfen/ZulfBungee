@@ -93,12 +93,14 @@ public class ClientConnection extends BukkitRunnable {
 
     public void run() {
 
+        Thread.currentThread().setName("ClientConnection");
+
         do {
             try {
 
                 if (clientListenerManager.isSocketConnected().get()) {
 
-                    Packet packetIn = dataInHandler.getDataQueue().poll(5, TimeUnit.SECONDS);
+                    Packet packetIn = dataInHandler.getDataQueue().poll(1, TimeUnit.SECONDS);
 
                     if (packetIn != null) {
 
@@ -114,23 +116,25 @@ public class ClientConnection extends BukkitRunnable {
 
                 } else {
 
+                    pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
+
                     socketBarrier.arriveAndAwaitAdvance();
 
                     Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
 
                     if (clientListenerManager.isTerminated().get()) {
-
-                        socketBarrier.arriveAndDeregister();
-
+                        break;
                     } else socketOptional.ifPresent(value -> socket = value);
 
                 }
 
             } catch (InterruptedException e) {
-                socketBarrier.arriveAndDeregister();
+                break;
             }
 
         } while (running.get());
+
+        socketBarrier.arriveAndDeregister();
 
     }
 
@@ -226,6 +230,9 @@ public class ClientConnection extends BukkitRunnable {
 
         if (running.compareAndSet(true, false)) {
 
+            heartbeatThread.cancel();
+            clientListenerManager.shutdown();
+
             for (File scriptFile : scriptFiles) {
 
                 boolean deleted = scriptFile.delete();
@@ -237,9 +244,6 @@ public class ClientConnection extends BukkitRunnable {
                 }
 
             }
-
-            heartbeatThread.cancel();
-            clientListenerManager.shutdown();
 
         }
 

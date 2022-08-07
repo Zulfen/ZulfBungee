@@ -7,7 +7,7 @@
 
     <groupId>tk.zulfengaming</groupId>
     <artifactId>ZulfBungee</artifactId>
-    <version>0.7.2-ALPHA</version>
+    <version>0.7.6-ALPHA</version>
 
     <repositories>
         <repository>

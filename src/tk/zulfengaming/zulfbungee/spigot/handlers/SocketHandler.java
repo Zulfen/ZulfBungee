@@ -29,6 +29,8 @@ public class SocketHandler implements Callable<Optional<Socket>> {
     @Override
     public Optional<Socket> call() throws InterruptedException {
 
+        Thread.currentThread().setName("SocketHandler");
+
         Socket socket = new Socket();
 
         try {
