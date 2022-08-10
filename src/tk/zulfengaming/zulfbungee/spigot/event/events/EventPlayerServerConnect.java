@@ -11,6 +11,7 @@ public class EventPlayerServerConnect extends Event {
     private final ProxyPlayer player;
 
     public EventPlayerServerConnect(ProxyPlayer player) {
+        super(true);
         this.player = player;
     }
 

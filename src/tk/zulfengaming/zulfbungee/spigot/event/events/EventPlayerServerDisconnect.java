@@ -11,6 +11,7 @@ public class EventPlayerServerDisconnect extends Event {
     private final ProxyPlayer player;
 
     public EventPlayerServerDisconnect(ProxyPlayer player) {
+        super(true);
         this.player = player;
     }
 

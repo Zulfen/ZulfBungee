@@ -10,7 +10,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.spigot.event.events.EventMessage;
+import tk.zulfengaming.zulfbungee.spigot.event.events.EventProxyMessage;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 @Name("Proxy Server Switch Server")
@@ -20,19 +20,19 @@ public class EvtServerMessage extends SkriptEvent {
     private Literal<String> title;
 
     static {
-        Skript.registerEvent("Server Message", EvtServerMessage.class, EventMessage.class, "[(bungeecord|bungee|proxy)] server message [(titled|called)] %string%");
+        Skript.registerEvent("Server Message", EvtServerMessage.class, EventProxyMessage.class, "[(bungeecord|bungee|proxy)] server message [(titled|called)] %string%");
 
-        EventValues.registerEventValue(EventMessage.class, String.class, new Getter<String, EventMessage>() {
+        EventValues.registerEventValue(EventProxyMessage.class, String.class, new Getter<String, EventProxyMessage>() {
             @Override
-            public String get(EventMessage eventMessage) {
-                return eventMessage.getMessage().getText();
+            public String get(EventProxyMessage eventProxyMessage) {
+                return eventProxyMessage.getMessage().getText();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventMessage.class, ProxyServer.class, new Getter<ProxyServer, EventMessage>() {
+        EventValues.registerEventValue(EventProxyMessage.class, ProxyServer.class, new Getter<ProxyServer, EventProxyMessage>() {
             @Override
-            public ProxyServer get(EventMessage eventMessage) {
-                return eventMessage.getMessage().getFrom();
+            public ProxyServer get(EventProxyMessage eventProxyMessage) {
+                return eventProxyMessage.getMessage().getFrom();
             }
         }, 0);
 
@@ -47,7 +47,7 @@ public class EvtServerMessage extends SkriptEvent {
     @Override
     public boolean check(Event event) {
 
-        EventMessage messageEvent = (EventMessage) event;
+        EventProxyMessage messageEvent = (EventProxyMessage) event;
 
         return messageEvent.getMessage().getTitle().equals(title.getSingle());
 

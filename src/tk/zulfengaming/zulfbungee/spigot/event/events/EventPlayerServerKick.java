@@ -13,6 +13,7 @@ public class EventPlayerServerKick extends Event {
     private final String reason;
 
     public EventPlayerServerKick(String reason, ProxyPlayer player) {
+        super(true);
         this.player = player;
         this.reason = reason;
     }

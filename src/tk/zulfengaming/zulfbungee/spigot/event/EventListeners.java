@@ -10,7 +10,7 @@ public class EventListeners implements Listener {
     public void onPlayerSwitchServer(EventPlayerSwitchServer event) {}
 
     @EventHandler
-    public void onServerMessage(EventMessage event) {}
+    public void onServerMessage(EventProxyMessage event) {}
 
     @EventHandler
     public void onPlayerDisconnect(EventPlayerServerDisconnect event) {}

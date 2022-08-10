@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot.managers;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.handlers.SocketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
@@ -40,16 +41,17 @@ public class ClientListenerManager extends BukkitRunnable {
 
     private ClientInfo clientInfo;
 
-
     public ClientListenerManager(ClientConnection connectionIn) {
 
         this.connection = connectionIn;
         this.pluginInstance = connectionIn.getPluginInstance();
 
+        YamlConfig config = pluginInstance.getYamlConfig();
+
         try {
 
-            this.serverAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("server-host"));
-            this.clientAddress = InetAddress.getByName(pluginInstance.getYamlConfig().getString("client-host"));
+            this.serverAddress = InetAddress.getByName(config.getString("server-host"));
+            this.clientAddress = InetAddress.getByName(config.getString("client-host"));
 
         } catch (UnknownHostException e) {
 
@@ -58,8 +60,8 @@ public class ClientListenerManager extends BukkitRunnable {
 
         }
 
-        int serverPort = pluginInstance.getYamlConfig().getInt("server-port");
-        int clientPort = pluginInstance.getYamlConfig().getInt("client-port");
+        int serverPort = config.getInt("server-port");
+        int clientPort = config.getInt("client-port");
 
         this.socketHandler = new SocketHandler(clientAddress, clientPort, serverAddress, serverPort, connection.getTimeout());
 
@@ -125,7 +127,6 @@ public class ClientListenerManager extends BukkitRunnable {
         return clientInfo;
     }
 
-
     @Override
     public void run() {
 
@@ -137,7 +138,9 @@ public class ClientListenerManager extends BukkitRunnable {
 
             socketBarrier.arriveAndAwaitAdvance();
 
-            pluginInstance.warning("Connection lost with proxy, attempting to connect every 2 seconds...");
+            if (!terminated.get()) {
+                pluginInstance.warning("Connection lost with proxy, attempting to connect every 2 seconds...");
+            }
 
             closeSocket();
 
@@ -151,7 +154,6 @@ public class ClientListenerManager extends BukkitRunnable {
 
                         // blocking call
                         Optional<Socket> socketOptional = pluginInstance.getTaskManager().submitCallable(socketHandler);
-
                         socketOptional.ifPresent(value -> socket = value);
 
                         if (socket != null) {

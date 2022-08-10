@@ -24,11 +24,9 @@ public class Packet implements Serializable {
     // packets sent by skript should set this field to false
 
     public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn) {
-
         this.type = packetType;
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
-
         this.data = dataIn;
     }
 
@@ -36,7 +34,6 @@ public class Packet implements Serializable {
         this.type = packetType;
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
-
         this.data[0] = dataIn;
     }
 

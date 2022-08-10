@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
+import tk.zulfengaming.zulfbungee.spigot.handlers.TaskManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
@@ -73,20 +74,20 @@ public class ClientConnection extends BukkitRunnable {
         this.timeout = pluginInstance.getYamlConfig().getInt("connection-timeout");
         this.packetResponseTime = pluginInstance.getYamlConfig().getInt("packet-response-time");
 
-        socketBarrier = clientListenerManager.getSocketBarrier();
+        TaskManager taskManager = pluginInstance.getTaskManager();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = pluginInstance.getTaskManager().newAsyncTickTask(heartbeatTask, timeout);
+        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, timeout);
 
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
 
+        socketBarrier = clientListenerManager.getSocketBarrier();
         socketBarrier.register();
 
-        pluginInstance.getTaskManager().newAsyncTask(clientListenerManager);
-        pluginInstance.getTaskManager().newAsyncTask(dataInHandler);
-        pluginInstance.getTaskManager().newAsyncTask(dataOutHandler);
-
+        taskManager.newAsyncTask(clientListenerManager);
+        taskManager.newAsyncTask(dataInHandler);
+        taskManager.newAsyncTask(dataOutHandler);
 
     }
 
@@ -226,7 +227,7 @@ public class ClientConnection extends BukkitRunnable {
         return timeout;
     }
 
-    public synchronized void shutdown() {
+    public void shutdown() {
 
         if (running.compareAndSet(true, false)) {
 

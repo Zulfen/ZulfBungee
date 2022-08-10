@@ -4,13 +4,14 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
 
-public class EventMessage extends Event {
+public class EventProxyMessage extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
     private final ServerMessage message;
 
-    public EventMessage(ServerMessage messageIn) {
+    public EventProxyMessage(ServerMessage messageIn) {
+        super(true);
         this.message = messageIn;
     }
 

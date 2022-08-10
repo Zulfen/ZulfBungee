@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: io.github.waterfallmc:waterfall-event:1.19-R0.1-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-event/1.19-R0.1-SNAPSHOT/waterfall-event-1.19-R0.1-20220703.150952-10.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-event/1.19-R0.1-SNAPSHOT/waterfall-event-1.19-R0.1-20220728.165025-12.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-event/1.19-R0.1-SNAPSHOT/waterfall-event-1.19-R0.1-20220703.150952-10-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-event/1.19-R0.1-SNAPSHOT/waterfall-event-1.19-R0.1-20220728.165025-12-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-event/1.19-R0.1-SNAPSHOT/waterfall-event-1.19-R0.1-20220703.150952-10-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-event/1.19-R0.1-SNAPSHOT/waterfall-event-1.19-R0.1-20220728.165025-12-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
