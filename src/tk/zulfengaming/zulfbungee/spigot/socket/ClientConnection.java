@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -191,8 +192,14 @@ public class ClientConnection extends BukkitRunnable {
         CommandSender sender = pluginInstance.getServer().getConsoleSender();
 
         if (infoIn.getSender() != null) {
+
             ProxyPlayer playerIn = infoIn.getSender();
-            sender = pluginInstance.getServer().getPlayer(playerIn.getUuid());
+            Player playerOut = pluginInstance.getServer().getPlayer(playerIn.getUuid());
+
+            if (playerOut != null) {
+                sender = playerOut;
+            }
+
         }
 
         getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(this, infoIn.getScriptName(), action, sender, infoIn.getScriptData()))

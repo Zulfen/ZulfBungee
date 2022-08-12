@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ExprCurrentProxyServer extends SimpleExpression<ProxyServer> {
 
     static {
-        Skript.registerExpression(ExprCurrentProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "this [script's] server");
+        Skript.registerExpression(ExprCurrentProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "this [script's] (server|client|proxy server)");
     }
 
     @Override

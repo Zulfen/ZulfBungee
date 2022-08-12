@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public class NetworkVariable implements Serializable {
 
-    private String changeModeAsString = null;
+    private String changeModeAsString = "";
     private final String name;
     private Value[] values = new Value[1];
 
@@ -22,7 +22,7 @@ public class NetworkVariable implements Serializable {
     }
 
     public Optional<SkriptChangeMode> getChangeMode() {
-        return Optional.ofNullable(SkriptChangeMode.valueOf(changeModeAsString));
+        return !changeModeAsString.isEmpty() ? Optional.of(SkriptChangeMode.valueOf(changeModeAsString)) : Optional.empty();
     }
 
     public String getName() {

@@ -22,7 +22,6 @@ import java.util.Optional;
 public class CondIsProxyPlayerOnline extends Condition {
 
     private Expression<ProxyPlayer> player;
-    private int option;
 
     static {
         Skript.registerCondition(CondIsProxyPlayerOnline.class, "%-proxyplayer% (1¦is|2¦is(n't| not)) online on the (proxy|bungeecord|bungee|network)");
@@ -41,16 +40,11 @@ public class CondIsProxyPlayerOnline extends Condition {
 
             boolean playerOnProxy = (boolean) packetIn.getDataSingle();
 
-            switch (option) {
-                case 1:
-                    return playerOnProxy;
-                case 2:
-                    return !playerOnProxy;
-            }
+            return playerOnProxy == isNegated();
 
         }
 
-        return false;
+        return isNegated();
     }
 
     @Override
@@ -61,7 +55,7 @@ public class CondIsProxyPlayerOnline extends Condition {
     @Override
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         player = (Expression<ProxyPlayer>) expressions[0];
-        option = parseResult.mark;
+        setNegated(parseResult.mark == 1);
         return true;
     }
 }

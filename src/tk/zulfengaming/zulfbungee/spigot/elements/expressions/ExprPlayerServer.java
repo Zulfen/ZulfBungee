@@ -17,7 +17,7 @@ import java.util.Optional;
 public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, ProxyServer> {
 
     static {
-        register(ExprPlayerServer.class, ProxyServer.class, "[(current|connected)] server[s]", "proxyplayers");
+        register(ExprPlayerServer.class, ProxyServer.class, "[(current|connected)] server", "proxyplayers");
     }
 
     @Override

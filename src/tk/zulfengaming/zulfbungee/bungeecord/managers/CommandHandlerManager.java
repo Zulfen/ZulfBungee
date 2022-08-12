@@ -55,7 +55,6 @@ public class CommandHandlerManager {
 
                     String requiredLabel = requiredLabels[i];
 
-
                     String argIn = argsIn[i];
 
                     if (requiredLabel.equalsIgnoreCase(argIn)) {

@@ -19,7 +19,6 @@ import java.util.Objects;
 public class CondIsServerOnline extends Condition {
 
     private Expression<ProxyServer> server;
-    private int option;
 
     static {
         Skript.registerCondition(CondIsServerOnline.class, "%-proxyserver% (1¦is|2¦is(n't| not)) online");
@@ -31,20 +30,11 @@ public class CondIsServerOnline extends Condition {
         ProxyServer proxyServer = server.getSingle(event);
 
         if (proxyServer != null) {
-
             boolean contains = ProxyServerInfoManager.contains(proxyServer.getName());
-
-            switch (option) {
-                case 1:
-                    return contains;
-                case 2:
-                    return !contains;
-            }
-
-
+            return contains == isNegated();
         }
 
-        return false;
+        return isNegated();
 
     }
 
@@ -57,7 +47,7 @@ public class CondIsServerOnline extends Condition {
     @SuppressWarnings("unchecked")
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         server = (Expression<ProxyServer>) expressions[0];
-        option = parseResult.mark;
+        setNegated(parseResult.mark == 1);
         return true;
     }
 }
