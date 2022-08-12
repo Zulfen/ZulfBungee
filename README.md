@@ -47,15 +47,9 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 - [(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]
 
-- (proxy|bungeecord|bungee) server [(named|called)] %string%
-
-- (proxy|bungeecord|bungee) player [(named|called)] %string%
-
 - proxyserver's (player limit|max player count)
 
-- this server
-
-- proxyserver's name
+- this [script's] (server|client|proxy server)
 
 ## **Conditions:**
 
