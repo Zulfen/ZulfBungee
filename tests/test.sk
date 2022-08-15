@@ -14,7 +14,7 @@ command /zulfbungeetest:
       wait 3 seconds
 
       broadcast "&aPrinting the name of this client:"
-      broadcast this server's name
+      broadcast this server
 
       wait 3 seconds
 
@@ -58,17 +58,3 @@ command /zulfbungeetest:
       delete network variable {zulfbungee::test::*}
 
       broadcast "&c&lCongrats! The test is done! Please send results back!"
-
-command /sendtest:
-   trigger:
-      bungee send all of the bungeecord players to proxy server "zulfbungee2"
-
-
-on player switch server:
-   broadcast "&a&lPlayer server switch event fired:"
-   broadcast "&a&lPlayer involved: %event-player%"
-   broadcast "&a&lServer involved: %event-proxyserver%"
-
-on server message "Sample Title":
-   broadcast "&a&lServer message event was fired:"
-   broadcast "&a&lMessage: %event-text%"
