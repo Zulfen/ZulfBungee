@@ -27,7 +27,16 @@ public class ExprCurrentProxyServer extends SimpleExpression<ProxyServer> {
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
         Optional<String> name = connection.getConnectionName();
 
-        return name.map(s -> new ProxyServer[]{ProxyServerInfoManager.toProxyServer(s)}).orElse(null);
+        if (name.isPresent()) {
+
+            Optional<ProxyServer> optionalProxyServer = ProxyServerInfoManager.toProxyServer(name.get());
+            if (optionalProxyServer.isPresent()) {
+                return new ProxyServer[]{optionalProxyServer.get()};
+            }
+
+        }
+
+        return null;
 
     }
 
