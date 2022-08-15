@@ -58,7 +58,7 @@ public class SkriptTypes {
 
                     @Override
                     public ProxyServer parse(@NotNull String s, @NotNull ParseContext context) {
-                        return ProxyServerInfoManager.toProxyServer(s);
+                        return null;
                     }
 
                     @Override
