@@ -279,7 +279,7 @@ public class Server implements Runnable {
 
     public ProxyServer[] getProxyServerArray() {
         return activeConnections.entrySet().stream()
-                .map(proxyServerList -> new ProxyServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
+                .map(proxyServerList -> new ProxyServer(proxyServerList.getKey(), proxyServerList.getValue().getServerInfo()))
                 .toArray(ProxyServer[]::new);
     }
 

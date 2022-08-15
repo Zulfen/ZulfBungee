@@ -37,7 +37,7 @@ public class BaseServerConnection implements Runnable {
     private final DataInHandler dataInHandler;
     private final DataOutHandler dataOutHandler;
 
-    private ClientInfo clientInfo;
+    private ServerInfo serverInfo;
 
     private Packet packetInBuffer;
 
@@ -171,7 +171,7 @@ public class BaseServerConnection implements Runnable {
 
                 byte[] data = Files.readAllBytes(scriptPathIn);
 
-                send(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new ScriptInfo(actionIn,
+                send(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
                         scriptName, playerOut, data)));
 
             } catch (IOException e) {
@@ -187,12 +187,12 @@ public class BaseServerConnection implements Runnable {
         return server;
     }
 
-    public ClientInfo getClientInfo() {
-        return clientInfo;
+    public ServerInfo getServerInfo() {
+        return serverInfo;
     }
 
-    public void setClientInfo(ClientInfo clientInfo) {
-        this.clientInfo = clientInfo;
+    public void setServerInfo(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
     }
 
     public Socket getSocket() {

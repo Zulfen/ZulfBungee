@@ -2,13 +2,13 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 
 import java.io.Serializable;
 
-public class ClientInfo implements Serializable {
+public class ServerInfo implements Serializable {
 
     private final int maxPlayers;
 
     private final int minecraftPort;
 
-    public ClientInfo(int maxPlayersIn, int minecraftPortIn) {
+    public ServerInfo(int maxPlayersIn, int minecraftPortIn) {
         this.maxPlayers = maxPlayersIn;
         this.minecraftPort = minecraftPortIn;
     }

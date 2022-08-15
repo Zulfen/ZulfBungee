@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.managers;
 
-import tk.zulfengaming.zulfbungee.universal.socket.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.*;
@@ -8,10 +8,18 @@ import java.util.stream.Collectors;
 
 public class ProxyServerInfoManager {
 
-    private static final HashMap<String, ClientInfo> servers = new HashMap<>();
+    private static final HashMap<String, ServerInfo> servers = new HashMap<>();
 
-    public static ProxyServer toProxyServer(String nameIn) {
-        return new ProxyServer(nameIn, servers.get(nameIn));
+    public static Optional<ProxyServer> toProxyServer(String nameIn) {
+
+        ServerInfo serverInfo = servers.get(nameIn);
+
+        if (serverInfo != null) {
+            return Optional.of(new ProxyServer(nameIn, serverInfo));
+        }
+
+        return Optional.empty();
+
     }
 
     public static void setServers(ProxyServer[] serverList) {

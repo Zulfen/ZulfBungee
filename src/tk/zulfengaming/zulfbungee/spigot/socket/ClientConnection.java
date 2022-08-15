@@ -226,7 +226,7 @@ public class ClientConnection extends BukkitRunnable {
         return clientListenerManager.isSocketConnected();
     }
 
-    public ClientInfo getClientInfo() {
+    public ServerInfo getClientInfo() {
         return clientListenerManager.getClientInfo();
     }
 

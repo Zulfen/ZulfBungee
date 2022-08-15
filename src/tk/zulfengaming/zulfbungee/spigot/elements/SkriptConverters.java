@@ -45,7 +45,5 @@ public class SkriptConverters {
 
         });
 
-        Converters.registerConverter(String.class, ProxyServer.class, ProxyServerInfoManager::toProxyServer);
-
     }
 }

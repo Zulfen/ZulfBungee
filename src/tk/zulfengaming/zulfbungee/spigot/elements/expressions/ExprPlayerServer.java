@@ -38,10 +38,11 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
 
             if (packetIn.getDataArray().length != 0) {
 
-                String serverName = (String) packetIn.getDataSingle();
+                Optional<ProxyServer> optionalProxyServer = ProxyServerInfoManager.toProxyServer((String) packetIn.getDataSingle());
 
-                return ProxyServerInfoManager.toProxyServer(serverName);
-
+                if (optionalProxyServer.isPresent()) {
+                    return optionalProxyServer.get();
+                }
 
             }
 

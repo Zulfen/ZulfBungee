@@ -5,6 +5,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
@@ -16,7 +17,7 @@ public class PlayerServer extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
 
         ProxyPlayer playerIn = (ProxyPlayer) packetIn.getDataSingle();
 

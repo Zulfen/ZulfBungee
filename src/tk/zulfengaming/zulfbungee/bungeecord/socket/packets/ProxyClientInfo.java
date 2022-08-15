@@ -20,15 +20,15 @@ public class ProxyClientInfo extends PacketHandler {
     @Override
     public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
 
-        ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
+        ServerInfo serverInfo = (ServerInfo) packetIn.getDataSingle();
 
         // potentially update this atomically.
-        connection.setClientInfo(clientInfo);
+        connection.setServerInfo(serverInfo);
 
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
         InetAddress inetAddressIn = socketAddressIn.getAddress();
-        int portIn = clientInfo.getMinecraftPort();
+        int portIn = serverInfo.getMinecraftPort();
 
         for (Map.Entry<String, net.md_5.bungee.api.config.ServerInfo> info : getProxy().getServersCopy().entrySet()) {
 
