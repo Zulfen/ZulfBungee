@@ -12,7 +12,6 @@ import tk.zulfengaming.zulfbungee.spigot.managers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -21,7 +20,7 @@ public class ExprProxyServer extends SimpleExpression<ProxyServer> {
     private Expression<String> serverNames;
 
     static {
-        Skript.registerExpression(ExprProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) server [(named|called)] %strings%");
+        Skript.registerExpression(ExprProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) server[s] [(named|called)] %strings%");
     }
 
     @Override

@@ -2,7 +2,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 
 public class ProxyPlayers extends PacketHandler {
 
-    public ProxyPlayers(Server serverIn) {
-        super(serverIn, PacketTypes.PROXY_PLAYERS);
+    public ProxyPlayers(MainServer mainServerIn) {
+        super(mainServerIn, PacketTypes.PROXY_PLAYERS);
 
     }
 

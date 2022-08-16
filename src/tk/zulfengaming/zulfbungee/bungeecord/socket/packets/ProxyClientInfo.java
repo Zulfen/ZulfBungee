@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.*;
 
 import java.net.InetAddress;
@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class ProxyClientInfo extends PacketHandler {
 
-    public ProxyClientInfo(Server serverIn) {
-        super(serverIn, PacketTypes.PROXY_CLIENT_INFO);
+    public ProxyClientInfo(MainServer mainServerIn) {
+        super(mainServerIn, PacketTypes.PROXY_CLIENT_INFO);
 
     }
 

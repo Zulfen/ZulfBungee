@@ -2,15 +2,15 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 public class GlobalScript extends PacketHandler {
 
-    public GlobalScript(Server serverIn) {
-        super(serverIn, PacketTypes.GLOBAL_SCRIPT);
+    public GlobalScript(MainServer mainServerIn) {
+        super(mainServerIn, PacketTypes.GLOBAL_SCRIPT);
 
     }
 

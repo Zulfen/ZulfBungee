@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
 
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
@@ -8,20 +8,20 @@ import java.util.Optional;
 
 public abstract class StorageImpl {
 
-    private final Server mainServer;
+    private final MainServer mainServer;
 
     private final String host, port, username, password, database;
 
-    public StorageImpl(Server serverIn) {
-        this.mainServer = serverIn;
+    public StorageImpl(MainServer mainServerIn) {
+        this.mainServer = mainServerIn;
 
-        this.host = serverIn.getPluginInstance().getConfig().getString("storage-host");
-        this.port = String.valueOf(serverIn.getPluginInstance().getConfig().getInt("storage-port"));
+        this.host = mainServerIn.getPluginInstance().getConfig().getString("storage-host");
+        this.port = String.valueOf(mainServerIn.getPluginInstance().getConfig().getInt("storage-port"));
 
-        this.username = serverIn.getPluginInstance().getConfig().getString("storage-username");
-        this.password = serverIn.getPluginInstance().getConfig().getString("storage-password");
+        this.username = mainServerIn.getPluginInstance().getConfig().getString("storage-username");
+        this.password = mainServerIn.getPluginInstance().getConfig().getString("storage-password");
 
-        this.database = serverIn.getPluginInstance().getConfig().getString("storage-database");
+        this.database = mainServerIn.getPluginInstance().getConfig().getString("storage-database");
     }
     
     public String getHost() {
@@ -58,7 +58,7 @@ public abstract class StorageImpl {
 
     public abstract void shutdown();
 
-    public Server getMainServer() {
+    public MainServer getMainServer() {
         return mainServer;
     }
 }

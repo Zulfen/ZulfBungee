@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.interfaces;
 
 import net.md_5.bungee.api.ProxyServer;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -10,7 +10,7 @@ public abstract class PacketHandler {
 
     private final PacketTypes[] types;
 
-    private final Server mainServer;
+    private final MainServer mainServer;
 
     public abstract Packet handlePacket(Packet packetIn, BaseServerConnection connection);
 
@@ -18,7 +18,7 @@ public abstract class PacketHandler {
         return types;
     }
 
-    public Server getMainServer() {
+    public MainServer getMainServer() {
         return mainServer;
     }
 
@@ -26,8 +26,8 @@ public abstract class PacketHandler {
         return mainServer.getPluginInstance().getProxy();
     }
 
-    public PacketHandler(Server serverIn, PacketTypes... types) {
-        this.mainServer = serverIn;
+    public PacketHandler(MainServer mainServerIn, PacketTypes... types) {
+        this.mainServer = mainServerIn;
         this.types = types;
 
     }

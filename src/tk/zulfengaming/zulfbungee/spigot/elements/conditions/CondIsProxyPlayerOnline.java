@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.conditions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Condition;
@@ -19,43 +20,32 @@ import java.util.Optional;
 
 @Name("Proxy Player Online")
 @Description("Checks if a proxy player is online on the network.")
-public class CondIsProxyPlayerOnline extends Condition {
+public class CondIsProxyPlayerOnline extends PropertyCondition<ProxyPlayer> {
 
     private Expression<ProxyPlayer> player;
 
     static {
-        Skript.registerCondition(CondIsProxyPlayerOnline.class, "%-proxyplayer% (1¦is|2¦is(n't| not)) online on the (proxy|bungeecord|bungee|network)");
+        register(CondIsProxyPlayerOnline.class, "online", "proxyplayers");
     }
 
     @Override
-    public boolean check(@NotNull Event event) {
+    public boolean check(ProxyPlayer proxyPlayer) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        Optional<Packet> response = connection.send(new Packet(PacketTypes.PLAYER_ONLINE, true, false, player.getSingle(event)));
+        Optional<Packet> response = connection.send(new Packet(PacketTypes.PLAYER_ONLINE, true, false, proxyPlayer));
 
         if (response.isPresent()) {
-
             Packet packetIn = response.get();
-
-            boolean playerOnProxy = (boolean) packetIn.getDataSingle();
-
-            return playerOnProxy == isNegated();
-
+            return (boolean) packetIn.getDataSingle();
         }
 
-        return isNegated();
+        return false;
+
     }
 
     @Override
-    public @NotNull String toString(Event event, boolean b) {
-        return "proxy player " + player.toString(event, b) + " status";
-    }
-
-    @Override
-    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
-        player = (Expression<ProxyPlayer>) expressions[0];
-        setNegated(parseResult.mark == 1);
-        return true;
+    protected @NotNull String getPropertyName() {
+        return "online";
     }
 }

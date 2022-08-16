@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -10,8 +10,8 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
 
 public class ServerSendMessage extends PacketHandler {
 
-    public ServerSendMessage(Server serverIn) {
-        super(serverIn, PacketTypes.SERVER_SEND_MESSAGE_EVENT);
+    public ServerSendMessage(MainServer mainServerIn) {
+        super(mainServerIn, PacketTypes.SERVER_SEND_MESSAGE_EVENT);
 
     }
 

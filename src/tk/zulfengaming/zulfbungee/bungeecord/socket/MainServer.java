@@ -21,7 +21,7 @@ import java.net.*;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Server implements Runnable {
+public class MainServer implements Runnable {
     // plugin instance !!!
 
     private final ZulfBungeecord pluginInstance;
@@ -47,7 +47,7 @@ public class Server implements Runnable {
     // storage
     private StorageImpl storage;
 
-    public Server(int port, InetAddress address, ZulfBungeecord instanceIn) {
+    public MainServer(int port, InetAddress address, ZulfBungeecord instanceIn) {
         this.hostAddress = address;
         this.port = port;
         this.pluginInstance = instanceIn;

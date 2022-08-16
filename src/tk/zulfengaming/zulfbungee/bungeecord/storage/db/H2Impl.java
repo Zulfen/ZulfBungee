@@ -2,15 +2,15 @@ package tk.zulfengaming.zulfbungee.bungeecord.storage.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.HikariSQLImpl;
 
 import java.io.File;
 
 public class H2Impl extends HikariSQLImpl {
 
-    public H2Impl(Server serverIn) {
-        super(serverIn);
+    public H2Impl(MainServer mainServerIn) {
+        super(mainServerIn);
     }
 
     @Override

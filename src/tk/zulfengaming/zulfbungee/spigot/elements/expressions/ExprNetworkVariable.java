@@ -110,10 +110,12 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         ArrayList<Value> valuesOut = new ArrayList<>();
 
-        if (delta != null && !mode.equals(Changer.ChangeMode.DELETE)) {
+        if (!mode.equals(Changer.ChangeMode.DELETE)) {
             for (Object o : delta) {
                 SerializedVariable.Value value = Classes.serialize(o);
-                valuesOut.add(new Value(value.type, value.data));
+                if (value != null) {
+                    valuesOut.add(new Value(value.type, value.data));
+                }
             }
         }
 
@@ -124,7 +126,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+    public Class<?> [] acceptChange(Changer.@NotNull ChangeMode mode) {
 
         if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) {
             return CollectionUtils.array(isSingle() ? Object.class : Object[].class);

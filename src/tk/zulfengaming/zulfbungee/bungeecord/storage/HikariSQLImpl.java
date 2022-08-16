@@ -5,7 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
 
@@ -24,8 +24,8 @@ public abstract class HikariSQLImpl extends StorageImpl {
 
     private final HikariDataSource dataSource;
 
-    public HikariSQLImpl(Server serverIn) {
-        super(serverIn);
+    public HikariSQLImpl(MainServer mainServerIn) {
+        super(mainServerIn);
         this.dataSource = initialiseDataSource();
     }
 

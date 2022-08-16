@@ -4,7 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 import java.io.IOException;
@@ -20,9 +20,9 @@ public class ScriptReload extends CommandHandler {
 
     private final WatchKey watchKey;
 
-    public ScriptReload(Server serverIn) {
+    public ScriptReload(MainServer mainServerIn) {
 
-        super(serverIn, "zulfen.bungee.admin.script", "scripts", "reload");
+        super(mainServerIn, "zulfen.bungee.admin.script", "scripts", "reload");
 
         try {
 

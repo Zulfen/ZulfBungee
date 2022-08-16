@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BaseServerConnection implements Runnable {
 
-    private final Server server;
+    private final MainServer mainServer;
     // plugin instance ?
     private final ZulfBungeecord pluginInstance;
 
@@ -43,14 +43,14 @@ public class BaseServerConnection implements Runnable {
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    public BaseServerConnection(Server serverIn, Socket socketIn) throws IOException {
+    public BaseServerConnection(MainServer mainServerIn, Socket socketIn) throws IOException {
         this.socket = socketIn;
 
-        this.packetManager = serverIn.getPacketManager();
+        this.packetManager = mainServerIn.getPacketManager();
 
-        this.pluginInstance = serverIn.getPluginInstance();
+        this.pluginInstance = mainServerIn.getPluginInstance();
 
-        this.server = serverIn;
+        this.mainServer = mainServerIn;
 
         this.address = socket.getRemoteSocketAddress();
 
@@ -114,7 +114,7 @@ public class BaseServerConnection implements Runnable {
 
         if (running.compareAndSet(true, false)) {
 
-            server.removeServerConnection(this);
+            mainServer.removeServerConnection(this);
 
             try {
 
@@ -183,8 +183,8 @@ public class BaseServerConnection implements Runnable {
 
     }
 
-    public Server getServer() {
-        return server;
+    public MainServer getServer() {
+        return mainServer;
     }
 
     public ServerInfo getServerInfo() {

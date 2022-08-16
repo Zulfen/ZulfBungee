@@ -10,10 +10,9 @@ import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
 import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
 import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
-import tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils;
 import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
 
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class ZulfBungeecord extends Plugin {
 
     private YamlConfig config;
 
-    private Server server;
+    private MainServer mainServer;
 
     private TaskManager taskManager;
 
@@ -55,14 +54,14 @@ public class ZulfBungeecord extends Plugin {
 
         try {
 
-            server = new Server(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
+            mainServer = new MainServer(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
-            CommandHandlerManager commandHandlerManager = new CommandHandlerManager(server);
+            CommandHandlerManager commandHandlerManager = new CommandHandlerManager(mainServer);
 
-            getProxy().getPluginManager().registerListener(this, new Events(server));
+            getProxy().getPluginManager().registerListener(this, new Events(mainServer));
             getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(commandHandlerManager));
 
-            taskManager.newTask(server);
+            taskManager.newTask(mainServer);
 
         } catch (UnknownHostException e) {
             error("There was an error trying to initialise the server:");
@@ -88,7 +87,7 @@ public class ZulfBungeecord extends Plugin {
     public void onDisable() {
 
         try {
-            server.end();
+            mainServer.end();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,8 +116,8 @@ public class ZulfBungeecord extends Plugin {
         return config;
     }
 
-    public Server getServer() {
-        return server;
+    public MainServer getServer() {
+        return mainServer;
     }
 
     public TaskManager getTaskManager() {

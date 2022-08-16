@@ -2,7 +2,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.socket.packets;
 
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.Server;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public class NetworkVariableGet extends PacketHandler {
 
-    public NetworkVariableGet(Server serverIn) {
-        super(serverIn, PacketTypes.NETWORK_VARIABLE_GET);
+    public NetworkVariableGet(MainServer mainServerIn) {
+        super(mainServerIn, PacketTypes.NETWORK_VARIABLE_GET);
 
     }
 
