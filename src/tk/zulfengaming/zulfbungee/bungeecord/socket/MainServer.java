@@ -1,7 +1,6 @@
 package tk.zulfengaming.zulfbungee.bungeecord.socket;
 
 
-import com.google.common.collect.HashBiMap;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -10,6 +9,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.bungeecord.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.bungeecord.storage.db.MySQLImpl;
+import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainServer implements Runnable {
     // plugin instance !!!
@@ -30,8 +31,8 @@ public class MainServer implements Runnable {
     private final int port;
     private final InetAddress hostAddress;
 
-    private boolean running = true;
-    private boolean serverSocketAvailable = false;
+    private final AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean serverSocketAvailable = new AtomicBoolean(false);
 
     // hey, keep that to yourself!
     private ServerSocket serverSocket;
@@ -39,10 +40,11 @@ public class MainServer implements Runnable {
 
     private final ArrayList<BaseServerConnection> socketConnections = new ArrayList<>();
 
-    private final HashBiMap<String, BaseServerConnection> activeConnections = HashBiMap.create();
+    private final HashMap<String, BaseServerConnection> activeConnections = new HashMap<>();
 
     // quite neat
     private final PacketHandlerManager packetManager;
+    private final TaskManager taskManager;
 
     // storage
     private StorageImpl storage;
@@ -53,6 +55,7 @@ public class MainServer implements Runnable {
         this.pluginInstance = instanceIn;
 
         this.packetManager = new PacketHandlerManager(this);
+        this.taskManager = instanceIn.getTaskManager();
 
         Optional<StorageImpl> newStorage = setupStorage();
 
@@ -70,12 +73,12 @@ public class MainServer implements Runnable {
 
 
     public void run() {
-        // making the server socket
+
 
         do {
             try {
 
-                if (serverSocketAvailable) {
+                if (serverSocketAvailable.get()) {
 
                     socket = serverSocket.accept();
 
@@ -115,7 +118,7 @@ public class MainServer implements Runnable {
                         break;
                     }
 
-                    serverSocketAvailable = true;
+                    serverSocketAvailable.compareAndSet(false, true);
 
                     pluginInstance.logInfo(ChatColor.GREEN + "Waiting for connections on " + hostAddress + ":" + port);
 
@@ -135,15 +138,15 @@ public class MainServer implements Runnable {
 
             }
 
-        } while (running);
+        } while (running.get());
     }
 
     private void acceptConnection(Socket socketIn) throws IOException {
 
         BaseServerConnection connection = new BaseServerConnection(this, socketIn);
 
-        pluginInstance.getTaskManager().newTask(connection);
-        addServerConnection(connection);
+        taskManager.newTask(connection);
+        socketConnections.add(connection);
 
         pluginInstance.logInfo(ChatColor.GREEN + "Connection established with address: " + connection.getAddress());
 
@@ -158,6 +161,7 @@ public class MainServer implements Runnable {
         List<Integer> ports = pluginInstance.getConfig().getIntList("ports");
 
         for (ServerInfo server : servers.values()) {
+
             InetSocketAddress inetServerAddr = (InetSocketAddress) server.getSocketAddress();
             InetSocketAddress inetAddrIn = (InetSocketAddress) addressIn;
 
@@ -178,11 +182,14 @@ public class MainServer implements Runnable {
         return false;
     }
 
-    public void sendToAllClients(Packet packetIn) {
-        pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
+    public void sendDirectToAllAsync(Packet packetIn) {
+        taskManager.newTask(() -> sendDirectToAll(packetIn));
+    }
 
+    public void sendDirectToAll(Packet packetIn) {
+        pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
         for (BaseServerConnection connection : socketConnections) {
-            connection.send(packetIn);
+            connection.sendDirect(packetIn);
         }
     }
 
@@ -202,52 +209,52 @@ public class MainServer implements Runnable {
 
     }
 
-    private void addServerConnection(BaseServerConnection connection) {
-        socketConnections.add(connection);
-    }
-
     public void addActiveConnection(BaseServerConnection connection, String name) {
 
         activeConnections.put(name, connection);
 
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
 
-        sendToAllClients(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
+        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
 
     }
 
-    public void removeServerConnection(BaseServerConnection connection) {
+    public void removeServerConnection(BaseServerConnection connectionIn) {
 
-        String name = activeConnections.inverse().get(connection);
+        socketConnections.remove(connectionIn);
+        String connectionName = connectionIn.getName();
 
-        pluginInstance.logInfo(String.format(ChatColor.YELLOW + "Disconnecting client %s (%s)", connection.getAddress(), name));
+        if (!connectionName.isEmpty()) {
+            activeConnections.remove(connectionName);
+            pluginInstance.logInfo(String.format(ChatColor.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), connectionName));
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, connectionName));
+        }
 
-        socketConnections.remove(connection);
-        activeConnections.remove(name);
 
-        sendToAllClients(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
 
     }
 
     public void end() throws IOException {
 
-        running = false;
+        if (running.compareAndSet(true, false)) {
 
-        for (BaseServerConnection connection : socketConnections) {
-            connection.shutdown();
-        }
+            for (BaseServerConnection connection : socketConnections) {
+                connection.shutdown();
+            }
 
-        activeConnections.clear();
-        socketConnections.clear();
+            activeConnections.clear();
+            socketConnections.clear();
 
-        if (socket != null) {
-            socket.close();
-        }
+            if (socket != null) {
+                socket.close();
+            }
 
-        serverSocket.close();
+            serverSocket.close();
 
-        if (storage != null) {
-            storage.shutdown();
+            if (storage != null) {
+                storage.shutdown();
+            }
+
         }
 
     }

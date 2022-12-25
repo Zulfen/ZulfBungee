@@ -16,14 +16,12 @@ import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.*;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.io.File;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +49,10 @@ public class ClientConnection extends BukkitRunnable {
 
     private final ClientListenerManager clientListenerManager;
 
+    private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
+
+    private final HashMap<String, ServerInfo> proxyServers = new HashMap<>();
+
     // other tasks
 
     private final Phaser socketBarrier;
@@ -58,22 +60,26 @@ public class ClientConnection extends BukkitRunnable {
     private final DataOutHandler dataOutHandler;
 
     private final DataInHandler dataInHandler;
-// misc. info
 
-    private String connectionName;
-    private final int timeout;
-    private final int packetResponseTime;
+    // misc. info
 
-    private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
+    private String connectionName = "";
+    private int timeout = 2000;
+    private int packetResponseTime = 1000;
 
-    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn) throws UnknownHostException {
+    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int packetResponseTimeIn) throws UnknownHostException {
 
         this.pluginInstance = pluginInstanceIn;
         this.clientListenerManager = new ClientListenerManager(this);
 
         this.packetHandlerManager = new PacketHandlerManager(this);
-        this.timeout = pluginInstance.getYamlConfig().getInt("connection-timeout");
-        this.packetResponseTime = pluginInstance.getYamlConfig().getInt("packet-response-time");
+
+        if (timeoutIn != 0) {
+            timeout = timeoutIn;
+        }
+        if (packetResponseTimeIn != 0) {
+            packetResponseTime = packetResponseTimeIn;
+        }
 
         TaskManager taskManager = pluginInstance.getTaskManager();
 
@@ -118,7 +124,7 @@ public class ClientConnection extends BukkitRunnable {
 
                 } else {
 
-                    pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
+                    pluginInstance.logDebug(String.format("Thread has arrived: %s", Thread.currentThread().getName()));
 
                     socketBarrier.arriveAndAwaitAdvance();
 
@@ -141,7 +147,7 @@ public class ClientConnection extends BukkitRunnable {
     }
 
 
-    public void send_direct(Packet packetIn) {
+    public void sendDirect(Packet packetIn) {
 
         try {
 
@@ -163,7 +169,7 @@ public class ClientConnection extends BukkitRunnable {
 
     public Optional<Packet> send(Packet packetIn) {
 
-        send_direct(packetIn);
+        sendDirect(packetIn);
 
         try {
 
@@ -202,7 +208,7 @@ public class ClientConnection extends BukkitRunnable {
 
         }
 
-        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(this, infoIn.getScriptName(), action, sender, infoIn.getScriptData()))
+        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(pluginInstance, infoIn.getScriptName(), action, sender, infoIn.getScriptData()))
                 .thenAccept(file -> {
                     switch (action) {
                         case NEW:
@@ -216,6 +222,24 @@ public class ClientConnection extends BukkitRunnable {
                     }
                 });
 
+    }
+
+    public void setProxyServers(ProxyServer[] serverList) {
+        proxyServers.clear();
+        Arrays.stream(serverList).forEach(server -> proxyServers.put(server.getName(), server.getServerInfo()));
+    }
+
+    public ProxyServer[] getProxyServers() {
+        return proxyServers.keySet().stream().map(ProxyServer::new).toArray(ProxyServer[]::new);
+    }
+
+    public Optional<ProxyServer> getProxyServer(String nameIn) {
+        ServerInfo serverInfo = proxyServers.get(nameIn);
+        return serverInfo != null ? Optional.of(new ProxyServer(nameIn, serverInfo)) : Optional.empty();
+    }
+
+    public boolean proxyServerOnline(String nameIn) {
+        return proxyServers.containsKey(nameIn);
     }
 
     public AtomicBoolean isRunning() {
@@ -265,13 +289,13 @@ public class ClientConnection extends BukkitRunnable {
         return clientListenerManager;
     }
 
-    public void setConnectionName(String connectionNameIn) {
+    public void setName(String connectionNameIn) {
         this.connectionName = connectionNameIn;
 
     }
 
-    public Optional<String> getConnectionName() {
-        return Optional.ofNullable(connectionName);
+    public String getName() {
+        return connectionName;
     }
 
 }

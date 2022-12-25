@@ -84,12 +84,18 @@ public class YamlConfig {
 
         if (scriptsFolder.exists()) {
 
-            for (File file : scriptsFolder.listFiles(File::isFile)) {
+            File[] files = scriptsFolder.listFiles(File::isFile);
 
-                String name = file.getName();
+            if (files != null) {
 
-                if (name.endsWith(".sk")) {
-                    cachedScripts.add(name);
+                for (File file : files) {
+
+                    String name = file.getName();
+
+                    if (name.endsWith(".sk")) {
+                        cachedScripts.add(name);
+                    }
+
                 }
             }
         }

@@ -32,15 +32,14 @@ public class EffServerSendMessage extends Effect {
     protected void execute(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+        String name = connection.getName();
 
-        if (connection.getConnectionName().isPresent()) {
-
-            String name = connection.getConnectionName().get();
+        if (!name.isEmpty()) {
 
             ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event),
                     new ProxyServer(name, connection.getClientInfo()));
 
-            connection.send_direct(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
+            connection.sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
                     false, false, messageOut));
 
         }
@@ -49,7 +48,7 @@ public class EffServerSendMessage extends Effect {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "effect server send message to " + servers.toString(event, b) + " with message " + message + " and title " + title;
+        return "effect server sendDirect message to " + servers.toString(event, b) + " with message " + message + " and title " + title;
     }
 
     @Override
@@ -57,7 +56,6 @@ public class EffServerSendMessage extends Effect {
         servers = (Expression<ProxyServer>) expressions[0];
         message = (Expression<String>) expressions[1];
         title = (Expression<String>) expressions[2];
-
         return true;
     }
 }

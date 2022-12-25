@@ -76,8 +76,6 @@ public class ClientListenerManager extends BukkitRunnable {
             try {
 
                 if (!socket.isClosed()) {
-                    socket.shutdownOutput();
-                    socket.shutdownInput();
                     socket.close();
                 }
 
@@ -90,9 +88,9 @@ public class ClientListenerManager extends BukkitRunnable {
     }
 
     public void shutdown() {
-        socketConnected.compareAndSet(true, false);
-        terminated.compareAndSet(false, true);
-        closeSocket();
+        if (socketConnected.compareAndSet(true, false) && terminated.compareAndSet(false, true)) {
+            closeSocket();
+        }
     }
 
     public ZulfBungeeSpigot getPluginInstance() {
@@ -184,8 +182,8 @@ public class ClientListenerManager extends BukkitRunnable {
 
                 serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
-                connection.send_direct(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, serverInfo));
-                connection.send_direct(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
+                connection.sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, serverInfo));
+                connection.sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
 
             } else {
 

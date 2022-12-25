@@ -6,21 +6,17 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import jdk.nashorn.internal.objects.annotations.Optimistic;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public class ExprProxyPlayer extends SimpleExpression<ProxyPlayer> {
 

@@ -15,7 +15,10 @@ import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BaseServerConnection implements Runnable {
@@ -37,13 +40,17 @@ public class BaseServerConnection implements Runnable {
     private final DataInHandler dataInHandler;
     private final DataOutHandler dataOutHandler;
 
+    private final TransferQueue<Packet> readQueue = new LinkedTransferQueue<>();
+
     private ServerInfo serverInfo;
 
-    private Packet packetInBuffer;
+    // initially empty
+    private String name = "";
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
     public BaseServerConnection(MainServer mainServerIn, Socket socketIn) throws IOException {
+
         this.socket = socketIn;
 
         this.packetManager = mainServerIn.getPacketManager();
@@ -72,16 +79,19 @@ public class BaseServerConnection implements Runnable {
                 if (socketConnected.get()) {
 
                     Packet packetIn = dataInHandler.getQueue().poll(5, TimeUnit.SECONDS);
-                    packetInBuffer = packetIn;
 
                     if (packetIn != null) {
+
+                        if (packetIn.shouldHandle() && readQueue.hasWaitingConsumer()) {
+                            readQueue.tryTransfer(packetIn);
+                        }
 
                         try {
 
                             Packet handledPacket = packetManager.handlePacket(packetIn, this);
 
                             if (packetIn.isReturnable() && handledPacket != null) {
-                                send(handledPacket);
+                                sendDirect(handledPacket);
                             }
 
                         } catch (Exception e) {
@@ -129,12 +139,22 @@ public class BaseServerConnection implements Runnable {
         }
     }
 
-    private Optional<Packet> read() {
-        return Optional.ofNullable(packetInBuffer);
+    // Customisable poll time, will just impl it this way for now!
+    /*private Optional<Packet> read(long lengthIn, TimeUnit timeUnitIn) {
+        try {
+            return Optional.ofNullable(readQueue.poll(lengthIn, timeUnitIn));
+        } catch (InterruptedException e) {
+            return Optional.empty();
+        }
 
     }
 
-    public void send(Packet packetIn) {
+    public Optional<Packet> send(Packet packetIn, long lengthIn, TimeUnit timeUnitIn) {
+        sendDirect(packetIn);
+        return read(lengthIn, timeUnitIn);
+    }*/
+
+    public void sendDirect(Packet packetIn) {
 
         try {
 
@@ -171,7 +191,7 @@ public class BaseServerConnection implements Runnable {
 
                 byte[] data = Files.readAllBytes(scriptPathIn);
 
-                send(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
+                sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
                         scriptName, playerOut, data)));
 
             } catch (IOException e) {
@@ -197,6 +217,14 @@ public class BaseServerConnection implements Runnable {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ZulfBungeecord getPluginInstance() {

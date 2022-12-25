@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.ProxyServerInfoManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
@@ -38,8 +37,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
 
             if (packetIn.getDataArray().length != 0) {
 
-                Optional<ProxyServer> optionalProxyServer = ProxyServerInfoManager.toProxyServer((String) packetIn.getDataSingle());
-
+                Optional<ProxyServer> optionalProxyServer = connection.getProxyServer((String) packetIn.getDataSingle());
                 if (optionalProxyServer.isPresent()) {
                     return optionalProxyServer.get();
                 }

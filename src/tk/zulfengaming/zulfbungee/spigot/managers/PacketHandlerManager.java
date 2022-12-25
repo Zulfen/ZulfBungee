@@ -7,12 +7,13 @@ import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 
 public class PacketHandlerManager {
 
-    private final EnumMap<PacketTypes, PacketHandler> handlers = new EnumMap<>(PacketTypes.class);
+    private final ArrayList<PacketHandler> handlers = new ArrayList<>();
 
     public PacketHandlerManager(ClientConnection connectionIn) {
         addHandler(new Heartbeat(connectionIn));
@@ -25,16 +26,24 @@ public class PacketHandlerManager {
         addHandler(new ProxyServerInfo(connectionIn));
         addHandler(new ServerKickEvent(connectionIn));
         addHandler(new GlobalScript(connectionIn));
+        addHandler(new ServerPingEvent(connectionIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {
-        for (PacketTypes type : handlerIn.getTypes()) {
-            handlers.put(type, handlerIn);
-        }
+        handlers.add(handlerIn);
     }
 
     public PacketHandler getHandler(Packet packetIn) {
-        return handlers.get(packetIn.getType());
+
+        for (PacketHandler handler : handlers) {
+            for (PacketTypes type : handler.getTypes()) {
+                if (packetIn.getType() == type) {
+                    return handler;
+                }
+            }
+        }
+
+        return null;
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time

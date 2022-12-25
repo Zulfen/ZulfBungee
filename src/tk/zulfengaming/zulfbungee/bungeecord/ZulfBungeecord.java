@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.sendMessage;
@@ -34,6 +36,8 @@ public class ZulfBungeecord extends Plugin {
     private TaskManager taskManager;
 
     private CheckUpdateTask updater;
+
+    private final AtomicBoolean isDisabled = new AtomicBoolean(false);
 
     // represents the full version, so like
     // version[0] = 0, version[1] = 6, version[2] = 7
@@ -87,7 +91,9 @@ public class ZulfBungeecord extends Plugin {
     public void onDisable() {
 
         try {
-            mainServer.end();
+            if (isDisabled.compareAndSet(false, true)) {
+                mainServer.end();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

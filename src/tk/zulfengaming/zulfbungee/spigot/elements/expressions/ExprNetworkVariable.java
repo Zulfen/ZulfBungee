@@ -91,11 +91,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
             return false;
         }
 
-        if (networkVariable == null) {
-            Skript.error("Variable passed in does not exist!");
-            return false;
-
-        } else if (networkVariable.isLocal()) {
+        if (networkVariable.isLocal()) {
             Skript.error("A network variable cannot be a local variable!");
             return false;
         }

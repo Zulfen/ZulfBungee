@@ -39,7 +39,7 @@ public class EffPlayerSendMessage extends Effect {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        connection.send_direct(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
+        connection.send(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
                         false, false, new ProxyPlayerDataContainer(message.getSingle(event), players.getArray(event))));
     }
 

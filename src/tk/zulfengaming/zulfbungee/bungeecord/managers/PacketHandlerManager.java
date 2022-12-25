@@ -7,12 +7,11 @@ import tk.zulfengaming.zulfbungee.bungeecord.socket.packets.*;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
-import java.util.EnumMap;
-
+import java.util.ArrayList;
 
 public class PacketHandlerManager {
 
-    private final EnumMap<PacketTypes, PacketHandler> handlers = new EnumMap<>(PacketTypes.class);
+    private final ArrayList<PacketHandler> handlers = new ArrayList<>();
 
     public PacketHandlerManager(MainServer mainServerIn) {
         addHandler(new Heartbeat(mainServerIn));
@@ -30,13 +29,21 @@ public class PacketHandlerManager {
     }
 
     public void addHandler(PacketHandler handlerIn) {
-        for (PacketTypes type : handlerIn.getTypes()) {
-            handlers.put(type, handlerIn);
-        }
+        handlers.add(handlerIn);
     }
 
     public PacketHandler getHandler(Packet packetIn) {
-        return handlers.get(packetIn.getType());
+
+        for (PacketHandler handler : handlers) {
+            for (PacketTypes type : handler.getTypes()) {
+                if (packetIn.getType() == type) {
+                    return handler;
+                }
+            }
+        }
+
+        return null;
+
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time

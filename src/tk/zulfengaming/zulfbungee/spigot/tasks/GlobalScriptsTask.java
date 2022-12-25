@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.spigot.tasks;
 import ch.njol.skript.Skript;
 import org.bukkit.command.CommandSender;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
 
 import java.io.File;
@@ -13,7 +12,6 @@ import java.util.function.Supplier;
 
 public class GlobalScriptsTask implements Supplier<File> {
 
-    private final ClientConnection connection;
     private final ZulfBungeeSpigot pluginInstance;
 
     private final byte[] data;
@@ -22,9 +20,8 @@ public class GlobalScriptsTask implements Supplier<File> {
     private final ScriptAction scriptAction;
     private final CommandSender sender;
 
-    public GlobalScriptsTask(ClientConnection connectionIn, String scriptNameIn, ScriptAction scriptActionIn, CommandSender senderIn, byte[] dataIn) {
-        this.connection = connectionIn;
-        this.pluginInstance = connection.getPluginInstance();
+    public GlobalScriptsTask(ZulfBungeeSpigot pluginInstanceIn, String scriptNameIn, ScriptAction scriptActionIn, CommandSender senderIn, byte[] dataIn) {
+        this.pluginInstance = pluginInstanceIn;
         this.scriptName = scriptNameIn;
         this.scriptAction = scriptActionIn;
         this.sender = senderIn;
@@ -37,7 +34,7 @@ public class GlobalScriptsTask implements Supplier<File> {
 
         Thread.currentThread().setName("GlobalScriptsTask");
 
-        File scriptFile = new File(Skript.getInstance().getDataFolder() + File.separator + "scripts",
+        File scriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
                     scriptName);
 
         switch (scriptAction) {
@@ -91,7 +88,7 @@ public class GlobalScriptsTask implements Supplier<File> {
     }
 
     private void skriptReload() {
-        pluginInstance.getTaskManager().newPluginTask(Skript.getInstance(), () -> connection.getPluginInstance().getServer().dispatchCommand(sender, "sk reload " + scriptName));
+        pluginInstance.getTaskManager().newPluginTask(Skript.getInstance(), () -> pluginInstance.getServer().dispatchCommand(sender, "sk reload " + scriptName));
     }
 
 }

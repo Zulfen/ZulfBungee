@@ -17,7 +17,7 @@ public class HeartbeatTask extends BukkitRunnable {
     public void run() {
         Thread.currentThread().setName("HeartbeatTask");
         if (connection.isConnected().get()) {
-            connection.send_direct(new Packet(PacketTypes.HEARTBEAT, true, true, null));
+            connection.sendDirect(new Packet(PacketTypes.HEARTBEAT, true, true, null));
         }
     }
 

@@ -8,7 +8,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.spigot.managers.ProxyServerInfoManager;
+import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 
 public class ExprProxyServers extends SimpleExpression<ProxyServer> {
@@ -19,7 +19,7 @@ public class ExprProxyServers extends SimpleExpression<ProxyServer> {
 
     @Override
     protected ProxyServer @NotNull [] get(@NotNull Event event) {
-        return ProxyServerInfoManager.getServers().toArray(new ProxyServer[0]);
+        return ZulfBungeeSpigot.getPlugin().getConnection().getProxyServers();
     }
 
     @Override

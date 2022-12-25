@@ -119,7 +119,14 @@ public class ScriptReload extends CommandHandler {
 
                 } else {
 
-                    sendMessage(sender, new ComponentBuilder("The script ").color(ChatColor.WHITE).append(scriptName).color(ChatColor.WHITE).italic(true).append(" does not exist! Please try retyping the command.").italic(false).color(ChatColor.WHITE).create());
+                    sendMessage(sender, new ComponentBuilder("The script ")
+                            .color(ChatColor.WHITE)
+                            .append(scriptName)
+                            .color(ChatColor.WHITE)
+                            .italic(true)
+                            .append(" does not exist! Please try retyping the command.")
+                            .italic(false)
+                            .color(ChatColor.WHITE).create());
 
                 }
             }

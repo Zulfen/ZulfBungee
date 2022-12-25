@@ -19,7 +19,7 @@ public class ConnectionName extends PacketHandler {
 
         String name = (String) packetIn.getDataSingle();
 
-        getConnection().setConnectionName(name);
+        getConnection().setName(name);
 
     }
 }
