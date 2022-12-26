@@ -20,6 +20,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class BaseServerConnection implements Runnable {
 
@@ -30,6 +31,7 @@ public class BaseServerConnection implements Runnable {
     private final Socket socket;
 
     private final AtomicBoolean socketConnected = new AtomicBoolean(true);
+    private long ping = 0;
 
     private final SocketAddress address;
 
@@ -233,6 +235,14 @@ public class BaseServerConnection implements Runnable {
 
     public SocketAddress getAddress() {
         return address;
+    }
+
+    public long getPing() {
+        return ping;
+    }
+
+    public void setPing(long ping) {
+        this.ping = ping;
     }
 
     public AtomicBoolean isSocketConnected() {

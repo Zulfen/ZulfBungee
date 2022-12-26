@@ -18,7 +18,4 @@ public class EventListeners implements Listener {
     @EventHandler
     public void onPlayerKick(EventPlayerServerKick event) {}
 
-    @EventHandler
-    public void onProxyPlayerPing(EventPlayerServerPing event) {}
-
 }

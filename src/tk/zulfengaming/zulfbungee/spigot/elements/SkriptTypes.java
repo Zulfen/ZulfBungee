@@ -27,24 +27,12 @@ public class SkriptTypes {
 
                     @Override
                     public ProxyPlayer parse(@NotNull String s, @NotNull ParseContext context) {
-
-                        Optional<Packet> playerRequest = ZulfBungeeSpigot.getPlugin().getConnection()
-                                .send(new Packet(PacketTypes.PROXY_PLAYER_UUID, true, false, s));
-
-                        if (playerRequest.isPresent()) {
-                            Packet packet = playerRequest.get();
-                            if (packet.getDataArray().length != 0) {
-                                UUID uuid = (UUID) packet.getDataSingle();
-                                return new ProxyPlayer(s, uuid);
-                            }
-                        }
-
                         return null;
                     }
 
                     @Override
                     public boolean canParse(@NotNull ParseContext context) {
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -68,13 +56,12 @@ public class SkriptTypes {
 
                     @Override
                     public ProxyServer parse(@NotNull String s, @NotNull ParseContext context) {
-                        Optional<ProxyServer> server = ZulfBungeeSpigot.getPlugin().getConnection().getProxyServer(s);
-                        return server.orElse(null);
+                        return null;
                     }
 
                     @Override
                     public boolean canParse(@NotNull ParseContext context) {
-                        return true;
+                        return false;
                     }
 
                     @Override

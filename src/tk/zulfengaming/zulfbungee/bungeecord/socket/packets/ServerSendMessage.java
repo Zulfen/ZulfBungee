@@ -25,7 +25,7 @@ public class ServerSendMessage extends PacketHandler {
             String serverName = server.getName();
 
             if (getMainServer().getServerNames().contains(serverName)) {
-                getMainServer().getFromName(serverName).sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT, false, true, message));
+                getMainServer().getConnectionFromName(serverName).sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT, false, true, message));
             }
         }
 

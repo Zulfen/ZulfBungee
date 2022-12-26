@@ -280,7 +280,7 @@ public class MainServer implements Runnable {
         return activeConnections.keySet();
     }
 
-    public BaseServerConnection getFromName(String name) {
+    public BaseServerConnection getConnectionFromName(String name) {
         return activeConnections.get(name);
     }
 

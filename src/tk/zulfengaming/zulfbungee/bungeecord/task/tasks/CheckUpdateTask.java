@@ -38,27 +38,9 @@ public class CheckUpdateTask implements Supplier<Optional<UpdateResult>> {
             String downloadURL = jsonObject.getAsJsonArray("assets").get(0)
                     .getAsJsonObject().get("browser_download_url").getAsString();
 
-            int[] latestIntVersion = new int[3];
-            String[] latestVersionSplit = latestVersion.split("v")[1].split("\\.");
+            String latestVersionSplit = latestVersion.split("v")[1];
 
-            for (int i = 0; i < latestVersionSplit.length; i++) {
-                latestIntVersion[i] = Integer.parseInt(latestVersionSplit[i]);
-            }
-
-            boolean isUpToDate = true;
-
-            for (int i = 0; i < latestVersionSplit.length; i++) {
-
-                int minorVer = pluginInstance.getIntVersion()[i];
-
-                if (latestIntVersion[i] > minorVer) {
-                    isUpToDate = false;
-                    break;
-                }
-
-            }
-
-            if (!isUpToDate) {
+            if (!latestVersionSplit.equals(pluginInstance.getDescription().getVersion())) {
                 return Optional.of(new UpdateResult(latestVersion, downloadURL));
             }
 

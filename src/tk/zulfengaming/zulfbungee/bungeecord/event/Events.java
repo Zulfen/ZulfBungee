@@ -7,7 +7,6 @@ import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
-import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
@@ -17,11 +16,9 @@ import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
 public class Events implements Listener {
 
     private final MainServer mainServer;
-    private final TaskManager taskManager;
 
     public Events(MainServer mainServerIn) {
         this.mainServer = mainServerIn;
-        this.taskManager = mainServer.getPluginInstance().getTaskManager();
     }
 
     @EventHandler
@@ -45,16 +42,6 @@ public class Events implements Listener {
 
     }
 
-    @EventHandler
-    public void onProxyPingEvent(ProxyPingEvent event) {
-
-        PendingConnection connection = event.getConnection();
-        ProxyPlayer playerOut = new ProxyPlayer(connection.getName(), connection.getUniqueId());
-
-        mainServer.sendDirectToAllAsync(new Packet(PacketTypes.PROXY_PLAYER_PING, false, true,
-                new ProxyPlayerDataContainer(connection.getSocketAddress().toString(), playerOut)));
-
-    }
 
     @EventHandler
     public void onSwitchServerEvent(ServerSwitchEvent event) {

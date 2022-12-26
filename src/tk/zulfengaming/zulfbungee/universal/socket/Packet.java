@@ -18,8 +18,7 @@ public class Packet implements Serializable {
     // seen as misleading.
 
     // that field is used to determine whether it automatically gets handled as soon
-    // as the ClientConnection receives it. an example of a packet that uses this
-    // is the heartbeat packet, as it is separate from Skript.
+    // as the ClientConnection receives it.
 
     // packets sent by skript should set this field to false
 

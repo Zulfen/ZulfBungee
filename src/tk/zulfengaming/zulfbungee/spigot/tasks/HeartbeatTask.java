@@ -5,9 +5,13 @@ import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
 
+import java.util.Optional;
+
 public class HeartbeatTask extends BukkitRunnable {
 
     private final ClientConnection connection;
+
+    private volatile long ping = 0;
 
     public HeartbeatTask(ClientConnection connectionIn) {
         this.connection = connectionIn;
@@ -15,9 +19,18 @@ public class HeartbeatTask extends BukkitRunnable {
 
     @Override
     public void run() {
+
         Thread.currentThread().setName("HeartbeatTask");
+
         if (connection.isConnected().get()) {
-            connection.sendDirect(new Packet(PacketTypes.HEARTBEAT, true, true, null));
+
+            long timeBefore = System.currentTimeMillis();
+            Optional<Packet> heartbeatSent = connection.send(new Packet(PacketTypes.HEARTBEAT, true, false, ping));
+
+            if (heartbeatSent.isPresent()) {
+                ping = System.currentTimeMillis() - timeBefore;
+            }
+
         }
     }
 

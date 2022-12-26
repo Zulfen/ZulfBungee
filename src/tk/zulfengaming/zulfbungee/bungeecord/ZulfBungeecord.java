@@ -39,11 +39,6 @@ public class ZulfBungeecord extends Plugin {
 
     private final AtomicBoolean isDisabled = new AtomicBoolean(false);
 
-    // represents the full version, so like
-    // version[0] = 0, version[1] = 6, version[2] = 7
-    // there is probably a better way to do this but hey
-    private final int[] intVersion = new int[3];
-
     private boolean isDebug = false;
 
     public void onEnable() {
@@ -71,14 +66,6 @@ public class ZulfBungeecord extends Plugin {
             error("There was an error trying to initialise the server:");
             e.printStackTrace();
 
-        }
-
-        // gets the version from plugin.yml and converts it to an integer array
-
-        String[] versionString = getDescription().getVersion().split("\\.");
-
-        for (int i = 0; i < versionString.length; i++) {
-            intVersion[i] = Integer.parseInt(versionString[i]);
         }
 
         updater = new CheckUpdateTask(this);
@@ -128,10 +115,6 @@ public class ZulfBungeecord extends Plugin {
 
     public TaskManager getTaskManager() {
         return taskManager;
-    }
-
-    public int[] getIntVersion() {
-        return intVersion;
     }
 
     public void checkUpdate(CommandSender sender, boolean notifySuccess) {

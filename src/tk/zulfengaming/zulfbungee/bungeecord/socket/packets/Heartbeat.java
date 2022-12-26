@@ -14,7 +14,8 @@ public class Heartbeat extends PacketHandler {
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
+        connection.setPing((Long) packetIn.getDataSingle());
         return packetIn;
     }
 }

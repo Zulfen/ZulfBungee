@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.managers;
 
 import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.CheckUpdate;
+import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.Ping;
 import tk.zulfengaming.zulfbungee.bungeecord.command.subcommands.script.ScriptReload;
 import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
@@ -20,6 +21,7 @@ public class CommandHandlerManager {
         this.mainServer = mainServerIn;
         addHandler(new ScriptReload(mainServerIn));
         addHandler(new CheckUpdate(mainServerIn));
+        addHandler(new Ping(mainServerIn));
     }
 
     public MainServer getMainServer() {

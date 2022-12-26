@@ -67,7 +67,7 @@ public class ClientConnection extends BukkitRunnable {
     private int timeout = 2000;
     private int packetResponseTime = 1000;
 
-    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int packetResponseTimeIn) throws UnknownHostException {
+    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int heartbeatIn, int packetResponseTimeIn) throws UnknownHostException {
 
         this.pluginInstance = pluginInstanceIn;
         this.clientListenerManager = new ClientListenerManager(this);
@@ -84,7 +84,7 @@ public class ClientConnection extends BukkitRunnable {
         TaskManager taskManager = pluginInstance.getTaskManager();
 
         HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, timeout);
+        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, heartbeatIn);
 
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
