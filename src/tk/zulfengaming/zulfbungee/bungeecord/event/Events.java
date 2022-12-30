@@ -1,17 +1,16 @@
 package tk.zulfengaming.zulfbungee.bungeecord.event;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
 
 public class Events implements Listener {
 

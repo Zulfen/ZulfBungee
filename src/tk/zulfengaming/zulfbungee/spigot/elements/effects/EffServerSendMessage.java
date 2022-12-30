@@ -11,10 +11,10 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.skript.ServerMessage;
 
 @Name("Proxy Server receive message")
 @Description("When a proxy server receives a message.")

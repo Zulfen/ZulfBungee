@@ -11,7 +11,7 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventProxyMessage;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
 
 @Name("Proxy Server Switch Server")
 @Description("When a server messages another server.")

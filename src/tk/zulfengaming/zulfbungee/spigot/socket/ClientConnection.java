@@ -14,9 +14,9 @@ import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
-import tk.zulfengaming.zulfbungee.universal.socket.*;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
 
 import java.io.File;
 import java.net.Socket;

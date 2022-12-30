@@ -11,8 +11,8 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
 
 @Name("Proxy Player Connect")
 @Description("When a proxy player joins the proxy.")

@@ -6,9 +6,9 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.handlers.SocketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.ServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ServerInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;

@@ -9,21 +9,20 @@ import net.md_5.bungee.api.plugin.Plugin;
 import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
 import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
-import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
-import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
-import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
+import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
+import tk.zulfengaming.zulfbungee.universal.util.UpdateResult;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
-import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.sendMessage;
+import static tk.zulfengaming.zulfbungee.universal.util.MessageUtils.sendMessage;
 
 public class ZulfBungeecord extends Plugin {
 

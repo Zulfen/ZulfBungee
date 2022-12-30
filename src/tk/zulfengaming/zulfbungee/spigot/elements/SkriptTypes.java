@@ -6,14 +6,8 @@ import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-
-import java.util.Optional;
-import java.util.UUID;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
 
 public class SkriptTypes {
 

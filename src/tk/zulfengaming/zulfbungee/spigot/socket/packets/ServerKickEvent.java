@@ -3,10 +3,10 @@ package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerKick;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.skript.ProxyPlayerDataContainer;
 
 import java.net.SocketAddress;
 

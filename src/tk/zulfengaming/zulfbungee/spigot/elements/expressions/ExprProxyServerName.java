@@ -2,7 +2,7 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
 
 public class ExprProxyServerName extends SimplePropertyExpression<ProxyServer, String> {
 

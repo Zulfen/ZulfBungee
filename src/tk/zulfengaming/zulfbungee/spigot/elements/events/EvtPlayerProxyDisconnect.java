@@ -11,7 +11,7 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
 
 @Name("Proxy Player Disconnect")
 @Description("When a proxy player disconnects from the proxy.")

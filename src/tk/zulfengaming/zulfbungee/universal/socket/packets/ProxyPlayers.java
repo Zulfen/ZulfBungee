@@ -1,0 +1,54 @@
+package tk.zulfengaming.zulfbungee.universal.socket.packets;
+
+import tk.zulfengaming.zulfbungee.universal.interfaces.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+public class ProxyPlayers extends PacketHandler {
+
+    public ProxyPlayers(MainServer mainServerIn) {
+        super(mainServerIn, PacketTypes.PROXY_PLAYERS);
+
+    }
+
+    @Override
+    public Packet handlePacket(Packet packetIn, BaseServerConnection connectionIn) {
+
+        ArrayList<ProxyPlayer> playersOut = new ArrayList<>();
+
+        if (packetIn.getDataArray().length != 0) {
+
+            ProxyServer[] servers = Stream.of(packetIn.getDataArray())
+                    .filter(Objects::nonNull)
+                    .filter(ProxyServer.class::isInstance)
+                    .map(ProxyServer.class::cast)
+                    .toArray(ProxyServer[]::new);
+
+            for (ProxyServer server : servers) {
+
+                Collection<ProxyPlayer> players = getProxy().getServersCopy().get(server.getName()).getPlayers();
+                playersOut.addAll(players);
+
+            }
+
+
+        } else {
+
+            playersOut.addAll(getProxy().getPlayers());
+
+        }
+
+
+        return new Packet(PacketTypes.PROXY_PLAYERS, false, false, playersOut.toArray(new ProxyPlayer[0]));
+
+    }
+}

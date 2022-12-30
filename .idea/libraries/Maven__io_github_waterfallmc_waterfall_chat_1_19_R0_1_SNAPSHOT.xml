@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: io.github.waterfallmc:waterfall-chat:1.19-R0.1-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-chat/1.19-R0.1-SNAPSHOT/waterfall-chat-1.19-R0.1-20220728.165004-12.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-chat/1.19-R0.1-SNAPSHOT/waterfall-chat-1.19-R0.1-20221207.213734-22.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-chat/1.19-R0.1-SNAPSHOT/waterfall-chat-1.19-R0.1-20220728.165004-12-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-chat/1.19-R0.1-SNAPSHOT/waterfall-chat-1.19-R0.1-20221207.213734-22-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-chat/1.19-R0.1-SNAPSHOT/waterfall-chat-1.19-R0.1-20220728.165004-12-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/waterfallmc/waterfall-chat/1.19-R0.1-SNAPSHOT/waterfall-chat-1.19-R0.1-20221207.213734-22-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

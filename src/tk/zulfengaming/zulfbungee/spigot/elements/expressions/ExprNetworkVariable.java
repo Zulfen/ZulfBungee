@@ -15,13 +15,12 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.util.skript.Value;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.skript.Value;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;

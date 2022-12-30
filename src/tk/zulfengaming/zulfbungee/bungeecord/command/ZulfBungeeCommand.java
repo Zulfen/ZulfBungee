@@ -3,14 +3,9 @@ package tk.zulfengaming.zulfbungee.bungeecord.command;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import tk.zulfengaming.zulfbungee.bungeecord.interfaces.CommandHandler;
-import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
+import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-
-import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.*;
+import static tk.zulfengaming.zulfbungee.universal.util.MessageUtils.*;
 
 public class ZulfBungeeCommand extends Command implements TabExecutor {
 
@@ -23,89 +18,11 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender commandSender, String[] argsIn) {
-
-        if (argsIn.length > 0) {
-
-            Optional<CommandHandler> handlerOptional = commandHandlerManager.matchToHandler(argsIn);
-
-            if (handlerOptional.isPresent()) {
-
-                CommandHandler handler = handlerOptional.get();
-                String mainPermission = handler.getBasePermission();
-
-                if (commandSender.hasPermission(mainPermission)) {
-
-                    int totalLabels = handler.getRequiredLabels().length;
-
-                    String[] extraArgs = new String[0];
-                    if (argsIn.length > totalLabels) {
-                        int lenDifference = argsIn.length - totalLabels;
-                        extraArgs = Arrays.copyOfRange(argsIn, argsIn.length - lenDifference, argsIn.length);
-                    }
-
-                    handler.handleCommand(commandSender, extraArgs);
-
-                } else {
-                    sendMessage(commandSender, "You don't have permission to run this command!");
-                }
-
-            } else {
-                sendMessage(commandSender, "That sub command does not exist! Please read the documentation.");
-            }
-
-        } else {
-            sendMessage(commandSender, "Please input a sub-command.");
-        }
-
-
-
+        commandHandlerManager.handle(commandSender, argsIn);
     }
 
     @Override
     public Iterable<String> onTabComplete(CommandSender commandSender, String[] strings) {
-
-        ArrayList<String> newArgs = new ArrayList<>();
-        String mainLabel = strings[0];
-
-        if (mainLabel.isEmpty()) {
-
-            for (CommandHandler handler : commandHandlerManager.getHandlers()) {
-                if (commandSender.hasPermission(handler.getBasePermission())) {
-                    newArgs.add(handler.getMainLabel());
-                }
-            }
-
-        } else {
-
-            int index = strings.length - 1;
-
-            Optional<CommandHandler> commandHandlerOptional = commandHandlerManager.mainLabelToHandler(mainLabel);
-
-            if (commandHandlerOptional.isPresent()) {
-
-                CommandHandler commandHandler = commandHandlerOptional.get();
-                if (commandSender.hasPermission(commandHandler.getBasePermission())) {
-
-                    int size = commandHandler.getRequiredLabels().length;
-
-                    if (index < size) {
-
-                        newArgs.add(commandHandler.getRequiredLabels()[index]);
-
-                    } else {
-
-                        int newIndex = index - size;
-                        newArgs.addAll(commandHandler.onTab(newIndex));
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        return newArgs;
-
+        return commandHandlerManager.onTabComplete(commandSender, strings);
     }
 }
