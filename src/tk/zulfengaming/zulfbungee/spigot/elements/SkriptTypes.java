@@ -6,21 +6,23 @@ import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 public class SkriptTypes {
 
     static {
-        Classes.registerClass(new ClassInfo<>(ProxyPlayer.class, "proxyplayer")
+        Classes.registerClass(new ClassInfo<>(ClientPlayer.class, "proxyplayer")
                 .user("proxyplayers?")
                 .name("Proxy Player")
                 .description("Represents a player on the Bungeecord network.")
-                .defaultExpression(new EventValueExpression<>(ProxyPlayer.class))
-                .parser(new Parser<ProxyPlayer>() {
+                .defaultExpression(new EventValueExpression<>(ClientPlayer.class))
+                .parser(new Parser<ClientPlayer>() {
 
                     @Override
-                    public ProxyPlayer parse(@NotNull String s, @NotNull ParseContext context) {
+                    public ClientPlayer parse(@NotNull String s, @NotNull ParseContext context) {
                         return null;
                     }
 
@@ -30,26 +32,26 @@ public class SkriptTypes {
                     }
 
                     @Override
-                    public @NotNull String toString(ProxyPlayer proxyPlayer, int i) {
+                    public @NotNull String toString(ClientPlayer proxyPlayer, int i) {
                         return proxyPlayer.getName();
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(ProxyPlayer proxyPlayer) {
+                    public @NotNull String toVariableNameString(ClientPlayer proxyPlayer) {
                         return proxyPlayer.getName();
                     }
 
                 }));
 
-        Classes.registerClass(new ClassInfo<>(ProxyServer.class, "proxyserver")
+        Classes.registerClass(new ClassInfo<>(ClientServer.class, "proxyserver")
                 .user("proxyservers?")
                 .name("Proxy Server")
                 .description("Represents a proxied server.")
-                .defaultExpression(new EventValueExpression<>(ProxyServer.class))
-                .parser(new Parser<ProxyServer>() {
+                .defaultExpression(new EventValueExpression<>(ClientServer.class))
+                .parser(new Parser<ClientServer>() {
 
                     @Override
-                    public ProxyServer parse(@NotNull String s, @NotNull ParseContext context) {
+                    public ClientServer parse(@NotNull String s, @NotNull ParseContext context) {
                         return null;
                     }
 
@@ -59,13 +61,13 @@ public class SkriptTypes {
                     }
 
                     @Override
-                    public @NotNull String toString(ProxyServer proxyServer, int i) {
-                        return proxyServer.getName();
+                    public @NotNull String toString(ClientServer zulfProxyServer, int i) {
+                        return zulfProxyServer.getName();
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(ProxyServer proxyServer) {
-                        return proxyServer.getName();
+                    public @NotNull String toVariableNameString(ClientServer zulfProxyServer) {
+                        return zulfProxyServer.getName();
                     }
 
                 }));

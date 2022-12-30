@@ -11,7 +11,8 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerKick;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 @Name("Proxy Player Kick")
 @Description("When a proxy player gets kicked from the proxy. (e.g. a ban)")
@@ -20,9 +21,9 @@ public class EvtPlayerProxyKick extends SkriptEvent {
     static {
         Skript.registerEvent("Proxy Player Kick", EvtPlayerProxyKick.class, EventPlayerServerKick.class, "(proxy|bungeecord|bungee) player kick");
 
-        EventValues.registerEventValue(EventPlayerServerKick.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerKick>() {
+        EventValues.registerEventValue(EventPlayerServerKick.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerServerKick>() {
             @Override
-            public ProxyPlayer get(EventPlayerServerKick eventPlayerServerKick) {
+            public ClientPlayer get(EventPlayerServerKick eventPlayerServerKick) {
                 return eventPlayerServerKick.getPlayer();
             }
         }, 0);

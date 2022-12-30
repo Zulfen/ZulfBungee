@@ -1,18 +1,18 @@
 package tk.zulfengaming.zulfbungee.universal.interfaces;
 
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.skript.Value;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.util.Optional;
 
-public abstract class StorageImpl {
+public abstract class StorageImpl<P> {
 
-    private final MainServer mainServer;
+    private final MainServer<P> mainServer;
 
     private final String host, port, username, password, database;
 
-    public StorageImpl(MainServer mainServerIn) {
+    public StorageImpl(MainServer<P> mainServerIn) {
         this.mainServer = mainServerIn;
 
         this.host = mainServerIn.getPluginInstance().getConfig().getString("storage-host");
@@ -58,7 +58,7 @@ public abstract class StorageImpl {
 
     public abstract void shutdown();
 
-    public MainServer getMainServer() {
+    public MainServer<P> getMainServer() {
         return mainServer;
     }
 }

@@ -6,28 +6,28 @@ import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.skript.SkriptChangeMode;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.SkriptChangeMode;
 
 import java.util.Optional;
 
-public class NetworkVariableModify extends PacketHandler {
+public class NetworkVariableModify<P> extends PacketHandler<P> {
 
-    public NetworkVariableModify(MainServer mainServerIn) {
+    public NetworkVariableModify(MainServer<P> mainServerIn) {
         super(mainServerIn, PacketTypes.NETWORK_VARIABLE_MODIFY);
 
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> address) {
 
         NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
 
-        Optional<StorageImpl> getStorage = getMainServer().getStorage();
+        Optional<StorageImpl<P>> getStorage = getMainServer().getStorage();
 
         if (getStorage.isPresent()) {
 
-            StorageImpl storage = getStorage.get();
+            StorageImpl<P> storage = getStorage.get();
 
             if (variable.getChangeMode().isPresent()) {
 

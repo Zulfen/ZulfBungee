@@ -7,9 +7,9 @@ import tk.zulfengaming.zulfbungee.universal.storage.HikariSQLImpl;
 
 import java.io.File;
 
-public class H2Impl extends HikariSQLImpl {
+public class H2Impl<P> extends HikariSQLImpl<P> {
 
-    public H2Impl(MainServer mainServerIn) {
+    public H2Impl(MainServer<P> mainServerIn) {
         super(mainServerIn);
     }
 
@@ -18,7 +18,7 @@ public class H2Impl extends HikariSQLImpl {
 
         HikariConfig hikariConfig = new HikariConfig();
 
-        File path = new File(getMainServer().getPluginInstance().getDataFolder(), getDatabase() + ".db");
+        File path = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase() + ".db");
         String jdbcUrl = "jdbc:h2:" + path.getAbsolutePath() + ";mode=MySQL";
 
         hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");

@@ -11,7 +11,9 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 @Name("Proxy Player Disconnect")
 @Description("When a proxy player disconnects from the proxy.")
@@ -20,9 +22,9 @@ public class EvtPlayerProxyDisconnect extends SkriptEvent {
     static {
         Skript.registerEvent("Proxy Player Disconnect", EvtPlayerProxyDisconnect.class, EventPlayerServerDisconnect.class, "(proxy|bungeecord|bungee) player disconnect");
 
-        EventValues.registerEventValue(EventPlayerServerDisconnect.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerDisconnect>() {
+        EventValues.registerEventValue(EventPlayerServerDisconnect.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerServerDisconnect>() {
             @Override
-            public ProxyPlayer get(EventPlayerServerDisconnect eventPlayerServerDisconnect) {
+            public ClientPlayer get(EventPlayerServerDisconnect eventPlayerServerDisconnect) {
                 return eventPlayerServerDisconnect.getPlayer();
             }
         }, 0);

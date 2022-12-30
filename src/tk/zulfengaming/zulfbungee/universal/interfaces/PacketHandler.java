@@ -6,27 +6,27 @@ import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
-public abstract class PacketHandler {
+public abstract class PacketHandler<P> {
 
     private final PacketTypes[] types;
 
-    private final MainServer mainServer;
+    private final MainServer<P> mainServer;
 
-    public abstract Packet handlePacket(Packet packetIn, BaseServerConnection connection);
+    public abstract Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection);
 
     public PacketTypes[] getTypes() {
         return types;
     }
 
-    public MainServer getMainServer() {
+    public MainServer<P> getMainServer() {
         return mainServer;
     }
 
-    public ZulfBungeeProxy getProxy() {
+    public ZulfBungeeProxy<P> getProxy() {
         return mainServer.getPluginInstance();
     }
 
-    public PacketHandler(MainServer mainServerIn, PacketTypes... types) {
+    public PacketHandler(MainServer<P> mainServerIn, PacketTypes... types) {
         this.mainServer = mainServerIn;
         this.types = types;
 

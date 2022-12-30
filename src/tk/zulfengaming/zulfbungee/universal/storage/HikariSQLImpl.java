@@ -6,8 +6,8 @@ import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.skript.Value;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
@@ -20,11 +20,11 @@ import java.util.Optional;
 
 // TODO: Make byte to long / double (and reverse) a static function somewhere else for re-usability.
 
-public abstract class HikariSQLImpl extends StorageImpl {
+public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
     private final HikariDataSource dataSource;
 
-    public HikariSQLImpl(MainServer mainServerIn) {
+    public HikariSQLImpl(MainServer<P> mainServerIn) {
         super(mainServerIn);
         this.dataSource = initialiseDataSource();
     }

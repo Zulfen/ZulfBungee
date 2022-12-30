@@ -5,11 +5,11 @@ import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 
-public class GlobalScript extends PacketHandler {
+public class GlobalScript<P> extends PacketHandler<P> {
 
-    public GlobalScript(MainServer mainServerIn) {
+    public GlobalScript(MainServer<P> mainServerIn) {
         super(mainServerIn, PacketTypes.GLOBAL_SCRIPT);
 
     }
@@ -17,7 +17,7 @@ public class GlobalScript extends PacketHandler {
     // used to retrieve all scripts on the proxy, client will never ask for scripts on its own apart from this, server sends it
     // when needed to the client
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         if (getMainServer().getPluginInstance().getConfig().getBoolean("global-scripts")) {
 

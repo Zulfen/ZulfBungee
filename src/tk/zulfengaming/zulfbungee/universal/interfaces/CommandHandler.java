@@ -6,15 +6,15 @@ import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import java.util.Collection;
 import java.util.Collections;
 
-public abstract class CommandHandler {
+public abstract class CommandHandler<P> {
 
     private final String[] labels;
 
     private final String permission;
 
-    private final MainServer mainServer;
+    private final MainServer<P> mainServer;
 
-    public abstract void handleCommand(ProxyCommandSender sender, String[] separateArgs);
+    public abstract void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs);
 
     public Collection<String> onTab(int index) {
         return Collections.emptyList();
@@ -32,11 +32,11 @@ public abstract class CommandHandler {
         return permission;
     }
 
-    public MainServer getMainServer() {
+    public MainServer<P> getMainServer() {
         return mainServer;
     }
 
-    public CommandHandler(MainServer mainServerIn, String permissionIn, String... labels) {
+    public CommandHandler(MainServer<P> mainServerIn, String permissionIn, String... labels) {
         this.labels = labels;
         this.mainServer = mainServerIn;
         this.permission = permissionIn;

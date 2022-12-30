@@ -2,17 +2,19 @@ package tk.zulfengaming.zulfbungee.spigot.event.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 public class EventPlayerServerKick extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
-    private final ProxyPlayer player;
+    private final ClientPlayer player;
 
     private final String reason;
 
-    public EventPlayerServerKick(String reason, ProxyPlayer player) {
+    public EventPlayerServerKick(String reason, ClientPlayer player) {
         super(true);
         this.player = player;
         this.reason = reason;
@@ -27,7 +29,7 @@ public class EventPlayerServerKick extends Event {
         return handlerList;
     }
 
-    public ProxyPlayer getPlayer() {
+    public ClientPlayer getPlayer() {
         return player;
     }
 

@@ -9,22 +9,23 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.Optional;
 
 @Name("Proxy Player Online")
 @Description("Checks if a proxy player is online on the network.")
-public class CondIsProxyPlayerOnline extends PropertyCondition<ProxyPlayer> {
+public class CondIsProxyPlayerOnline extends PropertyCondition<ClientPlayer> {
 
-    private Expression<ProxyPlayer> player;
+    private Expression<ClientPlayer> player;
 
     static {
         register(CondIsProxyPlayerOnline.class, "online", "proxyplayers");
     }
 
     @Override
-    public boolean check(ProxyPlayer proxyPlayer) {
+    public boolean check(ClientPlayer proxyPlayer) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 

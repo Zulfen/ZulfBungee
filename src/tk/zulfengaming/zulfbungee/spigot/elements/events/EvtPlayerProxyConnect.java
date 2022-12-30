@@ -11,8 +11,10 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 @Name("Proxy Player Connect")
 @Description("When a proxy player joins the proxy.")
@@ -21,17 +23,17 @@ public class EvtPlayerProxyConnect extends SkriptEvent {
     static {
         Skript.registerEvent("Proxy Player Connect", EvtPlayerProxyConnect.class, EventPlayerServerConnect.class, "(proxy|bungeecord|bungee) player connect");
 
-        EventValues.registerEventValue(EventPlayerServerConnect.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerServerConnect>() {
+        EventValues.registerEventValue(EventPlayerServerConnect.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerServerConnect>() {
 
             @Override
-            public ProxyPlayer get(EventPlayerServerConnect eventPlayerServerConnect) {
+            public ClientPlayer get(EventPlayerServerConnect eventPlayerServerConnect) {
                 return eventPlayerServerConnect.getPlayer();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventPlayerServerConnect.class, ProxyServer.class, new Getter<ProxyServer, EventPlayerServerConnect>() {
+        EventValues.registerEventValue(EventPlayerServerConnect.class, ClientServer.class, new Getter<ClientServer, EventPlayerServerConnect>() {
             @Override
-            public ProxyServer get(EventPlayerServerConnect eventPlayerServerConnect) {
+            public ClientServer get(EventPlayerServerConnect eventPlayerServerConnect) {
                 return eventPlayerServerConnect.getPlayer().getServer();
             }
         }, 0);

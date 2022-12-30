@@ -8,7 +8,9 @@ import tk.zulfengaming.zulfbungee.spigot.handlers.SocketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -39,7 +41,7 @@ public class ClientListenerManager extends BukkitRunnable {
     private final AtomicBoolean socketConnected = new AtomicBoolean(false);
     private final AtomicBoolean terminated = new AtomicBoolean(false);
 
-    private ServerInfo serverInfo;
+    private ClientInfo zulfServerInfo;
 
     public ClientListenerManager(ClientConnection connectionIn) {
 
@@ -121,8 +123,8 @@ public class ClientListenerManager extends BukkitRunnable {
         return socketBarrier;
     }
 
-    public ServerInfo getClientInfo() {
-        return serverInfo;
+    public ClientInfo getClientInfo() {
+        return zulfServerInfo;
     }
 
     @Override
@@ -180,9 +182,9 @@ public class ClientListenerManager extends BukkitRunnable {
 
                 pluginInstance.logInfo(ChatColor.GREEN + "Connection established with proxy!");
 
-                serverInfo = new ServerInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
+                zulfServerInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
 
-                connection.sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, serverInfo));
+                connection.sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, zulfServerInfo));
                 connection.sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
 
             } else {

@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot.tasks;
 import ch.njol.skript.Skript;
 import org.bukkit.command.CommandSender;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 
 import java.io.File;
 import java.io.IOException;

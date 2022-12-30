@@ -12,33 +12,35 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ExprProxyServerPlayers extends SimpleExpression<ProxyPlayer> {
+public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
 
     static {
-        Skript.registerExpression(ExprProxyServerPlayers.class, ProxyPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]");
+        Skript.registerExpression(ExprProxyServerPlayers.class, ClientPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]");
     }
 
-    private Expression<ProxyServer> servers;
+    private Expression<ClientServer> servers;
 
     @Override
-    protected ProxyPlayer[] get(@NotNull Event event) {
+    protected ClientPlayer[] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
-        ArrayList<ProxyPlayer> playersOut = new ArrayList<>();
+        ArrayList<ClientPlayer> playersOut = new ArrayList<>();
 
         Optional<Packet> request;
 
         if (servers != null) {
 
-            ProxyServer[] serversOut = servers.getArray(event);
+            ClientServer[] serversOut = servers.getArray(event);
 
             request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
                         true, false, serversOut));
@@ -47,7 +49,7 @@ public class ExprProxyServerPlayers extends SimpleExpression<ProxyPlayer> {
         } else {
 
             request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                    true, false, new ProxyServer[0]));
+                    true, false, new ZulfProxyServer[0]));
 
         }
 
@@ -57,10 +59,10 @@ public class ExprProxyServerPlayers extends SimpleExpression<ProxyPlayer> {
 
             if (packet.getDataArray() != null) {
 
-                List<ProxyPlayer> playersFrom = Stream.of(packet.getDataArray())
+                List<ClientPlayer> playersFrom = Stream.of(packet.getDataArray())
                         .filter(Objects::nonNull)
-                        .filter(ProxyPlayer.class::isInstance)
-                        .map(ProxyPlayer.class::cast)
+                        .filter(ClientPlayer.class::isInstance)
+                        .map(ClientPlayer.class::cast)
                         .collect(Collectors.toList());
 
                 playersOut.addAll(playersFrom);
@@ -70,7 +72,7 @@ public class ExprProxyServerPlayers extends SimpleExpression<ProxyPlayer> {
 
         }
 
-        return playersOut.toArray(new ProxyPlayer[0]);
+        return playersOut.toArray(new ClientPlayer[0]);
     }
 
     @Override
@@ -79,8 +81,8 @@ public class ExprProxyServerPlayers extends SimpleExpression<ProxyPlayer> {
     }
 
     @Override
-    public @NotNull Class<? extends ProxyPlayer> getReturnType() {
-        return ProxyPlayer.class;
+    public @NotNull Class<? extends ClientPlayer> getReturnType() {
+        return ClientPlayer.class;
     }
 
     @Override
@@ -90,7 +92,7 @@ public class ExprProxyServerPlayers extends SimpleExpression<ProxyPlayer> {
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
-        servers = (Expression<ProxyServer>) expressions[0];
+        servers = (Expression<ClientServer>) expressions[0];
         return true;
     }
 }

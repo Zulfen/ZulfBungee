@@ -1,19 +1,19 @@
 package tk.zulfengaming.zulfbungee.universal.socket;
 
 
-import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
-import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ScriptAction;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ServerInfo;
-import tk.zulfengaming.zulfbungee.universal.task.ProxyTaskManager;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
+import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
+import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
+import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -22,10 +22,10 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MainServer implements Runnable {
+public class MainServer<P> implements Runnable {
     // plugin instance !!!
 
-    private final ZulfBungeeProxy pluginInstance;
+    private final ZulfBungeeProxy<P> pluginInstance;
 
     // setting up the server
     private final int port;
@@ -38,18 +38,18 @@ public class MainServer implements Runnable {
     private ServerSocket serverSocket;
     private Socket socket;
 
-    private final ArrayList<BaseServerConnection> socketConnections = new ArrayList<>();
+    private final ArrayList<BaseServerConnection<P>> socketConnections = new ArrayList<>();
 
-    private final HashMap<String, BaseServerConnection> activeConnections = new HashMap<>();
+    private final HashMap<String, BaseServerConnection<P>> activeConnections = new HashMap<>();
 
     // quite neat
     private final PacketHandlerManager packetManager;
     private final ProxyTaskManager taskManager;
 
     // storage
-    private StorageImpl storage;
+    private StorageImpl<P> storage;
 
-    public MainServer(int port, InetAddress address, ZulfBungeeProxy instanceIn) {
+    public MainServer(int port, InetAddress address, ZulfBungeeProxy<P> instanceIn) {
         this.hostAddress = address;
         this.port = port;
         this.pluginInstance = instanceIn;
@@ -57,7 +57,7 @@ public class MainServer implements Runnable {
         this.packetManager = new PacketHandlerManager(this);
         this.taskManager = instanceIn.getTaskManager();
 
-        Optional<StorageImpl> newStorage = setupStorage();
+        Optional<StorageImpl<P>> newStorage = setupStorage();
 
         if (newStorage.isPresent()) {
 
@@ -143,7 +143,7 @@ public class MainServer implements Runnable {
 
     private void acceptConnection(Socket socketIn) throws IOException {
 
-        BaseServerConnection connection = new BaseServerConnection(this, socketIn);
+        BaseServerConnection<P> connection = new BaseServerConnection<>(this, socketIn);
 
         taskManager.newTask(connection);
         socketConnections.add(connection);
@@ -155,12 +155,12 @@ public class MainServer implements Runnable {
     // TODO: Add address whitelist
     private boolean isValidClient(SocketAddress addressIn) {
 
-        Map<String, ServerInfo> servers = pluginInstance.getServersCopy();
+        Map<String, ZulfServerInfo<P>> servers = pluginInstance.getServersCopy();
 
         boolean portWhitelistEnabled = pluginInstance.getConfig().getBoolean("port-whitelist");
         List<Integer> ports = pluginInstance.getConfig().getIntList("ports");
 
-        for (ServerInfo server : servers.values()) {
+        for (ZulfServerInfo<P> server : servers.values()) {
 
             InetSocketAddress inetServerAddr = (InetSocketAddress) server.getSocketAddress();
             InetSocketAddress inetAddrIn = (InetSocketAddress) addressIn;
@@ -188,14 +188,14 @@ public class MainServer implements Runnable {
 
     public void sendDirectToAll(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
-        for (BaseServerConnection connection : socketConnections) {
+        for (BaseServerConnection<P> connection : socketConnections) {
             connection.sendDirect(packetIn);
         }
     }
 
-    public void syncScriptsFolder(Map<String, ScriptAction> scriptNamesIn, ProxyCommandSender senderIn) {
+    public void syncScriptsFolder(Map<String, ScriptAction> scriptNamesIn, ProxyCommandSender<P> senderIn) {
 
-        for (BaseServerConnection connection : socketConnections) {
+        for (BaseServerConnection<P> connection : socketConnections) {
 
             for (Map.Entry<String, ScriptAction> script : scriptNamesIn.entrySet()) {
 
@@ -209,7 +209,7 @@ public class MainServer implements Runnable {
 
     }
 
-    public void addActiveConnection(BaseServerConnection connection, String name) {
+    public void addActiveConnection(BaseServerConnection<P> connection, String name) {
 
         activeConnections.put(name, connection);
 
@@ -219,7 +219,7 @@ public class MainServer implements Runnable {
 
     }
 
-    public void removeServerConnection(BaseServerConnection connectionIn) {
+    public void removeServerConnection(BaseServerConnection<P> connectionIn) {
 
         socketConnections.remove(connectionIn);
         String connectionName = connectionIn.getName();
@@ -231,14 +231,13 @@ public class MainServer implements Runnable {
         }
 
 
-
     }
 
     public void end() throws IOException {
 
         if (running.compareAndSet(true, false)) {
 
-            for (BaseServerConnection connection : socketConnections) {
+            for (BaseServerConnection<P> connection : socketConnections) {
                 connection.shutdown();
             }
 
@@ -259,16 +258,16 @@ public class MainServer implements Runnable {
 
     }
 
-    private Optional<StorageImpl> setupStorage() {
+    private Optional<StorageImpl<P>> setupStorage() {
 
-        StorageImpl newStorage = null;
+        StorageImpl<P> newStorage = null;
 
         String storageChoice = pluginInstance.getConfig().getString("storage-type");
 
         if (storageChoice.matches("(?i)mysql")) {
-            newStorage = new MySQLImpl(this);
+            newStorage = new MySQLImpl<>(this);
         } else if (storageChoice.matches("(?i)h2")) {
-            newStorage = new H2Impl(this);
+            newStorage = new H2Impl<>(this);
         }
 
         return Optional.ofNullable(newStorage);
@@ -280,14 +279,14 @@ public class MainServer implements Runnable {
         return activeConnections.keySet();
     }
 
-    public BaseServerConnection getConnectionFromName(String name) {
+    public BaseServerConnection<P> getConnectionFromName(String name) {
         return activeConnections.get(name);
     }
 
-    public ProxyServer[] getProxyServerArray() {
+    public ClientServer[] getProxyServerArray() {
         return activeConnections.entrySet().stream()
-                .map(proxyServerList -> new ProxyServer(proxyServerList.getKey(), proxyServerList.getValue().getServerInfo()))
-                .toArray(ProxyServer[]::new);
+                .map(proxyServerList -> new ClientServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
+                .toArray(ClientServer[]::new);
     }
 
 
@@ -295,11 +294,11 @@ public class MainServer implements Runnable {
         return packetManager;
     }
 
-    public Optional<StorageImpl> getStorage() {
+    public Optional<StorageImpl<P>> getStorage() {
         return Optional.ofNullable(storage);
     }
 
-    public ZulfBungeeProxy getPluginInstance() {
+    public ZulfBungeeProxy<P> getPluginInstance() {
         return pluginInstance;
     }
 

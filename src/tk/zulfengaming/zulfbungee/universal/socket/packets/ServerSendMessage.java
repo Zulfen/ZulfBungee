@@ -5,22 +5,22 @@ import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
-import tk.zulfengaming.zulfbungee.universal.skript.ServerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
 
-public class ServerSendMessage extends PacketHandler {
+public class ServerSendMessage<P> extends PacketHandler<P> {
 
-    public ServerSendMessage(MainServer mainServerIn) {
+    public ServerSendMessage(MainServer<P> mainServerIn) {
         super(mainServerIn, PacketTypes.SERVER_SEND_MESSAGE_EVENT);
 
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> address) {
 
         ServerMessage message = (ServerMessage) packetIn.getDataSingle();
 
-        for (ProxyServer server : message.getServers()) {
+        for (ClientServer server : message.getServers()) {
 
             String serverName = server.getName();
 

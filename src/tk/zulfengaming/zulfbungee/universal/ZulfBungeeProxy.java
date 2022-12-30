@@ -1,70 +1,46 @@
 package tk.zulfengaming.zulfbungee.universal;
 
-import tk.zulfengaming.zulfbungee.universal.command.Constants;
-import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ServerInfo;
-import tk.zulfengaming.zulfbungee.universal.task.ProxyTaskManager;
-import tk.zulfengaming.zulfbungee.universal.util.UpdateResult;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
+import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
+import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
-public abstract class ZulfBungeeProxy {
+public interface ZulfBungeeProxy<P> {
 
-    private final CheckUpdateTask checkUpdateTask;
+    void logDebug(String messageIn);
 
-    protected ZulfBungeeProxy(CheckUpdateTask checkUpdateTask) {
-        this.checkUpdateTask = checkUpdateTask;
-    }
+    void logInfo(String messageIn);
 
-    public abstract void logDebug(String messageIn);
+    void error(String messageIn);
 
-    public abstract void logInfo(String messageIn);
+    void warning(String messageIn);
 
-    public abstract void error(String messageIn);
+    MainServer<P> getServer();
 
-    public abstract void warning(String messageIn);
+    ProxyTaskManager getTaskManager();
+    ProxyConfig getConfig();
 
-    public abstract MainServer getServer();
+    ZulfProxyPlayer<P> getPlayer(UUID uuidIn);
+    ZulfProxyPlayer<P> getPlayer(String nameIn);
+    Collection<ZulfProxyPlayer<P>> getPlayers();
 
-    public abstract ProxyTaskManager getTaskManager();
-    public abstract ProxyConfig getConfig();
+    ZulfProxyServer<P> getServer(String name);
+    Map<String, ZulfServerInfo<P>> getServersCopy();
 
-    public abstract ProxyPlayer getPlayer(UUID uuidIn);
-    public abstract ProxyPlayer getPlayer(String nameIn);
-    public abstract Collection<ProxyPlayer> getPlayers();
-    public abstract Map<String, ServerInfo> getServersCopy();
+    String getVersion();
+    // make this a path tbh.
+    File getPluginFolder();
 
-    public abstract String getVersion();
+    P getPlatform();
 
-    public void checkUpdate(ProxyCommandSender senderIn, boolean notifySuccess) {
-
-        CompletableFuture.supplyAsync(checkUpdateTask)
-                .thenAccept(updateResult -> {
-
-                    if (updateResult.isPresent()) {
-
-                        UpdateResult getUpdaterResult = updateResult.get();
-
-                        senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("A new update to ZulfBungee is available! &e(%s)",
-                                getUpdaterResult.getLatestVersion())));
-                        senderIn.sendMessage(Constants.MESSAGE_PREFIX + "Copy this link into a browser for a direct download:");
-                        senderIn.sendMessage(Constants.MESSAGE_PREFIX + String.format("&3&n%s", getUpdaterResult.getDownloadURL()));
-
-                    } else if (notifySuccess) {
-
-                        senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("ZulfBungee is up to date! &e(%s)",
-                                getVersion())));
-                    }
-
-                });
-
-    }
+    CheckUpdateTask<P> getUpdater();
 
 }

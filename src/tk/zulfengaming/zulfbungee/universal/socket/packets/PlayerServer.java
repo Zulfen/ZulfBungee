@@ -5,22 +5,23 @@ import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-public class PlayerServer extends PacketHandler {
+public class PlayerServer<P> extends PacketHandler<P> {
 
-    public PlayerServer(MainServer mainServerIn) {
+    public PlayerServer(MainServer<P> mainServerIn) {
         super(mainServerIn, PacketTypes.PLAYER_SERVER);
 
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection connection) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
-        ProxyPlayer playerIn = (ProxyPlayer) packetIn.getDataSingle();
+        ClientPlayer playerIn = (ClientPlayer) packetIn.getDataSingle();
 
-        ProxyServer server = getProxy().getPlayer(playerIn.getUuid()).getServer();
+        ZulfProxyServer<P> server = getProxy().getPlayer(playerIn.getUuid()).getServer();
 
         if (server != null) {
 

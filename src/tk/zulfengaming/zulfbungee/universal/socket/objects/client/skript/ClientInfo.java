@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.socket.objects;
+package tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript;
 
 public class ClientInfo {
 

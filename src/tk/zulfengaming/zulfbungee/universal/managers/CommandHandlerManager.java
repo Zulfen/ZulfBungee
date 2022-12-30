@@ -10,36 +10,36 @@ import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 
 import java.util.*;
 
-public class CommandHandlerManager {
+public class CommandHandlerManager<P> {
 
-    private final MainServer mainServer;
+    private final MainServer<P> mainServer;
 
-    private final HashMap<String, CommandHandler> handlers = new HashMap<>();
+    private final HashMap<String, CommandHandler<P>> handlers = new HashMap<>();
 
-    public CommandHandlerManager(MainServer mainServerIn) {
+    public CommandHandlerManager(MainServer<P> mainServerIn) {
         this.mainServer = mainServerIn;
-        addHandler(new ScriptReload(mainServerIn));
-        addHandler(new CheckUpdate(mainServerIn));
-        addHandler(new Ping(mainServerIn));
+        addHandler(new ScriptReload<>(mainServerIn));
+        addHandler(new CheckUpdate<>(mainServerIn));
+        addHandler(new Ping<>(mainServerIn));
     }
 
-    public MainServer getMainServer() {
+    public MainServer<P> getMainServer() {
         return mainServer;
     }
 
-    public void addHandler(CommandHandler handlerIn) {
+    public void addHandler(CommandHandler<P> handlerIn) {
         handlers.put(handlerIn.getMainLabel(), handlerIn);
     }
 
-    public void handle(ProxyCommandSender sender, String[] argsIn) {
+    public void handle(ProxyCommandSender<P> sender, String[] argsIn) {
 
         if (argsIn.length > 0) {
 
-            Optional<CommandHandler> handlerOptional = matchToHandler(argsIn);
+            Optional<CommandHandler<P>> handlerOptional = matchToHandler(argsIn);
 
             if (handlerOptional.isPresent()) {
 
-                CommandHandler handler = handlerOptional.get();
+                CommandHandler<P> handler = handlerOptional.get();
                 String mainPermission = handler.getBasePermission();
 
                 if (sender.hasPermission(mainPermission)) {
@@ -68,14 +68,14 @@ public class CommandHandlerManager {
 
     }
 
-    public Iterable<String> onTabComplete(ProxyCommandSender commandSender, String[] strings) {
+    public Iterable<String> onTabComplete(ProxyCommandSender<P> commandSender, String[] strings) {
 
         ArrayList<String> newArgs = new ArrayList<>();
         String mainLabel = strings[0];
 
         if (mainLabel.isEmpty()) {
 
-            for (CommandHandler handler : handlers.values()) {
+            for (CommandHandler<P> handler : handlers.values()) {
                 if (commandSender.hasPermission(handler.getBasePermission())) {
                     newArgs.add(handler.getMainLabel());
                 }
@@ -85,11 +85,11 @@ public class CommandHandlerManager {
 
             int index = strings.length - 1;
 
-            Optional<CommandHandler> commandHandlerOptional = mainLabelToHandler(mainLabel);
+            Optional<CommandHandler<P>> commandHandlerOptional = mainLabelToHandler(mainLabel);
 
             if (commandHandlerOptional.isPresent()) {
 
-                CommandHandler commandHandler = commandHandlerOptional.get();
+                CommandHandler<P> commandHandler = commandHandlerOptional.get();
                 if (commandSender.hasPermission(commandHandler.getBasePermission())) {
 
                     int size = commandHandler.getRequiredLabels().length;
@@ -115,17 +115,17 @@ public class CommandHandlerManager {
 
     }
 
-    private Optional<CommandHandler> mainLabelToHandler(String mainLabelIn){
+    private Optional<CommandHandler<P>> mainLabelToHandler(String mainLabelIn){
         return Optional.ofNullable(handlers.get(mainLabelIn));
     }
 
-    private Optional<CommandHandler> matchToHandler(String[] argsIn) {
+    private Optional<CommandHandler<P>> matchToHandler(String[] argsIn) {
 
-        Optional<CommandHandler> handlerOptional = mainLabelToHandler(argsIn[0]);
+        Optional<CommandHandler<P>> handlerOptional = mainLabelToHandler(argsIn[0]);
 
         if (handlerOptional.isPresent()) {
 
-            CommandHandler handler = handlerOptional.get();
+            CommandHandler<P> handler = handlerOptional.get();
             String[] requiredLabels = handler.getRequiredLabels();
 
             int counter = 0;

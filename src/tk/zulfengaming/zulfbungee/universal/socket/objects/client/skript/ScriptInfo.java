@@ -1,4 +1,7 @@
-package tk.zulfengaming.zulfbungee.universal.socket.objects;
+package tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript;
+
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.io.Serializable;
 
@@ -8,11 +11,11 @@ public class ScriptInfo implements Serializable {
 
     private final String scriptName;
 
-    private final ProxyPlayer sender;
+    private final ClientPlayer sender;
 
     private final byte[] scriptData;
 
-    public ScriptInfo(ScriptAction scriptActionIn, String scriptNameIn, ProxyPlayer proxyPlayerIn, byte[] dataIn) {
+    public ScriptInfo(ScriptAction scriptActionIn, String scriptNameIn, ClientPlayer proxyPlayerIn, byte[] dataIn) {
         this.scriptAction = scriptActionIn;
         this.scriptName = scriptNameIn;
         this.sender = proxyPlayerIn;
@@ -27,7 +30,7 @@ public class ScriptInfo implements Serializable {
         return scriptAction;
     }
 
-    public ProxyPlayer getSender() {
+    public ClientPlayer getSender() {
         return sender;
     }
 

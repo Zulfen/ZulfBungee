@@ -2,9 +2,10 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-public class ExprProxyServerName extends SimplePropertyExpression<ProxyServer, String> {
+public class ExprProxyServerName extends SimplePropertyExpression<ClientServer, String> {
 
     static {
         register(ExprProxyServerName.class, String.class, "name", "proxyservers");
@@ -16,8 +17,8 @@ public class ExprProxyServerName extends SimplePropertyExpression<ProxyServer, S
     }
 
     @Override
-    public String convert(ProxyServer proxyServer) {
-        return proxyServer.getName();
+    public String convert(ClientServer zulfProxyServer) {
+        return zulfProxyServer.getName();
     }
 
     @Override

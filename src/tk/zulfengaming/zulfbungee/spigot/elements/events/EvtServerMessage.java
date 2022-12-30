@@ -11,7 +11,8 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventProxyMessage;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 @Name("Proxy Server Switch Server")
 @Description("When a server messages another server.")
@@ -29,9 +30,9 @@ public class EvtServerMessage extends SkriptEvent {
             }
         }, 0);
 
-        EventValues.registerEventValue(EventProxyMessage.class, ProxyServer.class, new Getter<ProxyServer, EventProxyMessage>() {
+        EventValues.registerEventValue(EventProxyMessage.class, ClientServer.class, new Getter<ClientServer, EventProxyMessage>() {
             @Override
-            public ProxyServer get(EventProxyMessage eventProxyMessage) {
+            public ClientServer get(EventProxyMessage eventProxyMessage) {
                 return eventProxyMessage.getMessage().getFrom();
             }
         }, 0);
@@ -46,9 +47,7 @@ public class EvtServerMessage extends SkriptEvent {
 
     @Override
     public boolean check(Event event) {
-
         EventProxyMessage messageEvent = (EventProxyMessage) event;
-
         return messageEvent.getMessage().getTitle().equals(title.getSingle());
 
     }

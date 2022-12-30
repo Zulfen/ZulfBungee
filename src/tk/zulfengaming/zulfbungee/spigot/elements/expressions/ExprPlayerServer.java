@@ -6,17 +6,18 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.util.Optional;
 
 // again, referenced code from Skungee 2.0!
 
-public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, ProxyServer> {
+public class ExprPlayerServer extends SimplePropertyExpression<ClientPlayer, ClientServer> {
 
     static {
-        register(ExprPlayerServer.class, ProxyServer.class, "[(current|connected)] server", "proxyplayers");
+        register(ExprPlayerServer.class, ClientServer.class, "[(current|connected)] server", "proxyplayers");
     }
 
     @Override
@@ -25,7 +26,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
     }
 
     @Override
-    public ProxyServer convert(ProxyPlayer proxyPlayer) {
+    public ClientServer convert(ClientPlayer proxyPlayer) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 
@@ -37,7 +38,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
 
             if (packetIn.getDataArray().length != 0) {
 
-                Optional<ProxyServer> optionalProxyServer = connection.getProxyServer((String) packetIn.getDataSingle());
+                Optional<ClientServer> optionalProxyServer = connection.getProxyServer((String) packetIn.getDataSingle());
                 if (optionalProxyServer.isPresent()) {
                     return optionalProxyServer.get();
                 }
@@ -50,7 +51,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ProxyPlayer, Prox
     }
 
     @Override
-    public @NotNull Class<? extends ProxyServer> getReturnType() {
-        return ProxyServer.class;
+    public Class<? extends ClientServer> getReturnType() {
+        return ClientServer.class;
     }
 }

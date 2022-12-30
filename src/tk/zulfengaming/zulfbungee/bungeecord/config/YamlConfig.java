@@ -5,6 +5,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
+import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,7 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class YamlConfig {
+public class YamlConfig implements ProxyConfig {
 
     private Path scriptsFolderPath;
     private File scriptsFolder;
@@ -126,4 +127,5 @@ public class YamlConfig {
     public List<Integer> getIntList(String node) {
         return loadedConfig.getIntList(node);
     }
+
 }

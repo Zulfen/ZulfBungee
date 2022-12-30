@@ -4,42 +4,48 @@ import tk.zulfengaming.zulfbungee.universal.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
-import tk.zulfengaming.zulfbungee.universal.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PlayerSwitchServer extends PacketHandler {
+public class PlayerSwitchServer<P> extends PacketHandler<P> {
 
-    public PlayerSwitchServer(MainServer mainServerIn) {
+    public PlayerSwitchServer(MainServer<P> mainServerIn) {
         super(mainServerIn, PacketTypes.PLAYER_SWITCH_SERVER);
 
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> address) {
 
-        ProxyPlayerDataContainer switchEvent = (ProxyPlayerDataContainer) packetIn.getDataSingle();
+        ClientPlayerDataContainer switchEvent = (ClientPlayerDataContainer) packetIn.getDataSingle();
 
-        ProxyServer proxyServer = (ProxyServer) switchEvent.getData();
+        ClientServer clientServer = (ClientServer) switchEvent.getData();
 
-        if (proxyServer != null) {
+        if (clientServer != null) {
 
-            ServerInfo serverInfo = getProxy().getServersCopy().get(proxyServer.getName());
+            ZulfProxyServer<P> server = getProxy().getServer(clientServer.getName());
+            ZulfServerInfo<P> zulfServerInfo = server.getServerInfo();
 
             List<UUID> uuids = Stream.of(switchEvent.getPlayers())
-                    .map(ProxyPlayer::getUuid)
+                    .map(ClientPlayer::getUuid)
                     .collect(Collectors.toList());
 
             for (UUID uuid : uuids) {
 
-                ProxyPlayer bungeecordPlayer = getProxy().getPlayer(uuid);
+                ZulfProxyPlayer<P> proxyPlayer = getProxy().getPlayer(uuid);
 
-                if (serverInfo != null)
-                    if (bungeecordPlayer != null) {
-                        bungeecordPlayer.connect(serverInfo);
+                if (zulfServerInfo != null)
+                    if (proxyPlayer != null) {
+                        proxyPlayer.connect(server);
                     }
 
             }

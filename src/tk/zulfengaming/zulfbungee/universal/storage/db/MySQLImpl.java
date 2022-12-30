@@ -4,9 +4,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.storage.HikariSQLImpl;
 
-public class MySQLImpl extends HikariSQLImpl {
+public class MySQLImpl<P> extends HikariSQLImpl<P> {
 
-    public MySQLImpl(MainServer mainServerIn) {
+    public MySQLImpl(MainServer<P> mainServerIn) {
         super(mainServerIn);
     }
 

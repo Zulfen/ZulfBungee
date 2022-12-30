@@ -1,13 +1,16 @@
 package tk.zulfengaming.zulfbungee.universal.socket;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.universal.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.universal.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -19,11 +22,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BaseServerConnection implements Runnable {
+public class BaseServerConnection<P> implements Runnable {
 
-    private final MainServer mainServer;
+    private final MainServer<P> mainServer;
     // plugin instance ?
-    private final ZulfBungeeProxy pluginInstance;
+    private final ZulfBungeeProxy<P> pluginInstance;
 
     private final Socket socket;
 
@@ -41,14 +44,14 @@ public class BaseServerConnection implements Runnable {
 
     private final TransferQueue<Packet> readQueue = new LinkedTransferQueue<>();
 
-    private ServerInfo serverInfo;
+    private ClientInfo clientInfo;
 
     // initially empty
     private String name = "";
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    public BaseServerConnection(MainServer mainServerIn, Socket socketIn) throws IOException {
+    public BaseServerConnection(MainServer<P> mainServerIn, Socket socketIn) throws IOException {
 
         this.socket = socketIn;
 
@@ -171,18 +174,18 @@ public class BaseServerConnection implements Runnable {
     }
 
     // input null into senderIn to make the console reload the scripts, not a player.
-    public void sendScript(Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender senderIn) {
+    public void sendScript(Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender<P> senderIn) {
 
         pluginInstance.getTaskManager().newTask(() -> {
 
             String scriptName = scriptPathIn.getFileName().toString();
 
-            ProxyPlayer playerOut = null;
+            ClientPlayer playerOut = null;
 
             if (senderIn != null) {
                 if (senderIn.isPlayer()) {
-                    ProxiedPlayer playerIn = (ProxiedPlayer) senderIn;
-                    playerOut = new ProxyPlayer(playerIn.getName(), playerIn.getUniqueId());
+                    ZulfProxyPlayer<P> playerIn = (ZulfProxyPlayer<P>) senderIn;
+                    playerOut = new ClientPlayer(playerIn.getName(), playerIn.getUuid());
                 }
             }
 
@@ -202,16 +205,16 @@ public class BaseServerConnection implements Runnable {
 
     }
 
-    public MainServer getServer() {
+    public MainServer<P> getServer() {
         return mainServer;
     }
 
-    public ServerInfo getServerInfo() {
-        return serverInfo;
+    public ClientInfo getClientInfo() {
+        return clientInfo;
     }
 
-    public void setServerInfo(ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
+    public void setClientInfo(ClientInfo clientInfo) {
+        this.clientInfo = clientInfo;
     }
 
     public Socket getSocket() {
@@ -226,7 +229,7 @@ public class BaseServerConnection implements Runnable {
         this.name = name;
     }
 
-    public ZulfBungeeProxy getPluginInstance() {
+    public ZulfBungeeProxy<P> getPluginInstance() {
         return pluginInstance;
     }
 

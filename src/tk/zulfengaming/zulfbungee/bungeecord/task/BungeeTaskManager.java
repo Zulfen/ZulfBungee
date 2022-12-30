@@ -3,10 +3,11 @@ package tk.zulfengaming.zulfbungee.bungeecord.task;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
+import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 
 import java.util.ArrayList;
 
-public class TaskManager {
+public class BungeeTaskManager implements ProxyTaskManager {
 
     private final ZulfBungeecord instance;
 
@@ -15,7 +16,7 @@ public class TaskManager {
     // keeps track of running stuff
     private final ArrayList<ScheduledTask> tasks = new ArrayList<>();
 
-    public TaskManager(ZulfBungeecord instanceIn) {
+    public BungeeTaskManager(ZulfBungeecord instanceIn) {
         this.instance = instanceIn;
         this.scheduler = instanceIn.getProxy().getScheduler();
     }

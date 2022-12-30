@@ -5,33 +5,34 @@ import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PlayerSendMessage extends PacketHandler {
+public class PlayerSendMessage<P> extends PacketHandler<P> {
 
-    public PlayerSendMessage(MainServer mainServerIn) {
+    public PlayerSendMessage(MainServer<P> mainServerIn) {
         super(mainServerIn, PacketTypes.PLAYER_SEND_MESSAGE);
 
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection address) {
+    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> address) {
 
-        ProxyPlayerDataContainer message = (ProxyPlayerDataContainer) packetIn.getDataSingle();
+        ClientPlayerDataContainer message = (ClientPlayerDataContainer) packetIn.getDataSingle();
 
         List<UUID> uuids = Stream.of(message.getPlayers())
-                .map(ProxyPlayer::getUuid)
+                .map(ClientPlayer::getUuid)
                 .collect(Collectors.toList());
 
         for (UUID uuid : uuids) {
 
-            ProxyPlayer bungeecordPlayer = getProxy().getPlayer(uuid);
+            ZulfProxyPlayer<P> bungeecordPlayer = getProxy().getPlayer(uuid);
 
             if (bungeecordPlayer != null) {
                 bungeecordPlayer.sendMessage((String) message.getData());

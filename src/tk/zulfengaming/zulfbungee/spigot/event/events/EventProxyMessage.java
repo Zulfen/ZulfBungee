@@ -2,7 +2,7 @@ package tk.zulfengaming.zulfbungee.spigot.event.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import tk.zulfengaming.zulfbungee.universal.skript.ServerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
 
 public class EventProxyMessage extends Event {
 

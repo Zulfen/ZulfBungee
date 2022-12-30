@@ -4,7 +4,7 @@ import tk.zulfengaming.zulfbungee.universal.interfaces.CommandHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.command.Constants;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -13,13 +13,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static tk.zulfengaming.zulfbungee.universal.util.MessageUtils.sendMessage;
-
-public class ScriptReload extends CommandHandler {
+public class ScriptReload<P> extends CommandHandler<P> {
 
     private final WatchKey watchKey;
 
-    public ScriptReload(MainServer mainServerIn) {
+    public ScriptReload(MainServer<P> mainServerIn) {
 
         super(mainServerIn, "zulfen.bungee.admin.script", "scripts", "reload");
 
@@ -39,7 +37,7 @@ public class ScriptReload extends CommandHandler {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void handleCommand(ProxyCommandSender sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs) {
 
         HashMap<String, ScriptAction> scriptsMap = new HashMap<>();
 
