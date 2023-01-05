@@ -27,7 +27,7 @@ public class ScriptLoad<P> extends CommandHandler<P> {
                 sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas loaded.", scriptName));
             }
 
-            sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script %s was was not sent as no clients are connected!.", scriptName));
+            sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script %s was was not sent as no clients are connected!", scriptName));
 
         } else {
             sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script &o%s &rdoes not exist! Please try retyping the command.",

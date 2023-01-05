@@ -26,7 +26,7 @@ public class ScriptUnload<P> extends CommandHandler<P> {
                 getMainServer().syncScripts(Collections.singletonMap(scriptName, ScriptAction.DELETE), sender);
                 sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas unloaded.", scriptName));
             } else {
-                sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas unloaded as no clients are connected!.", scriptName));
+                sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas unloaded as no clients are connected!", scriptName));
             }
 
 
