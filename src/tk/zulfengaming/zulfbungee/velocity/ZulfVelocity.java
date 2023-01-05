@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "zulfbungee", name = "ZulfBungee", version = "0.8.0", url = "https://github.com/Zulfen/ZulfBungee",
+@Plugin(id = "zulfbungee", name = "zulfbungee", version = "0.8.0", url = "https://github.com/Zulfen/ZulfBungee",
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
