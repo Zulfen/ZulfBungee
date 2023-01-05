@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 
-import tk.zulfengaming.zulfbungee.universal.interfaces.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -24,7 +24,6 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
-
         connection.setClientInfo(clientInfo);
 
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();

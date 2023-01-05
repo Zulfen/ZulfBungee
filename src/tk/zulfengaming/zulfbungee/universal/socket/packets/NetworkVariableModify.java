@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
-import tk.zulfengaming.zulfbungee.universal.interfaces.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;

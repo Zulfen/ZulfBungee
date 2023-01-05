@@ -1,26 +1,33 @@
 package tk.zulfengaming.zulfbungee.universal.managers;
 
-import tk.zulfengaming.zulfbungee.universal.command.subcommands.CheckUpdate;
-import tk.zulfengaming.zulfbungee.universal.command.subcommands.Ping;
-import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptReload;
-import tk.zulfengaming.zulfbungee.universal.interfaces.CommandHandler;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.command.Constants;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.CheckUpdate;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.Debug;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.Ping;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptLoad;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptReload;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptUnload;
+import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
+import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommandHandlerManager<P> {
 
     private final MainServer<P> mainServer;
 
-    private final HashMap<String, CommandHandler<P>> handlers = new HashMap<>();
+    private final ArrayList<CommandHandler<P>> handlers = new ArrayList<>();
 
     public CommandHandlerManager(MainServer<P> mainServerIn) {
         this.mainServer = mainServerIn;
         addHandler(new ScriptReload<>(mainServerIn));
+        addHandler(new ScriptLoad<>(mainServerIn));
+        addHandler(new ScriptUnload<>(mainServerIn));
         addHandler(new CheckUpdate<>(mainServerIn));
         addHandler(new Ping<>(mainServerIn));
+        addHandler(new Debug<>(mainServerIn));
     }
 
     public MainServer<P> getMainServer() {
@@ -28,14 +35,40 @@ public class CommandHandlerManager<P> {
     }
 
     public void addHandler(CommandHandler<P> handlerIn) {
-        handlers.put(handlerIn.getMainLabel(), handlerIn);
+        handlers.add(handlerIn);
     }
 
     public void handle(ProxyCommandSender<P> sender, String[] argsIn) {
 
         if (argsIn.length > 0) {
 
-            Optional<CommandHandler<P>> handlerOptional = matchToHandler(argsIn);
+            Optional<CommandHandler<P>> handlerOptional = handlers.stream()
+                    .filter(pCommandHandler -> {
+
+                        String[] requiredLabels = pCommandHandler.getRequiredLabels();
+
+                        int counter = 0;
+
+                        for (int i = 0; i < argsIn.length; i++) {
+
+                            if (i < requiredLabels.length) {
+
+                                String requiredLabel = requiredLabels[i];
+
+                                String argIn = argsIn[i];
+
+                                if (requiredLabel.equalsIgnoreCase(argIn)) {
+                                    counter += 1;
+                                }
+
+                            }
+
+                        }
+
+                        return requiredLabels.length == counter;
+
+                    })
+                    .findFirst();
 
             if (handlerOptional.isPresent()) {
 
@@ -68,91 +101,42 @@ public class CommandHandlerManager<P> {
 
     }
 
-    public Iterable<String> onTabComplete(ProxyCommandSender<P> commandSender, String[] strings) {
+    public List<String> onTabComplete(ProxyCommandSender<P> commandSender, String[] strings) {
 
-        ArrayList<String> newArgs = new ArrayList<>();
-        String mainLabel = strings[0];
+        if (strings.length > 0) {
 
-        if (mainLabel.isEmpty()) {
+            String mainLabel = strings[0];
 
-            for (CommandHandler<P> handler : handlers.values()) {
-                if (commandSender.hasPermission(handler.getBasePermission())) {
-                    newArgs.add(handler.getMainLabel());
-                }
+            if (!mainLabel.isEmpty()) {
+
+                return handlers.stream()
+                        .filter(pCommandHandler -> pCommandHandler.getMainLabel().equals(mainLabel))
+                        .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
+                        .filter(pCommandHandler -> strings.length <= pCommandHandler.getRequiredLabels().length)
+                        .map(pCommandHandler -> pCommandHandler.getRequiredLabels()[Math.min(pCommandHandler.getRequiredLabels().length - 1, Math.max(0, strings.length - 1))])
+                        .collect(Collectors.toList());
+
+            } else {
+
+                return handlers.stream()
+                        .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
+                        .map(CommandHandler::getMainLabel)
+                        .collect(Collectors.toList());
+
             }
+
 
         } else {
 
-            int index = strings.length - 1;
-
-            Optional<CommandHandler<P>> commandHandlerOptional = mainLabelToHandler(mainLabel);
-
-            if (commandHandlerOptional.isPresent()) {
-
-                CommandHandler<P> commandHandler = commandHandlerOptional.get();
-                if (commandSender.hasPermission(commandHandler.getBasePermission())) {
-
-                    int size = commandHandler.getRequiredLabels().length;
-
-                    if (index < size) {
-
-                        newArgs.add(commandHandler.getRequiredLabels()[index]);
-
-                    } else {
-
-                        int newIndex = index - size;
-                        newArgs.addAll(commandHandler.onTab(newIndex));
-
-                    }
-
-                }
-
-            }
+            return handlers.stream()
+                    .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
+                    .map(CommandHandler::getMainLabel)
+                    .collect(Collectors.toList());
 
         }
 
-        return newArgs;
 
     }
 
-    private Optional<CommandHandler<P>> mainLabelToHandler(String mainLabelIn){
-        return Optional.ofNullable(handlers.get(mainLabelIn));
-    }
 
-    private Optional<CommandHandler<P>> matchToHandler(String[] argsIn) {
-
-        Optional<CommandHandler<P>> handlerOptional = mainLabelToHandler(argsIn[0]);
-
-        if (handlerOptional.isPresent()) {
-
-            CommandHandler<P> handler = handlerOptional.get();
-            String[] requiredLabels = handler.getRequiredLabels();
-
-            int counter = 0;
-
-            for (int i = 0; i < argsIn.length; i++) {
-
-                if (i < requiredLabels.length) {
-
-                    String requiredLabel = requiredLabels[i];
-
-                    String argIn = argsIn[i];
-
-                    if (requiredLabel.equalsIgnoreCase(argIn)) {
-                        counter += 1;
-                    }
-
-                }
-
-            }
-
-            if (requiredLabels.length == counter) {
-                return Optional.of(handler);
-            }
-
-        }
-
-        return Optional.empty();
-
-    }
 }

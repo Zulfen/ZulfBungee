@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript;
 
-public class ClientInfo {
+import java.io.Serializable;
+
+public class ClientInfo implements Serializable {
 
     private final int maxPlayers;
 

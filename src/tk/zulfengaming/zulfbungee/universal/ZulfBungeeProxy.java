@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal;
 
+import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
@@ -9,6 +10,9 @@ import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -26,7 +30,8 @@ public interface ZulfBungeeProxy<P> {
     MainServer<P> getServer();
 
     ProxyTaskManager getTaskManager();
-    ProxyConfig getConfig();
+
+    ProxyConfig<P> getConfig();
 
     ZulfProxyPlayer<P> getPlayer(UUID uuidIn);
     ZulfProxyPlayer<P> getPlayer(String nameIn);
@@ -39,7 +44,9 @@ public interface ZulfBungeeProxy<P> {
     // make this a path tbh.
     File getPluginFolder();
 
-    P getPlatform();
+    ProxyCommandSender<P> getConsole();
+
+    String platformString();
 
     CheckUpdateTask<P> getUpdater();
 

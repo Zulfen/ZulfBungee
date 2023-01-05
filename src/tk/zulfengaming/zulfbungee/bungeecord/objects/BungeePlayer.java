@@ -35,6 +35,16 @@ public class BungeePlayer<P> extends ZulfProxyPlayer<ProxyServer> {
 
     }
 
+    public BungeePlayer(ProxiedPlayer playerIn, BungeeServer serverIn) {
+
+        super(net.md_5.bungee.api.ProxyServer.getInstance());
+        this.bungeePlayer = playerIn;
+        this.name = playerIn.getName();
+        this.uuid = playerIn.getUniqueId();
+        this.server = serverIn;
+
+    }
+
     @Override
     public ZulfProxyServer<ProxyServer> getServer() {
         return server;

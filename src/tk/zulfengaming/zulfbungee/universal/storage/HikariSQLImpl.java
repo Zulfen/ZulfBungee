@@ -2,8 +2,8 @@ package tk.zulfengaming.zulfbungee.universal.storage;
 
 import com.google.common.primitives.Longs;
 import com.zaxxer.hikari.HikariDataSource;
-import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
+import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
@@ -36,7 +36,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
-            getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Storage successfully started!");
+            getMainServer().getPluginInstance().logInfo(ChatColour.GREEN + "Storage successfully started!");
 
             String creationStatement = "CREATE TABLE IF NOT EXISTS variables " +
                     "(name VARCHAR(255) not NULL PRIMARY KEY, " +
@@ -46,7 +46,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
             Statement statement = tempConnection.createStatement();
             statement.execute(creationStatement);
 
-            getMainServer().getPluginInstance().logInfo(ChatColor.GREEN + "Done setting up the database!");
+            getMainServer().getPluginInstance().logInfo(ChatColour.GREEN + "Done setting up the database!");
 
 
         } catch (SQLException e) {

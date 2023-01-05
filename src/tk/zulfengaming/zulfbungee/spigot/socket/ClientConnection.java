@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
-import tk.zulfengaming.zulfbungee.spigot.handlers.TaskManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;

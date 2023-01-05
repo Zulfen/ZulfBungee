@@ -36,11 +36,11 @@ public class BaseServerConnection<P> implements Runnable {
     private final SocketAddress address;
 
     // handling packets
-    private final PacketHandlerManager packetManager;
+    private final PacketHandlerManager<P> packetManager;
 
     // data I/O
-    private final DataInHandler dataInHandler;
-    private final DataOutHandler dataOutHandler;
+    private final DataInHandler<P> dataInHandler;
+    private final DataOutHandler<P> dataOutHandler;
 
     private final TransferQueue<Packet> readQueue = new LinkedTransferQueue<>();
 
@@ -63,8 +63,8 @@ public class BaseServerConnection<P> implements Runnable {
 
         this.address = socket.getRemoteSocketAddress();
 
-        this.dataInHandler = new DataInHandler(this);
-        this.dataOutHandler = new DataOutHandler(this);
+        this.dataInHandler = new DataInHandler<>(this);
+        this.dataOutHandler = new DataOutHandler<>(this);
 
         pluginInstance.getTaskManager().newTask(dataInHandler);
         pluginInstance.getTaskManager().newTask(dataOutHandler);

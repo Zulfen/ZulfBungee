@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.bungeecord.event;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -10,6 +11,7 @@ import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
+import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -18,11 +20,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientI
 
 public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  {
 
-    private final MainServer<ProxyServer> mainServer;
-
     public BungeeEvents(MainServer<ProxyServer> mainServerIn) {
         super(mainServerIn);
-        this.mainServer = mainServerIn;
     }
 
     @EventHandler
@@ -32,10 +31,11 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
 
         if (eventPlayer.getServer() == null) {
 
-            String serverName = event.getServer().getInfo().getName();
-            ClientInfo clientInfo = mainServer.getConnectionFromName(serverName).getClientInfo();
+            ServerInfo serverInfo = event.getServer().getInfo();
+            ClientInfo clientInfo = mainServer.getConnectionFromName(serverInfo.getName()).getClientInfo();
 
-            serverConnected(new ClientServer(serverName, clientInfo), new BungeePlayer<>(eventPlayer));
+            serverConnected(new ClientServer(serverInfo.getName(), clientInfo), new BungeePlayer<>(eventPlayer,
+                    new BungeeServer(serverInfo)));
 
         }
     }

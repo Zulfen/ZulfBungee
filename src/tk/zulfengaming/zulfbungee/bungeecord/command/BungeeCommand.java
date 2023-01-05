@@ -8,11 +8,11 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 
-public class ZulfBungeeCommand extends Command implements TabExecutor {
+public class BungeeCommand extends Command implements TabExecutor {
 
     private final CommandHandlerManager<ProxyServer> commandHandlerManager;
 
-    public ZulfBungeeCommand(CommandHandlerManager<ProxyServer> handlerIn) {
+    public BungeeCommand(CommandHandlerManager<ProxyServer> handlerIn) {
         super("zulfbungee");
         this.commandHandlerManager = handlerIn;
     }
@@ -28,8 +28,8 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
         } else {
 
-            commandHandlerManager.handle(new BungeeConsole(commandHandlerManager.getMainServer().getPluginInstance()
-                    .getPlatform()), argsIn);
+            commandHandlerManager.handle(commandHandlerManager.getMainServer().getPluginInstance()
+                    .getConsole(), argsIn);
 
         }
 
@@ -47,8 +47,8 @@ public class ZulfBungeeCommand extends Command implements TabExecutor {
 
         } else {
 
-            return commandHandlerManager.onTabComplete(new BungeeConsole(commandHandlerManager.getMainServer().getPluginInstance()
-                    .getPlatform()), strings);
+            return commandHandlerManager.onTabComplete(commandHandlerManager.getMainServer().getPluginInstance()
+                    .getConsole(), strings);
 
         }
 

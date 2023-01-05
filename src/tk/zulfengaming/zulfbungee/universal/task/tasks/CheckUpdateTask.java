@@ -3,9 +3,9 @@ package tk.zulfengaming.zulfbungee.universal.task.tasks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.command.Constants;
+import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
-import tk.zulfengaming.zulfbungee.universal.util.UpdateResult;
+import tk.zulfengaming.zulfbungee.universal.handlers.util.UpdateResult;
 
 import java.io.IOException;
 import java.io.InputStream;

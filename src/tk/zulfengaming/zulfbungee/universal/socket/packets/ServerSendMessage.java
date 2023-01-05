@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
-import tk.zulfengaming.zulfbungee.universal.interfaces.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -25,7 +25,8 @@ public class ServerSendMessage<P> extends PacketHandler<P> {
             String serverName = server.getName();
 
             if (getMainServer().getServerNames().contains(serverName)) {
-                getMainServer().getConnectionFromName(serverName).sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT, false, true, message));
+                getMainServer().getConnectionFromName(serverName)
+                        .sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT, false, true, message));
             }
         }
 

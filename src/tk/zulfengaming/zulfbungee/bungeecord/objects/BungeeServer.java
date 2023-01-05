@@ -8,7 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BungeeServer extends ZulfProxyServer<ProxyServer> {
+public class BungeeServer implements ZulfProxyServer<ProxyServer> {
 
     private final String name;
 
@@ -19,7 +19,7 @@ public class BungeeServer extends ZulfProxyServer<ProxyServer> {
         this.name = bungeeInfoIn.getName();
 
         List<ZulfProxyPlayer<ProxyServer>> proxyPlayers = bungeeInfoIn.getPlayers().stream()
-                .map(BungeePlayer::new)
+                .map(proxiedPlayer -> new BungeePlayer<>(proxiedPlayer, this))
                 .collect(Collectors.toList());
 
         this.info = new ZulfServerInfo<>(bungeeInfoIn.getSocketAddress(), proxyPlayers);

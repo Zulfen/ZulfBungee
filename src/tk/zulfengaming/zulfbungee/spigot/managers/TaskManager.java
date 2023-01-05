@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.spigot.handlers;
+package tk.zulfengaming.zulfbungee.spigot.managers;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,7 +13,7 @@ public class TaskManager {
 
     private final ZulfBungeeSpigot instance;
 
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
     private final BukkitScheduler scheduler;
 
     public TaskManager(ZulfBungeeSpigot instanceIn) {

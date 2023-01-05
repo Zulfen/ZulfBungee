@@ -10,7 +10,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
 public class ProxyEvents<P> {
 
-    private final MainServer<P> mainServer;
+    protected final MainServer<P> mainServer;
 
     public ProxyEvents(MainServer<P> mainServerIn) {
         this.mainServer = mainServerIn;

@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.util;
+package tk.zulfengaming.zulfbungee.universal.handlers.util;
 
 public class UpdateResult {
 

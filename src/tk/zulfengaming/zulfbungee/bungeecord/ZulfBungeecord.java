@@ -4,15 +4,17 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
-import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
+import tk.zulfengaming.zulfbungee.bungeecord.command.BungeeCommand;
+import tk.zulfengaming.zulfbungee.bungeecord.command.BungeeConsole;
+import tk.zulfengaming.zulfbungee.bungeecord.config.BungeeConfig;
 import tk.zulfengaming.zulfbungee.bungeecord.event.BungeeEvents;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
+import tk.zulfengaming.zulfbungee.bungeecord.task.BungeeTaskManager;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
+import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.bungeecord.task.BungeeTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
@@ -23,7 +25,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -31,15 +32,13 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
     private Logger logger;
 
-    private YamlConfig config;
+    private BungeeConfig config;
 
     private MainServer<ProxyServer> mainServer;
 
     private BungeeTaskManager bungeeTaskManager;
 
     private CheckUpdateTask<ProxyServer> updater;
-
-    private final AtomicBoolean isDisabled = new AtomicBoolean(false);
 
     private boolean isDebug = false;
 
@@ -49,9 +48,12 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
         bungeeTaskManager = new BungeeTaskManager(this);
 
-        config = new YamlConfig(this);
+        config = new BungeeConfig(this);
 
         isDebug = config.getBoolean("debug");
+
+        updater = new CheckUpdateTask<>(this);
+
 
         try {
 
@@ -60,17 +62,15 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
             CommandHandlerManager<ProxyServer> commandHandlerManager = new CommandHandlerManager<>(mainServer);
 
             getProxy().getPluginManager().registerListener(this, new BungeeEvents(mainServer));
-            getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(commandHandlerManager));
+            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(commandHandlerManager));
 
             bungeeTaskManager.newTask(mainServer);
 
         } catch (UnknownHostException e) {
-            error("There was an error trying to initialise the server:");
+            error("Could not start the server! (bungeecord)");
             e.printStackTrace();
 
         }
-
-        updater = new CheckUpdateTask<>(this);
 
     }
 
@@ -78,9 +78,9 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     public void onDisable() {
 
         try {
-            if (isDisabled.compareAndSet(false, true)) {
-                mainServer.end();
-            }
+
+            mainServer.end();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,7 +105,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         logger.warning("[ZulfBungee] " + message);
     }
 
-    public YamlConfig getConfig() {
+    public BungeeConfig getConfig() {
         return config;
     }
 
@@ -180,8 +180,13 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public ProxyServer getPlatform() {
-        return getProxy();
+    public ProxyCommandSender<ProxyServer> getConsole() {
+        return new BungeeConsole(getProxy());
+    }
+
+    @Override
+    public String platformString() {
+        return String.format("Bungeecord (%s)", getProxy().getVersion());
     }
 
     @Override
@@ -196,7 +201,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     public BungeeTaskManager getTaskManager() {
         return bungeeTaskManager;
     }
-
 
 
 }

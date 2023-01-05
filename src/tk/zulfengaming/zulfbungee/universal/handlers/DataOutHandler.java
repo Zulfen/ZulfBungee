@@ -11,15 +11,15 @@ import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class DataOutHandler implements Runnable {
+public class DataOutHandler<P> implements Runnable {
 
-    private final BaseServerConnection connection;
+    private final BaseServerConnection<P> connection;
 
     private final BlockingQueue<Packet> queueOut = new LinkedBlockingQueue<>();
 
     private final ObjectOutputStream outputStream;
 
-    public DataOutHandler(BaseServerConnection connectionIn) throws IOException {
+    public DataOutHandler(BaseServerConnection<P> connectionIn) throws IOException {
         this.connection = connectionIn;
 
         Socket socket = connectionIn.getSocket();

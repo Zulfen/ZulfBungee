@@ -7,11 +7,11 @@ import java.util.Collection;
 public class ZulfServerInfo<P> {
 
     private final SocketAddress socketAddress;
-    private final ArrayList<ZulfProxyPlayer<P>> players = new ArrayList<>();
+    private final Collection<ZulfProxyPlayer<P>> players;
 
     public ZulfServerInfo(SocketAddress socketAddressIn, Collection<ZulfProxyPlayer<P>> playersIn) {
         this.socketAddress = socketAddressIn;
-        players.addAll(playersIn);
+        this.players = playersIn;
     }
 
     public Collection<ZulfProxyPlayer<P>> getPlayers() {

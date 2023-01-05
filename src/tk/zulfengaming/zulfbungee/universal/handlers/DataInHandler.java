@@ -13,16 +13,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 // issue must be here
 
-public class DataInHandler implements Runnable {
+public class DataInHandler<P> implements Runnable {
 
-    private final BaseServerConnection connection;
+    private final BaseServerConnection<P> connection;
 
     private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
 
     private final ObjectInputStream inputStream;
 
 
-    public DataInHandler(BaseServerConnection connectionIn) throws IOException {
+    public DataInHandler(BaseServerConnection<P> connectionIn) throws IOException {
         this.connection = connectionIn;
         Socket socket = connectionIn.getSocket();
         this.inputStream = new ObjectInputStream(socket.getInputStream());

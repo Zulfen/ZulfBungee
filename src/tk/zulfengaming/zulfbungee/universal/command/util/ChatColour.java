@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.command;
+package tk.zulfengaming.zulfbungee.universal.command.util;
 
 public enum ChatColour {
 
@@ -28,7 +28,7 @@ public enum ChatColour {
     private final String toString;
 
     ChatColour(char code) {
-        this.toString = new String(new char[]{'&', code});
+        this.toString = new String(new char[]{'§', code});
     }
 
     @Override

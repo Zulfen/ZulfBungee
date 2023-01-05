@@ -1,10 +1,11 @@
 package tk.zulfengaming.zulfbungee.universal.command.subcommands.script;
 
-import tk.zulfengaming.zulfbungee.universal.interfaces.CommandHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.command.Constants;
+import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.command.util.CommandUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -19,13 +20,15 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
     public ScriptReload(MainServer<P> mainServerIn) {
 
-        super(mainServerIn, "zulfen.bungee.admin.script", "scripts", "reload");
+        super(mainServerIn, "zulfen.bungee.admin.script.reload", "scripts", "reload");
 
         try {
 
             WatchService folderWatchService = FileSystems.getDefault().newWatchService();
 
-            this.watchKey = getMainServer().getPluginInstance().getConfig().getScriptsFolderPath().register(folderWatchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+            this.watchKey = getMainServer().getPluginInstance().getConfig()
+                    .getScriptsFolderPath()
+                    .register(folderWatchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
 
 
         } catch (IOException e) {
@@ -76,31 +79,13 @@ public class ScriptReload<P> extends CommandHandler<P> {
                 if (scriptsMap.isEmpty()) {
                     sender.sendMessage(Constants.MESSAGE_PREFIX + "No scripts have been updated, as they haven't been modified.");
                 } else {
-                    getMainServer().syncScriptsFolder(scriptsMap, sender);
+                    getMainServer().syncScripts(scriptsMap, sender);
                     sender.sendMessage(String.format(Constants.MESSAGE_PREFIX + "%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()));
                 }
 
             } else {
 
-                StringBuilder scriptNameBuilder = new StringBuilder();
-
-                for (int i = 0; i < separateArgs.length; i++) {
-
-                    String arg = separateArgs[i];
-
-                    scriptNameBuilder.append(arg);
-
-                    if (i != separateArgs.length - 1) {
-                        scriptNameBuilder.append(" ");
-                    } else {
-                        if (!arg.endsWith(".sk")) {
-                            scriptNameBuilder.append(".sk");
-                        }
-                    }
-
-                }
-
-                String scriptName = scriptNameBuilder.toString();
+                String scriptName = CommandUtils.getScriptNameArgs(separateArgs);
 
                 if (getMainServer().getPluginInstance().getConfig().getScripts().contains(scriptName)) {
 
@@ -108,7 +93,7 @@ public class ScriptReload<P> extends CommandHandler<P> {
                     tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptName));
 
                     if (!tempScriptsMap.isEmpty()) {
-                        getMainServer().syncScriptsFolder(tempScriptsMap, sender);
+                        getMainServer().syncScripts(tempScriptsMap, sender);
                         sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script %s was updated.", scriptName));
                     } else {
                         sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script %s has not been updated!", scriptName));

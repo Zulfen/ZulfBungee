@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.interfaces;
+package tk.zulfengaming.zulfbungee.universal.handlers;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;

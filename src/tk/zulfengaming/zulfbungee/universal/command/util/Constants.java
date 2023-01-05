@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.command;
+package tk.zulfengaming.zulfbungee.universal.command.util;
 
 public enum Constants {
 

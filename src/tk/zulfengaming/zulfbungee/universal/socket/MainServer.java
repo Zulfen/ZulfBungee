@@ -2,10 +2,11 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.command.ChatColour;
+import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
@@ -13,7 +14,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
-import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class MainServer<P> implements Runnable {
     private final HashMap<String, BaseServerConnection<P>> activeConnections = new HashMap<>();
 
     // quite neat
-    private final PacketHandlerManager packetManager;
+    private final PacketHandlerManager<P> packetManager;
     private final ProxyTaskManager taskManager;
 
     // storage
@@ -54,20 +54,25 @@ public class MainServer<P> implements Runnable {
         this.port = port;
         this.pluginInstance = instanceIn;
 
-        this.packetManager = new PacketHandlerManager(this);
+        this.packetManager = new PacketHandlerManager<>(this);
         this.taskManager = instanceIn.getTaskManager();
 
-        Optional<StorageImpl<P>> newStorage = setupStorage();
+        pluginInstance.getTaskManager().newTask(() -> {
 
-        if (newStorage.isPresent()) {
+            Optional<StorageImpl<P>> newStorage = setupStorage();
 
-            storage = newStorage.get();
+            if (newStorage.isPresent()) {
 
-            pluginInstance.getTaskManager().newTask(() -> storage.setupDatabase());
+                storage = newStorage.get();
+                storage.setupDatabase();
 
-            pluginInstance.logDebug(ChatColour.GREEN + "Currently using StorageImpl: " + storage.getClass().toString());
+                pluginInstance.logDebug(ChatColour.GREEN + "Currently using StorageImpl: " + storage.getClass().toString());
 
-        }
+            }
+
+        });
+
+        pluginInstance.getUpdater().checkUpdate(pluginInstance.getConsole(), true);
 
     }
 
@@ -193,7 +198,7 @@ public class MainServer<P> implements Runnable {
         }
     }
 
-    public void syncScriptsFolder(Map<String, ScriptAction> scriptNamesIn, ProxyCommandSender<P> senderIn) {
+    public void syncScripts(Map<String, ScriptAction> scriptNamesIn, ProxyCommandSender<P> senderIn) {
 
         for (BaseServerConnection<P> connection : socketConnections) {
 
@@ -289,8 +294,11 @@ public class MainServer<P> implements Runnable {
                 .toArray(ClientServer[]::new);
     }
 
+    public boolean areClientsConnected() {
+        return socketConnections.size() > 0;
+    }
 
-    public PacketHandlerManager getPacketManager() {
+    public PacketHandlerManager<P> getPacketManager() {
         return packetManager;
     }
 
