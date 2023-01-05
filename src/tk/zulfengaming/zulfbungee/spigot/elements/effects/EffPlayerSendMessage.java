@@ -11,16 +11,16 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 @Name("Send Proxy Player message")
 @Description("Sends proxy player(s) a message.")
 public class EffPlayerSendMessage extends Effect {
 
-    private Expression<ProxyPlayer> players;
+    private Expression<ClientPlayer> players;
     private Expression<String> message;
 
     static {
@@ -30,17 +30,15 @@ public class EffPlayerSendMessage extends Effect {
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         message = (Expression<String>) expressions[1];
-        players = (Expression<ProxyPlayer>) expressions[0];
+        players = (Expression<ClientPlayer>) expressions[0];
         return true;
     }
 
     @Override
     protected void execute(@NotNull Event event) {
-
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-
         connection.send(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
-                        false, false, new ProxyPlayerDataContainer(message.getSingle(event), players.getArray(event))));
+                        false, false, new ClientPlayerDataContainer(message.getSingle(event), players.getArray(event))));
     }
 
     @Override

@@ -11,8 +11,10 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 @Name("Proxy Player Switch Server")
 @Description("When a proxy player switches to another server.")
@@ -22,16 +24,16 @@ public class EvtPlayerSwitchServer extends SkriptEvent {
 
         Skript.registerEvent("Proxy Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "[(proxy|bungeecord|bungee)] player switch server");
 
-        EventValues.registerEventValue(EventPlayerSwitchServer.class, ProxyPlayer.class, new Getter<ProxyPlayer, EventPlayerSwitchServer>() {
+        EventValues.registerEventValue(EventPlayerSwitchServer.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerSwitchServer>() {
             @Override
-            public ProxyPlayer get(EventPlayerSwitchServer eventPlayerSwitchServer) {
+            public ClientPlayer get(EventPlayerSwitchServer eventPlayerSwitchServer) {
                 return eventPlayerSwitchServer.getPlayer();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventPlayerSwitchServer.class, ProxyServer.class, new Getter<ProxyServer, EventPlayerSwitchServer>() {
+        EventValues.registerEventValue(EventPlayerSwitchServer.class, ClientServer.class, new Getter<ClientServer, EventPlayerSwitchServer>() {
             @Override
-            public ProxyServer get(EventPlayerSwitchServer eventPlayerSwitchServer) {
+            public ClientServer get(EventPlayerSwitchServer eventPlayerSwitchServer) {
                 return eventPlayerSwitchServer.getPlayer().getServer();
             }
         }, 0);

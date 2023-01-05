@@ -9,16 +9,17 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-public class ExprProxyServers extends SimpleExpression<ProxyServer> {
+public class ExprProxyServers extends SimpleExpression<ClientServer> {
 
     static {
-        Skript.registerExpression(ExprProxyServers.class, ProxyServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
+        Skript.registerExpression(ExprProxyServers.class, ClientServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
     }
 
     @Override
-    protected ProxyServer @NotNull [] get(@NotNull Event event) {
+    protected ClientServer @NotNull [] get(@NotNull Event event) {
         return ZulfBungeeSpigot.getPlugin().getConnection().getProxyServers();
     }
 
@@ -28,8 +29,8 @@ public class ExprProxyServers extends SimpleExpression<ProxyServer> {
     }
 
     @Override
-    public @NotNull Class<? extends ProxyServer> getReturnType() {
-        return ProxyServer.class;
+    public @NotNull Class<? extends ClientServer> getReturnType() {
+        return ClientServer.class;
     }
 
     @Override

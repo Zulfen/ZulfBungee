@@ -1,35 +1,31 @@
 package tk.zulfengaming.zulfbungee.spigot.elements.conditions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.Optional;
 
 @Name("Proxy Player Online")
 @Description("Checks if a proxy player is online on the network.")
-public class CondIsProxyPlayerOnline extends PropertyCondition<ProxyPlayer> {
+public class CondIsProxyPlayerOnline extends PropertyCondition<ClientPlayer> {
 
-    private Expression<ProxyPlayer> player;
+    private Expression<ClientPlayer> player;
 
     static {
         register(CondIsProxyPlayerOnline.class, "online", "proxyplayers");
     }
 
     @Override
-    public boolean check(ProxyPlayer proxyPlayer) {
+    public boolean check(ClientPlayer proxyPlayer) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
 

@@ -4,7 +4,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.io.EOFException;
 import java.io.IOException;

@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax.">
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/PacketHandlerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/PacketHandlerManager.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.0 - working multiplatform build." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,11 +13,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -39,27 +44,43 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/Java/ZulfBungee&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="tk.zulfengaming.zulfbungee.universal.command" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="tk.zulfengaming.zulfbungee.universal.socket.objects.client" />
+      <recent name="tk.zulfengaming.zulfbungee.universal" />
+      <recent name="tk.zulfengaming.zulfbungee.universal.command" />
+      <recent name="tk.zulfengaming.zulfbungee.universal.socket.packets" />
       <recent name="tk.zulfengaming.zulfbungee.bungeecord.command.subcommands" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="tk.zulfengaming.zulfbungee.universal.command.subcommands.script" />
       <recent name="tk.zulfengaming.zulfbungee.bungeecord.command.subcommands" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.elements.events" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.socket.packets" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.event.events" />
-      <recent name="tk.zulfengaming.zulfbungee.spigot.elements.expressions" />
     </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn install" />
+    </option>
   </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
@@ -316,7 +337,35 @@
       <option name="project" value="LOCAL" />
       <updated>1672017750478</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax.">
+      <created>1672017843478</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1672017843478</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Alpha v0.8.0 - working on multiplatform support slowly.">
+      <created>1672361862185</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1672361862185</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Alpha v0.8.0 - initial multiplatform rewrite commit. Supports bungeecord only right now.">
+      <created>1672431828464</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1672431828464</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Alpha v0.8.0 - working multiplatform build.">
+      <created>1672953025108</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1672953025126</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -353,7 +402,10 @@
     <MESSAGE value="Alpha v0.7.9 - restored old syntax but improved it!" />
     <MESSAGE value="Alpha v0.8.0 - reordered proxy server mapping and maybe fixed string to player / server parsing" />
     <MESSAGE value="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax." />
+    <MESSAGE value="Alpha v0.8.0 - working on multiplatform support slowly." />
+    <MESSAGE value="Alpha v0.8.0 - initial multiplatform rewrite commit. Supports bungeecord only right now." />
+    <MESSAGE value="Alpha v0.8.0 - working multiplatform build." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.0 - working multiplatform build." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

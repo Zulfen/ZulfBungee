@@ -9,14 +9,17 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
-import tk.zulfengaming.zulfbungee.spigot.handlers.TaskManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
-import tk.zulfengaming.zulfbungee.universal.socket.*;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
 import java.io.File;
 import java.net.Socket;
@@ -51,7 +54,7 @@ public class ClientConnection extends BukkitRunnable {
 
     private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
 
-    private final HashMap<String, ServerInfo> proxyServers = new HashMap<>();
+    private final HashMap<String, ClientInfo> proxyServers = new HashMap<>();
 
     // other tasks
 
@@ -199,7 +202,7 @@ public class ClientConnection extends BukkitRunnable {
 
         if (infoIn.getSender() != null) {
 
-            ProxyPlayer playerIn = infoIn.getSender();
+            ClientPlayer playerIn = infoIn.getSender();
             Player playerOut = pluginInstance.getServer().getPlayer(playerIn.getUuid());
 
             if (playerOut != null) {
@@ -224,18 +227,22 @@ public class ClientConnection extends BukkitRunnable {
 
     }
 
-    public void setProxyServers(ProxyServer[] serverList) {
+    public void setProxyServers(ClientServer[] serverList) {
         proxyServers.clear();
-        Arrays.stream(serverList).forEach(server -> proxyServers.put(server.getName(), server.getServerInfo()));
+        Arrays.stream(serverList).forEach(server -> proxyServers.put(server.getName(), server.getClientInfo()));
     }
 
-    public ProxyServer[] getProxyServers() {
-        return proxyServers.keySet().stream().map(ProxyServer::new).toArray(ProxyServer[]::new);
+    public ClientServer[] getProxyServers() {
+
+        return proxyServers.entrySet().stream()
+                .map(server -> new ClientServer(server.getKey(), server.getValue()))
+                .toArray(ClientServer[]::new);
+
     }
 
-    public Optional<ProxyServer> getProxyServer(String nameIn) {
-        ServerInfo serverInfo = proxyServers.get(nameIn);
-        return serverInfo != null ? Optional.of(new ProxyServer(nameIn, serverInfo)) : Optional.empty();
+    public Optional<ClientServer> getProxyServer(String nameIn) {
+        ClientInfo zulfServerInfo = proxyServers.get(nameIn);
+        return zulfServerInfo != null ? Optional.of(new ClientServer(nameIn, zulfServerInfo)) : Optional.empty();
     }
 
     public boolean proxyServerOnline(String nameIn) {
@@ -250,7 +257,7 @@ public class ClientConnection extends BukkitRunnable {
         return clientListenerManager.isSocketConnected();
     }
 
-    public ServerInfo getClientInfo() {
+    public ClientInfo getClientInfo() {
         return clientListenerManager.getClientInfo();
     }
 

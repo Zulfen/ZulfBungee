@@ -1,43 +1,44 @@
 package tk.zulfengaming.zulfbungee.bungeecord;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import tk.zulfengaming.zulfbungee.bungeecord.command.ZulfBungeeCommand;
-import tk.zulfengaming.zulfbungee.bungeecord.config.YamlConfig;
-import tk.zulfengaming.zulfbungee.bungeecord.event.Events;
-import tk.zulfengaming.zulfbungee.bungeecord.managers.CommandHandlerManager;
-import tk.zulfengaming.zulfbungee.bungeecord.socket.MainServer;
-import tk.zulfengaming.zulfbungee.bungeecord.task.TaskManager;
-import tk.zulfengaming.zulfbungee.bungeecord.task.tasks.CheckUpdateTask;
-import tk.zulfengaming.zulfbungee.bungeecord.util.UpdateResult;
+import tk.zulfengaming.zulfbungee.bungeecord.command.BungeeCommand;
+import tk.zulfengaming.zulfbungee.bungeecord.command.BungeeConsole;
+import tk.zulfengaming.zulfbungee.bungeecord.config.BungeeConfig;
+import tk.zulfengaming.zulfbungee.bungeecord.event.BungeeEvents;
+import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
+import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
+import tk.zulfengaming.zulfbungee.bungeecord.task.BungeeTaskManager;
+import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
+import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
+import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
+import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import static tk.zulfengaming.zulfbungee.bungeecord.util.MessageUtils.sendMessage;
-
-public class ZulfBungeecord extends Plugin {
+public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServer> {
 
     private Logger logger;
 
-    private YamlConfig config;
+    private BungeeConfig config;
 
-    private MainServer mainServer;
+    private MainServer<ProxyServer> mainServer;
 
-    private TaskManager taskManager;
+    private BungeeTaskManager bungeeTaskManager;
 
-    private CheckUpdateTask updater;
-
-    private final AtomicBoolean isDisabled = new AtomicBoolean(false);
+    private CheckUpdateTask<ProxyServer> updater;
 
     private boolean isDebug = false;
 
@@ -45,32 +46,31 @@ public class ZulfBungeecord extends Plugin {
 
         logger = getProxy().getLogger();
 
-        taskManager = new TaskManager(this);
+        bungeeTaskManager = new BungeeTaskManager(this);
 
-        config = new YamlConfig(this);
+        config = new BungeeConfig(this);
 
         isDebug = config.getBoolean("debug");
 
+        updater = new CheckUpdateTask<>(this);
+
+
         try {
 
-            mainServer = new MainServer(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
+            mainServer = new MainServer<>(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
-            CommandHandlerManager commandHandlerManager = new CommandHandlerManager(mainServer);
+            CommandHandlerManager<ProxyServer> commandHandlerManager = new CommandHandlerManager<>(mainServer);
 
-            getProxy().getPluginManager().registerListener(this, new Events(mainServer));
-            getProxy().getPluginManager().registerCommand(this, new ZulfBungeeCommand(commandHandlerManager));
+            getProxy().getPluginManager().registerListener(this, new BungeeEvents(mainServer));
+            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(commandHandlerManager));
 
-            taskManager.newTask(mainServer);
+            bungeeTaskManager.newTask(mainServer);
 
         } catch (UnknownHostException e) {
-            error("There was an error trying to initialise the server:");
+            error("Could not start the server! (bungeecord)");
             e.printStackTrace();
 
         }
-
-        updater = new CheckUpdateTask(this);
-
-        checkUpdate(getProxy().getConsole(), true);
 
     }
 
@@ -78,14 +78,14 @@ public class ZulfBungeecord extends Plugin {
     public void onDisable() {
 
         try {
-            if (isDisabled.compareAndSet(false, true)) {
-                mainServer.end();
-            }
+
+            mainServer.end();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        taskManager.shutdown();
+        bungeeTaskManager.shutdown();
 
     }
 
@@ -105,66 +105,102 @@ public class ZulfBungeecord extends Plugin {
         logger.warning("[ZulfBungee] " + message);
     }
 
-    public YamlConfig getConfig() {
+    public BungeeConfig getConfig() {
         return config;
     }
 
-    public MainServer getServer() {
+    @Override
+    public ZulfProxyPlayer<ProxyServer> getPlayer(UUID uuidIn) {
+
+        ProxiedPlayer player = getProxy().getPlayer(uuidIn);
+
+        if (player != null) {
+            return new BungeePlayer<>(player);
+        }
+
+        return null;
+    }
+
+    @Override
+    public ZulfProxyPlayer<ProxyServer> getPlayer(String nameIn) {
+
+        ProxiedPlayer player = getProxy().getPlayer(nameIn);
+
+        if (player != null) {
+            return new BungeePlayer<>(player);
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public Collection<ZulfProxyPlayer<ProxyServer>> getPlayers() {
+        return getProxy().getPlayers().stream()
+                .filter(Objects::nonNull)
+                .map(BungeePlayer::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ZulfProxyServer<ProxyServer> getServer(String name) {
+
+        ServerInfo bungeeServerInfo = getProxy().getServersCopy().get(name);
+
+        if (bungeeServerInfo != null) {
+            return new BungeeServer(getProxy().getServersCopy().get(name));
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public Map<String, ZulfServerInfo<ProxyServer>> getServersCopy() {
+
+        HashMap<String, ZulfServerInfo<ProxyServer>>
+                serverMap = new HashMap<>();
+
+        for (ServerInfo bungeeInfo : getProxy().getServersCopy().values()) {
+            serverMap.put(bungeeInfo.getName(), new ZulfServerInfo<>
+                    (bungeeInfo.getSocketAddress(), getPlayers()));
+        }
+
+        return serverMap;
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
+    }
+
+    @Override
+    public File getPluginFolder() {
+        return getDataFolder();
+    }
+
+    @Override
+    public ProxyCommandSender<ProxyServer> getConsole() {
+        return new BungeeConsole(getProxy());
+    }
+
+    @Override
+    public String platformString() {
+        return String.format("Bungeecord (%s)", getProxy().getVersion());
+    }
+
+    @Override
+    public CheckUpdateTask<ProxyServer> getUpdater() {
+        return updater;
+    }
+
+    public MainServer<ProxyServer> getServer() {
         return mainServer;
     }
 
-    public TaskManager getTaskManager() {
-        return taskManager;
+    public BungeeTaskManager getTaskManager() {
+        return bungeeTaskManager;
     }
 
-    public void checkUpdate(CommandSender sender, boolean notifySuccess) {
-
-        CompletableFuture.supplyAsync(updater)
-                .thenAccept(updateResult -> {
-
-                    if (updateResult.isPresent()) {
-
-                        UpdateResult getUpdaterResult = updateResult.get();
-
-                        sendMessage(sender, new ComponentBuilder("A new update to ZulfBungee is available!")
-                                .color(ChatColor.WHITE)
-                                .append(" (Version " + getUpdaterResult.getLatestVersion() + ")")
-                                .italic(true)
-                                .color(ChatColor.YELLOW)
-                                .create());
-
-                        if (sender instanceof ProxiedPlayer) {
-
-                            sendMessage(sender, new ComponentBuilder("Click this link to get a direct download!")
-                                    .color(ChatColor.WHITE)
-                                    .underlined(true)
-                                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, getUpdaterResult.getDownloadURL()))
-                                    .create());
-
-                        } else {
-
-                            sendMessage(sender, new ComponentBuilder("Copy this link into a browser for a direct download!")
-                                    .color(ChatColor.WHITE)
-                                    .create());
-                            sender.sendMessage(new ComponentBuilder(getUpdaterResult.getDownloadURL())
-                                    .color(ChatColor.DARK_AQUA)
-                                    .underlined(true)
-                                    .create());
-
-                        }
-
-                    } else if (notifySuccess) {
-
-                        sendMessage(sender, new ComponentBuilder("ZulfBungee is up to date!")
-                                .color(ChatColor.WHITE)
-                                .append(" (Version " + getDescription().getVersion() + ")")
-                                .italic(true)
-                                .color(ChatColor.YELLOW)
-                                .create());
-                    }
-
-                });
-
-    }
 
 }

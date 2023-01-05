@@ -2,15 +2,16 @@ package tk.zulfengaming.zulfbungee.spigot.event.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 public class EventPlayerServerDisconnect extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
-    private final ProxyPlayer player;
+    private final ClientPlayer player;
 
-    public EventPlayerServerDisconnect(ProxyPlayer player) {
+    public EventPlayerServerDisconnect(ClientPlayer player) {
         super(true);
         this.player = player;
     }
@@ -24,7 +25,7 @@ public class EventPlayerServerDisconnect extends Event {
         return handlerList;
     }
 
-    public ProxyPlayer getPlayer() {
+    public ClientPlayer getPlayer() {
         return player;
     }
 }

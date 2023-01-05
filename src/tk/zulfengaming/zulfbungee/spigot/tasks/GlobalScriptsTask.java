@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.spigot.tasks;
 import ch.njol.skript.Skript;
 import org.bukkit.command.CommandSender;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.universal.socket.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,18 +41,19 @@ public class GlobalScriptsTask implements Supplier<File> {
 
             case NEW:
                 newScript(scriptFile);
+                skriptProcess("load");
                 break;
             case DELETE:
                 removeScript(scriptFile);
+                skriptProcess("unload");
                 break;
             case RELOAD:
                 removeScript(scriptFile);
                 newScript(scriptFile);
+                skriptProcess("reload");
                 break;
 
         }
-
-        skriptReload();
 
         return scriptFile;
 
@@ -87,8 +88,9 @@ public class GlobalScriptsTask implements Supplier<File> {
 
     }
 
-    private void skriptReload() {
-        pluginInstance.getTaskManager().newPluginTask(Skript.getInstance(), () -> pluginInstance.getServer().dispatchCommand(sender, "sk reload " + scriptName));
+    private void skriptProcess(String commandAction) {
+        pluginInstance.getTaskManager().newPluginTask(Skript.getInstance(), () -> pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
+                commandAction, scriptName)));
     }
 
 }

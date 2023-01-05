@@ -7,7 +7,7 @@
 
 *The project is currently based around Minecraft 1.12.2 and Java 8 to ensure a level of legacy support, but will be dropped soon.*
 
-**Support for platforms will be added in v1.0.0.**
+**Supports Bungeecord and Velocity!**
 
 Small portions of this plugin were referenced from another addon to aid development ([Skungee by LimeGlass](https://github.com/Skungee/Skungee-2.0.0)), and code referenced will be credited accordingly.
 
@@ -59,3 +59,12 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 - if %-proxyserver% (1¦is|2¦is(n't| not)) online
 
+# Commands / Permissions
+
+- `zulfen.bungee.admin.script.load` /zulfbungee scripts load <name>
+- `zulfen.bungee.admin.script.unload` /zulfbungee scripts unload <name>
+- `zulfen.bungee.admin.script.unload` /zulfbungee scripts reload <name>
+
+- `zulfen.bungee.admin.update.check` /zulfbungee update check
+- `zulfen.bungee.admin.debug` /zulfbungee debug
+- `zulfen.bungee.admin.ping` /zulfbungee ping

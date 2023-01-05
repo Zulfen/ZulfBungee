@@ -10,26 +10,27 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.util.Optional;
 
-public class ExprCurrentProxyServer extends SimpleExpression<ProxyServer> {
+public class ExprCurrentProxyServer extends SimpleExpression<ClientServer> {
 
     static {
-        Skript.registerExpression(ExprCurrentProxyServer.class, ProxyServer.class, ExpressionType.SIMPLE, "this [script's] (server|client|proxy server)");
+        Skript.registerExpression(ExprCurrentProxyServer.class, ClientServer.class, ExpressionType.SIMPLE, "this [script's] (server|client|proxy server)");
     }
 
     @Override
-    protected ProxyServer[] get(@NotNull Event event) {
+    protected ClientServer[] get(@NotNull Event event) {
 
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
         String name = connection.getName();
 
         if (!name.isEmpty()) {
-            Optional<ProxyServer> optionalProxyServer = connection.getProxyServer(name);
+            Optional<ClientServer> optionalProxyServer = connection.getProxyServer(name);
             if (optionalProxyServer.isPresent()) {
-                return new ProxyServer[]{optionalProxyServer.get()};
+                return new ClientServer[]{optionalProxyServer.get()};
             }
         }
 
@@ -43,8 +44,8 @@ public class ExprCurrentProxyServer extends SimpleExpression<ProxyServer> {
     }
 
     @Override
-    public @NotNull Class<? extends ProxyServer> getReturnType() {
-        return ProxyServer.class;
+    public @NotNull Class<? extends ClientServer> getReturnType() {
+        return ClientServer.class;
     }
 
     @Override

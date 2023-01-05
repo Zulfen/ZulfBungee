@@ -2,9 +2,10 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ProxyServer, Number> {
+public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ClientServer, Number> {
 
     static {
         register(ExprProxyServerMaxPlayers.class, Number.class, "(player limit|max player count)", "proxyservers");
@@ -16,8 +17,8 @@ public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ProxySer
     }
 
     @Override
-    public Number convert(ProxyServer proxyServer) {
-        return proxyServer.getServerInfo().getMaxPlayers();
+    public Number convert(ClientServer zulfProxyServer) {
+        return zulfProxyServer.getClientInfo().getMaxPlayers();
     }
 
     @Override

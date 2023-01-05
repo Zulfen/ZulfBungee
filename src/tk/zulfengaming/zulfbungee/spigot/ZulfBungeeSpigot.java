@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.spigot.handlers.TaskManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

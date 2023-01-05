@@ -11,16 +11,17 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ProxyServer;
-import tk.zulfengaming.zulfbungee.universal.util.skript.ServerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
 
 @Name("Proxy Server receive message")
 @Description("When a proxy server receives a message.")
 public class EffServerSendMessage extends Effect {
 
-    private Expression<ProxyServer> servers;
+    private Expression<ClientServer> servers;
     private Expression<String> message;
     private Expression<String> title;
 
@@ -37,7 +38,7 @@ public class EffServerSendMessage extends Effect {
         if (!name.isEmpty()) {
 
             ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event),
-                    new ProxyServer(name, connection.getClientInfo()));
+                    new ClientServer(name, connection.getClientInfo()));
 
             connection.sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
                     false, false, messageOut));
@@ -53,7 +54,7 @@ public class EffServerSendMessage extends Effect {
 
     @Override
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
-        servers = (Expression<ProxyServer>) expressions[0];
+        servers = (Expression<ClientServer>) expressions[0];
         message = (Expression<String>) expressions[1];
         title = (Expression<String>) expressions[2];
         return true;
