@@ -26,6 +26,7 @@ import tk.zulfengaming.zulfbungee.velocity.command.VelocityConsole;
 import tk.zulfengaming.zulfbungee.velocity.config.VelocityConfig;
 import tk.zulfengaming.zulfbungee.velocity.event.VelocityEvents;
 import tk.zulfengaming.zulfbungee.velocity.objects.VelocityPlayer;
+import tk.zulfengaming.zulfbungee.velocity.socket.VelocityMainServer;
 import tk.zulfengaming.zulfbungee.velocity.task.VelocityTaskManager;
 
 import javax.inject.Inject;
@@ -81,7 +82,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
         try {
 
-            this.mainServer = new MainServer<>(pluginConfig.getInt("port"),
+            this.mainServer = new VelocityMainServer(pluginConfig.getInt("port"),
                     InetAddress.getByName(pluginConfig.getString("host")), this);
 
             taskManager.newTask(mainServer);
@@ -154,13 +155,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public Collection<ZulfProxyPlayer<ProxyServer>> getPlayers() {
-        return velocity.getAllPlayers().stream()
-                .map(player -> new VelocityPlayer(player, this))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public ZulfProxyServer<ProxyServer> getServer(String name) {
         return null;
     }
@@ -204,6 +198,11 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
+    public ProxyServer getPlatform() {
+        return velocity;
+    }
+
+    @Override
     public String platformString() {
         return String.format("Velocity (%s)", velocity.getVersion().getVersion());
     }
@@ -215,10 +214,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
     public LegacyComponentSerializer getLegacyTextSerialiser() {
         return legacyTextSerialiser;
-    }
-
-    public ProxyServer getVelocity() {
-        return velocity;
     }
 
 }

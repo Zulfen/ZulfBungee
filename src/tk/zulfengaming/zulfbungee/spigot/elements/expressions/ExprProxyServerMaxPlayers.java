@@ -8,7 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer
 public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ClientServer, Number> {
 
     static {
-        register(ExprProxyServerMaxPlayers.class, Number.class, "(player limit|max player count)", "proxyservers");
+        register(ExprProxyServerMaxPlayers.class, Number.class, "(player limit|max[imum] player count)", "proxyservers");
     }
 
     @Override

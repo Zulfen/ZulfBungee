@@ -35,7 +35,6 @@ public interface ZulfBungeeProxy<P> {
 
     ZulfProxyPlayer<P> getPlayer(UUID uuidIn);
     ZulfProxyPlayer<P> getPlayer(String nameIn);
-    Collection<ZulfProxyPlayer<P>> getPlayers();
 
     ZulfProxyServer<P> getServer(String name);
     Map<String, ZulfServerInfo<P>> getServersCopy();
@@ -45,6 +44,8 @@ public interface ZulfBungeeProxy<P> {
     File getPluginFolder();
 
     ProxyCommandSender<P> getConsole();
+
+    P getPlatform();
 
     String platformString();
 

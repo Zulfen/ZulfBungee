@@ -21,7 +21,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer
 public class EvtPlayerProxyConnect extends SkriptEvent {
 
     static {
-        Skript.registerEvent("Proxy Player Connect", EvtPlayerProxyConnect.class, EventPlayerServerConnect.class, "(proxy|bungeecord|bungee) player connect");
+        Skript.registerEvent("Proxy Player Connect", EvtPlayerProxyConnect.class, EventPlayerServerConnect.class, "(proxy|bungeecord|bungee|velocity) player connect");
 
         EventValues.registerEventValue(EventPlayerServerConnect.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerServerConnect>() {
 

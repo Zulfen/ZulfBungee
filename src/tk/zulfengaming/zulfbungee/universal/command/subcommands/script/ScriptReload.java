@@ -108,7 +108,7 @@ public class ScriptReload<P> extends CommandHandler<P> {
             }
 
         } else {
-            sender.sendMessage("Please specify a script to reload.");
+            sender.sendMessage(Constants.MESSAGE_PREFIX + "Please specify a script to reload.");
         }
     }
 

@@ -18,7 +18,7 @@ public class CommandHandlerManager<P> {
 
     private final MainServer<P> mainServer;
 
-    private final ArrayList<CommandHandler<P>> handlers = new ArrayList<>();
+    private final ArrayList<CommandHandler<P>> handler = new ArrayList<>();
 
     public CommandHandlerManager(MainServer<P> mainServerIn) {
         this.mainServer = mainServerIn;
@@ -35,14 +35,14 @@ public class CommandHandlerManager<P> {
     }
 
     public void addHandler(CommandHandler<P> handlerIn) {
-        handlers.add(handlerIn);
+        handler.add(handlerIn);
     }
 
     public void handle(ProxyCommandSender<P> sender, String[] argsIn) {
 
         if (argsIn.length > 0) {
 
-            Optional<CommandHandler<P>> handlerOptional = handlers.stream()
+            Optional<CommandHandler<P>> handlerOptional = handler.stream()
                     .filter(pCommandHandler -> {
 
                         String[] requiredLabels = pCommandHandler.getRequiredLabels();
@@ -109,16 +109,33 @@ public class CommandHandlerManager<P> {
 
             if (!mainLabel.isEmpty()) {
 
-                return handlers.stream()
-                        .filter(pCommandHandler -> pCommandHandler.getMainLabel().equals(mainLabel))
-                        .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
-                        .filter(pCommandHandler -> strings.length <= pCommandHandler.getRequiredLabels().length)
-                        .map(pCommandHandler -> pCommandHandler.getRequiredLabels()[Math.min(pCommandHandler.getRequiredLabels().length - 1, Math.max(0, strings.length - 1))])
-                        .collect(Collectors.toList());
+                List<String> labels = new ArrayList<>();
+
+                for (CommandHandler<P> pCommandHandler : handler) {
+
+                    if (pCommandHandler.getMainLabel().equals(mainLabel)) {
+
+                        String[] requiredLabels = pCommandHandler.getRequiredLabels();
+
+                        int index = strings.length - 1;
+                        int size = requiredLabels.length;
+
+                        if (index < size) {
+                            labels.add(requiredLabels[index]);
+                        } else {
+                            int newIndex = index - size;
+                            labels.addAll(pCommandHandler.onTab(newIndex));
+                        }
+
+                    }
+
+                }
+
+                return labels;
 
             } else {
 
-                return handlers.stream()
+                return handler.stream()
                         .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
                         .map(CommandHandler::getMainLabel)
                         .collect(Collectors.toList());
@@ -128,7 +145,7 @@ public class CommandHandlerManager<P> {
 
         } else {
 
-            return handlers.stream()
+            return handler.stream()
                     .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
                     .map(CommandHandler::getMainLabel)
                     .collect(Collectors.toList());

@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     static {
-        Skript.registerExpression(ExprNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "(proxy|network|bungeecord|bungee) variable %objects%");
+        Skript.registerExpression(ExprNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "(proxy|network|bungeecord|bungee|velocity) variable %objects%");
     }
 
     private Variable<?> networkVariable;

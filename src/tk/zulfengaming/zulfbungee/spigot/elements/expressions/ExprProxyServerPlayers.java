@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
 
     static {
-        Skript.registerExpression(ExprProxyServerPlayers.class, ClientPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]");
+        Skript.registerExpression(ExprProxyServerPlayers.class, ClientPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy|velocity) players [on %-proxyservers%]");
     }
 
     private Expression<ClientServer> servers;
@@ -49,7 +49,7 @@ public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
         } else {
 
             request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                    true, false, new ZulfProxyServer[0]));
+                    true, false, new Object[0]));
 
         }
 

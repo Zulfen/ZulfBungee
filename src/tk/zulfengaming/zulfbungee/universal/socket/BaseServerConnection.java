@@ -17,16 +17,18 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BaseServerConnection<P> implements Runnable {
+public abstract class BaseServerConnection<P> implements Runnable {
 
     private final MainServer<P> mainServer;
+
     // plugin instance ?
-    private final ZulfBungeeProxy<P> pluginInstance;
+    protected final ZulfBungeeProxy<P> pluginInstance;
 
     private final Socket socket;
 
@@ -47,7 +49,7 @@ public class BaseServerConnection<P> implements Runnable {
     private ClientInfo clientInfo;
 
     // initially empty
-    private String name = "";
+    protected String name = "";
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -228,6 +230,8 @@ public class BaseServerConnection<P> implements Runnable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public abstract List<ZulfProxyPlayer<P>> getPlayers();
 
     public ZulfBungeeProxy<P> getPluginInstance() {
         return pluginInstance;

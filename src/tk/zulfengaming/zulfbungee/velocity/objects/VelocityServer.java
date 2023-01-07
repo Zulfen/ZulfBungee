@@ -18,7 +18,7 @@ public class VelocityServer implements ZulfProxyServer<ProxyServer> {
 
     public VelocityServer(RegisteredServer velocityServerIn, ZulfVelocity pluginIn) {
 
-        ProxyServer proxyServer = pluginIn.getVelocity();
+        ProxyServer proxyServer = pluginIn.getPlatform();
         this.name = velocityServerIn.getServerInfo().getName();
 
         List<ZulfProxyPlayer<ProxyServer>> proxyPlayers = velocityServerIn.getPlayersConnected().stream()

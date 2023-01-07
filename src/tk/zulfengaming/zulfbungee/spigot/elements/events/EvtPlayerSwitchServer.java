@@ -22,7 +22,7 @@ public class EvtPlayerSwitchServer extends SkriptEvent {
 
     static {
 
-        Skript.registerEvent("Proxy Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "[(proxy|bungeecord|bungee)] player switch server");
+        Skript.registerEvent("Proxy Player Switch Server", EvtPlayerSwitchServer.class, EventPlayerSwitchServer.class, "[(proxy|bungeecord|bungee|velocity)] player switch server");
 
         EventValues.registerEventValue(EventPlayerSwitchServer.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerSwitchServer>() {
             @Override

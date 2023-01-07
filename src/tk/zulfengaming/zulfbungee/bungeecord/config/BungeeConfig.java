@@ -7,9 +7,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BungeeConfig extends ProxyConfig<ProxyServer> {
@@ -29,31 +27,6 @@ public class BungeeConfig extends ProxyConfig<ProxyServer> {
             throw new RuntimeException(e);
         }
 
-    }
-
-    public List<String> getScripts() {
-
-        ArrayList<String> cachedScripts = new ArrayList<>();
-
-        if (scriptsFolder.exists()) {
-
-            File[] files = scriptsFolder.listFiles(File::isFile);
-
-            if (files != null) {
-
-                for (File file : files) {
-
-                    String name = file.getName();
-
-                    if (name.endsWith(".sk")) {
-                        cachedScripts.add(name);
-                    }
-
-                }
-            }
-        }
-
-        return cachedScripts;
     }
 
     public String getString(String node) {

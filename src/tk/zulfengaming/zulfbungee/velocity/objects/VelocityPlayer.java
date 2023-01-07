@@ -25,10 +25,10 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
 
     public VelocityPlayer(Player velocityPlayerIn, ZulfVelocity pluginIn) {
 
-        super(pluginIn.getVelocity());
+        super(pluginIn.getPlatform());
 
         this.zulfVelocity = pluginIn;
-        this.velocity = zulfVelocity.getVelocity();
+        this.velocity = zulfVelocity.getPlatform();
         this.velocityPlayer = velocityPlayerIn;
         this.name = velocityPlayer.getUsername();
         this.uuid = velocityPlayer.getUniqueId();
@@ -45,10 +45,10 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
 
     public VelocityPlayer(Player velocityPlayerIn, VelocityServer serverIn, ZulfVelocity pluginIn) {
 
-        super(pluginIn.getVelocity());
+        super(pluginIn.getPlatform());
 
         this.zulfVelocity = pluginIn;
-        this.velocity = zulfVelocity.getVelocity();
+        this.velocity = zulfVelocity.getPlatform();
         this.velocityPlayer = velocityPlayerIn;
         this.name = velocityPlayer.getUsername();
         this.uuid = velocityPlayer.getUniqueId();

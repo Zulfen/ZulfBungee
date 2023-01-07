@@ -41,11 +41,11 @@ public class GlobalScriptsTask implements Supplier<File> {
 
             case NEW:
                 newScript(scriptFile);
-                skriptProcess("load");
+                skriptProcess("enable");
                 break;
             case DELETE:
                 removeScript(scriptFile);
-                skriptProcess("unload");
+                skriptProcess("disable");
                 break;
             case RELOAD:
                 removeScript(scriptFile);

@@ -15,7 +15,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer
 public class ExprProxyServers extends SimpleExpression<ClientServer> {
 
     static {
-        Skript.registerExpression(ExprProxyServers.class, ClientServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee)] servers");
+        Skript.registerExpression(ExprProxyServers.class, ClientServer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] [online] [(proxy|bungeecord|bungee|velocity)] servers");
     }
 
     @Override
