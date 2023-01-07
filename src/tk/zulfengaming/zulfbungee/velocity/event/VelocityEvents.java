@@ -39,7 +39,7 @@ public class VelocityEvents extends ProxyEvents<ProxyServer> {
             String serverName = serverConnectedEvent.getPreviousServer().get().getServerInfo().getName();
             ClientInfo clientInfo = mainServer.getConnectionFromName(serverName).getClientInfo();
 
-            switchServer(new ClientServer(serverName, clientInfo),  new VelocityPlayer(serverConnectedEvent.getPlayer(),
+            switchServer(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
                     zulfVelocity));
 
         }

@@ -11,7 +11,9 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.packets.ProxyPlayers;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
 
@@ -21,8 +23,9 @@ import java.net.*;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
-public class MainServer<P> implements Runnable {
+public abstract class MainServer<P> implements Runnable {
     // plugin instance !!!
 
     private final ZulfBungeeProxy<P> pluginInstance;
@@ -50,6 +53,7 @@ public class MainServer<P> implements Runnable {
     private StorageImpl<P> storage;
 
     public MainServer(int port, InetAddress address, ZulfBungeeProxy<P> instanceIn) {
+
         this.hostAddress = address;
         this.port = port;
         this.pluginInstance = instanceIn;
@@ -146,9 +150,11 @@ public class MainServer<P> implements Runnable {
         } while (running.get());
     }
 
+    protected abstract BaseServerConnection<P> newConnection(Socket socketIn) throws IOException;
+
     private void acceptConnection(Socket socketIn) throws IOException {
 
-        BaseServerConnection<P> connection = new BaseServerConnection<>(this, socketIn);
+        BaseServerConnection<P> connection = newConnection(socketIn);
 
         taskManager.newTask(connection);
         socketConnections.add(connection);
@@ -292,6 +298,11 @@ public class MainServer<P> implements Runnable {
         return activeConnections.entrySet().stream()
                 .map(proxyServerList -> new ClientServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
                 .toArray(ClientServer[]::new);
+    }
+
+    public List<ZulfProxyPlayer<P>> getAllPlayers() {
+        return socketConnections.stream()
+                .flatMap(connection -> connection.getPlayers().stream()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public boolean areClientsConnected() {

@@ -21,7 +21,7 @@ public class ExprProxyServer extends SimpleExpression<ClientServer> {
     private Expression<String> serverNames;
 
     static {
-        Skript.registerExpression(ExprProxyServer.class, ClientServer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) server[s] [(named|called)] %strings%");
+        Skript.registerExpression(ExprProxyServer.class, ClientServer.class, ExpressionType.SIMPLE, "[(proxy|bungeecord|bungee|velocity)] server[s] [(named|called)] %strings%]");
     }
 
     @Override

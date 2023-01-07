@@ -13,7 +13,7 @@ public class VelocityTaskManager implements ProxyTaskManager {
 
     @Override
     public void newTask(Runnable taskIn) {
-        zulfVelocity.getVelocity().getScheduler().buildTask(zulfVelocity, taskIn).schedule();
+        zulfVelocity.getPlatform().getScheduler().buildTask(zulfVelocity, taskIn).schedule();
     }
 
 }

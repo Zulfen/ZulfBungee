@@ -24,7 +24,7 @@ public class ExprProxyPlayer extends SimpleExpression<ClientPlayer> {
     private Expression<String> playerNames;
 
     static {
-        Skript.registerExpression(ExprProxyPlayer.class, ClientPlayer.class, ExpressionType.SIMPLE, "(proxy|bungeecord|bungee) player[s] [(named|called)] %strings%");
+        Skript.registerExpression(ExprProxyPlayer.class, ClientPlayer.class, ExpressionType.SIMPLE, "[(proxy|bungeecord|bungee|velocity)] player[s] [(named|called)] %strings%");
     }
 
     @Override

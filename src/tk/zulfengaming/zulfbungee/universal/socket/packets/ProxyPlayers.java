@@ -48,7 +48,7 @@ public class ProxyPlayers<P> extends PacketHandler<P> {
 
         } else {
 
-            playersOut = getProxy().getPlayers().stream()
+            playersOut = getMainServer().getAllPlayers().stream()
                     .map(player -> new ClientPlayer(player.getName(), player.getUuid()))
                     .collect(Collectors.toCollection(ArrayList::new));
 

@@ -10,6 +10,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.config.BungeeConfig;
 import tk.zulfengaming.zulfbungee.bungeecord.event.BungeeEvents;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
+import tk.zulfengaming.zulfbungee.bungeecord.socket.BungeeMainServer;
 import tk.zulfengaming.zulfbungee.bungeecord.task.BungeeTaskManager;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
@@ -24,9 +25,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServer> {
 
@@ -57,7 +59,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
         try {
 
-            mainServer = new MainServer<>(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
+            mainServer = new BungeeMainServer(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
 
             CommandHandlerManager<ProxyServer> commandHandlerManager = new CommandHandlerManager<>(mainServer);
 
@@ -69,7 +71,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         } catch (UnknownHostException e) {
             error("Could not start the server! (bungeecord)");
             e.printStackTrace();
-
         }
 
     }
@@ -135,14 +136,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public Collection<ZulfProxyPlayer<ProxyServer>> getPlayers() {
-        return getProxy().getPlayers().stream()
-                .filter(Objects::nonNull)
-                .map(BungeePlayer::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public ZulfProxyServer<ProxyServer> getServer(String name) {
 
         ServerInfo bungeeServerInfo = getProxy().getServersCopy().get(name);
@@ -163,7 +156,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
         for (ServerInfo bungeeInfo : getProxy().getServersCopy().values()) {
             serverMap.put(bungeeInfo.getName(), new ZulfServerInfo<>
-                    (bungeeInfo.getSocketAddress(), getPlayers()));
+                    (bungeeInfo.getSocketAddress(), mainServer.getAllPlayers()));
         }
 
         return serverMap;
@@ -182,6 +175,11 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     @Override
     public ProxyCommandSender<ProxyServer> getConsole() {
         return new BungeeConsole(getProxy());
+    }
+
+    @Override
+    public ProxyServer getPlatform() {
+        return getProxy();
     }
 
     @Override

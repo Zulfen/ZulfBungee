@@ -19,6 +19,7 @@ public class ClientPlayer implements Serializable {
     public ClientPlayer(String name, UUID uuid, ClientServer serverIn) {
         this.name = name;
         this.uuid = uuid;
+        this.server = serverIn;
     }
 
     public ClientServer getServer() {
