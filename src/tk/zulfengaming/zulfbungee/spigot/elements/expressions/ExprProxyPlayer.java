@@ -12,7 +12,6 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

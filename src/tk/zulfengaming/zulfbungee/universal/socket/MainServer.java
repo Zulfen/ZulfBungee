@@ -2,8 +2,8 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
+import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
@@ -13,7 +13,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.packets.ProxyPlayers;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
 

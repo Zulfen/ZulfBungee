@@ -70,7 +70,7 @@ public class ClientConnection extends BukkitRunnable {
     private int timeout = 2000;
     private int packetResponseTime = 1000;
 
-    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int heartbeatIn, int packetResponseTimeIn) throws UnknownHostException {
+    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int heartbeatIn, int packetResponseTimeIn) {
 
         this.pluginInstance = pluginInstanceIn;
         this.clientListenerManager = new ClientListenerManager(this);

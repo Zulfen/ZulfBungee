@@ -12,7 +12,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerKick;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 @Name("Proxy Player Kick")
 @Description("When a proxy player gets kicked from the proxy. (e.g. a ban)")

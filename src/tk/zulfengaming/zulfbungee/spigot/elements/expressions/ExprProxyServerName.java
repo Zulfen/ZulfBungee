@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 public class ExprProxyServerName extends SimplePropertyExpression<ClientServer, String> {
 

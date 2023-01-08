@@ -10,10 +10,6 @@ import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,8 +22,6 @@ public interface ZulfBungeeProxy<P> {
     void error(String messageIn);
 
     void warning(String messageIn);
-
-    MainServer<P> getServer();
 
     ProxyTaskManager getTaskManager();
 

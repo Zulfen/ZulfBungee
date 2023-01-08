@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.universal.config;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,9 +12,9 @@ import java.util.List;
 
 public abstract class ProxyConfig<P> {
 
-    protected File scriptsFolder;
-    protected Path scriptsFolderPath;
-    protected File configFile;
+    protected final File scriptsFolder;
+    protected final Path scriptsFolderPath;
+    protected final File configFile;
 
     protected ProxyConfig(ZulfBungeeProxy<P> instanceIn) {
 

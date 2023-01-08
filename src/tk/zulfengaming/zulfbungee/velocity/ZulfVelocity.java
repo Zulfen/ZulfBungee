@@ -128,11 +128,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public MainServer<ProxyServer> getServer() {
-        return mainServer;
-    }
-
-    @Override
     public ProxyTaskManager getTaskManager() {
         return taskManager;
     }

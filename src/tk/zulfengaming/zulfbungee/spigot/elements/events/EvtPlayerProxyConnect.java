@@ -13,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 @Name("Proxy Player Connect")
 @Description("When a proxy player joins the proxy.")
