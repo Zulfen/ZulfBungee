@@ -192,10 +192,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         return updater;
     }
 
-    public MainServer<ProxyServer> getServer() {
-        return mainServer;
-    }
-
     public BungeeTaskManager getTaskManager() {
         return bungeeTaskManager;
     }

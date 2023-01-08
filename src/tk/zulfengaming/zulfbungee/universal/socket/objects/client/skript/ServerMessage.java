@@ -1,7 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript;
 
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.io.Serializable;
 

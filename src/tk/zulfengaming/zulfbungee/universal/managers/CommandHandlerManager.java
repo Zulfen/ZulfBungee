@@ -11,7 +11,10 @@ import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CommandHandlerManager<P> {
@@ -121,10 +124,18 @@ public class CommandHandlerManager<P> {
                         int size = requiredLabels.length;
 
                         if (index < size) {
+
                             labels.add(requiredLabels[index]);
+
                         } else {
-                            int newIndex = index - size;
-                            labels.addAll(pCommandHandler.onTab(newIndex));
+
+                            String[] afterMain = Arrays.copyOfRange(strings, 0, strings.length - 1);
+
+                            if (Arrays.equals(requiredLabels, afterMain)) {
+                                int newIndex = index - size;
+                                labels.addAll(pCommandHandler.onTab(newIndex));
+                            }
+
                         }
 
                     }

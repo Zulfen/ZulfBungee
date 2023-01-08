@@ -9,8 +9,6 @@ import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 import tk.zulfengaming.zulfbungee.velocity.objects.VelocityPlayer;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class VelocityCommand implements SimpleCommand {

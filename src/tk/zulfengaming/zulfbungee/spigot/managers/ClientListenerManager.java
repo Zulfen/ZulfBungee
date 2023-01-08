@@ -8,9 +8,7 @@ import tk.zulfengaming.zulfbungee.spigot.handlers.SocketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -166,6 +164,8 @@ public class ClientListenerManager extends BukkitRunnable {
 
                 } catch (InterruptedException e) {
                     break;
+                } catch (RejectedExecutionException ignored) {
+                    // ignored as we specifically throw this exception upon shutting down, we don't need to do any more work
                 } catch (ExecutionException e) {
                     pluginInstance.logDebug(ChatColor.RED + String.format("Error while creating socket: %s", e.getCause().getMessage()));
                 }

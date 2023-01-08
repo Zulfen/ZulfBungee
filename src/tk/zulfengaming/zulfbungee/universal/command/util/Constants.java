@@ -2,12 +2,12 @@ package tk.zulfengaming.zulfbungee.universal.command.util;
 
 public enum Constants {
 
-    MESSAGE_PREFIX("&f&l[&b&lZulfBungee&f&l]&r ");
+    MESSAGE_PREFIX();
 
     private final String toString;
 
-    Constants(String s) {
-        this.toString = s;
+    Constants() {
+        this.toString = "&f&l[&b&lZulfBungee&f&l]&r ";
     }
 
     @Override

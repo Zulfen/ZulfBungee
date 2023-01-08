@@ -34,7 +34,11 @@ public class TaskManager {
     }
 
     public <T> T submitCallable(Callable<T> callableIn) throws ExecutionException, InterruptedException {
-        return !executorService.isShutdown() ? executorService.submit(callableIn).get() : null;
+        if (!executorService.isShutdown()) {
+            return executorService.submit(callableIn).get();
+        } else {
+            throw new RejectedExecutionException("Shutting down - callable cannot be submitted.");
+        }
     }
 
     public <T> CompletableFuture<T> submitSupplier(Supplier<T> supplierIn) {

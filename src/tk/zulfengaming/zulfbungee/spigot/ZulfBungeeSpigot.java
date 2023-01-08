@@ -36,18 +36,11 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
         debug = config.getBoolean("debug");
 
-        try {
+        connection = new ClientConnection(this, config.getInt("connection-timeout"),
+                config.getInt("heartbeat-ticks"),
+                config.getInt("packet-response-time"));
 
-            connection = new ClientConnection(this, config.getInt("connection-timeout"),
-                    config.getInt("heartbeat-ticks"),
-                    config.getInt("packet-response-time"));
-
-            taskManager.newAsyncTask(connection);
-
-        } catch (UnknownHostException e) {
-            error("Error launching connection task!");
-            e.printStackTrace();
-        }
+        taskManager.newAsyncTask(connection);
 
         SkriptAddon addon = Skript.registerAddon(this);
 
