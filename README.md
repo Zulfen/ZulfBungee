@@ -15,7 +15,7 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 ## **Known Bugs:**
 
-* None right now.
+* Proper colour parsing from Skript might be a little broken - would require some code reshuffling to fix. (use & colour codes for now)
 
 # **Supported Syntax:**
 
