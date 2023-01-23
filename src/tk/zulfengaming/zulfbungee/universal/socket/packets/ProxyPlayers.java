@@ -10,7 +10,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,10 +37,13 @@ public class ProxyPlayers<P> extends PacketHandler<P> {
 
             for (ClientServer server : servers) {
 
-                Collection<ZulfProxyPlayer<P>> players = getProxy().getServersCopy().get(server.getName()).getPlayers();
+                BaseServerConnection<P> serverConnection = getMainServer().getConnectionFromName(server.getName());
 
-                for (ZulfProxyPlayer<P> player : players) {
-                    playersOut.add(new ClientPlayer(player.getName(), player.getUuid()));
+                if (serverConnection != null) {
+                    List<ZulfProxyPlayer<P>> players = connectionIn.getPlayers();
+                    for (ZulfProxyPlayer<P> player : players) {
+                        playersOut.add(new ClientPlayer(player.getName(), player.getUuid()));
+                    }
                 }
 
             }

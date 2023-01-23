@@ -220,13 +220,9 @@ public abstract class MainServer<P> implements Runnable {
     }
 
     public void addActiveConnection(BaseServerConnection<P> connection, String name) {
-
         activeConnections.put(name, connection);
-
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
-
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
-
     }
 
     public void removeServerConnection(BaseServerConnection<P> connectionIn) {
@@ -297,6 +293,18 @@ public abstract class MainServer<P> implements Runnable {
         return activeConnections.entrySet().stream()
                 .map(proxyServerList -> new ClientServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
                 .toArray(ClientServer[]::new);
+    }
+
+    public List<ZulfProxyPlayer<P>> getProxyPlayersFrom(String nameIn) {
+
+        BaseServerConnection<P> serverConnection = getConnectionFromName(nameIn);
+
+        if (serverConnection != null) {
+            return serverConnection.getPlayers();
+        }
+
+        return Collections.emptyList();
+
     }
 
     public List<ZulfProxyPlayer<P>> getAllPlayers() {

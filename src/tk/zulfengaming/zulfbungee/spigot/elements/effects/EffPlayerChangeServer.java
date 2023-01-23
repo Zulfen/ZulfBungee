@@ -37,7 +37,7 @@ public class EffPlayerChangeServer extends Effect {
 
     @Override
     protected void execute(@NotNull Event event) {
-        ZulfBungeeSpigot.getPlugin().getConnection().send(new Packet(PacketTypes.PLAYER_SWITCH_SERVER,
+        ZulfBungeeSpigot.getPlugin().getConnection().sendDirect(new Packet(PacketTypes.PLAYER_SWITCH_SERVER,
                             true, true, new ClientPlayerDataContainer(server.getSingle(event), players.getArray(event))));
     }
 

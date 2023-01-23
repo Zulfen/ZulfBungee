@@ -14,7 +14,11 @@ import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
+
+import java.util.Optional;
 
 @Name("Send Proxy Player message")
 @Description("Sends proxy player(s) a message.")
@@ -36,9 +40,13 @@ public class EffPlayerSendMessage extends Effect {
 
     @Override
     protected void execute(@NotNull Event event) {
+
         ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-        connection.send(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
-                        false, false, new ClientPlayerDataContainer(message.getSingle(event), players.getArray(event))));
+        Optional<ClientServer> asServer = connection.getAsServer();
+
+        asServer.ifPresent(server -> connection.sendDirect(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
+                false, true, new PlayerMessage(server, players.getArray(event), message.getSingle(event)))));
+
     }
 
     @Override

@@ -22,19 +22,8 @@ public class ExprCurrentProxyServer extends SimpleExpression<ClientServer> {
 
     @Override
     protected ClientServer[] get(@NotNull Event event) {
-
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-        String name = connection.getName();
-
-        if (!name.isEmpty()) {
-            Optional<ClientServer> optionalProxyServer = connection.getProxyServer(name);
-            if (optionalProxyServer.isPresent()) {
-                return new ClientServer[]{optionalProxyServer.get()};
-            }
-        }
-
-        return null;
-
+        Optional<ClientServer> connection = ZulfBungeeSpigot.getPlugin().getConnection().getAsServer();
+        return connection.map(server -> new ClientServer[]{server}).orElse(null);
     }
 
     @Override

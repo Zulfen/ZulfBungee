@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.checkerframework.checker.nullness.Opt;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
@@ -233,16 +234,26 @@ public class ClientConnection extends BukkitRunnable {
     }
 
     public ClientServer[] getProxyServers() {
-
         return proxyServers.entrySet().stream()
                 .map(server -> new ClientServer(server.getKey(), server.getValue()))
                 .toArray(ClientServer[]::new);
-
     }
 
     public Optional<ClientServer> getProxyServer(String nameIn) {
         ClientInfo zulfServerInfo = proxyServers.get(nameIn);
         return zulfServerInfo != null ? Optional.of(new ClientServer(nameIn, zulfServerInfo)) : Optional.empty();
+    }
+
+    public Optional<ClientServer> getAsServer() {
+
+        ClientInfo clientInfo = proxyServers.get(connectionName);
+
+        if (clientInfo != null) {
+            return Optional.of(new ClientServer(connectionName, clientInfo));
+        }
+
+        return Optional.empty();
+
     }
 
     public boolean proxyServerOnline(String nameIn) {

@@ -49,7 +49,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
     private ClientInfo clientInfo;
 
     // initially empty
-    protected String name = "";
+    private String name = "";
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -90,25 +90,10 @@ public abstract class BaseServerConnection<P> implements Runnable {
                             readQueue.tryTransfer(packetIn);
                         }
 
-                        try {
-
-                            Packet handledPacket = packetManager.handlePacket(packetIn, this);
-
-                            if (packetIn.isReturnable() && handledPacket != null) {
-                                sendDirect(handledPacket);
-                            }
-
-                        } catch (Exception e) {
-
-                            // Used if unhandled exception occurs
-                            pluginInstance.error(String.format("Unhandled exception occurred in connection with address %s", socket.getRemoteSocketAddress()));
-                            e.printStackTrace();
-
-                            end();
-
-                        }
+                        processPacket(packetIn);
 
                     }
+
                 }
 
             } catch (InterruptedException e) {
@@ -117,6 +102,28 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         } while (running.get());
 
+
+    }
+
+    protected void processPacket(Packet packetIn) {
+
+        try {
+
+            Packet handledPacket = packetManager.handlePacket(packetIn, this);
+
+            if (packetIn.isReturnable() && handledPacket != null) {
+                sendDirect(handledPacket);
+            }
+
+        } catch (Exception e) {
+
+            // Used if unhandled exception occurs
+            pluginInstance.error(String.format("Unhandled exception occurred in connection with address %s", socket.getRemoteSocketAddress()));
+            e.printStackTrace();
+
+            end();
+
+        }
 
     }
 
@@ -231,7 +238,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
         this.name = name;
     }
 
-    public abstract List<ZulfProxyPlayer<P>> getPlayers();
+    public abstract List<ZulfProxyPlayer<P>> getPlayers(String nameIn);
 
     public ZulfBungeeProxy<P> getPluginInstance() {
         return pluginInstance;

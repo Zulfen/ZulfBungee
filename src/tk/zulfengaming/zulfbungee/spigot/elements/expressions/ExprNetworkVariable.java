@@ -48,7 +48,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
             Packet packetIn = response.get();
 
-            if (packetIn.getDataSingle() != null) {
+            if (packetIn.getDataSingle() != null && packetIn.getDataArray().length > 0) {
 
                 NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
 

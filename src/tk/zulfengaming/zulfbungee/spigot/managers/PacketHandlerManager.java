@@ -25,6 +25,7 @@ public class PacketHandlerManager {
         addHandler(new ProxyServerInfo(connectionIn));
         addHandler(new ServerKickEvent(connectionIn));
         addHandler(new GlobalScript(connectionIn));
+        addHandler(new PlayerSendMessage(connectionIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {

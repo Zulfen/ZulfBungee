@@ -1,18 +1,11 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
 
 public class PlayerSendMessage<P> extends PacketHandler<P> {
 
@@ -24,22 +17,15 @@ public class PlayerSendMessage<P> extends PacketHandler<P> {
     @Override
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> address) {
 
-        ClientPlayerDataContainer message = (ClientPlayerDataContainer) packetIn.getDataSingle();
+        PlayerMessage playerMessage = (PlayerMessage) packetIn.getDataSingle();
 
-        List<UUID> uuids = Stream.of(message.getPlayers())
-                .map(ClientPlayer::getUuid)
-                .collect(Collectors.toList());
+        BaseServerConnection<P> connectionFromName = getMainServer().getConnectionFromName(playerMessage.getFromServer().getName());
 
-        for (UUID uuid : uuids) {
-
-            ZulfProxyPlayer<P> bungeecordPlayer = getProxy().getPlayer(uuid);
-
-            if (bungeecordPlayer != null) {
-                bungeecordPlayer.sendMessage((String) message.getData());
-            }
-
+        if (connectionFromName != null) {
+            connectionFromName.sendDirect(packetIn);
         }
 
         return null;
+
     }
 }

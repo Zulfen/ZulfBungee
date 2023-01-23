@@ -92,7 +92,6 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
     public void connect(ZulfProxyServer<ProxyServer> serverIn) {
         Optional<RegisteredServer> server = velocity.getServer(serverIn.getName());
         server.ifPresent(registeredServer -> velocityPlayer.createConnectionRequest(registeredServer).connect());
-
     }
 
 }

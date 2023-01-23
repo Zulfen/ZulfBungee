@@ -1,6 +1,5 @@
 package tk.zulfengaming.zulfbungee.universal.storage;
 
-import com.google.common.primitives.Longs;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
@@ -8,8 +7,8 @@ import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
+import tk.zulfengaming.zulfbungee.universal.storage.util.ValueOperation;
 
-import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +16,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
-
-// TODO: Make byte to long / double (and reverse) a static function somewhere else for re-usability.
 
 public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
@@ -69,7 +66,6 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
                 String finalisedQuery = "%" + listName + "::%";
 
                 preparedStatement.setString(1, finalisedQuery);
-
                 ResultSet result = preparedStatement.executeQuery();
 
                 ArrayList<Value> values = new ArrayList<>();
@@ -77,7 +73,6 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
                 while (result.next()) {
                     String type = result.getString("type");
                     byte[] data = result.getBytes("data");
-
                     //getMainServer().getPluginInstance().logDebug("Got value " + valueName);
                     values.add(new Value(type, data));
 
@@ -233,37 +228,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                 if (result.next()) {
 
-                    byte[] bytesOut = new byte[0];
-
-                    byte[] bytesFrom = result.getBytes("data");
-
-                    if (value.type.equals("long")) {
-
-                        long storedLong = Longs.fromByteArray(bytesFrom);
-                        long givenLong = Longs.fromByteArray(value.data);
-
-                        bytesOut = Longs.toByteArray(storedLong + givenLong);
-
-                    } else if (value.type.equals("double")) {
-
-                        if (result.getString("type").equals("long")) {
-
-                            long storedLong = Longs.fromByteArray(bytesFrom);
-
-                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
-
-                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedLong + givenDouble).array();
-
-                        } else {
-
-                            double storedDouble = ByteBuffer.wrap(bytesFrom).getDouble();
-
-                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
-
-                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedDouble + givenDouble).array();
-                        }
-
-                    }
+                    byte[] bytesOut = ValueOperation.add(result.getBytes("data"), value, result.getString("type"));
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
@@ -363,42 +328,11 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
                 PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
 
                 getStatement.setString(1, name);
-
                 ResultSet result = getStatement.executeQuery();
 
                 if (result.next()) {
 
-                    byte[] bytesOut = new byte[0];
-
-                    byte[] bytesFrom = result.getBytes("data");
-
-                    if (value.type.equals("long")) {
-
-                        long storedLong = Longs.fromByteArray(bytesFrom);
-                        long givenLong = Longs.fromByteArray(value.data);
-
-                        bytesOut = Longs.toByteArray(storedLong - givenLong);
-
-                    } else if (value.type.equals("double")) {
-
-                        if (result.getString("type").equals("long")) {
-
-                            long storedLong = Longs.fromByteArray(bytesFrom);
-
-                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
-
-                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedLong + givenDouble).array();
-
-                        } else {
-
-                            double storedDouble = ByteBuffer.wrap(bytesFrom).getDouble();
-
-                            double givenDouble = ByteBuffer.wrap(value.data).getDouble();
-
-                            bytesOut = ByteBuffer.wrap(new byte[8]).putDouble(storedDouble + givenDouble).array();
-                        }
-
-                    }
+                    byte[] bytesOut = ValueOperation.subtract(result.getBytes("data"), value, result.getString("type"));
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 

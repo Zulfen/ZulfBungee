@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class VelocityServerConnection extends BaseServerConnection<ProxyServer> {
@@ -21,10 +22,11 @@ public class VelocityServerConnection extends BaseServerConnection<ProxyServer> 
         super(mainServerIn, socketIn);
     }
 
+
     @Override
     public List<ZulfProxyPlayer<ProxyServer>> getPlayers() {
 
-        Optional<RegisteredServer> server = pluginInstance.getPlatform().getServer(name);
+        Optional<RegisteredServer> server = pluginInstance.getPlatform().getServer(getName());
 
         return server.<List<ZulfProxyPlayer<ProxyServer>>>map(registeredServer -> registeredServer.getPlayersConnected().stream()
                 .map(player -> new VelocityPlayer(player, (ZulfVelocity) pluginInstance))
