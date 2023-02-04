@@ -15,8 +15,7 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 ## **Known Bugs:**
 
-* Proper colour parsing from Skript might be a little broken - would require some code reshuffling to fix. (use & colour codes for now)
-* Using `localhost` in Bungeecord configurations causes a false positive while doing the security check, meaning the proxy will ignore the connection. (fixing this!)
+* None right now!
 
 # **Supported Syntax:**
 
