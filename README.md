@@ -16,6 +16,7 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 ## **Known Bugs:**
 
 * Proper colour parsing from Skript might be a little broken - would require some code reshuffling to fix. (use & colour codes for now)
+* Using `localhost` in Bungeecord configurations causes a false positive while doing the security check, meaning the proxy will ignore the connection. (fixing this!)
 
 # **Supported Syntax:**
 
@@ -63,7 +64,7 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 - `zulfen.bungee.admin.script.load` /zulfbungee scripts load <name>
 - `zulfen.bungee.admin.script.unload` /zulfbungee scripts unload <name>
-- `zulfen.bungee.admin.script.unload` /zulfbungee scripts reload <name>
+- `zulfen.bungee.admin.script.reload` /zulfbungee scripts reload <name>
 
 - `zulfen.bungee.admin.update.check` /zulfbungee update check
 - `zulfen.bungee.admin.debug` /zulfbungee debug
