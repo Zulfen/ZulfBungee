@@ -17,12 +17,7 @@ public class BungeeServer implements ZulfProxyServer<ProxyServer> {
     public BungeeServer(net.md_5.bungee.api.config.ServerInfo bungeeInfoIn) {
 
         this.name = bungeeInfoIn.getName();
-
-        List<ZulfProxyPlayer<ProxyServer>> proxyPlayers = bungeeInfoIn.getPlayers().stream()
-                .map(proxiedPlayer -> new BungeePlayer<>(proxiedPlayer, this))
-                .collect(Collectors.toList());
-
-        this.info = new ZulfServerInfo<>(bungeeInfoIn.getSocketAddress(), proxyPlayers);
+        this.info = new ZulfServerInfo<>(bungeeInfoIn.getSocketAddress());
 
     }
 

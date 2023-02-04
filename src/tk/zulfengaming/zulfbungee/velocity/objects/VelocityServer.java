@@ -20,12 +20,7 @@ public class VelocityServer implements ZulfProxyServer<ProxyServer> {
 
         ProxyServer proxyServer = pluginIn.getPlatform();
         this.name = velocityServerIn.getServerInfo().getName();
-
-        List<ZulfProxyPlayer<ProxyServer>> proxyPlayers = velocityServerIn.getPlayersConnected().stream()
-                .map(player -> new VelocityPlayer(player, this, pluginIn))
-                .collect(Collectors.toList());
-
-        this.info = new ZulfServerInfo<>(proxyServer.getBoundAddress(), proxyPlayers);
+        this.info = new ZulfServerInfo<>(proxyServer.getBoundAddress());
 
     }
 
