@@ -92,6 +92,7 @@ public class DataInHandler extends BukkitRunnable {
                 e.printStackTrace();
 
                 clientListenerManager.isSocketConnected().compareAndSet(true, false);
+                connection.shutdown();
 
             } catch (InterruptedException e) {
                 break;

@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -13,9 +14,8 @@ import java.util.Optional;
 
 public class NetworkVariableModify<P> extends PacketHandler<P> {
 
-    public NetworkVariableModify(MainServer<P> mainServerIn) {
-        super(mainServerIn, PacketTypes.NETWORK_VARIABLE_MODIFY);
-
+    public NetworkVariableModify(PacketHandlerManager<P> packetHandlerManager) {
+        super(packetHandlerManager);
     }
 
     @Override

@@ -6,15 +6,9 @@ import java.util.Collection;
 public class ZulfServerInfo<P> {
 
     private final SocketAddress socketAddress;
-    private final Collection<ZulfProxyPlayer<P>> players;
 
-    public ZulfServerInfo(SocketAddress socketAddressIn, Collection<ZulfProxyPlayer<P>> playersIn) {
+    public ZulfServerInfo(SocketAddress socketAddressIn) {
         this.socketAddress = socketAddressIn;
-        this.players = playersIn;
-    }
-
-    public Collection<ZulfProxyPlayer<P>> getPlayers() {
-        return players;
     }
 
     public SocketAddress getSocketAddress() {

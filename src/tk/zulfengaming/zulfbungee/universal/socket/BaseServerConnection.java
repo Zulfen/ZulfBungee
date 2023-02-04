@@ -13,6 +13,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.file.Files;
@@ -47,9 +49,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
     private final TransferQueue<Packet> readQueue = new LinkedTransferQueue<>();
 
     private ClientInfo clientInfo;
-
-    // initially empty
-    private String name = "";
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -226,19 +225,35 @@ public abstract class BaseServerConnection<P> implements Runnable {
         this.clientInfo = clientInfo;
     }
 
-    public Socket getSocket() {
-        return socket;
+    public InputStream getInputStream() {
+
+        try {
+            if (socketConnected.get()) {
+                return socket.getInputStream();
+            } else {
+                throw new RuntimeException("Socket is not connected!");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public String getName() {
-        return name;
+    public OutputStream getOutputStream() {
+
+        try {
+            if (socketConnected.get()) {
+                return socket.getOutputStream();
+            } else {
+                throw new RuntimeException("Socket is not connected!");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public abstract List<ZulfProxyPlayer<P>> getPlayers(String nameIn);
+    public abstract List<ZulfProxyPlayer<P>> getPlayers();
 
     public ZulfBungeeProxy<P> getPluginInstance() {
         return pluginInstance;

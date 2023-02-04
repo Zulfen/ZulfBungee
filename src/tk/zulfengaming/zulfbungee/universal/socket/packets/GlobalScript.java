@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -9,9 +10,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 
 public class GlobalScript<P> extends PacketHandler<P> {
 
-    public GlobalScript(MainServer<P> mainServerIn) {
-        super(mainServerIn, PacketTypes.GLOBAL_SCRIPT);
-
+    public GlobalScript(PacketHandlerManager<P> packetHandlerManager) {
+        super(packetHandlerManager);
     }
 
     // used to retrieve all scripts on the proxy, client will never ask for scripts on its own apart from this, server sends it

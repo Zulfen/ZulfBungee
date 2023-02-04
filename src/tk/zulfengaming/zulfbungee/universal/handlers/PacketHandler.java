@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.handlers;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -8,28 +9,20 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
 public abstract class PacketHandler<P> {
 
-    private final PacketTypes[] types;
-
-    private final MainServer<P> mainServer;
+    private final PacketHandlerManager<P> packetHandlerManager;
 
     public abstract Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection);
 
-    public PacketTypes[] getTypes() {
-        return types;
-    }
-
     public MainServer<P> getMainServer() {
-        return mainServer;
+        return packetHandlerManager.getMainServer();
     }
 
     public ZulfBungeeProxy<P> getProxy() {
-        return mainServer.getPluginInstance();
+        return packetHandlerManager.getMainServer().getPluginInstance();
     }
 
-    public PacketHandler(MainServer<P> mainServerIn, PacketTypes... types) {
-        this.mainServer = mainServerIn;
-        this.types = types;
-
+    public PacketHandler(PacketHandlerManager<P> packetHandlerManagerIn) {
+        this.packetHandlerManager = packetHandlerManagerIn;
     }
 
 }

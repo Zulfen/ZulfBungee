@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -17,9 +18,8 @@ import java.util.stream.Stream;
 
 public class ProxyPlayers<P> extends PacketHandler<P> {
 
-    public ProxyPlayers(MainServer<P> mainServerIn) {
-        super(mainServerIn, PacketTypes.PROXY_PLAYERS);
-
+    public ProxyPlayers(PacketHandlerManager<P> packetHandlerManager) {
+        super(packetHandlerManager);
     }
 
     @Override
@@ -37,13 +37,9 @@ public class ProxyPlayers<P> extends PacketHandler<P> {
 
             for (ClientServer server : servers) {
 
-                BaseServerConnection<P> serverConnection = getMainServer().getConnectionFromName(server.getName());
-
-                if (serverConnection != null) {
-                    List<ZulfProxyPlayer<P>> players = connectionIn.getPlayers();
-                    for (ZulfProxyPlayer<P> player : players) {
-                        playersOut.add(new ClientPlayer(player.getName(), player.getUuid()));
-                    }
+                List<ZulfProxyPlayer<P>> players = getMainServer().getProxyPlayersFrom(server.getName());
+                for (ZulfProxyPlayer<P> player : players) {
+                    playersOut.add(new ClientPlayer(player.getName(), player.getUuid()));
                 }
 
             }

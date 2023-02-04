@@ -6,9 +6,12 @@ import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Phaser;
@@ -76,6 +79,13 @@ public class DataOutHandler extends BukkitRunnable {
 
             } catch (InterruptedException e) {
                 break;
+
+            } catch (EOFException | SocketException | SocketTimeoutException e) {
+
+                pluginInstance.warning("Proxy server appears to have disconnected!");
+
+                clientListenerManager.isSocketConnected().compareAndSet(true, false);
+
             } catch (IOException e) {
 
                 pluginInstance.error("An unexpected error occurred!");
@@ -86,6 +96,7 @@ public class DataOutHandler extends BukkitRunnable {
                 e.printStackTrace();
 
                 clientListenerManager.isSocketConnected().compareAndSet(true, false);
+                connection.shutdown();
 
             }
 

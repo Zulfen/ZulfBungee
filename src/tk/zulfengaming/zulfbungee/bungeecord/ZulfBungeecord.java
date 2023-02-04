@@ -156,7 +156,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
         for (ServerInfo bungeeInfo : getProxy().getServersCopy().values()) {
             serverMap.put(bungeeInfo.getName(), new ZulfServerInfo<>
-                    (bungeeInfo.getSocketAddress(), mainServer.getAllPlayers()));
+                    (bungeeInfo.getSocketAddress()));
         }
 
         return serverMap;

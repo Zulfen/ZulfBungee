@@ -24,8 +24,7 @@ public class DataInHandler<P> implements Runnable {
 
     public DataInHandler(BaseServerConnection<P> connectionIn) throws IOException {
         this.connection = connectionIn;
-        Socket socket = connectionIn.getSocket();
-        this.inputStream = new ObjectInputStream(socket.getInputStream());
+        this.inputStream = new ObjectInputStream(connectionIn.getInputStream());
 
     }
 

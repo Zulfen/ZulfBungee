@@ -21,10 +21,7 @@ public class DataOutHandler<P> implements Runnable {
 
     public DataOutHandler(BaseServerConnection<P> connectionIn) throws IOException {
         this.connection = connectionIn;
-
-        Socket socket = connectionIn.getSocket();
-        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-
+        this.outputStream = new ObjectOutputStream(connectionIn.getOutputStream());
     }
 
     @Override

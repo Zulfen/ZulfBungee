@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -10,9 +11,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer
 
 public class ProxyPlayerOnline<P> extends PacketHandler<P> {
 
-    public ProxyPlayerOnline(MainServer<P> mainServerIn) {
-        super(mainServerIn, PacketTypes.PLAYER_ONLINE);
-
+    public ProxyPlayerOnline(PacketHandlerManager<P> packetHandlerManager) {
+        super(packetHandlerManager);
     }
 
     @Override

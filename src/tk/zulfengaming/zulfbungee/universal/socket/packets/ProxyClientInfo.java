@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -15,9 +16,8 @@ import java.util.Map;
 
 public class ProxyClientInfo<P> extends PacketHandler<P> {
 
-    public ProxyClientInfo(MainServer<P> mainServerIn) {
-        super(mainServerIn, PacketTypes.PROXY_CLIENT_INFO);
-
+    public ProxyClientInfo(PacketHandlerManager<P> packetHandlerManager) {
+        super(packetHandlerManager);
     }
 
     @Override
@@ -42,7 +42,6 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
             if (infoInetAddr.equals(inetAddressIn) && portIn == infoPort) {
 
                 String name = info.getKey();
-                connection.setName(name);
                 getMainServer().addActiveConnection(connection, name);
 
                 return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);

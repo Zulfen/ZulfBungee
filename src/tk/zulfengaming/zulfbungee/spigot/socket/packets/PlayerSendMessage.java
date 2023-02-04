@@ -31,8 +31,6 @@ public class PlayerSendMessage extends PacketHandler {
 
         for (ClientPlayer clientPlayer : playerMessage.getToPlayers()) {
 
-            getConnection().getPluginInstance().logDebug(clientPlayer.getName());
-
             BaseComponent[] components = BungeeConverter.convert(parsed);
 
             getConnection().getPluginInstance()

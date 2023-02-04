@@ -42,6 +42,7 @@ public abstract class MainServer<P> implements Runnable {
 
     private final ArrayList<BaseServerConnection<P>> socketConnections = new ArrayList<>();
 
+    private final HashMap<SocketAddress, String> addressNames = new HashMap<>();
     private final HashMap<String, BaseServerConnection<P>> activeConnections = new HashMap<>();
 
     // quite neat
@@ -170,12 +171,21 @@ public abstract class MainServer<P> implements Runnable {
         boolean portWhitelistEnabled = pluginInstance.getConfig().getBoolean("port-whitelist");
         List<Integer> ports = pluginInstance.getConfig().getIntList("ports");
 
+        InetSocketAddress inetAddrIn = ((InetSocketAddress) addressIn);
+
+        boolean isLocalHost = false;
+
+        try {
+            isLocalHost = inetAddrIn.getAddress().equals(InetAddress.getLocalHost());
+        } catch (UnknownHostException e) {
+            pluginInstance.warning("Could not resolve localhost on this machine. Security checks may fail!");
+        }
+
         for (ZulfServerInfo<P> server : servers.values()) {
 
-            InetSocketAddress inetServerAddr = (InetSocketAddress) server.getSocketAddress();
-            InetSocketAddress inetAddrIn = (InetSocketAddress) addressIn;
+            SocketAddress inetServerAddr = server.getSocketAddress();
 
-            if (inetServerAddr.getAddress().equals(inetAddrIn.getAddress())) {
+            if (inetServerAddr.equals(inetAddrIn) || isLocalHost) {
 
                 if (portWhitelistEnabled) {
 
@@ -210,7 +220,6 @@ public abstract class MainServer<P> implements Runnable {
             for (Map.Entry<String, ScriptAction> script : scriptNamesIn.entrySet()) {
 
                 Path scriptPath = pluginInstance.getConfig().getScriptPath(script.getKey());
-
                 connection.sendScript(scriptPath, script.getValue(), senderIn);
 
             }
@@ -220,20 +229,24 @@ public abstract class MainServer<P> implements Runnable {
     }
 
     public void addActiveConnection(BaseServerConnection<P> connection, String name) {
+
+        addressNames.put(connection.getAddress(), name);
         activeConnections.put(name, connection);
+
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
+
     }
 
     public void removeServerConnection(BaseServerConnection<P> connectionIn) {
 
         socketConnections.remove(connectionIn);
-        String connectionName = connectionIn.getName();
+        String name = addressNames.get(connectionIn.getAddress());
 
-        if (!connectionName.isEmpty()) {
-            activeConnections.remove(connectionName);
-            pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), connectionName));
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, connectionName));
+        if (name != null) {
+            activeConnections.remove(name);
+            pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
         }
 
 
@@ -248,6 +261,7 @@ public abstract class MainServer<P> implements Runnable {
             }
 
             activeConnections.clear();
+            addressNames.clear();
             socketConnections.clear();
 
             if (socket != null) {
@@ -283,6 +297,10 @@ public abstract class MainServer<P> implements Runnable {
 
     public Set<String> getServerNames() {
         return activeConnections.keySet();
+    }
+
+    public Optional<String> getNameFromAddress(SocketAddress addressIn) {
+        return Optional.ofNullable(addressNames.get(addressIn));
     }
 
     public BaseServerConnection<P> getConnectionFromName(String name) {

@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
@@ -18,9 +19,8 @@ import java.util.stream.Stream;
 
 public class PlayerSwitchServer<P> extends PacketHandler<P> {
 
-    public PlayerSwitchServer(MainServer<P> mainServerIn) {
-        super(mainServerIn, PacketTypes.PLAYER_SWITCH_SERVER);
-
+    public PlayerSwitchServer(PacketHandlerManager<P> packetHandlerManager) {
+        super(packetHandlerManager);
     }
 
     @Override

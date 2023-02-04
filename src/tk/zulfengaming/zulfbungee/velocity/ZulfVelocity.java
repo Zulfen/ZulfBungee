@@ -163,11 +163,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
             ServerInfo serverInfo = server.getServerInfo();
 
-            List<ZulfProxyPlayer<ProxyServer>> proxyPlayers = server.getPlayersConnected().stream()
-                    .map(player -> new VelocityPlayer(player, this))
-                    .collect(Collectors.toList());
-
-            ZulfServerInfo<ProxyServer> zulfInfo = new ZulfServerInfo<>(serverInfo.getAddress(), proxyPlayers);
+            ZulfServerInfo<ProxyServer> zulfInfo = new ZulfServerInfo<>(serverInfo.getAddress());
 
             serversMap.put(serverInfo.getName(), zulfInfo);
 

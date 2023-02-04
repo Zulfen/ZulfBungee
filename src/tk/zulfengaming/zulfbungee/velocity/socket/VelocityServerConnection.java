@@ -26,11 +26,19 @@ public class VelocityServerConnection extends BaseServerConnection<ProxyServer> 
     @Override
     public List<ZulfProxyPlayer<ProxyServer>> getPlayers() {
 
-        Optional<RegisteredServer> server = pluginInstance.getPlatform().getServer(getName());
+        Optional<String> nameFromAddress = getServer().getNameFromAddress(getAddress());
 
-        return server.<List<ZulfProxyPlayer<ProxyServer>>>map(registeredServer -> registeredServer.getPlayersConnected().stream()
-                .map(player -> new VelocityPlayer(player, (ZulfVelocity) pluginInstance))
-                .collect(Collectors.toList())).orElse(Collections.emptyList());
+        if (nameFromAddress.isPresent()) {
+
+            Optional<RegisteredServer> server = pluginInstance.getPlatform().getServer(nameFromAddress.get());
+
+            return server.<List<ZulfProxyPlayer<ProxyServer>>>map(registeredServer -> registeredServer.getPlayersConnected().stream()
+                    .map(player -> new VelocityPlayer(player, (ZulfVelocity) pluginInstance))
+                    .collect(Collectors.toList())).orElse(Collections.emptyList());
+
+        }
+
+        return Collections.emptyList();
 
     }
 

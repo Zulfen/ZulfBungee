@@ -9,10 +9,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BungeeServerConnection extends BaseServerConnection<ProxyServer> {
@@ -22,15 +19,19 @@ public class BungeeServerConnection extends BaseServerConnection<ProxyServer> {
     }
 
     @Override
-    public List<ZulfProxyPlayer<ProxyServer>> getPlayers(String nameIn) {
+    public List<ZulfProxyPlayer<ProxyServer>> getPlayers() {
 
-        ServerInfo serverInfo = pluginInstance.getPlatform().getServersCopy().get(nameIn);
+        Optional<String> nameFromAddress = getServer().getNameFromAddress(getAddress());
 
-        if (serverInfo != null) {
+        if (nameFromAddress.isPresent()) {
+
+            ServerInfo serverInfo = pluginInstance.getPlatform().getServersCopy().get(nameFromAddress.get());
+
             return serverInfo.getPlayers().stream()
                     .filter(Objects::nonNull)
                     .map(BungeePlayer::new)
                     .collect(Collectors.toList());
+
         } else {
             return Collections.emptyList();
         }
