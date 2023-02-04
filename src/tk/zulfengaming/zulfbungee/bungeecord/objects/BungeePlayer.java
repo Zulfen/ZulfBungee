@@ -63,7 +63,9 @@ public class BungeePlayer<P> extends ZulfProxyPlayer<ProxyServer> {
     @Override
     public void connect(ZulfProxyServer<ProxyServer> serverIn) {
         ServerInfo serverInfo = platform.getServerInfo(serverIn.getName());
-        bungeePlayer.connect(serverInfo);
+        if (serverInfo != null) {
+            bungeePlayer.connect(serverInfo);
+        }
     }
 
     @Override
