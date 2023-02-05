@@ -13,6 +13,8 @@ Small portions of this plugin were referenced from another addon to aid developm
 
 Building this addon by yourself might be a bit of a pain right now, sorry! I am currently planning on switching from Maven to Gradle. For the meantime, you can load the repo as an IntelliJ project and you should be able to build it from there.
 
+Please keep in mind that this plugin is currently in Alpha testing, so serious bugs may occur!
+
 ## **Known Bugs:**
 
 * Network variables sometimes don't get fetched properly.
