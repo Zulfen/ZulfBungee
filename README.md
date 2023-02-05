@@ -15,7 +15,7 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 ## **Known Bugs:**
 
-* None right now!
+* Network variables sometimes don't get fetched properly.
 
 # **Supported Syntax:**
 
