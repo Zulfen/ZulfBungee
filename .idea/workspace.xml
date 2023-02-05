@@ -9,8 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.0 - little fix">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.0 - null check just in case.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -428,7 +429,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675552466791</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Alpha v0.8.0 - null check just in case.">
+      <created>1675553456967</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1675553456967</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -443,7 +451,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.7.3 - added a null check to prevent NPE in server online condition" />
     <MESSAGE value="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully..." />
     <MESSAGE value="Alpha v0.7.3 - please.. please let this be the commit that fixes the updater..." />
     <MESSAGE value="Alpha v0.7.4 - fixed autocompletion showing even if the user didn't have the required permission, and MessageUtils fix." />
@@ -468,9 +475,24 @@
     <MESSAGE value="Alpha v0.8.0 - more work" />
     <MESSAGE value="Alpha v0.8.0 - fixed colour parsing, cleaned up somg code and hopefully fixed localhost bug." />
     <MESSAGE value="Alpha v0.8.0 - little fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.0 - little fix" />
+    <MESSAGE value="Alpha v0.8.0 - null check just in case." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.0 - null check just in case." />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="java.util.concurrent.atomic.AtomicBoolean" memberName="value" />

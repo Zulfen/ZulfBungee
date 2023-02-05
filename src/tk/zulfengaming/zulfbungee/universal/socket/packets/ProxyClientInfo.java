@@ -12,6 +12,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class ProxyClientInfo<P> extends PacketHandler<P> {
@@ -28,7 +29,6 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
 
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
-        InetAddress inetAddressIn = socketAddressIn.getAddress();
         int portIn = clientInfo.getMinecraftPort();
 
         for (Map.Entry<String, ZulfServerInfo<P>> info : getProxy().getServersCopy().entrySet()) {
@@ -37,9 +37,15 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
 
             int infoPort = infoSockAddr.getPort();
 
-            InetAddress infoInetAddr = infoSockAddr.getAddress();
+            boolean isLocalHost = false;
 
-            if (infoInetAddr.equals(inetAddressIn) && portIn == infoPort) {
+            try {
+                isLocalHost = socketAddressIn.getAddress().equals(InetAddress.getLocalHost());
+            } catch (UnknownHostException e) {
+                getMainServer().getPluginInstance().warning("Could not resolve localhost on this machine. Names for connections could break!");
+            }
+
+            if ((infoSockAddr.equals(socketAddressIn) || isLocalHost) && portIn == infoPort) {
 
                 String name = info.getKey();
                 getMainServer().addActiveConnection(connection, name);
