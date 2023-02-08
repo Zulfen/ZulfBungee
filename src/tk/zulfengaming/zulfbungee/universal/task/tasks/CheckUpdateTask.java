@@ -73,7 +73,7 @@ public class CheckUpdateTask<P> implements Supplier<Optional<UpdateResult>> {
                     } else if (notifySuccess) {
 
                         senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("ZulfBungee is up to date! &e(%s)",
-                                pluginInstance)));
+                                pluginInstance.getVersion())));
                     }
 
                 });

@@ -81,17 +81,13 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
                 if (socketConnected.get()) {
 
-                    Packet packetIn = dataInHandler.getQueue().poll(5, TimeUnit.SECONDS);
+                    Packet packetIn = dataInHandler.getQueue().take();
 
-                    if (packetIn != null) {
-
-                        if (packetIn.shouldHandle() && readQueue.hasWaitingConsumer()) {
-                            readQueue.tryTransfer(packetIn);
-                        }
-
-                        processPacket(packetIn);
-
+                    if (packetIn.shouldHandle() && readQueue.hasWaitingConsumer()) {
+                        readQueue.tryTransfer(packetIn);
                     }
+
+                    processPacket(packetIn);
 
                 }
 

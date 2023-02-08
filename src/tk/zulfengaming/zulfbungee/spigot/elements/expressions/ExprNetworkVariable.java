@@ -40,28 +40,14 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     @Override
     protected Object[] get(Event event) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+        Optional<NetworkVariable> response = ZulfBungeeSpigot.getPlugin()
+                .getConnection().requestNetworkVariable(networkVariable.getName().toString(event));
 
-        Optional<Packet> response = connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, networkVariable.getName().toString(event)));
+        return response.map(networkVariable -> Stream.of(networkVariable.getValueArray())
+                .filter(Objects::nonNull)
+                .map(value -> Classes.deserialize(value.type, value.data))
+                .toArray(Object[]::new)).orElse(null);
 
-        if (response.isPresent()) {
-
-            Packet packetIn = response.get();
-
-            if (packetIn.getDataSingle() != null && packetIn.getDataArray().length > 0) {
-
-                NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
-
-                return Stream.of(variable.getValueArray())
-                        .filter(Objects::nonNull)
-                        .map(value -> Classes.deserialize(value.type, value.data))
-                        .toArray(Object[]::new);
-
-            }
-
-        }
-
-        return null;
     }
 
     @Override

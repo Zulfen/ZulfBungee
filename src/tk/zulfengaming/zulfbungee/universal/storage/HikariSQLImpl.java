@@ -73,7 +73,6 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
                 while (result.next()) {
                     String type = result.getString("type");
                     byte[] data = result.getBytes("data");
-                    //getMainServer().getPluginInstance().logDebug("Got value " + valueName);
                     values.add(new Value(type, data));
 
                 }
@@ -97,8 +96,6 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
                     byte[] data = result.getBytes("data");
                     String type = result.getString("type");
                     Value value = new Value(type, data);
-
-                    //getMainServer().getPluginInstance().logDebug("Got value " + name);
 
                     return Optional.of(new NetworkVariable(name, value));
 

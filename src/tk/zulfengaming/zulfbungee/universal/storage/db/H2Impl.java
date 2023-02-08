@@ -28,7 +28,7 @@ public class H2Impl<P> extends HikariSQLImpl<P> {
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
-        dataSource.setMaximumPoolSize(10);
+        dataSource.setMaximumPoolSize(50);
 
         return dataSource;
 

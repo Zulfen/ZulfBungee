@@ -9,6 +9,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class NetworkVariableGet<P> extends PacketHandler<P> {
@@ -29,17 +30,17 @@ public class NetworkVariableGet<P> extends PacketHandler<P> {
             StorageImpl<P> storage = getStorage.get();
 
             Optional<NetworkVariable> storedVariable = storage.getVariable(variableName);
-            NetworkVariable variable = null;
 
             if (storedVariable.isPresent()) {
-                variable = storedVariable.get();
-
+                NetworkVariable variable = storedVariable.get();
+                return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable);
+            } else {
+                return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Object[0]);
             }
-
-            return new Packet(PacketTypes.NETWORK_VARIABLE_GET, false, false, variable);
 
         }
 
         return null;
+
     }
 }

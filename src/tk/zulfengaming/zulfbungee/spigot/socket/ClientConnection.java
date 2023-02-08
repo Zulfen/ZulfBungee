@@ -19,6 +19,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
@@ -44,6 +45,7 @@ public class ClientConnection extends BukkitRunnable {
 
     // the latest packet from the queue coming in.
     private final TransferQueue<Packet> skriptPacketQueue = new LinkedTransferQueue<>();
+    private final TransferQueue<Packet> networkVariableQueue = new LinkedTransferQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -112,7 +114,7 @@ public class ClientConnection extends BukkitRunnable {
 
                 if (clientListenerManager.isSocketConnected().get()) {
 
-                    Packet packetIn = dataInHandler.getDataQueue().poll(1, TimeUnit.SECONDS);
+                    Packet packetIn = dataInHandler.getDataQueue().poll(packetResponseTime, TimeUnit.MILLISECONDS);
 
                     if (packetIn != null) {
 
@@ -121,10 +123,19 @@ public class ClientConnection extends BukkitRunnable {
                             packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
 
                         } else {
-                            skriptPacketQueue.tryTransfer(packetIn);
+
+                            // Retrieving variables should take as long as it needs
+                            if (packetIn.getType() != PacketTypes.NETWORK_VARIABLE_GET) {
+                                skriptPacketQueue.transfer(packetIn);
+                            } else {
+                                networkVariableQueue.transfer(packetIn);
+                            }
+
                         }
 
                     }
+
+
 
                 } else {
 
@@ -168,6 +179,25 @@ public class ClientConnection extends BukkitRunnable {
             pluginInstance.error("That packet failed to send due to thread interruption?:");
             pluginInstance.error(packetIn.toString());
         }
+
+    }
+
+    public Optional<NetworkVariable> requestNetworkVariable(String nameIn) {
+
+        sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, nameIn));
+
+        try {
+
+            Packet response = networkVariableQueue.take();
+
+            if (response.getDataArray().length > 0) {
+                return Optional.ofNullable((NetworkVariable) response.getDataSingle());
+            }
+
+        } catch (InterruptedException ignored) {
+        }
+
+        return Optional.empty();
 
     }
 
