@@ -9,10 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.1 - experimental network variables + message fix">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.2 - experimental Pterodactyl work around.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/bungee.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/Debug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/Debug.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -455,7 +458,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675887150050</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Alpha v0.8.2 - experimental Pterodactyl work around.">
+      <created>1676048033917</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1676048033917</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -470,7 +480,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.7.4 - updater message added for user feedback" />
     <MESSAGE value="Alpha v0.7.4 - message fix lol" />
     <MESSAGE value="Alpha v0.7.5 - jksdfsfksfsfksn slsf sf" />
     <MESSAGE value="Alpha v0.7.5 - what I made works, but I very much dislike it for whatever reason." />
@@ -495,7 +504,8 @@
     <MESSAGE value="Alpha v0.8.0 - another localhost fix" />
     <MESSAGE value="Alpha v0.8.0 - experimental network variables + message fix" />
     <MESSAGE value="Alpha v0.8.1 - experimental network variables + message fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.1 - experimental network variables + message fix" />
+    <MESSAGE value="Alpha v0.8.2 - experimental Pterodactyl work around." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.2 - experimental Pterodactyl work around." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

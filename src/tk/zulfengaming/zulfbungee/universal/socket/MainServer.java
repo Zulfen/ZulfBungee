@@ -15,6 +15,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
+import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -90,24 +91,7 @@ public abstract class MainServer<P> implements Runnable {
                 if (serverSocketAvailable.get()) {
 
                     socket = serverSocket.accept();
-
-                    SocketAddress remoteAddress = socket.getRemoteSocketAddress();
-
-                    if (isValidClient(remoteAddress)) {
-
-                        acceptConnection(socket);
-
-                    } else {
-
-                        pluginInstance.warning("A connection to the proxy was established, but the security check failed!");
-                        pluginInstance.warning("Please check your Bungeecord config.yml to see if the Spigot server is defined, or make sure the client" +
-                                "'s port is defined in the port whitelist section of the ZulfBungee config, if it's enabled!");
-
-                        pluginInstance.warning("");
-                        pluginInstance.warning("Address that tried to connect: " + remoteAddress.toString());
-
-                        socket.close();
-                    }
+                    acceptConnection(socket);
 
 
                 } else {

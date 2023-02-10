@@ -35,12 +35,16 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-@Plugin(id = "zulfbungee", name = "zulfbungee", version = "0.8.0", url = "https://github.com/Zulfen/ZulfBungee",
+@Plugin(id = "zulfbungee", name = "zulfbungee", version = ZulfVelocity.VERSION, url = "https://github.com/Zulfen/ZulfBungee",
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
+
+    protected static final String VERSION = "0.8.2";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
@@ -175,7 +179,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
     @Override
     public String getVersion() {
-        return "0.8.1";
+        return VERSION;
     }
 
     @Override
