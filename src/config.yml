@@ -4,7 +4,7 @@
 server-port: 8000
 
 # The IP of your proxy.
-server-host: "0.0.0.0"
+server-host: "127.0.0.1"
 
 # The port which this client (this Spigot server) will bind to, so it can listen for the proxy.
 client-port: 8001
@@ -13,6 +13,8 @@ client-port: 8001
 # This should usually be left as 0.0.0.0, or 127.0.0.1, but feel free to change this if you need to -
 # (i.e. you are on shared hosting / Pterodactyl)
 client-host: "0.0.0.0"
+
+# If your proxy cannot find the name of your server from
 
 # - Options -
 

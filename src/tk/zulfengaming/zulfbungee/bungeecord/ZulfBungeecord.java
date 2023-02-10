@@ -47,13 +47,9 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     public void onEnable() {
 
         logger = getProxy().getLogger();
-
         bungeeTaskManager = new BungeeTaskManager(this);
-
         config = new BungeeConfig(this);
-
         isDebug = config.getBoolean("debug");
-
         updater = new CheckUpdateTask<>(this);
 
 
