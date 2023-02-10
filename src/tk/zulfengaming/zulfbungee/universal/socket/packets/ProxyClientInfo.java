@@ -36,7 +36,10 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
             if ((infoSockAddr.getAddress().equals(socketAddressIn.getAddress()) && portCheck)) {
 
                 String name = info.getKey();
-                getMainServer().addActiveConnection(connection, name);
+
+                if (!getMainServer().getServerNames().contains(name)) {
+                    getMainServer().addActiveConnection(connection, name);
+                }
 
                 return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
 

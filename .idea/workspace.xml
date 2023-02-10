@@ -9,12 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.2 - removed security checks entirely.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.2 - :3" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,13 +128,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00001" summary="Alpha v0.7.1 - fixed condition not accounting for choice and small error in CheckUpdateTask">
-      <created>1658427185818</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1658427185818</updated>
     </task>
     <task id="LOCAL-00002" summary="Alpha v0.7.1 - fixed condition not accounting for choice and small error in CheckUpdateTask">
       <created>1658427213887</created>
@@ -477,7 +465,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676059900969</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Alpha v0.8.2 - :3">
+      <created>1676066070112</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1676066070112</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,7 +487,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.7.5 - jksdfsfksfsfksn slsf sf" />
     <MESSAGE value="Alpha v0.7.5 - what I made works, but I very much dislike it for whatever reason." />
     <MESSAGE value="Alpha v0.7.6 - fixed a thread safety issue, and also chat colours in the debug messages on non-legacy versions." />
     <MESSAGE value="Alpha v0.7.7 - fixed async errors with events on modern versions." />
@@ -517,7 +511,8 @@
     <MESSAGE value="Alpha v0.8.1 - experimental network variables + message fix" />
     <MESSAGE value="Alpha v0.8.2 - experimental Pterodactyl work around." />
     <MESSAGE value="Alpha v0.8.2 - removed security checks entirely." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.2 - removed security checks entirely." />
+    <MESSAGE value="Alpha v0.8.2 - :3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.2 - :3" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

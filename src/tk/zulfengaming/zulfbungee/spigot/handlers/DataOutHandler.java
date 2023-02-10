@@ -64,6 +64,7 @@ public class DataOutHandler extends BukkitRunnable {
 
                     pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
 
+                    queueOut.clear();
                     socketBarrier.arriveAndAwaitAdvance();
 
                     Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
