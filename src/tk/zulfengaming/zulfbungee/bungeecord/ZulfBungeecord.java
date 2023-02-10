@@ -141,7 +141,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         ServerInfo bungeeServerInfo = getProxy().getServersCopy().get(name);
 
         if (bungeeServerInfo != null) {
-            return new BungeeServer(getProxy().getServersCopy().get(name));
+            return new BungeeServer(bungeeServerInfo);
         }
 
         return null;

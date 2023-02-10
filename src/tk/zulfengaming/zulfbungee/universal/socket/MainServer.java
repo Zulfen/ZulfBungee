@@ -174,9 +174,11 @@ public abstract class MainServer<P> implements Runnable {
         InetSocketAddress inetAddrIn = ((InetSocketAddress) addressIn);
 
         boolean isLocalHost = false;
+        boolean isPterodactyl = false;
 
         try {
             isLocalHost = inetAddrIn.getAddress().equals(InetAddress.getLocalHost());
+            isPterodactyl = inetAddrIn.getAddress().equals(InetAddress.getByName("172.18.0.1"));
         } catch (UnknownHostException e) {
             pluginInstance.warning("Could not resolve localhost on this machine. Security checks may fail!");
         }
@@ -185,7 +187,7 @@ public abstract class MainServer<P> implements Runnable {
 
             SocketAddress inetServerAddr = server.getSocketAddress();
 
-            if (inetServerAddr.equals(inetAddrIn) || isLocalHost) {
+            if (inetServerAddr.equals(inetAddrIn) || isLocalHost || isPterodactyl) {
 
                 if (portWhitelistEnabled) {
 
@@ -234,7 +236,7 @@ public abstract class MainServer<P> implements Runnable {
         activeConnections.put(name, connection);
 
         pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
-        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
+        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
     }
 
@@ -246,7 +248,7 @@ public abstract class MainServer<P> implements Runnable {
         if (name != null) {
             activeConnections.remove(name);
             pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getProxyServerArray()));
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
         }
 
 
@@ -307,7 +309,7 @@ public abstract class MainServer<P> implements Runnable {
         return activeConnections.get(name);
     }
 
-    public ClientServer[] getProxyServerArray() {
+    public ClientServer[] getClientServerArray() {
         return activeConnections.entrySet().stream()
                 .map(proxyServerList -> new ClientServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
                 .toArray(ClientServer[]::new);
