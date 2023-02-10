@@ -42,18 +42,3 @@ storage-database: "database"
 # If you get errors in console because of SSL, disable it here, but it's better to set up SSL on the MySQL server.
 mysql-use-ssl: true
 mysql-verify-certificate: true
-
-
-# - Security -
-
-# [Port Whitelisting]
-
-# Enable this option if you want to only allow ports from a defined list to be able to connect to this proxy.
-# Useful if you are on a shared machine and want to prevent unwanted connections to your proxy.
-
-port-whitelist: false
-
-# The ports you want to allow connecting should be defined here:
-
-ports:
-  - 8000

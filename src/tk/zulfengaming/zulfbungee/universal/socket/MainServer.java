@@ -147,47 +147,6 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-    // TODO: Add address whitelist
-    private boolean isValidClient(SocketAddress addressIn) {
-
-        Map<String, ZulfServerInfo<P>> servers = pluginInstance.getServersCopy();
-
-        boolean portWhitelistEnabled = pluginInstance.getConfig().getBoolean("port-whitelist");
-        List<Integer> ports = pluginInstance.getConfig().getIntList("ports");
-
-        InetSocketAddress inetAddrIn = ((InetSocketAddress) addressIn);
-
-        boolean isLocalHost = false;
-        boolean isPterodactyl = false;
-
-        try {
-            isLocalHost = inetAddrIn.getAddress().equals(InetAddress.getLocalHost());
-            isPterodactyl = inetAddrIn.getAddress().equals(InetAddress.getByName("172.18.0.1"));
-        } catch (UnknownHostException e) {
-            pluginInstance.warning("Could not resolve localhost on this machine. Security checks may fail!");
-        }
-
-        for (ZulfServerInfo<P> server : servers.values()) {
-
-            SocketAddress inetServerAddr = server.getSocketAddress();
-
-            if (inetServerAddr.equals(inetAddrIn) || isLocalHost || isPterodactyl) {
-
-                if (portWhitelistEnabled) {
-
-                    return ports.contains(inetAddrIn.getPort());
-
-                }
-
-                return true;
-
-            }
-
-        }
-
-        return false;
-    }
-
     public void sendDirectToAllAsync(Packet packetIn) {
         taskManager.newTask(() -> sendDirectToAll(packetIn));
     }
