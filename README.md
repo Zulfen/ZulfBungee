@@ -17,7 +17,7 @@ Please keep in mind that this plugin is currently in Alpha testing, so serious b
 
 ## **Known Bugs:**
 
-* Network variables sometimes don't get fetched properly.
+* None right now!
 
 # **Supported Syntax:**
 
