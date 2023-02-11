@@ -21,47 +21,7 @@ Please keep in mind that this plugin is currently in Alpha testing, so serious b
 
 # **Supported Syntax:**
 
-## **Effects:**
-
-- (proxy|bungeecord|bungee) message player %-proxyplayers% [the message] %string%
-
-- (proxy|bungeecord|bungee) message server %-proxyservers% [the message] %string% (named|called|with title) %string%
-
-- (proxy|bungeecord|bungee) (send|transfer) %-proxyplayers% to %-proxyserver%
-
-- kick [(proxy|bungeecord|bungee|velocity)] %-proxyplayers% [(by reason of|because [of]|on account of|due to|with [reason]) %-string%]
-
-## **Events:**
-
-- on (proxy|bungeecord|bungee) player connect
-
-- on (proxy|bungeecord|bungee) player switch server
-
-- on (bungeecord|bungee|proxy) server message [(titled|called)] %string%
-
-- on (proxy|bungeecord|bungee) player disconnect
-
-- on (proxy|bungeecord|bungee) player kick
-
-## **Expressions:**
-
-- [(all [[of] the]|the)] online [(proxy|bungeecord|bungee)] servers
-
-- (proxy|network|bungeecord|bungee) variable %objects%
-
-- proxyplayer's [(current|connected)] server[s]
-
-- [(all [[of] the]|the)] (bungeecord|bungee|proxy) players [on %-proxyservers%]
-
-- proxyserver's (player limit|max player count)
-
-- this [script's] (server|client|proxy server)
-
-## **Conditions:**
-
-- if player %-proxyplayer% (1¦is|2¦is(n't| not)) online on the (proxy|bungeecord|bungee|network)
-
-- if %-proxyserver% (1¦is|2¦is(n't| not)) online
+[![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=ZulfBungee)
 
 # Commands / Permissions
 
