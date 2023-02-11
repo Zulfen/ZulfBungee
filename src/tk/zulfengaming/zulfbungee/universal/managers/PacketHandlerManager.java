@@ -32,6 +32,7 @@ public class PacketHandlerManager<P> {
         handlers.put(PacketTypes.PROXY_PLAYERS, new ProxyPlayers<>(this));
         handlers.put(PacketTypes.PROXY_PLAYER_UUID, new ProxyPlayerUUID<>(this));
         handlers.put(PacketTypes.SERVER_SEND_MESSAGE_EVENT, new ServerSendMessage<>(this));
+        handlers.put(PacketTypes.KICK_PLAYER, new PlayerKick<>(this));
 
     }
 

@@ -143,8 +143,6 @@ public abstract class MainServer<P> implements Runnable {
         taskManager.newTask(connection);
         socketConnections.add(connection);
 
-        pluginInstance.logInfo(ChatColour.GREEN + "Connection established with address: " + connection.getAddress());
-
     }
 
     public void sendDirectToAllAsync(Packet packetIn) {
@@ -175,10 +173,12 @@ public abstract class MainServer<P> implements Runnable {
 
     public void addActiveConnection(BaseServerConnection<P> connection, String name) {
 
-        addressNames.put(connection.getAddress(), name);
+        SocketAddress address = connection.getAddress();
+
+        addressNames.put(address, name);
         activeConnections.put(name, connection);
 
-        pluginInstance.logDebug("Server '" + name + "' added to the list of active connections!");
+        pluginInstance.logInfo(ChatColour.GREEN + "Connection established with address: " + address);
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
     }

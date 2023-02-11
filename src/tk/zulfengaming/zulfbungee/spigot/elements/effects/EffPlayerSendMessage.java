@@ -28,7 +28,7 @@ public class EffPlayerSendMessage extends Effect {
     private Expression<String> message;
 
     static {
-        Skript.registerEffect(EffPlayerSendMessage.class, "[(proxy|bungeecord|bungee)] (message|send|tell) %-proxyplayers% [the message] %string%");
+        Skript.registerEffect(EffPlayerSendMessage.class, "[(proxy|bungeecord|bungee|velocity)] (message|send|tell) %-proxyplayers% [the message] %string%");
     }
 
     @Override

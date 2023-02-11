@@ -22,4 +22,6 @@ public abstract class ZulfProxyPlayer<P> implements ProxyCommandSender<P> {
 
     public abstract void connect(ZulfProxyServer<P> serverIn);
 
+    public abstract void disconnect(String reason);
+
 }

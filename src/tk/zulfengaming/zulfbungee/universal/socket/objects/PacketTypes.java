@@ -17,6 +17,7 @@ public enum PacketTypes {
     SERVER_SEND_MESSAGE_EVENT,
     CONNECT_EVENT,
     DISCONNECT_EVENT,
+    KICK_PLAYER,
     KICK_EVENT,
     INVALID_CONFIGURATION, // unused for now
     GLOBAL_SCRIPT,

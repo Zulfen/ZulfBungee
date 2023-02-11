@@ -39,9 +39,17 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
 
                 if (!getMainServer().getServerNames().contains(name)) {
                     getMainServer().addActiveConnection(connection, name);
+                    return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
                 }
 
-                return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
+
+            } else {
+
+                getProxy().warning(String.format("We couldn't find the client with the address %s!", infoSockAddr.getAddress()));
+                getProxy().warning("Please make sure that the address in your proxy's main config is valid!");
+
+                connection.sendDirect(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, new Object[0]));
+                break;
 
             }
 

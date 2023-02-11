@@ -43,21 +43,6 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
 
     }
 
-    public VelocityPlayer(Player velocityPlayerIn, VelocityServer serverIn, ZulfVelocity pluginIn) {
-
-        super(pluginIn.getPlatform());
-
-        this.zulfVelocity = pluginIn;
-        this.velocity = zulfVelocity.getPlatform();
-        this.velocityPlayer = velocityPlayerIn;
-        this.name = velocityPlayer.getUsername();
-        this.uuid = velocityPlayer.getUniqueId();
-
-        this.server = serverIn;
-
-
-    }
-
     @Override
     public boolean isPlayer() {
         return true;
@@ -92,6 +77,11 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
     public void connect(ZulfProxyServer<ProxyServer> serverIn) {
         Optional<RegisteredServer> server = velocity.getServer(serverIn.getName());
         server.ifPresent(registeredServer -> velocityPlayer.createConnectionRequest(registeredServer).connect());
+    }
+
+    @Override
+    public void disconnect(String reason) {
+        velocityPlayer.disconnect(zulfVelocity.getLegacyTextSerialiser().deserialize(reason));
     }
 
 }

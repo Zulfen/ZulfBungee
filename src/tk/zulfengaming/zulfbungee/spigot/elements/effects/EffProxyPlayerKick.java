@@ -16,33 +16,32 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
-@Name("Send Proxy Player to Proxy Server")
-@Description("Sends a proxy player to another given proxy server.")
-public class EffPlayerChangeServer extends Effect {
+@Name("Kick Proxy Player")
+@Description("Kicks a proxy player from the network.")
+public class EffProxyPlayerKick extends Effect {
 
+    private Expression<String> reason;
     private Expression<ClientPlayer> players;
-    private Expression<ClientServer> server;
 
     static {
-        Skript.registerEffect(EffPlayerChangeServer.class, "[(proxy|bungeecord|bungee|velocity)] (send|transfer)" +
-                " %-proxyplayers% to %-proxyserver%");
+        Skript.registerEffect(EffProxyPlayerKick.class, "kick [(proxy|bungeecord|bungee|velocity)] %-proxyplayers% [(by reason of|because [of]|on account of|due to|with [reason]) %-string%]");
     }
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
+        reason = (Expression<String>) expressions[1];
         players = (Expression<ClientPlayer>) expressions[0];
-        server = (Expression<ClientServer>) expressions[1];
         return true;
     }
 
     @Override
     protected void execute(@NotNull Event event) {
-        ZulfBungeeSpigot.getPlugin().getConnection().sendDirect(new Packet(PacketTypes.PLAYER_SWITCH_SERVER,
-                            true, true, new ClientPlayerDataContainer(server.getSingle(event), players.getArray(event))));
+        ZulfBungeeSpigot.getPlugin().getConnection().sendDirect(new Packet(PacketTypes.KICK_PLAYER,
+                            false, true, new ClientPlayerDataContainer(reason.getSingle(event), players.getArray(event))));
     }
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "effect send proxy player " + players.toString(event, b) + " to server " + server.toString(event, b);
+        return "effect kick proxy player " + players.toString(event, b);
     }
 }
