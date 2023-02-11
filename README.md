@@ -29,6 +29,8 @@ Please keep in mind that this plugin is currently in Alpha testing, so serious b
 
 - (proxy|bungeecord|bungee) (send|transfer) %-proxyplayers% to %-proxyserver%
 
+- kick [(proxy|bungeecord|bungee|velocity)] %-proxyplayers% [(by reason of|because [of]|on account of|due to|with [reason]) %-string%]
+
 ## **Events:**
 
 - on (proxy|bungeecord|bungee) player connect
