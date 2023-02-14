@@ -32,8 +32,9 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
             InetSocketAddress infoSockAddr = (InetSocketAddress) info.getValue().getSocketAddress();
 
             boolean portCheck = infoSockAddr.getPort() == clientInfo.getMinecraftPort();
+            boolean addressCheck = infoSockAddr.getAddress().equals(socketAddressIn.getAddress());
 
-            if ((infoSockAddr.getAddress().equals(socketAddressIn.getAddress()) && portCheck)) {
+            if (addressCheck && portCheck) {
 
                 String name = info.getKey();
 
@@ -43,10 +44,12 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
                 }
 
 
-            } else {
+            } else if (!addressCheck) {
 
                 getProxy().warning(String.format("We couldn't find the client with the address %s!", infoSockAddr.getAddress()));
                 getProxy().warning("Please make sure that the address in your proxy's main config is valid!");
+                getProxy().warning(String.format("Address check returned %s (%s compared to %s)", false, infoSockAddr.getAddress(), socketAddressIn.getAddress()));
+                getProxy().warning(String.format("Port check returned %s (%s compared to %s)", portCheck, infoSockAddr.getPort(), clientInfo.getMinecraftPort()));
 
                 connection.sendDirect(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, new Object[0]));
                 break;

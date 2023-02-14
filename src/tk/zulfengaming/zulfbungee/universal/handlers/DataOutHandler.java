@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class DataOutHandler<P> implements Runnable {
 
@@ -33,10 +34,12 @@ public class DataOutHandler<P> implements Runnable {
 
                 if (connection.isSocketConnected().get()) {
 
-                    Packet packetOut = queueOut.take();
+                    Packet packetOut = queueOut.poll(1, TimeUnit.SECONDS);
 
-                    outputStream.writeObject(packetOut);
-                    outputStream.flush();
+                    if (packetOut != null) {
+                        outputStream.writeObject(packetOut);
+                        outputStream.flush();
+                    }
 
                 }
 

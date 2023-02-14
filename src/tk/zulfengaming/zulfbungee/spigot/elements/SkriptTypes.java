@@ -8,6 +8,7 @@ import ch.njol.skript.registrations.Classes;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 public class SkriptTypes {
 
@@ -44,7 +45,7 @@ public class SkriptTypes {
         Classes.registerClass(new ClassInfo<>(ClientServer.class, "proxyserver")
                 .user("proxyservers?")
                 .name("Proxy Server")
-                .description("Represents a proxied server.")
+                .description("Represents a network variable.")
                 .defaultExpression(new EventValueExpression<>(ClientServer.class))
                 .parser(new Parser<ClientServer>() {
 
@@ -69,5 +70,35 @@ public class SkriptTypes {
                     }
 
                 }));
+
+        Classes.registerClass(new ClassInfo<>(NetworkVariable.class, "networkvariable")
+                .user("networkvariables?")
+                .name("Proxy Server")
+                .description("Represents a proxied server.")
+                .defaultExpression(new EventValueExpression<>(NetworkVariable.class))
+                .parser(new Parser<NetworkVariable>() {
+
+                    @Override
+                    public NetworkVariable parse(@NotNull String s, @NotNull ParseContext context) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(NetworkVariable networkVariable, int i) {
+                        return networkVariable.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(NetworkVariable networkVariable) {
+                        return networkVariable.getName();
+                    }
+
+                }));
+
     }
 }

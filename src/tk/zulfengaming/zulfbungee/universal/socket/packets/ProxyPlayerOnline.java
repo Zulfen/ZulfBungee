@@ -9,6 +9,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
+import java.util.Optional;
+
 public class ProxyPlayerOnline<P> extends PacketHandler<P> {
 
     public ProxyPlayerOnline(PacketHandlerManager<P> packetHandlerManager) {
@@ -22,9 +24,9 @@ public class ProxyPlayerOnline<P> extends PacketHandler<P> {
 
         if (skriptPlayer != null) {
 
-            ZulfProxyPlayer<P> proxiedPlayer = getProxy().getPlayer(skriptPlayer.getUuid());
+            Optional<ZulfProxyPlayer<P>> proxiedPlayer = getProxy().getPlayer(skriptPlayer.getUuid());
 
-            if (proxiedPlayer != null) {
+            if (proxiedPlayer.isPresent()) {
                 return new Packet(PacketTypes.PLAYER_ONLINE, false, false, true);
             }
 

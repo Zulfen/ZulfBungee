@@ -7,7 +7,10 @@ import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
+
+import java.util.Optional;
 
 public class PlayerServer<P> extends PacketHandler<P> {
 
@@ -20,9 +23,11 @@ public class PlayerServer<P> extends PacketHandler<P> {
 
         ClientPlayer playerIn = (ClientPlayer) packetIn.getDataSingle();
 
-        ZulfProxyServer<P> server = getProxy().getPlayer(playerIn.getUuid()).getServer();
+        Optional<ZulfProxyPlayer<P>> player = getProxy().getPlayer(playerIn.getUuid());
 
-        if (server != null) {
+        if (player.isPresent()) {
+
+            ZulfProxyServer<P> server = player.get().getServer();
 
             String name = server.getName();
 
@@ -31,6 +36,7 @@ public class PlayerServer<P> extends PacketHandler<P> {
         } else {
             return new Packet(PacketTypes.PLAYER_SERVER, false, false, new Object[0]);
         }
+
 
     }
 }

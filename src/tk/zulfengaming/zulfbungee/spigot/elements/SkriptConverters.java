@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.elements;
 
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -8,10 +9,13 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class SkriptConverters {
 

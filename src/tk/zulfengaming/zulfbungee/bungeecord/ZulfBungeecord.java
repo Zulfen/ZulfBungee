@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -43,6 +44,8 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     private CheckUpdateTask<ProxyServer> updater;
 
     private boolean isDebug = false;
+
+    private BungeeConsole console = new BungeeConsole(getProxy());
 
     public void onEnable() {
 
@@ -107,40 +110,40 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public ZulfProxyPlayer<ProxyServer> getPlayer(UUID uuidIn) {
+    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(UUID uuidIn) {
 
         ProxiedPlayer player = getProxy().getPlayer(uuidIn);
 
         if (player != null) {
-            return new BungeePlayer<>(player);
+            return Optional.of(new BungeePlayer<>(player));
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public ZulfProxyPlayer<ProxyServer> getPlayer(String nameIn) {
+    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(String nameIn) {
 
         ProxiedPlayer player = getProxy().getPlayer(nameIn);
 
         if (player != null) {
-            return new BungeePlayer<>(player);
+            return Optional.of(new BungeePlayer<>(player));
         }
 
-        return null;
+        return Optional.empty();
 
     }
 
     @Override
-    public ZulfProxyServer<ProxyServer> getServer(String name) {
+    public Optional<ZulfProxyServer<ProxyServer>> getServer(String name) {
 
         ServerInfo bungeeServerInfo = getProxy().getServersCopy().get(name);
 
         if (bungeeServerInfo != null) {
-            return new BungeeServer(bungeeServerInfo);
+            return Optional.of(new BungeeServer(bungeeServerInfo));
         }
 
-        return null;
+        return Optional.empty();
 
     }
 
@@ -170,7 +173,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
     @Override
     public ProxyCommandSender<ProxyServer> getConsole() {
-        return new BungeeConsole(getProxy());
+        return console;
     }
 
     @Override

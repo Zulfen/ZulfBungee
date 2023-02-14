@@ -13,6 +13,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,21 +33,21 @@ public class PlayerSwitchServer<P> extends PacketHandler<P> {
 
         if (clientServer != null) {
 
-            ZulfProxyServer<P> server = getProxy().getServer(clientServer.getName());
-            ZulfServerInfo<P> zulfServerInfo = server.getServerInfo();
+            Optional<ZulfProxyServer<P>> server = getProxy().getServer(clientServer.getName());
 
-            List<UUID> uuids = Stream.of(switchEvent.getPlayers())
-                    .map(ClientPlayer::getUuid)
-                    .collect(Collectors.toList());
+            if (server.isPresent()) {
 
-            for (UUID uuid : uuids) {
+                List<UUID> uuids = Stream.of(switchEvent.getPlayers())
+                        .map(ClientPlayer::getUuid)
+                        .collect(Collectors.toList());
 
-                ZulfProxyPlayer<P> proxyPlayer = getProxy().getPlayer(uuid);
+                for (UUID uuid : uuids) {
 
-                if (zulfServerInfo != null)
-                    if (proxyPlayer != null) {
-                        proxyPlayer.connect(server);
-                    }
+                    Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(uuid);
+
+                    proxyPlayer.ifPresent(pZulfProxyPlayer -> pZulfProxyPlayer.connect(server.get()));
+
+                }
 
             }
 

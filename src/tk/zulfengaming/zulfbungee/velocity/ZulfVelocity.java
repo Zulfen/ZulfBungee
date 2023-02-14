@@ -26,6 +26,7 @@ import tk.zulfengaming.zulfbungee.velocity.command.VelocityConsole;
 import tk.zulfengaming.zulfbungee.velocity.config.VelocityConfig;
 import tk.zulfengaming.zulfbungee.velocity.event.VelocityEvents;
 import tk.zulfengaming.zulfbungee.velocity.objects.VelocityPlayer;
+import tk.zulfengaming.zulfbungee.velocity.objects.VelocityServer;
 import tk.zulfengaming.zulfbungee.velocity.socket.VelocityMainServer;
 import tk.zulfengaming.zulfbungee.velocity.task.VelocityTaskManager;
 
@@ -44,7 +45,7 @@ import java.util.UUID;
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
-    protected static final String VERSION = "0.8.2";
+    protected static final String VERSION = "0.8.3";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
@@ -59,6 +60,8 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     private final CheckUpdateTask<ProxyServer> updater;
 
     private final VelocityTaskManager taskManager;
+
+    private final VelocityConsole console = new VelocityConsole(this);
 
     private final LegacyComponentSerializer legacyTextSerialiser = LegacyComponentSerializer.builder()
             .character('&').
@@ -142,20 +145,22 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public ZulfProxyPlayer<ProxyServer> getPlayer(UUID uuidIn) {
+    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(UUID uuidIn) {
         Optional<Player> player = velocity.getPlayer(uuidIn);
-        return player.map(value -> new VelocityPlayer(value, this)).orElse(null);
+        return player.map(value -> new VelocityPlayer(value, this));
     }
 
     @Override
-    public ZulfProxyPlayer<ProxyServer> getPlayer(String nameIn) {
+    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(String nameIn) {
         Optional<Player> player = velocity.getPlayer(nameIn);
-        return player.map(value -> new VelocityPlayer(value, this)).orElse(null);
+        return player.map(value -> new VelocityPlayer(value, this));
     }
 
     @Override
-    public ZulfProxyServer<ProxyServer> getServer(String name) {
-        return null;
+    public Optional<ZulfProxyServer<ProxyServer>> getServer(String name) {
+        Optional<RegisteredServer> server = velocity.getServer(name);
+        return server.map(registeredServer -> new VelocityServer(registeredServer, this));
+
     }
 
     @Override
@@ -189,7 +194,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
     @Override
     public ProxyCommandSender<ProxyServer> getConsole() {
-        return new VelocityConsole(this);
+        return console;
     }
 
     @Override

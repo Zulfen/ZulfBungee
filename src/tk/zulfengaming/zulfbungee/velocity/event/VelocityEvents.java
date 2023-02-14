@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
+import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
@@ -37,10 +38,14 @@ public class VelocityEvents extends ProxyEvents<ProxyServer> {
         } else {
 
             String serverName = serverConnectedEvent.getPreviousServer().get().getServerInfo().getName();
-            ClientInfo clientInfo = mainServer.getConnectionFromName(serverName).getClientInfo();
 
-            switchServer(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
-                    zulfVelocity));
+            BaseServerConnection<ProxyServer> connectionFromName = mainServer.getConnectionFromName(serverName);
+
+            if (connectionFromName != null) {
+                ClientInfo clientInfo = connectionFromName.getClientInfo();
+                switchServer(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
+                        zulfVelocity));
+            }
 
         }
 

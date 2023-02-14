@@ -81,13 +81,17 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
                 if (socketConnected.get()) {
 
-                    Packet packetIn = dataInHandler.getQueue().take();
+                    Packet packetIn = dataInHandler.getQueue().poll(1, TimeUnit.SECONDS);
 
-                    if (packetIn.shouldHandle() && readQueue.hasWaitingConsumer()) {
-                        readQueue.tryTransfer(packetIn);
+                    if (packetIn != null) {
+
+                        if (packetIn.shouldHandle() && readQueue.hasWaitingConsumer()) {
+                            readQueue.tryTransfer(packetIn);
+                        }
+
+                        processPacket(packetIn);
+
                     }
-
-                    processPacket(packetIn);
 
                 }
 
@@ -172,7 +176,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
         }
 
         if (packetIn.getType() != PacketTypes.HEARTBEAT) {
-            pluginInstance.logDebug("Sent packet " + packetIn.getType().toString() + "...");
+            pluginInstance.logDebug("Sent packet " + packetIn + "...");
         }
 
     }

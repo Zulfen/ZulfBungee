@@ -11,6 +11,7 @@ public class HeartbeatTask extends BukkitRunnable {
 
     private final ClientConnection connection;
 
+    private volatile long timeBefore = 0;
     private volatile long ping = 0;
 
     public HeartbeatTask(ClientConnection connectionIn) {
@@ -24,14 +25,18 @@ public class HeartbeatTask extends BukkitRunnable {
 
         if (connection.isConnected().get()) {
 
-            long timeBefore = System.currentTimeMillis();
-            Optional<Packet> heartbeatSent = connection.send(new Packet(PacketTypes.HEARTBEAT, true, false, ping));
-
-            if (heartbeatSent.isPresent()) {
-                ping = System.currentTimeMillis() - timeBefore;
-            }
+            timeBefore = System.currentTimeMillis();
+            connection.sendDirect(new Packet(PacketTypes.HEARTBEAT, true, true, ping));
 
         }
+    }
+
+    public long getTimeBefore() {
+        return timeBefore;
+    }
+
+    public void setPing(long ping) {
+        this.ping = ping;
     }
 
 }

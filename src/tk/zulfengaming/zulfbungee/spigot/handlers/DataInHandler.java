@@ -56,7 +56,6 @@ public class DataInHandler extends BukkitRunnable {
 
                     if (dataIn instanceof Packet) {
                         queueIn.put((Packet) dataIn);
-
                     }
 
                 } else {

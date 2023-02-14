@@ -11,6 +11,7 @@ import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ZulfBungeeProxy<P> {
@@ -27,10 +28,10 @@ public interface ZulfBungeeProxy<P> {
 
     ProxyConfig<P> getConfig();
 
-    ZulfProxyPlayer<P> getPlayer(UUID uuidIn);
-    ZulfProxyPlayer<P> getPlayer(String nameIn);
+    Optional<ZulfProxyPlayer<P>> getPlayer(UUID uuidIn);
+    Optional<ZulfProxyPlayer<P>> getPlayer(String nameIn);
 
-    ZulfProxyServer<P> getServer(String name);
+    Optional<ZulfProxyServer<P>> getServer(String name);
     Map<String, ZulfServerInfo<P>> getServersCopy();
 
     String getVersion();

@@ -159,6 +159,7 @@ public class ClientListenerManager extends BukkitRunnable {
                         }
 
                     } else {
+                        pluginInstance.logDebug(ChatColor.RED + "Done!");
                         break;
                     }
 
@@ -167,6 +168,9 @@ public class ClientListenerManager extends BukkitRunnable {
                 } catch (RejectedExecutionException ignored) {
                     // ignored as we specifically throw this exception upon shutting down, we don't need to do any more work
                 } catch (ExecutionException e) {
+                    if (e.getCause() instanceof InterruptedException) {
+                        break;
+                    }
                     pluginInstance.logDebug(ChatColor.RED + String.format("Error while creating socket: %s", e.getCause().getMessage()));
                 }
 
@@ -190,11 +194,7 @@ public class ClientListenerManager extends BukkitRunnable {
             } else {
 
                 while (socketHandoff.hasWaitingConsumer()) {
-                    try {
-                        socketHandoff.transfer(Optional.empty());
-                    } catch (InterruptedException e) {
-                        break;
-                    }
+                    socketHandoff.tryTransfer(Optional.empty());
                 }
 
             }

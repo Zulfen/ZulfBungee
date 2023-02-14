@@ -209,11 +209,10 @@ public abstract class MainServer<P> implements Runnable {
             addressNames.clear();
             socketConnections.clear();
 
-            if (socket != null) {
+            if (socket != null && serverSocket != null) {
                 socket.close();
+                serverSocket.close();
             }
-
-            serverSocket.close();
 
             if (storage != null) {
                 storage.shutdown();

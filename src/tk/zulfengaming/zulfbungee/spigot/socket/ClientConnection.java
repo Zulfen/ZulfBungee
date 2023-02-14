@@ -44,8 +44,7 @@ public class ClientConnection extends BukkitRunnable {
     private Socket socket;
 
     // the latest packet from the queue coming in.
-    private final TransferQueue<Packet> skriptPacketQueue = new LinkedTransferQueue<>();
-    private final TransferQueue<Packet> networkVariableQueue = new LinkedTransferQueue<>();
+    private final TransferQueue<Optional<Packet>> skriptPacketQueue = new LinkedTransferQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -67,6 +66,8 @@ public class ClientConnection extends BukkitRunnable {
 
     private final DataInHandler dataInHandler;
 
+    private final HeartbeatTask heartbeatTask;
+
     // misc. info
 
     private String connectionName = "";
@@ -87,10 +88,15 @@ public class ClientConnection extends BukkitRunnable {
             packetResponseTime = packetResponseTimeIn;
         }
 
+        int heartbeatTicks = 1000;
+        if (heartbeatIn != 0) {
+            heartbeatTicks = heartbeatIn;
+        }
+
         TaskManager taskManager = pluginInstance.getTaskManager();
 
-        HeartbeatTask heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, heartbeatIn);
+        this.heartbeatTask = new HeartbeatTask(this);
+        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, heartbeatTicks);
 
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
@@ -119,25 +125,20 @@ public class ClientConnection extends BukkitRunnable {
                     if (packetIn != null) {
 
                         if (packetIn.shouldHandle()) {
-
                             packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
-
                         } else {
-
-                            // Retrieving variables should take as long as it needs
-                            if (packetIn.getType() != PacketTypes.NETWORK_VARIABLE_GET) {
-                                skriptPacketQueue.transfer(packetIn);
-                            } else {
-                                networkVariableQueue.transfer(packetIn);
+                            while (skriptPacketQueue.hasWaitingConsumer()) {
+                                skriptPacketQueue.tryTransfer(Optional.of(packetIn));
                             }
-
                         }
-
                     }
 
 
-
                 } else {
+
+                    while (skriptPacketQueue.hasWaitingConsumer()) {
+                        skriptPacketQueue.tryTransfer(Optional.empty());
+                    }
 
                     pluginInstance.logDebug(String.format("Thread has arrived: %s", Thread.currentThread().getName()));
 
@@ -184,17 +185,13 @@ public class ClientConnection extends BukkitRunnable {
 
     public Optional<NetworkVariable> requestNetworkVariable(String nameIn) {
 
-        sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, nameIn));
+        Optional<Packet> send = send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, nameIn));
 
-        try {
-
-            Packet response = networkVariableQueue.take();
-
-            if (response.getDataArray().length > 0) {
-                return Optional.ofNullable((NetworkVariable) response.getDataSingle());
+        if (send.isPresent()) {
+            Packet packet = send.get();
+            if (packet.getDataArray().length > 0) {
+                return Optional.of((NetworkVariable) packet.getDataSingle());
             }
-
-        } catch (InterruptedException ignored) {
         }
 
         return Optional.empty();
@@ -207,15 +204,19 @@ public class ClientConnection extends BukkitRunnable {
 
         try {
 
-            Packet poll = skriptPacketQueue.poll(packetResponseTime, TimeUnit.MILLISECONDS);
+            if (clientListenerManager.isSocketConnected().get()) {
 
-            if (poll == null) {
-                pluginInstance.logDebug(ChatColor.YELLOW + packetIn.toString());
-                pluginInstance.logDebug(ChatColor.YELLOW + "was dropped! This could have been caused by the server skipping ticks.");
-                pluginInstance.logDebug(ChatColor.YELLOW + "Please try adjusting your packet response time in the config.");
+                Optional<Packet> poll = skriptPacketQueue.take();
+
+                if (!poll.isPresent()) {
+                    pluginInstance.logDebug(ChatColor.YELLOW + packetIn.toString());
+                    pluginInstance.logDebug(ChatColor.YELLOW + "was dropped! This could have been caused by the server skipping ticks.");
+                    pluginInstance.logDebug(ChatColor.YELLOW + "Please try adjusting your packet response time in the config.");
+                }
+
+                return poll;
+
             }
-
-            return Optional.ofNullable(poll);
 
         } catch (InterruptedException e) {
             pluginInstance.warning(String.format("Packet: %s", packetIn.toString()));
@@ -337,9 +338,12 @@ public class ClientConnection extends BukkitRunnable {
         return clientListenerManager;
     }
 
+    public HeartbeatTask getHeartbeatTask() {
+        return heartbeatTask;
+    }
+
     public void setName(String connectionNameIn) {
         this.connectionName = connectionNameIn;
-
     }
 
     public String getName() {

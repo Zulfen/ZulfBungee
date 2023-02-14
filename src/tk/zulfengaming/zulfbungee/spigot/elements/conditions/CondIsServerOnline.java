@@ -31,7 +31,7 @@ public class CondIsServerOnline extends Condition {
             return ZulfBungeeSpigot.getPlugin().getConnection().proxyServerOnline(server.getName()) == isNegated();
         }
 
-        return isNegated();
+        return !isNegated();
 
     }
 

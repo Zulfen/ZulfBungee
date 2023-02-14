@@ -8,6 +8,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
+import java.util.Optional;
+
 public class PlayerKick<P> extends PacketHandler<P> {
 
     public PlayerKick(PacketHandlerManager<P> packetHandlerManager) {
@@ -18,22 +20,11 @@ public class PlayerKick<P> extends PacketHandler<P> {
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         ClientPlayerDataContainer container = (ClientPlayerDataContainer) packetIn.getDataSingle();
+        String message = (String) container.getData();
 
         for (ClientPlayer player : container.getPlayers()) {
-
-            ZulfProxyPlayer<P> proxyPlayer = getProxy().getPlayer(player.getUuid());
-
-            if (proxyPlayer != null) {
-
-                String reason = "You have been kicked from the proxy.";
-
-                if (container.getData() != null) {
-                    reason = (String) container.getData();
-                }
-
-                proxyPlayer.disconnect(reason);
-
-            }
+            Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(player.getUuid());
+            proxyPlayer.ifPresent(pZulfProxyPlayer -> pZulfProxyPlayer.disconnect(message));
 
         }
 
