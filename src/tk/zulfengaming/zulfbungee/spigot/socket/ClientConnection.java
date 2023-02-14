@@ -309,7 +309,7 @@ public class ClientConnection extends BukkitRunnable {
 
     public void shutdown() {
 
-        if (running.compareAndSet(true, false)) {
+        if (running.compareAndSet(true, false) && clientListenerManager.isTerminated().compareAndSet(false, true)) {
 
             heartbeatThread.cancel();
             clientListenerManager.shutdown();

@@ -88,7 +88,7 @@ public class ClientListenerManager extends BukkitRunnable {
     }
 
     public void shutdown() {
-        if (socketConnected.compareAndSet(true, false) && terminated.compareAndSet(false, true)) {
+        if (socketConnected.compareAndSet(true, false)) {
             closeSocket();
         }
     }
@@ -168,9 +168,6 @@ public class ClientListenerManager extends BukkitRunnable {
                 } catch (RejectedExecutionException ignored) {
                     // ignored as we specifically throw this exception upon shutting down, we don't need to do any more work
                 } catch (ExecutionException e) {
-                    if (e.getCause() instanceof InterruptedException) {
-                        break;
-                    }
                     pluginInstance.logDebug(ChatColor.RED + String.format("Error while creating socket: %s", e.getCause().getMessage()));
                 }
 

@@ -45,7 +45,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
     private boolean isDebug = false;
 
-    private BungeeConsole console = new BungeeConsole(getProxy());
+    private final BungeeConsole console = new BungeeConsole(getProxy());
 
     public void onEnable() {
 
