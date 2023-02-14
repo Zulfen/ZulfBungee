@@ -9,11 +9,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.3 - network variable + servers patch">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.3 - don't bother changing heartbeat tick time">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ClientListenerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ClientListenerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/ClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/ClientConnection.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,20 +130,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Alpha v0.7.2 - made a slight syntax change">
-      <created>1658774362566</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1658774362566</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Alpha v0.7.2 - fixed tab completion being wrong and refactored message sending a little.">
-      <created>1658847008822</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1658847008823</updated>
     </task>
     <task id="LOCAL-00007" summary="Alpha v0.7.2 - fixed tab completion being wrong and refactored message sending a little.">
       <created>1658847024438</created>
@@ -477,7 +460,21 @@
       <option name="project" value="LOCAL" />
       <updated>1676389912605</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Alpha v0.8.3 - shutting down threads patch">
+      <created>1676390577391</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1676390577391</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Alpha v0.8.3 - don't bother changing heartbeat tick time">
+      <created>1676390683467</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1676390683467</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,8 +489,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.7.8 - syntax simplification and global script reloading fix." />
-    <MESSAGE value="Alpha v0.7.9 - brought back and recoded the proxy server expression." />
     <MESSAGE value="Alpha v0.7.9 - restored old syntax but improved it!" />
     <MESSAGE value="Alpha v0.8.0 - reordered proxy server mapping and maybe fixed string to player / server parsing" />
     <MESSAGE value="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax." />
@@ -517,7 +512,9 @@
     <MESSAGE value="Alpha v0.8.2 - duplicate connection fix (?)" />
     <MESSAGE value="Alpha v0.8.2 - added kick syntax!" />
     <MESSAGE value="Alpha v0.8.3 - network variable + servers patch" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.3 - network variable + servers patch" />
+    <MESSAGE value="Alpha v0.8.3 - shutting down threads patch" />
+    <MESSAGE value="Alpha v0.8.3 - don't bother changing heartbeat tick time" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.3 - don't bother changing heartbeat tick time" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
