@@ -74,7 +74,7 @@ public class ClientConnection extends BukkitRunnable {
     private int timeout = 2000;
     private int packetResponseTime = 1000;
 
-    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int heartbeatIn, int packetResponseTimeIn) {
+    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int packetResponseTimeIn) {
 
         this.pluginInstance = pluginInstanceIn;
         this.clientListenerManager = new ClientListenerManager(this);
@@ -88,15 +88,10 @@ public class ClientConnection extends BukkitRunnable {
             packetResponseTime = packetResponseTimeIn;
         }
 
-        int heartbeatTicks = 1000;
-        if (heartbeatIn != 0) {
-            heartbeatTicks = heartbeatIn;
-        }
-
         TaskManager taskManager = pluginInstance.getTaskManager();
 
         this.heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, heartbeatTicks);
+        this.heartbeatThread = taskManager.newAsyncTickTask(heartbeatTask, 20);
 
         this.dataInHandler = new DataInHandler(this);
         this.dataOutHandler = new DataOutHandler(this);
