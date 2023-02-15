@@ -6,11 +6,9 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class DataOutHandler<P> implements Runnable {
 
@@ -34,12 +32,10 @@ public class DataOutHandler<P> implements Runnable {
 
                 if (connection.isSocketConnected().get()) {
 
-                    Packet packetOut = queueOut.poll(1, TimeUnit.SECONDS);
+                    Packet packetOut = queueOut.take();
 
-                    if (packetOut != null) {
-                        outputStream.writeObject(packetOut);
-                        outputStream.flush();
-                    }
+                    outputStream.writeObject(packetOut);
+                    outputStream.flush();
 
                 }
 

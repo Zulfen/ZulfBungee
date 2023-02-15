@@ -1,16 +1,17 @@
 package tk.zulfengaming.zulfbungee.universal.socket;
 
+import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
+import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.universal.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,8 +21,8 @@ import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -81,17 +82,21 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
                 if (socketConnected.get()) {
 
-                    Packet packetIn = dataInHandler.getQueue().poll(1, TimeUnit.SECONDS);
+                    Optional<Packet> packetIn = dataInHandler.getQueue().take();
 
-                    if (packetIn != null) {
+                    if (packetIn.isPresent()) {
 
-                        if (packetIn.shouldHandle() && readQueue.hasWaitingConsumer()) {
-                            readQueue.tryTransfer(packetIn);
+                        Packet packet = packetIn.get();
+
+                        if (packet.shouldHandle() && readQueue.hasWaitingConsumer()) {
+                            readQueue.tryTransfer(packet);
                         }
 
-                        processPacket(packetIn);
+                        processPacket(packet);
 
                     }
+
+
 
                 }
 

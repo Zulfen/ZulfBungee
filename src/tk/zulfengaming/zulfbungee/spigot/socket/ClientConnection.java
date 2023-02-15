@@ -5,31 +5,29 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.checkerframework.checker.nullness.Opt;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
-import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.*;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
 import java.io.File;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -72,9 +70,8 @@ public class ClientConnection extends BukkitRunnable {
 
     private String connectionName = "";
     private int timeout = 2000;
-    private int packetResponseTime = 1000;
 
-    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn, int packetResponseTimeIn) {
+    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn) {
 
         this.pluginInstance = pluginInstanceIn;
         this.clientListenerManager = new ClientListenerManager(this);
@@ -83,9 +80,6 @@ public class ClientConnection extends BukkitRunnable {
 
         if (timeoutIn != 0) {
             timeout = timeoutIn;
-        }
-        if (packetResponseTimeIn != 0) {
-            packetResponseTime = packetResponseTimeIn;
         }
 
         TaskManager taskManager = pluginInstance.getTaskManager();
@@ -115,16 +109,13 @@ public class ClientConnection extends BukkitRunnable {
 
                 if (clientListenerManager.isSocketConnected().get()) {
 
-                    Packet packetIn = dataInHandler.getDataQueue().poll(packetResponseTime, TimeUnit.MILLISECONDS);
+                    Packet packetIn = dataInHandler.getDataQueue().take();
 
-                    if (packetIn != null) {
-
-                        if (packetIn.shouldHandle()) {
-                            packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
-                        } else {
-                            while (skriptPacketQueue.hasWaitingConsumer()) {
-                                skriptPacketQueue.tryTransfer(Optional.of(packetIn));
-                            }
+                    if (packetIn.shouldHandle()) {
+                        packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
+                    } else {
+                        while (skriptPacketQueue.hasWaitingConsumer()) {
+                            skriptPacketQueue.transfer(Optional.of(packetIn));
                         }
                     }
 
@@ -132,7 +123,7 @@ public class ClientConnection extends BukkitRunnable {
                 } else {
 
                     while (skriptPacketQueue.hasWaitingConsumer()) {
-                        skriptPacketQueue.tryTransfer(Optional.empty());
+                        skriptPacketQueue.transfer(Optional.empty());
                     }
 
                     pluginInstance.logDebug(String.format("Thread has arrived: %s", Thread.currentThread().getName()));

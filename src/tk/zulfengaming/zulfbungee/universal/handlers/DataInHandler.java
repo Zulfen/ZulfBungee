@@ -6,8 +6,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.Socket;
 import java.net.SocketException;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,7 +17,7 @@ public class DataInHandler<P> implements Runnable {
 
     private final BaseServerConnection<P> connection;
 
-    private final BlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
 
     private final ObjectInputStream inputStream;
 
@@ -40,8 +40,10 @@ public class DataInHandler<P> implements Runnable {
 
                     if (dataIn instanceof Packet) {
 
-                        queueIn.put((Packet) dataIn);
+                        queueIn.put(Optional.of((Packet) dataIn));
 
+                    } else {
+                        queueIn.put(Optional.empty());
                     }
 
                 }
@@ -71,7 +73,7 @@ public class DataInHandler<P> implements Runnable {
         disconnect();
     }
 
-    public BlockingQueue<Packet> getQueue() {
+    public BlockingQueue<Optional<Packet>> getQueue() {
         return queueIn;
     }
 

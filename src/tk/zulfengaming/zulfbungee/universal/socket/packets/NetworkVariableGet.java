@@ -34,13 +34,11 @@ public class NetworkVariableGet<P> extends PacketHandler<P> {
             if (storedVariable.isPresent()) {
                 NetworkVariable variable = storedVariable.get();
                 return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable);
-            } else {
-                return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Object[0]);
             }
 
         }
 
-        return null;
+        return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Object[0]);
 
     }
 }
