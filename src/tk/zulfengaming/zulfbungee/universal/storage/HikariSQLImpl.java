@@ -161,6 +161,8 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                     //getMainServer().getPluginInstance().logDebug("Stored variable " + variableNameIn);
 
+                } else {
+                    getMainServer().getPluginInstance().logDebug(String.format("%sVariable %s appears to be empty? Unable to save.", ChatColour.YELLOW, variableNameIn));
                 }
 
             }
