@@ -39,17 +39,22 @@ public class GlobalScriptsTask implements Supplier<File> {
 
         switch (scriptAction) {
 
+            // proxy may report this as new to its filesystem, but will already exist on client's filesystem.
             case NEW:
-                newScript(scriptFile);
-                skriptProcess("enable");
+                if (!scriptFile.exists()) {
+                    newScript(scriptFile);
+                    skriptProcess("enable");
+                } else {
+                    reloadScript(scriptFile);
+                    skriptProcess("reload");
+                }
                 break;
             case DELETE:
                 removeScript(scriptFile);
                 skriptProcess("disable");
                 break;
             case RELOAD:
-                removeScript(scriptFile);
-                newScript(scriptFile);
+                reloadScript(scriptFile);
                 skriptProcess("reload");
                 break;
 
@@ -57,6 +62,11 @@ public class GlobalScriptsTask implements Supplier<File> {
 
         return scriptFile;
 
+    }
+
+    private void reloadScript(File fileInstance) {
+        removeScript(fileInstance);
+        newScript(fileInstance);
     }
 
     private void newScript(File fileInstance) {

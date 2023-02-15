@@ -144,20 +144,24 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
             } else {
 
-                Value value = variable.getSingleValue();
+                if (variable.getValueArray().length > 0) {
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
+                    Value value = variable.getSingleValue();
 
-                preparedStatement.setString(1, variableNameIn);
-                preparedStatement.setString(2, value.type);
-                preparedStatement.setBytes(3, value.data);
+                    PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
-                preparedStatement.setBytes(4, value.data);
-                preparedStatement.setString(5, value.type);
+                    preparedStatement.setString(1, variableNameIn);
+                    preparedStatement.setString(2, value.type);
+                    preparedStatement.setBytes(3, value.data);
 
-                preparedStatement.executeUpdate();
+                    preparedStatement.setBytes(4, value.data);
+                    preparedStatement.setString(5, value.type);
 
-                //getMainServer().getPluginInstance().logDebug("Stored variable " + variableNameIn);
+                    preparedStatement.executeUpdate();
+
+                    //getMainServer().getPluginInstance().logDebug("Stored variable " + variableNameIn);
+
+                }
 
             }
 

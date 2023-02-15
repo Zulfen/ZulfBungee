@@ -46,7 +46,7 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
 
             } else if (!addressCheck) {
 
-                getProxy().warning(String.format("We couldn't find the client with the address %s!", infoSockAddr.getAddress()));
+                getProxy().warning(String.format("We couldn't find the client with the address %s!", socketAddressIn.getAddress()));
                 getProxy().warning("Please make sure that the address in your proxy's main config is valid!");
                 getProxy().warning(String.format("Address check returned %s (%s compared to %s)", false, infoSockAddr.getAddress(), socketAddressIn.getAddress()));
                 getProxy().warning(String.format("Port check returned %s (%s compared to %s)", portCheck, infoSockAddr.getPort(), clientInfo.getMinecraftPort()));
