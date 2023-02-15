@@ -36,8 +36,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
         debug = config.getBoolean("debug");
 
-        connection = new ClientConnection(this, config.getInt("connection-timeout"),
-                config.getInt("packet-response-time"));
+        connection = new ClientConnection(this, config.getInt("connection-timeout"));
 
         taskManager.newAsyncTask(connection);
 
