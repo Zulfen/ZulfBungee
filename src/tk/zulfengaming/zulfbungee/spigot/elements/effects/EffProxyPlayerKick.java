@@ -24,7 +24,7 @@ public class EffProxyPlayerKick extends Effect {
     private Expression<ClientPlayer> players;
 
     static {
-        Skript.registerEffect(EffProxyPlayerKick.class, "kick [(proxy|bungeecord|bungee|velocity)] %-proxyplayers% [(by reason of|because [of]|on account of|due to|with [reason]) %-string%]");
+        Skript.registerEffect(EffProxyPlayerKick.class, "kick [(proxy|bungeecord|bungee|velocity) [player]] %-proxyplayers% [(by reason of|because [of]|on account of|due to|with [reason]) %-string%]");
     }
 
     @Override

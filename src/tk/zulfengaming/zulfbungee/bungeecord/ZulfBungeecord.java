@@ -153,7 +153,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         HashMap<String, ZulfServerInfo<ProxyServer>>
                 serverMap = new HashMap<>();
 
-        for (ServerInfo bungeeInfo : getProxy().getServersCopy().values()) {
+        for (ServerInfo bungeeInfo : getProxy().getServers().values()) {
             serverMap.put(bungeeInfo.getName(), new ZulfServerInfo<>
                     (bungeeInfo.getSocketAddress()));
         }
