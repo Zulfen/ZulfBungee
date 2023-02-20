@@ -15,13 +15,12 @@ import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
 
 public class DataOutHandler extends BukkitRunnable {
 
     private final ClientConnection connection;
 
-    private final LinkedBlockingQueue<Packet> queueOut = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
 
     private ObjectOutputStream outputStream;
 
@@ -53,18 +52,17 @@ public class DataOutHandler extends BukkitRunnable {
 
                 if (clientListenerManager.isSocketConnected().get()) {
 
-                    Packet packetOut = queueOut.poll(1, TimeUnit.SECONDS);
+                    Optional<Packet> packetOut = queueOut.take();
 
-                    if (packetOut != null) {
-                        outputStream.writeObject(packetOut);
+                    if (packetOut.isPresent()) {
+                        outputStream.writeObject(packetOut.get());
                         outputStream.flush();
                     }
-                    
+
                 } else {
 
                     pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
 
-                    queueOut.clear();
                     socketBarrier.arriveAndAwaitAdvance();
 
                     Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
@@ -107,7 +105,7 @@ public class DataOutHandler extends BukkitRunnable {
 
     }
 
-    public LinkedBlockingQueue<Packet> getDataQueue() {
+    public LinkedBlockingQueue<Optional<Packet>> getDataQueue() {
         return queueOut;
     }
 }

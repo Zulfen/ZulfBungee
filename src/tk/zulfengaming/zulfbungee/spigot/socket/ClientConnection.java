@@ -28,7 +28,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.Phaser;
-import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientConnection extends BukkitRunnable {
@@ -42,7 +41,7 @@ public class ClientConnection extends BukkitRunnable {
     private Socket socket;
 
     // the latest packet from the queue coming in.
-    private final TransferQueue<Optional<Packet>> skriptPacketQueue = new LinkedTransferQueue<>();
+    private final LinkedTransferQueue<Optional<Packet>> skriptPacketQueue = new LinkedTransferQueue<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -71,16 +70,12 @@ public class ClientConnection extends BukkitRunnable {
     private String connectionName = "";
     private int timeout = 2000;
 
-    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn, int timeoutIn) {
+    public ClientConnection(ZulfBungeeSpigot pluginInstanceIn) {
 
         this.pluginInstance = pluginInstanceIn;
         this.clientListenerManager = new ClientListenerManager(this);
 
         this.packetHandlerManager = new PacketHandlerManager(this);
-
-        if (timeoutIn != 0) {
-            timeout = timeoutIn;
-        }
 
         TaskManager taskManager = pluginInstance.getTaskManager();
 
@@ -109,22 +104,31 @@ public class ClientConnection extends BukkitRunnable {
 
                 if (clientListenerManager.isSocketConnected().get()) {
 
-                    Packet packetIn = dataInHandler.getDataQueue().take();
+                    Optional<Packet> packetIn = dataInHandler.getDataQueue().take();
 
-                    if (packetIn.shouldHandle()) {
-                        packetHandlerManager.handlePacket(packetIn, socket.getRemoteSocketAddress());
-                    } else {
-                        while (skriptPacketQueue.hasWaitingConsumer()) {
-                            skriptPacketQueue.transfer(Optional.of(packetIn));
+                    if (packetIn.isPresent()) {
+
+                        Packet packet = packetIn.get();
+
+                        if (packet.shouldHandle()) {
+                            packetHandlerManager.handlePacket(packet, socket.getRemoteSocketAddress());
+                        } else {
+                            skriptPacketQueue.put(packetIn);
                         }
+
+                    } else {
+
+                        while (skriptPacketQueue.hasWaitingConsumer()) {
+                            skriptPacketQueue.tryTransfer(Optional.empty());
+                        }
+
                     }
 
 
                 } else {
 
-                    while (skriptPacketQueue.hasWaitingConsumer()) {
-                        skriptPacketQueue.transfer(Optional.empty());
-                    }
+                    dataOutHandler.getDataQueue().offer(Optional.empty());
+                    skriptPacketQueue.offer(Optional.empty());
 
                     pluginInstance.logDebug(String.format("Thread has arrived: %s", Thread.currentThread().getName()));
 
@@ -155,10 +159,10 @@ public class ClientConnection extends BukkitRunnable {
 
             if (clientListenerManager.isSocketConnected().get()) {
 
-                dataOutHandler.getDataQueue().put(packetIn);
+                dataOutHandler.getDataQueue().put(Optional.of(packetIn));
 
                 if (packetIn.getType() != PacketTypes.HEARTBEAT) {
-                    pluginInstance.logDebug("Sent packet " + packetIn.getType().toString() + "...");
+                    pluginInstance.logDebug("Sent packet " + packetIn + "...");
                 }
             }
 

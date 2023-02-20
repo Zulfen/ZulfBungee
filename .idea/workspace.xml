@@ -9,14 +9,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.5 - fix potential crash with network variables">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.8.5 - removed response time setting.">
+      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/handlers/DataInHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/handlers/DataInHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/handlers/DataOutHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/handlers/DataOutHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/TaskManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/ClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/ClientConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/handlers/DataInHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/handlers/DataInHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/handlers/DataOutHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/handlers/DataOutHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableGet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableGet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableModify.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableModify.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +83,7 @@
     &quot;ToolWindowProblems.ShowToolbar&quot;: &quot;false&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/Java/ZulfBungee&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -136,20 +138,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
-      <created>1658858007639</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1658858007639</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
-      <created>1658858115529</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1658858115529</updated>
     </task>
     <task id="LOCAL-00014" summary="Alpha v0.7.3 - fixed H2 deciding to have the console as the main class hopefully...">
       <created>1658858607594</created>
@@ -480,7 +468,21 @@
       <option name="project" value="LOCAL" />
       <updated>1676478991308</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Alpha v0.8.5 - removed response time setting.">
+      <created>1676492648360</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1676492648361</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Alpha v0.8.5 - removed response time setting.">
+      <created>1676492665514</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1676492665515</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.8.0 - working on multiplatform support slowly." />
     <MESSAGE value="Alpha v0.8.0 - initial multiplatform rewrite commit. Supports bungeecord only right now." />
     <MESSAGE value="Alpha v0.8.0 - working multiplatform build." />
     <MESSAGE value="Alpha v0.8.0 - remove a fullstop" />
@@ -520,12 +521,14 @@
     <MESSAGE value="Alpha v0.8.3 - syntax fix" />
     <MESSAGE value="Alpha v0.8.4 - bungeecord getServers() fix" />
     <MESSAGE value="Alpha v0.8.5 - fix potential crash with network variables" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.5 - fix potential crash with network variables" />
+    <MESSAGE value="Alpha v0.8.5 - removed response time setting." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.8.5 - removed response time setting." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="java.util.concurrent.atomic.AtomicBoolean" memberName="value" />
+        <PinnedItemInfo parentTag="tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager" memberName="zulfServerInfo" />
         <PinnedItemInfo parentTag="tk.zulfengaming.zulfbungee.universal.util.skript.ProxyPlayer" memberName="server" />
       </pinned-members>
     </pin-to-top-manager>

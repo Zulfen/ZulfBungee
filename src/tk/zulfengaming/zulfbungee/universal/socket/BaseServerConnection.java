@@ -141,6 +141,9 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
             mainServer.removeServerConnection(this);
 
+            dataInHandler.shutdown();
+            dataOutHandler.shutdown();
+
             try {
 
                 socket.close();
@@ -173,7 +176,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         try {
 
-            dataOutHandler.getQueue().put(packetIn);
+            dataOutHandler.getQueue().put(Optional.of(packetIn));
 
         } catch (InterruptedException e) {
             pluginInstance.error("That packet failed to send due to thread interruption?:");

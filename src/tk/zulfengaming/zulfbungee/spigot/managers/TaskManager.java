@@ -13,7 +13,7 @@ public class TaskManager {
 
     private final ZulfBungeeSpigot instance;
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
     private final BukkitScheduler scheduler;
 
     public TaskManager(ZulfBungeeSpigot instanceIn) {

@@ -30,6 +30,7 @@ public class DataInHandler<P> implements Runnable {
 
     @Override
     public void run() {
+
         do {
 
             try {
@@ -39,11 +40,7 @@ public class DataInHandler<P> implements Runnable {
                     Object dataIn = inputStream.readObject();
 
                     if (dataIn instanceof Packet) {
-
                         queueIn.put(Optional.of((Packet) dataIn));
-
-                    } else {
-                        queueIn.put(Optional.empty());
                     }
 
                 }

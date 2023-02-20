@@ -7,6 +7,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.SocketException;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -14,7 +15,7 @@ public class DataOutHandler<P> implements Runnable {
 
     private final BaseServerConnection<P> connection;
 
-    private final BlockingQueue<Packet> queueOut = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
 
     private final ObjectOutputStream outputStream;
 
@@ -32,10 +33,12 @@ public class DataOutHandler<P> implements Runnable {
 
                 if (connection.isSocketConnected().get()) {
 
-                    Packet packetOut = queueOut.take();
+                    Optional<Packet> packetOut = queueOut.take();
 
-                    outputStream.writeObject(packetOut);
-                    outputStream.flush();
+                    if (packetOut.isPresent()) {
+                        outputStream.writeObject(packetOut.get());
+                        outputStream.flush();
+                    }
 
                 }
 
@@ -62,10 +65,18 @@ public class DataOutHandler<P> implements Runnable {
     }
 
     public void shutdown() {
+
+        try {
+            queueOut.put(Optional.empty());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         disconnect();
+
     }
 
-    public BlockingQueue<Packet> getQueue() {
+    public BlockingQueue<Optional<Packet>> getQueue() {
         return queueOut;
     }
 

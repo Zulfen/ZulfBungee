@@ -20,7 +20,7 @@ public class DataInHandler extends BukkitRunnable {
 
     private final ClientConnection connection;
 
-    private final LinkedBlockingQueue<Packet> queueIn = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
 
     private final Phaser socketBarrier;
 
@@ -55,10 +55,12 @@ public class DataInHandler extends BukkitRunnable {
                     Object dataIn = inputStream.readObject();
 
                     if (dataIn instanceof Packet) {
-                        queueIn.put((Packet) dataIn);
+                        queueIn.put(Optional.of((Packet) dataIn));
                     }
 
                 } else {
+
+                    queueIn.put(Optional.empty());
 
                     pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
 
@@ -106,7 +108,7 @@ public class DataInHandler extends BukkitRunnable {
 
     }
 
-    public LinkedBlockingQueue<Packet> getDataQueue() {
+    public LinkedBlockingQueue<Optional<Packet>> getDataQueue() {
         return queueIn;
     }
 
