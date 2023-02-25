@@ -19,7 +19,7 @@ public enum PacketTypes {
     DISCONNECT_EVENT,
     KICK_PLAYER,
     KICK_EVENT,
-    INVALID_CONFIGURATION, // unused for now
+    INVALID_CONFIGURATION,
     GLOBAL_SCRIPT,
 
 }
