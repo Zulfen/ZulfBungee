@@ -9,7 +9,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -29,48 +29,9 @@ public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
 
     @Override
     protected ClientPlayer[] get(@NotNull Event event) {
-
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-
-        ArrayList<ClientPlayer> playersOut = new ArrayList<>();
-
-        Optional<Packet> request;
-
-        if (servers != null) {
-
-            ClientServer[] serversOut = servers.getArray(event);
-
-            request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                        true, false, serversOut));
-
-
-        } else {
-
-            request = connection.send(new Packet(PacketTypes.PROXY_PLAYERS,
-                    true, false, new Object[0]));
-
-        }
-
-        if (request.isPresent()) {
-
-            Packet packet = request.get();
-
-            if (packet.getDataArray() != null) {
-
-                List<ClientPlayer> playersFrom = Stream.of(packet.getDataArray())
-                        .filter(Objects::nonNull)
-                        .filter(ClientPlayer.class::isInstance)
-                        .map(ClientPlayer.class::cast)
-                        .collect(Collectors.toList());
-
-                playersOut.addAll(playersFrom);
-
-
-            }
-
-        }
-
-        return playersOut.toArray(new ClientPlayer[0]);
+        List<ClientPlayer> players = ZulfBungeeSpigot.getPlugin().getConnectionManager()
+                .getPlayers(servers.getArray(event));
+        return players.toArray(new ClientPlayer[0]);
     }
 
     @Override

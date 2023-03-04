@@ -5,11 +5,11 @@ import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
 import net.md_5.bungee.api.chat.BaseComponent;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
 
 import java.net.SocketAddress;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class PlayerSendMessage extends PacketHandler {
 
-    public PlayerSendMessage(ClientConnection connectionIn) {
+    public PlayerSendMessage(Connection connectionIn) {
         super(connectionIn, PacketTypes.PLAYER_SEND_MESSAGE);
     }
 

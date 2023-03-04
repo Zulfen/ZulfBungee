@@ -7,10 +7,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class ZulfBungeeSpigot extends JavaPlugin {
@@ -23,7 +25,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     private TaskManager taskManager;
     private YamlConfig config;
 
-    private ClientConnection connection;
+    private ConnectionManager connectionManager;
 
     public void onEnable() {
 
@@ -36,9 +38,23 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
         debug = config.getBoolean("debug");
 
-        connection = new ClientConnection(this, config.getInt("connection-timeout"));
+        try {
 
-        taskManager.newAsyncTask(connection);
+            InetAddress serverAddress = InetAddress.getByName(config.getString("server-host"));
+            InetAddress clientAddress = InetAddress.getByName(config.getString("client-host"));
+
+            int serverPort = config.getInt("server-port");
+            int clientPort = config.getInt("client-port");
+
+            connectionManager = new ConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort, config.getInt("connection-timeout"));
+            taskManager.newAsyncTask(connectionManager);
+
+        } catch (UnknownHostException e) {
+
+            error("Could not get the name of the host in the config!:");
+            e.printStackTrace();
+
+        }
 
         SkriptAddon addon = Skript.registerAddon(this);
 
@@ -56,7 +72,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     }
 
     public void onDisable() {
-        connection.shutdown();
+        connectionManager.shutdown();
         taskManager.shutdown();
     }
 
@@ -86,8 +102,8 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         return taskManager;
     }
 
-    public ClientConnection getConnection() {
-        return connection;
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
     }
 
     // static reference for Skript only

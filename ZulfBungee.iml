@@ -68,5 +68,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spongepowered:configurate-yaml:3.7.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spongepowered:configurate-gson:3.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:23.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.vdurmont:semver4j:3.1.0" level="project" />
   </component>
 </module>

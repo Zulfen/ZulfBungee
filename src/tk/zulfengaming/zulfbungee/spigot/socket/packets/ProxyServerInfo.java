@@ -1,17 +1,20 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.IncomingServerType;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
 
 import java.net.SocketAddress;
-import java.util.stream.Stream;
 
 public class ProxyServerInfo extends PacketHandler {
 
-    public ProxyServerInfo(ClientConnection connectionIn) {
+    public ProxyServerInfo(Connection connectionIn) {
         super(connectionIn, PacketTypes.PROXY_CLIENT_INFO);
 
     }
@@ -19,12 +22,22 @@ public class ProxyServerInfo extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn, SocketAddress address) {
 
-        ClientServer[] serversIn = Stream.of(packetIn.getDataArray())
-                .filter(ClientServer.class::isInstance)
-                .map(ClientServer.class::cast)
-                .toArray(ClientServer[]::new);
+        ConnectionManager connectionManager = getConnection().getConnectionManager();
 
-        getConnection().setProxyServers(serversIn);
+        ClientServer serverIn = (ClientServer) packetIn.getDataArray()[0];
+        IncomingServerType type = (IncomingServerType) packetIn.getDataArray()[1];
+
+        String serverName = serverIn.getName();
+        ClientInfo clientInfo = serverIn.getClientInfo();
+
+        switch (type) {
+            case ADD:
+                connectionManager.addProxyServer(serverName, clientInfo);
+                break;
+            case REMOVE:
+                connectionManager.removeProxyServer(serverName);
+                break;
+        }
 
     }
 }

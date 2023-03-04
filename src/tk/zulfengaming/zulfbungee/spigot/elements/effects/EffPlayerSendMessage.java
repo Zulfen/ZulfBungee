@@ -10,12 +10,12 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
 
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class EffPlayerSendMessage extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
         Optional<ClientServer> asServer = connection.getAsServer();
 
         asServer.ifPresent(server -> connection.sendDirect(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,

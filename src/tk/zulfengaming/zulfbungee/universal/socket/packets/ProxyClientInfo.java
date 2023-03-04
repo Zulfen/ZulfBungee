@@ -22,7 +22,6 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
-        connection.setClientInfo(clientInfo);
 
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
@@ -39,6 +38,7 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
                 String name = info.getKey();
 
                 if (!getMainServer().getServerNames().contains(name)) {
+                    getMainServer().setClientInfo(name, clientInfo);
                     getMainServer().addActiveConnection(connection, name);
                     return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
                 }

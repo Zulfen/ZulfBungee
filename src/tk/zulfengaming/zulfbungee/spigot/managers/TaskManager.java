@@ -25,8 +25,8 @@ public class TaskManager {
         scheduler.runTask(pluginIn, taskIn);
     }
 
-    public void newAsyncTask(BukkitRunnable taskIn) {
-        taskIn.runTaskAsynchronously(instance);
+    public BukkitTask newAsyncTask(BukkitRunnable taskIn) {
+        return taskIn.runTaskAsynchronously(instance);
     }
 
     public BukkitTask newAsyncTickTask(BukkitRunnable taskIn, int ticks) {

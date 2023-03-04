@@ -10,18 +10,20 @@ import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.IncomingServerType;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
-import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -41,10 +43,12 @@ public abstract class MainServer<P> implements Runnable {
     private ServerSocket serverSocket;
     private Socket socket;
 
-    private final ArrayList<BaseServerConnection<P>> socketConnections = new ArrayList<>();
+    private final CopyOnWriteArrayList<BaseServerConnection<P>> socketConnections = new CopyOnWriteArrayList<>();
 
-    private final HashMap<SocketAddress, String> addressNames = new HashMap<>();
-    private final HashMap<String, BaseServerConnection<P>> activeConnections = new HashMap<>();
+    private final ConcurrentHashMap<SocketAddress, String> addressNames = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, BaseServerConnection<P>> activeConnections = new ConcurrentHashMap<>();
+
+    private final ConcurrentHashMap<String, ClientInfo> clientInfos = new ConcurrentHashMap<>();
 
     // quite neat
     private final PacketHandlerManager<P> packetManager;
@@ -171,15 +175,25 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-    public void addActiveConnection(BaseServerConnection<P> connection, String name) {
+    public void addActiveConnection(BaseServerConnection<P> connectionIn, String name) {
 
-        SocketAddress address = connection.getAddress();
+        SocketAddress address = connectionIn.getAddress();
 
         addressNames.put(address, name);
-        activeConnections.put(name, connection);
+        activeConnections.put(name, connectionIn);
 
-        pluginInstance.logInfo(ChatColour.GREEN + "Connection established with address: " + address);
-        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
+        Optional<ClientInfo> getClientInfo = getClientInfo(name);
+
+        if (getClientInfo.isPresent()) {
+
+            pluginInstance.logInfo(ChatColour.GREEN + "Connection established with address: " + address);
+
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, new Object[]{
+                    new ClientServer(name, getClientInfo.get()), IncomingServerType.ADD
+            }));
+
+        }
+
 
     }
 
@@ -189,9 +203,16 @@ public abstract class MainServer<P> implements Runnable {
         String name = addressNames.get(connectionIn.getAddress());
 
         if (name != null) {
+
             activeConnections.remove(name);
+            ClientInfo clientInfo = clientInfos.remove(name);
+
             pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
+
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, new Object[]{
+                    new ClientServer(name, clientInfo), IncomingServerType.REMOVE
+            }));
+
         }
 
 
@@ -201,17 +222,15 @@ public abstract class MainServer<P> implements Runnable {
 
         if (running.compareAndSet(true, false)) {
 
-            for (BaseServerConnection<P> connection : socketConnections) {
-                connection.shutdown();
+            if (socket != null) {
+                socket.close();
+            }
+            if (serverSocket != null) {
+                serverSocket.close();
             }
 
-            activeConnections.clear();
-            addressNames.clear();
-            socketConnections.clear();
-
-            if (socket != null && serverSocket != null) {
-                socket.close();
-                serverSocket.close();
+            for (BaseServerConnection<P> connection : socketConnections) {
+                connection.end();
             }
 
             if (storage != null) {
@@ -251,12 +270,6 @@ public abstract class MainServer<P> implements Runnable {
         return activeConnections.get(name);
     }
 
-    public ClientServer[] getClientServerArray() {
-        return activeConnections.entrySet().stream()
-                .map(proxyServerList -> new ClientServer(proxyServerList.getKey(), proxyServerList.getValue().getClientInfo()))
-                .toArray(ClientServer[]::new);
-    }
-
     public List<ZulfProxyPlayer<P>> getProxyPlayersFrom(String nameIn) {
 
         BaseServerConnection<P> serverConnection = getConnectionFromName(nameIn);
@@ -272,6 +285,14 @@ public abstract class MainServer<P> implements Runnable {
     public List<ZulfProxyPlayer<P>> getAllPlayers() {
         return socketConnections.stream()
                 .flatMap(connection -> connection.getPlayers().stream()).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void setClientInfo(String nameIn, ClientInfo clientInfoIn) {
+        clientInfos.put(nameIn, clientInfoIn);
+    }
+
+    public Optional<ClientInfo> getClientInfo(String nameIn) {
+        return Optional.ofNullable(clientInfos.get(nameIn));
     }
 
     public boolean areClientsConnected() {

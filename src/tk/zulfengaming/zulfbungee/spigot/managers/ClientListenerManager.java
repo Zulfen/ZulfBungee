@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.handlers.SocketHandler;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
@@ -22,7 +22,7 @@ public class ClientListenerManager extends BukkitRunnable {
 
     private final ZulfBungeeSpigot pluginInstance;
 
-    private final ClientConnection connection;
+    private final SocketConnection connection;
 
     private final SocketHandler socketHandler;
 
@@ -41,7 +41,7 @@ public class ClientListenerManager extends BukkitRunnable {
 
     private ClientInfo zulfServerInfo;
 
-    public ClientListenerManager(ClientConnection connectionIn) {
+    public ClientListenerManager(SocketConnection connectionIn) {
 
         this.connection = connectionIn;
         this.pluginInstance = connectionIn.getPluginInstance();
@@ -97,7 +97,7 @@ public class ClientListenerManager extends BukkitRunnable {
         return pluginInstance;
     }
 
-    public ClientConnection getConnection() {
+    public SocketConnection getConnection() {
         return connection;
     }
 

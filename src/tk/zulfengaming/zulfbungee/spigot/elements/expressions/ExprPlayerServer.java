@@ -3,7 +3,8 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -27,7 +28,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ClientPlayer, Cli
     @Override
     public ClientServer convert(ClientPlayer proxyPlayer) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
 
         Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
 

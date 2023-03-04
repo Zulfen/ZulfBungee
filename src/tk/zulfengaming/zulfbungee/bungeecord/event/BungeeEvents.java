@@ -13,10 +13,13 @@ import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
+import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+
+import java.util.Optional;
 
 public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  {
 
@@ -32,10 +35,11 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
         if (eventPlayer.getServer() == null) {
 
             ServerInfo serverInfo = event.getServer().getInfo();
-            ClientInfo clientInfo = mainServer.getConnectionFromName(serverInfo.getName()).getClientInfo();
+            Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverInfo.getName());
 
-            serverConnected(new ClientServer(serverInfo.getName(), clientInfo), new BungeePlayer<>(eventPlayer,
-                    new BungeeServer(serverInfo)));
+            getClientInfo.ifPresent(clientInfo -> serverConnected(new ClientServer(serverInfo.getName(), clientInfo), new BungeePlayer<>(eventPlayer,
+                    new BungeeServer(serverInfo))));
+
 
         }
     }
@@ -50,9 +54,9 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
 
             String toName = eventPlayer.getServer().getInfo().getName();
 
-            ClientInfo clientInfo = mainServer.getConnectionFromName(toName).getClientInfo();
+            Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(toName);
 
-            switchServer(new ClientServer(toName, clientInfo), new BungeePlayer<>(eventPlayer));
+            getClientInfo.ifPresent(clientInfo -> switchServer(new ClientServer(toName, clientInfo), new BungeePlayer<>(eventPlayer)));
 
         }
 

@@ -1,6 +1,5 @@
 package tk.zulfengaming.zulfbungee.spigot.elements;
 
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -9,13 +8,10 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public class SkriptConverters {
 
@@ -31,7 +27,7 @@ public class SkriptConverters {
 
         Converters.registerConverter(String.class, ClientPlayer.class, s -> {
 
-            Optional<Packet> playerRequest = ZulfBungeeSpigot.getPlugin().getConnection()
+            Optional<Packet> playerRequest = ZulfBungeeSpigot.getPlugin().getConnectionManager()
                     .send(new Packet(PacketTypes.PROXY_PLAYER_UUID, true, false, s));
 
             if (playerRequest.isPresent()) {
@@ -47,7 +43,7 @@ public class SkriptConverters {
         });
 
         Converters.registerConverter(String.class, ClientServer.class, s -> {
-            Optional<ClientServer> server = ZulfBungeeSpigot.getPlugin().getConnection().getProxyServer(s);
+            Optional<ClientServer> server = ZulfBungeeSpigot.getPlugin().getConnectionManager().getProxyServer(s);
             return server.orElse(null);
         });
 

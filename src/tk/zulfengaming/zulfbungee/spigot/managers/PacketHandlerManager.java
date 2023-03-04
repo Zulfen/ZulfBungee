@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.managers;
 
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.*;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
@@ -14,7 +14,7 @@ public class PacketHandlerManager {
 
     private final ArrayList<PacketHandler> handlers = new ArrayList<>();
 
-    public PacketHandlerManager(ClientConnection connectionIn) {
+    public PacketHandlerManager(Connection connectionIn) {
         addHandler(new Heartbeat(connectionIn));
         addHandler(new ConnectionName(connectionIn));
         addHandler(new ServerSwitchEvent(connectionIn));

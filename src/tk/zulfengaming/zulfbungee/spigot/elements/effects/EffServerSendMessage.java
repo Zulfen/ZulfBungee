@@ -10,11 +10,14 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
+
+import java.util.Optional;
 
 @Name("Proxy Server receive message")
 @Description("When a proxy server receives a message.")
@@ -31,13 +34,13 @@ public class EffServerSendMessage extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
-        String name = connection.getName();
+        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        Optional<ClientServer> getClientServer  = connection.getAsServer();
 
-        if (!name.isEmpty()) {
+        if (getClientServer.isPresent()) {
 
             ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event),
-                    new ClientServer(name, connection.getClientInfo()));
+                    getClientServer.get());
 
             connection.sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
                     false, false, messageOut));
