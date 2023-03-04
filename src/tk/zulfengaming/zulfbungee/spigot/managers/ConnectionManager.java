@@ -23,9 +23,7 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -34,10 +32,10 @@ public class ConnectionManager extends BukkitRunnable {
 
     private final ZulfBungeeSpigot pluginInstance;
     
-    private final List<Connection> allConnections = Collections.synchronizedList(new ArrayList<>());
+    private final CopyOnWriteArrayList<Connection> allConnections = new CopyOnWriteArrayList<>();
 
-    private final Map<SocketAddress, String> addressNames = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, Connection> connectionNames = Collections.synchronizedMap(new HashMap<>());
+    private final ConcurrentHashMap<SocketAddress, String> addressNames = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Connection> connectionNames = new ConcurrentHashMap<>();
 
     private final LinkedHashMap<String, ClientInfo> proxyServers = new LinkedHashMap<>();
 
@@ -71,9 +69,7 @@ public class ConnectionManager extends BukkitRunnable {
 
             try {
 
-                pluginInstance.warning("hi");
                 connectionBarrier.await();
-                pluginInstance.warning("bye");
 
                 while (registered.get() > 0) {
 

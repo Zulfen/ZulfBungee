@@ -20,30 +20,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SocketConnection extends Connection {
 
-    // threads
-
-
-
     private final Socket socket;
 
     private final AtomicBoolean socketConnected = new AtomicBoolean(true);
-
-    private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
-
-    private final HashMap<String, ClientInfo> proxyServers = new HashMap<>();
-
 
     private final DataOutHandler dataOutHandler;
 
     private final DataInHandler dataInHandler;
 
-
-
     private final TaskManager taskManager;
-
-    // misc. info
-
-    private String connectionName = "";
 
     public SocketConnection(ConnectionManager connectionManagerIn, Socket socketIn) throws IOException {
 
@@ -58,6 +43,8 @@ public class SocketConnection extends Connection {
 
     public void run() {
 
+        Thread.currentThread().setName("ClientConnection");
+
         taskManager.newAsyncTask(dataInHandler);
         taskManager.newAsyncTask(dataOutHandler);
 
@@ -67,8 +54,6 @@ public class SocketConnection extends Connection {
 
         sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, zulfServerInfo));
         sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
-
-        Thread.currentThread().setName("ClientConnection");
 
         do {
             try {
@@ -102,7 +87,6 @@ public class SocketConnection extends Connection {
 
     }
 
-
     public void sendDirect(Packet packetIn) {
 
         try {
@@ -123,33 +107,6 @@ public class SocketConnection extends Connection {
 
     }
 
-    public Optional<Packet> send(Packet packetIn) {
-
-        sendDirect(packetIn);
-
-        try {
-
-            if (socketConnected.get()) {
-
-                Optional<Packet> poll = skriptPacketQueue.take();
-
-                if (!poll.isPresent()) {
-                    pluginInstance.logDebug(ChatColor.YELLOW + packetIn.toString());
-                    pluginInstance.logDebug(ChatColor.YELLOW + "was dropped! This could have been caused by the server skipping ticks.");
-                    pluginInstance.logDebug(ChatColor.YELLOW + "Please try adjusting your packet response time in the config.");
-                }
-
-                return poll;
-
-            }
-
-        } catch (InterruptedException e) {
-            pluginInstance.warning(String.format("Packet: %s", packetIn.toString()));
-            pluginInstance.warning("was interrupted being read.");
-        }
-
-        return Optional.empty();
-    }
 
     @Override
     public SocketAddress getAddress() {
@@ -186,18 +143,6 @@ public class SocketConnection extends Connection {
             dataInHandler.cancel();
             dataOutHandler.cancel();
 
-            for (File scriptFile : scriptFiles) {
-
-                boolean deleted = scriptFile.delete();
-
-                if (deleted) {
-                    pluginInstance.logDebug("Deleted script file " + scriptFile.getName() + " successfully.");
-                } else {
-                    pluginInstance.warning("Failed to delete script file " + scriptFile.getName() + ". Does it exist?");
-                }
-
-            }
-
         }
 
     }
@@ -228,14 +173,6 @@ public class SocketConnection extends Connection {
             throw new RuntimeException(e);
         }
 
-    }
-
-    public void setName(String connectionNameIn) {
-        this.connectionName = connectionNameIn;
-    }
-
-    public String getName() {
-        return connectionName;
     }
 
 }

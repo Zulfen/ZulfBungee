@@ -30,8 +30,6 @@ public abstract class Connection extends BukkitRunnable {
         connectionManager.register();
     }
 
-    public abstract Optional<Packet> send(Packet packetIn);
-
     public abstract void sendDirect(Packet packetIn);
 
     public ZulfBungeeSpigot getPluginInstance() {
