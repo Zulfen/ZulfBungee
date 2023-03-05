@@ -1,21 +1,19 @@
 package tk.zulfengaming.zulfbungee.spigot.tasks;
 
 import org.bukkit.scheduler.BukkitRunnable;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
-import java.util.Optional;
-
 public class HeartbeatTask extends BukkitRunnable {
 
-    private final ClientConnection connection;
+    private final ConnectionManager connectionManager;
 
     private volatile long timeBefore = 0;
     private volatile long ping = 0;
 
-    public HeartbeatTask(ClientConnection connectionIn) {
-        this.connection = connectionIn;
+    public HeartbeatTask(ConnectionManager connectionIn) {
+        this.connectionManager = connectionIn;
     }
 
     @Override
@@ -23,12 +21,11 @@ public class HeartbeatTask extends BukkitRunnable {
 
         Thread.currentThread().setName("HeartbeatTask");
 
-        if (connection.isConnected().get()) {
-
+        if (connectionManager.getRegistered() > 0) {
             timeBefore = System.currentTimeMillis();
-            connection.sendDirect(new Packet(PacketTypes.HEARTBEAT, true, true, ping));
-
+            connectionManager.sendDirect(new Packet(PacketTypes.HEARTBEAT, true, true, ping));
         }
+
     }
 
     public long getTimeBefore() {

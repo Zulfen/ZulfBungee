@@ -11,30 +11,30 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
-import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Broadcast;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
 
 import java.util.Optional;
 
-@Name("Send Proxy Player message")
-@Description("Sends proxy player(s) a message.")
-public class EffPlayerSendMessage extends Effect {
+@Name("Broadcast")
+@Description("Broadcasts a message.")
+public class EffProxyBroadcast extends Effect {
 
-    private Expression<ClientPlayer> players;
+    private Expression<ClientServer> servers;
     private Expression<String> message;
 
     static {
-        Skript.registerEffect(EffPlayerSendMessage.class, "[(proxy|bungeecord|bungee|velocity) [player]] (message|send|tell) [(proxy|bungeecord|bungee|velocity) [players]] %-proxyplayers% [the message] %string%");
+        Skript.registerEffect(EffProxyBroadcast.class, "[(proxy|bungeecord|bungee|velocity)] broadcast [the [message]] %string% [(on|to) %-proxyservers%]");
     }
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
-        message = (Expression<String>) expressions[1];
-        players = (Expression<ClientPlayer>) expressions[0];
+        message = (Expression<String>) expressions[0];
+        servers = (Expression<ClientServer>) expressions[1];
         return true;
     }
 
@@ -42,15 +42,17 @@ public class EffPlayerSendMessage extends Effect {
     protected void execute(@NotNull Event event) {
 
         ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
-        Optional<ClientServer> asServer = connection.getAsServer();
 
-        asServer.ifPresent(server -> connection.sendDirect(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
-                false, true, new PlayerMessage(server, players.getArray(event), message.getSingle(event)))));
+        if (servers != null) {
+            connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true, new Broadcast(servers.getArray(event), message.getSingle(event))));
+        } else {
+            connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true,  new Broadcast(new ClientServer[0], message.getSingle(event))));
+        }
 
     }
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "effect message proxy player " + players.toString(event, b) + " with message " + message.toString(event, b);
+        return "effect broadcast " + message.toString(event, b) + " to servers " + servers.toString(event, b);
     }
 }

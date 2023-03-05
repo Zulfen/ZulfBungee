@@ -31,7 +31,7 @@ public class CondIsProxyPlayerOnline extends Condition {
 
         ClientPlayer player = expressionPlayer.getSingle(event);
 
-        Optional<Packet> response = ZulfBungeeSpigot.getPlugin().getConnection()
+        Optional<Packet> response = ZulfBungeeSpigot.getPlugin().getConnectionManager()
                 .send(new Packet(PacketTypes.PLAYER_ONLINE, true, false, player));
 
         if (response.isPresent()) {

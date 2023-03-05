@@ -14,7 +14,8 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
@@ -41,7 +42,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     protected Object[] get(Event event) {
 
         Optional<NetworkVariable> response = ZulfBungeeSpigot.getPlugin()
-                .getConnection().requestNetworkVariable(networkVariable.getName().toString(event));
+                .getConnectionManager().requestNetworkVariable(networkVariable.getName().toString(event));
 
         return response.map(networkVariable -> Stream.of(networkVariable.getValueArray())
                 .filter(Objects::nonNull)
@@ -87,7 +88,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     @Override
     public void change(@NotNull Event e, Object[] delta, Changer.ChangeMode mode) {
 
-        ClientConnection connection = ZulfBungeeSpigot.getPlugin().getConnection();
+        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
 
         ArrayList<Value> valuesOut = new ArrayList<>();
 
@@ -102,7 +103,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         NetworkVariable variableOut = new NetworkVariable(networkVariable.getName().toString(e), mode.name(), valuesOut.toArray(new Value[0]));
 
-        connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
+        connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
 
     }
 

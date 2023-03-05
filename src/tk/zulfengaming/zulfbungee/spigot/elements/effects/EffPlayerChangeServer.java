@@ -25,7 +25,7 @@ public class EffPlayerChangeServer extends Effect {
 
     static {
         Skript.registerEffect(EffPlayerChangeServer.class, "[(proxy|bungeecord|bungee|velocity) [player]] (send|transfer)" +
-                " %-proxyplayers% to [(proxy|bungeecord|bungee|velocity) [server[s]]] %-proxyserver%");
+                " %-proxyplayers% to [(proxy|bungeecord|bungee|velocity)] [server[s]]] %-proxyserver%");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class EffPlayerChangeServer extends Effect {
 
     @Override
     protected void execute(@NotNull Event event) {
-        ZulfBungeeSpigot.getPlugin().getConnection().sendDirect(new Packet(PacketTypes.PLAYER_SWITCH_SERVER,
+        ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.PLAYER_SWITCH_SERVER,
                             true, true, new ClientPlayerDataContainer(server.getSingle(event), players.getArray(event))));
     }
 

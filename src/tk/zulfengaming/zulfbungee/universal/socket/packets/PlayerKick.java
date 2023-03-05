@@ -23,7 +23,7 @@ public class PlayerKick<P> extends PacketHandler<P> {
         String message = (String) container.getData();
 
         for (ClientPlayer player : container.getPlayers()) {
-            Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(player.getUuid());
+            Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(player);
             proxyPlayer.ifPresent(pZulfProxyPlayer -> pZulfProxyPlayer.disconnect(message));
 
         }

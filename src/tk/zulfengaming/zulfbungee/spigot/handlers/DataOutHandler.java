@@ -2,44 +2,31 @@ package tk.zulfengaming.zulfbungee.spigot.handlers;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
 
 public class DataOutHandler extends BukkitRunnable {
 
-    private final ClientConnection connection;
+    private final SocketConnection connection;
 
-    private final LinkedBlockingQueue<Packet> queueOut = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
 
-    private ObjectOutputStream outputStream;
+    private final ObjectOutputStream outputStream;
 
-    private final Phaser socketBarrier;
-
-    private final ClientListenerManager clientListenerManager;
     private final ZulfBungeeSpigot pluginInstance;
 
-    public DataOutHandler(ClientConnection connectionIn) {
-
+    public DataOutHandler(SocketConnection connectionIn) throws IOException {
         this.connection = connectionIn;
-        this.clientListenerManager = connection.getClientListenerManager();
         this.pluginInstance = connection.getPluginInstance();
-
-        this.socketBarrier = clientListenerManager.getSocketBarrier();
-
-        socketBarrier.register();
-
+        this.outputStream = new ObjectOutputStream(connectionIn.getOutputStream());
     }
 
 
@@ -51,29 +38,13 @@ public class DataOutHandler extends BukkitRunnable {
         do {
             try {
 
-                if (clientListenerManager.isSocketConnected().get()) {
+                if (connection.isConnected().get()) {
 
-                    Packet packetOut = queueOut.poll(1, TimeUnit.SECONDS);
+                    Optional<Packet> packetOut = queueOut.take();
 
-                    if (packetOut != null) {
-                        outputStream.writeObject(packetOut);
+                    if (packetOut.isPresent()) {
+                        outputStream.writeObject(packetOut.get());
                         outputStream.flush();
-                    }
-                    
-                } else {
-
-                    pluginInstance.logDebug("Thread has arrived: " + Thread.currentThread().getName());
-
-                    queueOut.clear();
-                    socketBarrier.arriveAndAwaitAdvance();
-
-                    Optional<Socket> socketOptional = clientListenerManager.getSocketHandoff().take();
-
-                    if (clientListenerManager.isTerminated().get()) {
-                        break;
-                    } else if (socketOptional.isPresent()) {
-                        Socket newSocket = socketOptional.get();
-                        outputStream = new ObjectOutputStream(newSocket.getOutputStream());
                     }
 
                 }
@@ -85,7 +56,7 @@ public class DataOutHandler extends BukkitRunnable {
 
                 pluginInstance.warning("Proxy server appears to have disconnected!");
 
-                clientListenerManager.isSocketConnected().compareAndSet(true, false);
+                connection.isConnected().compareAndSet(true, false);
 
             } catch (IOException e) {
 
@@ -96,18 +67,25 @@ public class DataOutHandler extends BukkitRunnable {
 
                 e.printStackTrace();
 
-                clientListenerManager.isSocketConnected().compareAndSet(true, false);
+                connection.isConnected().compareAndSet(true, false);
                 connection.shutdown();
 
             }
 
         } while (connection.isRunning().get());
 
-        socketBarrier.arriveAndDeregister();
-
     }
 
-    public LinkedBlockingQueue<Packet> getDataQueue() {
+    public void disconnect() {
+        connection.isConnected().compareAndSet(true, false);
+        queueOut.offer(Optional.empty());
+    }
+
+    public void shutdown() {
+        disconnect();
+    }
+
+    public LinkedBlockingQueue<Optional<Packet>> getDataQueue() {
         return queueOut;
     }
 }

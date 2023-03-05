@@ -23,7 +23,7 @@ public class PlayerServer<P> extends PacketHandler<P> {
 
         ClientPlayer playerIn = (ClientPlayer) packetIn.getDataSingle();
 
-        Optional<ZulfProxyPlayer<P>> player = getProxy().getPlayer(playerIn.getUuid());
+        Optional<ZulfProxyPlayer<P>> player = getProxy().getPlayer(playerIn);
 
         if (player.isPresent()) {
 

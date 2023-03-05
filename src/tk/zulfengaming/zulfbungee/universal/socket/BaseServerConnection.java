@@ -8,7 +8,6 @@ import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
@@ -49,8 +48,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
     private final TransferQueue<Packet> readQueue = new LinkedTransferQueue<>();
 
-    private ClientInfo clientInfo;
-
     private final AtomicBoolean running = new AtomicBoolean(true);
 
     public BaseServerConnection(MainServer<P> mainServerIn, Socket socketIn) throws IOException {
@@ -68,13 +65,13 @@ public abstract class BaseServerConnection<P> implements Runnable {
         this.dataInHandler = new DataInHandler<>(this);
         this.dataOutHandler = new DataOutHandler<>(this);
 
-        pluginInstance.getTaskManager().newTask(dataInHandler);
-        pluginInstance.getTaskManager().newTask(dataOutHandler);
-
     }
 
 
     public void run() {
+
+        pluginInstance.getTaskManager().newTask(dataInHandler);
+        pluginInstance.getTaskManager().newTask(dataOutHandler);
 
         do {
 
@@ -131,15 +128,14 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
     }
 
-    public void shutdown() {
-        running.compareAndSet(true, false);
-    }
-
     public void end()  {
 
-        if (running.compareAndSet(true, false)) {
+        if (running.compareAndSet(true, false) && dataOutHandler.getQueue().offer(Optional.empty())) {
 
             mainServer.removeServerConnection(this);
+
+            dataInHandler.shutdown();
+            dataOutHandler.shutdown();
 
             try {
 
@@ -173,7 +169,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         try {
 
-            dataOutHandler.getQueue().put(packetIn);
+            dataOutHandler.getQueue().put(Optional.of(packetIn));
 
         } catch (InterruptedException e) {
             pluginInstance.error("That packet failed to send due to thread interruption?:");
@@ -220,14 +216,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
     public MainServer<P> getServer() {
         return mainServer;
-    }
-
-    public ClientInfo getClientInfo() {
-        return clientInfo;
-    }
-
-    public void setClientInfo(ClientInfo clientInfo) {
-        this.clientInfo = clientInfo;
     }
 
     public InputStream getInputStream() {

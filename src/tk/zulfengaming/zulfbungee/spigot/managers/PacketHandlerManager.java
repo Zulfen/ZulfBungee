@@ -1,7 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.managers;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.spigot.socket.packets.*;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
@@ -12,10 +13,12 @@ import java.util.ArrayList;
 
 public class PacketHandlerManager {
 
+    private final TaskManager taskManager;
+
     private final ArrayList<PacketHandler> handlers = new ArrayList<>();
 
-    public PacketHandlerManager(ClientConnection connectionIn) {
-        addHandler(new Heartbeat(connectionIn));
+    public PacketHandlerManager(Connection connectionIn) {
+        this.taskManager = connectionIn.getPluginInstance().getTaskManager();
         addHandler(new ConnectionName(connectionIn));
         addHandler(new ServerSwitchEvent(connectionIn));
         addHandler(new ServerMessageEvent(connectionIn));
@@ -26,6 +29,7 @@ public class PacketHandlerManager {
         addHandler(new ServerKickEvent(connectionIn));
         addHandler(new GlobalScript(connectionIn));
         addHandler(new PlayerSendMessage(connectionIn));
+        addHandler(new ProxyPlayerCommand(connectionIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {
@@ -47,6 +51,19 @@ public class PacketHandlerManager {
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time
     public void handlePacket(Packet packetIn, SocketAddress address) {
-        getHandler(packetIn).handlePacket(packetIn, address);
+
+        PacketHandler handler = getHandler(packetIn);
+
+        if (handler.isAsync()) {
+            taskManager.newAsyncTask(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    handler.handlePacket(packetIn, address);
+                }
+            });
+        } else {
+            handler.handlePacket(packetIn, address);
+        }
+
     }
 }

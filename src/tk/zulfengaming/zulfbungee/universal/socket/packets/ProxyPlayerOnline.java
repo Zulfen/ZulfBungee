@@ -24,7 +24,7 @@ public class ProxyPlayerOnline<P> extends PacketHandler<P> {
 
         if (skriptPlayer != null) {
 
-            Optional<ZulfProxyPlayer<P>> proxiedPlayer = getProxy().getPlayer(skriptPlayer.getUuid());
+            Optional<ZulfProxyPlayer<P>> proxiedPlayer = getProxy().getPlayer(skriptPlayer);
 
             if (proxiedPlayer.isPresent()) {
                 return new Packet(PacketTypes.PLAYER_ONLINE, false, false, true);

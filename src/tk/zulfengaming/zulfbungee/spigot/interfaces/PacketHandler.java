@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.interfaces;
 
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
+import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
@@ -10,7 +10,9 @@ public abstract class PacketHandler {
 
     private final PacketTypes[] types;
 
-    private final ClientConnection connection;
+    private final Connection connection;
+
+    private final boolean isAsync;
 
     public abstract void handlePacket(Packet packetIn, SocketAddress address);
 
@@ -18,15 +20,18 @@ public abstract class PacketHandler {
         return types;
     }
 
-    public ClientConnection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 
-    public PacketHandler(ClientConnection connectionIn, PacketTypes... types){
-
+    public PacketHandler(Connection connectionIn, boolean isAsync, PacketTypes... types){
         this.connection = connectionIn;
         this.types = types;
+        this.isAsync = isAsync;
+    }
 
+    public boolean isAsync() {
+        return isAsync;
     }
 
 }

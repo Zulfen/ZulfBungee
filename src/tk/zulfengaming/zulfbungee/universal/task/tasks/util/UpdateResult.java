@@ -1,13 +1,15 @@
-package tk.zulfengaming.zulfbungee.universal.handlers.util;
+package tk.zulfengaming.zulfbungee.universal.task.tasks.util;
 
 public class UpdateResult {
 
     private final String latestVersion;
     private final String downloadURL;
+    private final VersionStatus versionStatus;
 
-    public UpdateResult(String latestVersionIn, String downloadURLIn) {
+    public UpdateResult(String latestVersionIn, String downloadURLIn, VersionStatus versionStatusIn) {
         this.latestVersion = latestVersionIn;
         this.downloadURL = downloadURLIn;
+        this.versionStatus = versionStatusIn;
     }
 
     public String getLatestVersion() {
@@ -17,4 +19,9 @@ public class UpdateResult {
     public String getDownloadURL() {
         return downloadURL;
     }
+
+    public VersionStatus getVersionStatus() {
+        return versionStatus;
+    }
+
 }

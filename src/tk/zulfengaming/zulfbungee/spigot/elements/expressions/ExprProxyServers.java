@@ -19,7 +19,7 @@ public class ExprProxyServers extends SimpleExpression<ClientServer> {
 
     @Override
     protected ClientServer @NotNull [] get(@NotNull Event event) {
-        return ZulfBungeeSpigot.getPlugin().getConnection().getProxyServers();
+        return ZulfBungeeSpigot.getPlugin().getConnectionManager().getAllProxyServers().toArray(new ClientServer[0]);
     }
 
     @Override

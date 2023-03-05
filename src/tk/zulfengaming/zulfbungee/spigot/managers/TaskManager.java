@@ -13,7 +13,7 @@ public class TaskManager {
 
     private final ZulfBungeeSpigot instance;
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
     private final BukkitScheduler scheduler;
 
     public TaskManager(ZulfBungeeSpigot instanceIn) {
@@ -25,12 +25,16 @@ public class TaskManager {
         scheduler.runTask(pluginIn, taskIn);
     }
 
-    public void newAsyncTask(BukkitRunnable taskIn) {
-        taskIn.runTaskAsynchronously(instance);
+    public BukkitTask newAsyncTask(BukkitRunnable taskIn) {
+        return taskIn.runTaskAsynchronously(instance);
     }
 
     public BukkitTask newAsyncTickTask(BukkitRunnable taskIn, int ticks) {
         return taskIn.runTaskTimerAsynchronously(instance, 0, ticks);
+    }
+
+    public void newMainThreadTask(Callable<Void> callableIn) {
+        scheduler.callSyncMethod(instance, callableIn);
     }
 
     public <T> T submitCallable(Callable<T> callableIn) throws ExecutionException, InterruptedException {

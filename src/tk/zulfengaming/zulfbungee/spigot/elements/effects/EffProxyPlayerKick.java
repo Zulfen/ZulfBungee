@@ -13,7 +13,6 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 @Name("Kick Proxy Player")
@@ -36,7 +35,7 @@ public class EffProxyPlayerKick extends Effect {
 
     @Override
     protected void execute(@NotNull Event event) {
-        ZulfBungeeSpigot.getPlugin().getConnection().sendDirect(new Packet(PacketTypes.KICK_PLAYER,
+        ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.KICK_PLAYER,
                             false, true, new ClientPlayerDataContainer(reason.getSingle(event), players.getArray(event))));
     }
 

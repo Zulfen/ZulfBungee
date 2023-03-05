@@ -9,7 +9,6 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.socket.ClientConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class ExprCurrentProxyServer extends SimpleExpression<ClientServer> {
 
     @Override
     protected ClientServer[] get(@NotNull Event event) {
-        Optional<ClientServer> connection = ZulfBungeeSpigot.getPlugin().getConnection().getAsServer();
+        Optional<ClientServer> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager().getAsServer();
         return connection.map(server -> new ClientServer[]{server}).orElse(null);
     }
 

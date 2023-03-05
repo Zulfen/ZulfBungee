@@ -1,4 +1,4 @@
-package tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript;
+package tk.zulfengaming.zulfbungee.universal.socket.objects.client;
 
 import java.io.Serializable;
 

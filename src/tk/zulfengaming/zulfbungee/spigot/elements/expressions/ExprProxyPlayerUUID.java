@@ -3,9 +3,6 @@ package tk.zulfengaming.zulfbungee.spigot.elements.expressions;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-
-import java.util.UUID;
 
 public class ExprProxyPlayerUUID extends SimplePropertyExpression<ClientPlayer, String> {
 
@@ -27,4 +24,5 @@ public class ExprProxyPlayerUUID extends SimplePropertyExpression<ClientPlayer, 
     public @NotNull Class<? extends String> getReturnType() {
         return String.class;
     }
+
 }

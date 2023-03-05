@@ -6,14 +6,16 @@ import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 import tk.zulfengaming.zulfbungee.velocity.objects.VelocityPlayer;
+
+import java.util.Optional;
 
 public class VelocityEvents extends ProxyEvents<ProxyServer> {
 
@@ -30,22 +32,22 @@ public class VelocityEvents extends ProxyEvents<ProxyServer> {
         if (!serverConnectedEvent.getPreviousServer().isPresent()) {
 
             String serverName = serverConnectedEvent.getServer().getServerInfo().getName();
-            ClientInfo clientInfo = mainServer.getConnectionFromName(serverName).getClientInfo();
+            Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverName);
 
-            serverConnected(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
-                    zulfVelocity));
+            getClientInfo.ifPresent(clientInfo -> serverConnected(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
+                    zulfVelocity)));
+
 
         } else {
 
-            String serverName = serverConnectedEvent.getPreviousServer().get().getServerInfo().getName();
+            Optional<RegisteredServer> previousServer = serverConnectedEvent.getPreviousServer();
+            String serverName = previousServer.get().getServerInfo().getName();
 
-            BaseServerConnection<ProxyServer> connectionFromName = mainServer.getConnectionFromName(serverName);
+            Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverName);
 
-            if (connectionFromName != null) {
-                ClientInfo clientInfo = connectionFromName.getClientInfo();
-                switchServer(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
-                        zulfVelocity));
-            }
+            getClientInfo.ifPresent(clientInfo -> switchServer(new ClientServer(serverName, clientInfo), new VelocityPlayer(serverConnectedEvent.getPlayer(),
+                    zulfVelocity)));
+
 
         }
 
