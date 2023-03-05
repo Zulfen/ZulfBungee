@@ -1,7 +1,5 @@
 package tk.zulfengaming.zulfbungee.universal.socket.objects.client;
 
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
-
 import java.io.Serializable;
 
 public class ClientServer implements Serializable {

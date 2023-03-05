@@ -9,12 +9,11 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.spigot.tasks.ConnectionTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
-import tk.zulfengaming.zulfbungee.spigot.tasks.HeartbeatTask;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
@@ -50,14 +49,9 @@ public class ConnectionManager extends BukkitRunnable {
     private final CyclicBarrier connectionBarrier = new CyclicBarrier(2);
     private final BukkitTask connectionTask;
 
-    private final BukkitTask heartbeatThread;
-    private final HeartbeatTask heartbeatTask;
-
     public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort, int timeOut) {
         this.pluginInstance = pluginIn;
         this.connectionTask = pluginInstance.getTaskManager().newAsyncTask(new ConnectionTask(this, connectionBarrier, clientAddress, clientPort, serverAddress, serverPort, timeOut));
-        this.heartbeatTask = new HeartbeatTask(this);
-        this.heartbeatThread = pluginInstance.getTaskManager().newAsyncTickTask(heartbeatTask, 20);
     }
 
     @Override
@@ -154,6 +148,7 @@ public class ConnectionManager extends BukkitRunnable {
             if (!list.isEmpty()) {
 
                 return list.stream()
+                        .filter(packet -> packet.getDataArray().length > 0)
                         .map(Packet::getDataSingle)
                         .filter(Objects::nonNull)
                         .filter(ClientPlayer.class::isInstance)
@@ -292,8 +287,6 @@ public class ConnectionManager extends BukkitRunnable {
 
         if (running.compareAndSet(true, false)) {
 
-            heartbeatThread.cancel();
-
             for (Connection connection : allConnections) {
                 connection.shutdown();
                 connection.cancel();
@@ -307,10 +300,6 @@ public class ConnectionManager extends BukkitRunnable {
     }
     public AtomicBoolean isRunning() {
         return running;
-    }
-
-    public HeartbeatTask getHeartbeatTask() {
-        return heartbeatTask;
     }
 
     public ZulfBungeeSpigot getPluginInstance() {

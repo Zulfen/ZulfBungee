@@ -17,6 +17,8 @@ import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
@@ -146,20 +148,20 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(UUID uuidIn) {
-        Optional<Player> player = velocity.getPlayer(uuidIn);
-        return player.map(value -> new VelocityPlayer(value, this));
-    }
-
-    @Override
     public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(String nameIn) {
         Optional<Player> player = velocity.getPlayer(nameIn);
         return player.map(value -> new VelocityPlayer(value, this));
     }
 
     @Override
-    public Optional<ZulfProxyServer<ProxyServer>> getServer(String name) {
-        Optional<RegisteredServer> server = velocity.getServer(name);
+    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(ClientPlayer clientPlayerIn) {
+        Optional<Player> player = velocity.getPlayer(clientPlayerIn.getUuid());
+        return player.map(value -> new VelocityPlayer(value, this));
+    }
+
+    @Override
+    public Optional<ZulfProxyServer<ProxyServer>> getServer(ClientServer clientServerIn) {
+        Optional<RegisteredServer> server = velocity.getServer(clientServerIn.getName());
         return server.map(registeredServer -> new VelocityServer(registeredServer, this));
 
     }
@@ -181,6 +183,19 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
         return serversMap;
 
+    }
+
+    @Override
+    public void broadcast(String messageIn) {
+        for (RegisteredServer registeredServer : velocity.getAllServers()) {
+            registeredServer.sendMessage(legacyTextSerialiser.deserialize(messageIn));
+        }
+    }
+
+    @Override
+    public void broadcast(String messageIn, String serverName) {
+        Optional<RegisteredServer> server = velocity.getServer(serverName);
+        server.ifPresent(registeredServer -> registeredServer.sendMessage(legacyTextSerialiser.deserialize(messageIn)));
     }
 
     @Override

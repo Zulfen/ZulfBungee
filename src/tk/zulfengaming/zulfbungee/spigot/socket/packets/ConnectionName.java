@@ -10,7 +10,7 @@ import java.net.SocketAddress;
 public class ConnectionName extends PacketHandler {
 
     public ConnectionName(Connection connectionIn) {
-        super(connectionIn, PacketTypes.CONNECTION_NAME);
+        super(connectionIn, true, PacketTypes.CONNECTION_NAME);
 
     }
 

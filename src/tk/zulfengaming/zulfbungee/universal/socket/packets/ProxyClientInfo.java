@@ -6,7 +6,7 @@ import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 
 import java.net.InetSocketAddress;

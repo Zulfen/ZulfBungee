@@ -2,12 +2,13 @@ package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
+
+import java.util.Optional;
 
 public class ServerSendMessage<P> extends PacketHandler<P> {
 
@@ -24,10 +25,11 @@ public class ServerSendMessage<P> extends PacketHandler<P> {
 
             String serverName = server.getName();
 
-            if (getMainServer().getServerNames().contains(serverName)) {
-                getMainServer().getConnectionFromName(serverName)
-                        .sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT, false, true, message));
-            }
+            Optional<BaseServerConnection<P>> connectionFromName = getMainServer().getConnection(serverName);
+
+            connectionFromName.ifPresent(pBaseServerConnection -> pBaseServerConnection
+                    .sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT, false, true, message)));
+
         }
 
         return null;

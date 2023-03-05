@@ -12,7 +12,7 @@ import java.net.SocketAddress;
 public class ServerMessageEvent extends PacketHandler {
 
     public ServerMessageEvent(Connection connectionIn) {
-        super(connectionIn, PacketTypes.SERVER_SEND_MESSAGE_EVENT);
+        super(connectionIn, true, PacketTypes.SERVER_SEND_MESSAGE_EVENT);
 
     }
 

@@ -3,10 +3,10 @@ package tk.zulfengaming.zulfbungee.universal.socket.packets;
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
+
+import java.util.Optional;
 
 public class PlayerSendMessage<P> extends PacketHandler<P> {
 
@@ -19,11 +19,8 @@ public class PlayerSendMessage<P> extends PacketHandler<P> {
 
         PlayerMessage playerMessage = (PlayerMessage) packetIn.getDataSingle();
 
-        BaseServerConnection<P> connectionFromName = getMainServer().getConnectionFromName(playerMessage.getFromServer().getName());
-
-        if (connectionFromName != null) {
-            connectionFromName.sendDirect(packetIn);
-        }
+        Optional<BaseServerConnection<P>> connectionFromName = getMainServer().getConnection(playerMessage.getFromServer());
+        connectionFromName.ifPresent(pBaseServerConnection -> pBaseServerConnection.sendDirect(packetIn));
 
         return null;
 

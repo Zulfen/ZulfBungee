@@ -29,9 +29,20 @@ public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
 
     @Override
     protected ClientPlayer[] get(@NotNull Event event) {
-        List<ClientPlayer> players = ZulfBungeeSpigot.getPlugin().getConnectionManager()
-                .getPlayers(servers.getArray(event));
+
+        List<ClientPlayer> players;
+
+        if (servers != null) {
+            ClientServer[] getServers = servers.getArray(event);
+            players = ZulfBungeeSpigot.getPlugin().getConnectionManager()
+                    .getPlayers(getServers);
+        } else {
+            players = ZulfBungeeSpigot.getPlugin().getConnectionManager()
+                    .getPlayers(new ClientServer[0]);
+        }
+
         return players.toArray(new ClientPlayer[0]);
+
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.net.SocketAddress;
 public class ServerKickEvent extends PacketHandler {
 
     public ServerKickEvent(Connection connectionIn) {
-        super(connectionIn, PacketTypes.KICK_EVENT);
+        super(connectionIn, true, PacketTypes.KICK_EVENT);
 
     }
 

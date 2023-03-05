@@ -11,7 +11,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.IncomingServerType;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
@@ -266,16 +266,24 @@ public abstract class MainServer<P> implements Runnable {
         return Optional.ofNullable(addressNames.get(addressIn));
     }
 
-    public BaseServerConnection<P> getConnectionFromName(String name) {
-        return activeConnections.get(name);
+    public Optional<BaseServerConnection<P>> getConnection(String name) {
+        return Optional.ofNullable(activeConnections.get(name));
+    }
+
+    public Optional<BaseServerConnection<P>> getConnection(ClientServer serverIn) {
+        return Optional.ofNullable(activeConnections.get(serverIn.getName()));
+    }
+
+    public Optional<BaseServerConnection<P>> getConnection(ZulfProxyPlayer<P> playerIn) {
+        return Optional.ofNullable(activeConnections.get(playerIn.getServer().getName()));
     }
 
     public List<ZulfProxyPlayer<P>> getProxyPlayersFrom(String nameIn) {
 
-        BaseServerConnection<P> serverConnection = getConnectionFromName(nameIn);
+        Optional<BaseServerConnection<P>> serverConnection = getConnection(nameIn);
 
-        if (serverConnection != null) {
-            return serverConnection.getPlayers();
+        if (serverConnection.isPresent()) {
+            return serverConnection.get().getPlayers();
         }
 
         return Collections.emptyList();

@@ -2,20 +2,16 @@ package tk.zulfengaming.zulfbungee.spigot.handlers;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Phaser;
 
 public class DataOutHandler extends BukkitRunnable {
 

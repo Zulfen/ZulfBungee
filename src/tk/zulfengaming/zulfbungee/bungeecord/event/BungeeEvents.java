@@ -13,11 +13,10 @@ import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
 import java.util.Optional;
 

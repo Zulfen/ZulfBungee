@@ -33,17 +33,13 @@ public class PlayerSwitchServer<P> extends PacketHandler<P> {
 
         if (clientServer != null) {
 
-            Optional<ZulfProxyServer<P>> server = getProxy().getServer(clientServer.getName());
+            Optional<ZulfProxyServer<P>> server = getProxy().getServer(clientServer);
 
             if (server.isPresent()) {
 
-                List<UUID> uuids = Stream.of(switchEvent.getPlayers())
-                        .map(ClientPlayer::getUuid)
-                        .collect(Collectors.toList());
+                for (ClientPlayer clientPlayer : switchEvent.getPlayers()) {
 
-                for (UUID uuid : uuids) {
-
-                    Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(uuid);
+                    Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(clientPlayer);
 
                     proxyPlayer.ifPresent(pZulfProxyPlayer -> pZulfProxyPlayer.connect(server.get()));
 

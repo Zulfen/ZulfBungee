@@ -103,7 +103,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         NetworkVariable variableOut = new NetworkVariable(networkVariable.getName().toString(e), mode.name(), valuesOut.toArray(new Value[0]));
 
-        connection.send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
+        connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
 
     }
 

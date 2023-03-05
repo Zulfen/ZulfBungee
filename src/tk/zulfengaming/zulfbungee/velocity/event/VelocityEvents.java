@@ -8,11 +8,10 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 import tk.zulfengaming.zulfbungee.velocity.objects.VelocityPlayer;
 

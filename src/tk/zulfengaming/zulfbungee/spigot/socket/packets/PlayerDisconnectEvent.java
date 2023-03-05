@@ -13,7 +13,7 @@ import java.net.SocketAddress;
 public class PlayerDisconnectEvent extends PacketHandler {
 
     public PlayerDisconnectEvent(Connection connectionIn) {
-        super(connectionIn, PacketTypes.DISCONNECT_EVENT);
+        super(connectionIn, true, PacketTypes.DISCONNECT_EVENT);
 
     }
 

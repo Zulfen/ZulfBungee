@@ -12,7 +12,7 @@ import java.net.SocketAddress;
 public class GlobalScript extends PacketHandler {
 
     public GlobalScript(Connection connectionIn) {
-        super(connectionIn, PacketTypes.GLOBAL_SCRIPT);
+        super(connectionIn, false, PacketTypes.GLOBAL_SCRIPT);
 
     }
 

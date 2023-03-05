@@ -1,21 +1,20 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SocketConnection extends Connection {
@@ -67,11 +66,16 @@ public class SocketConnection extends Connection {
                         Packet packet = packetIn.get();
 
                         if (packet.shouldHandle()) {
+
                             packetHandlerManager.handlePacket(packet, socket.getRemoteSocketAddress());
+
+
                         } else {
                             skriptPacketQueue.put(packetIn);
                         }
 
+                    } else {
+                        skriptPacketQueue.offer(Optional.empty());
                     }
 
                 } else {

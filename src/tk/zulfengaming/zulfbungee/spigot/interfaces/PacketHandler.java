@@ -12,6 +12,8 @@ public abstract class PacketHandler {
 
     private final Connection connection;
 
+    private final boolean isAsync;
+
     public abstract void handlePacket(Packet packetIn, SocketAddress address);
 
     public PacketTypes[] getTypes() {
@@ -22,10 +24,14 @@ public abstract class PacketHandler {
         return connection;
     }
 
-    public PacketHandler(Connection connectionIn, PacketTypes... types){
+    public PacketHandler(Connection connectionIn, boolean isAsync, PacketTypes... types){
         this.connection = connectionIn;
         this.types = types;
+        this.isAsync = isAsync;
+    }
 
+    public boolean isAsync() {
+        return isAsync;
     }
 
 }

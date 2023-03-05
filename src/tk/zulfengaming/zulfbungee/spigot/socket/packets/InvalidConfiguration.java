@@ -11,7 +11,7 @@ import java.net.SocketAddress;
 public class InvalidConfiguration extends PacketHandler {
 
     public InvalidConfiguration(Connection connectionIn) {
-        super(connectionIn, PacketTypes.INVALID_CONFIGURATION);
+        super(connectionIn, false, PacketTypes.INVALID_CONFIGURATION);
 
     }
 

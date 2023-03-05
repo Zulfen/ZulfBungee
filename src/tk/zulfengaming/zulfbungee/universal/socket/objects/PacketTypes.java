@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.universal.socket.objects;
 public enum PacketTypes {
 
     PLAYER_SEND_MESSAGE,
+    BROADCAST_MESSAGE,
     PROXY_PLAYERS,
     PROXY_PLAYER_UUID,
     PLAYER_SERVER,
@@ -21,5 +22,6 @@ public enum PacketTypes {
     KICK_EVENT,
     INVALID_CONFIGURATION, // unused for now
     GLOBAL_SCRIPT,
+    EXECUTE_COMMAND
 
 }

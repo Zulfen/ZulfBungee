@@ -1,6 +1,8 @@
 package tk.zulfengaming.zulfbungee.bungeecord;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -16,6 +18,8 @@ import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
@@ -110,18 +114,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(UUID uuidIn) {
-
-        ProxiedPlayer player = getProxy().getPlayer(uuidIn);
-
-        if (player != null) {
-            return Optional.of(new BungeePlayer<>(player));
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
     public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(String nameIn) {
 
         ProxiedPlayer player = getProxy().getPlayer(nameIn);
@@ -135,9 +127,22 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public Optional<ZulfProxyServer<ProxyServer>> getServer(String name) {
+    public Optional<ZulfProxyPlayer<ProxyServer>> getPlayer(ClientPlayer clientPlayerIn) {
 
-        ServerInfo bungeeServerInfo = getProxy().getServersCopy().get(name);
+        ProxiedPlayer player = getProxy().getPlayer(clientPlayerIn.getUuid());
+
+        if (player != null) {
+            return Optional.of(new BungeePlayer<>(player));
+        }
+
+        return Optional.empty();
+
+    }
+
+    @Override
+    public Optional<ZulfProxyServer<ProxyServer>> getServer(ClientServer clientServerIn) {
+
+        ServerInfo bungeeServerInfo = getProxy().getServers().get(clientServerIn.getName());
 
         if (bungeeServerInfo != null) {
             return Optional.of(new BungeeServer(bungeeServerInfo));
@@ -159,6 +164,26 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         }
 
         return serverMap;
+    }
+
+    @Override
+    public void broadcast(String messageIn) {
+        getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                ('&', messageIn)));
+    }
+
+    @Override
+    public void broadcast(String messageIn, String serverNameIn) {
+
+        ServerInfo serverInfo = getProxy().getServers().get(serverNameIn);
+
+        if (serverInfo != null) {
+            for (ProxiedPlayer player : serverInfo.getPlayers()) {
+                player.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
+                        ('&', messageIn)));
+            }
+        }
+
     }
 
     @Override

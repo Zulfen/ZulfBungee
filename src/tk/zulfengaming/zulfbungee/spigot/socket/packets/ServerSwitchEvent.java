@@ -12,7 +12,7 @@ import java.net.SocketAddress;
 public class ServerSwitchEvent extends PacketHandler {
 
     public ServerSwitchEvent(Connection connectionIn) {
-        super(connectionIn, PacketTypes.SERVER_SWITCH_EVENT);
+        super(connectionIn, true, PacketTypes.SERVER_SWITCH_EVENT);
 
     }
 

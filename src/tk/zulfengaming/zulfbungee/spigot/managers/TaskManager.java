@@ -33,6 +33,10 @@ public class TaskManager {
         return taskIn.runTaskTimerAsynchronously(instance, 0, ticks);
     }
 
+    public void newMainThreadTask(Callable<Void> callableIn) {
+        scheduler.callSyncMethod(instance, callableIn);
+    }
+
     public <T> T submitCallable(Callable<T> callableIn) throws ExecutionException, InterruptedException {
         if (!executorService.isShutdown()) {
             return executorService.submit(callableIn).get();

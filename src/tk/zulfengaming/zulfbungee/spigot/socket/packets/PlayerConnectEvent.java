@@ -13,7 +13,7 @@ import java.net.SocketAddress;
 public class PlayerConnectEvent extends PacketHandler {
 
     public PlayerConnectEvent(Connection connectionIn) {
-        super(connectionIn, PacketTypes.CONNECT_EVENT);
+        super(connectionIn, true, PacketTypes.CONNECT_EVENT);
 
     }
 
