@@ -9,10 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.1 - added servers command, added proxy server command execution syntax, hopefully fixed thread safety issues, the updater and Velocity command quirks.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffProxyServerExecute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffProxyServerExecute.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.1 - bruh" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,13 +128,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Alpha v0.7.4 - fixed autocompletion showing even if the user didn't have the required permission, and MessageUtils fix.">
-      <created>1658935752378</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1658935752378</updated>
     </task>
     <task id="LOCAL-00018" summary="Alpha v0.7.4 - updater message added for user feedback">
       <created>1658935925396</created>
@@ -475,7 +465,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678221453908</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Alpha v0.9.1 - bruh">
+      <created>1678222260903</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1678222260903</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -490,7 +487,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.8.0 - change velocity name" />
     <MESSAGE value="Alpha v0.8.0 - fixed command handler and syntax, also re-arranged how main server and connections are instantiated for future flexibility." />
     <MESSAGE value="Alpha v0.8.0 - fixed command handler and syntax again hehe" />
     <MESSAGE value="Alpha v0.8.0 - more work" />
@@ -515,7 +511,8 @@
     <MESSAGE value="Alpha v0.9.0 - client rewrite finished, starts up (at least)" />
     <MESSAGE value="Alpha v0.9.0 - added proxy player command syntax and fixed events bug with network variables." />
     <MESSAGE value="Alpha v0.9.1 - added servers command, added proxy server command execution syntax, hopefully fixed thread safety issues, the updater and Velocity command quirks." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.1 - added servers command, added proxy server command execution syntax, hopefully fixed thread safety issues, the updater and Velocity command quirks." />
+    <MESSAGE value="Alpha v0.9.1 - bruh" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.1 - bruh" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

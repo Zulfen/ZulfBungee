@@ -25,7 +25,7 @@ public class EffProxyServerExecute extends Effect {
     private Expression<String> command;
 
     static {
-        Skript.registerEffect(EffProxyServerExecute.class, "make [(proxy|bungeecord|bungee|velocity)] server[s]] %-proxyservers% (execute|run) [[the] command] %string%");
+        Skript.registerEffect(EffProxyServerExecute.class, "make [(proxy|bungeecord|bungee|velocity) server[s]] %-proxyservers% (execute|run) [[the] command] %string%");
     }
 
     @Override
