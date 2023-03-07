@@ -13,23 +13,25 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ConsoleExecutableCommand;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerExecutableCommand;
 
-@Name("Proxy Player Execute Command")
-@Description("Makes a proxy player execute a command (on the Spigot server)")
-public class EffProxyPlayerExecute extends Effect {
+@Name("Proxy Server Execute Command")
+@Description("Makes a proxy server execute a command. Keep in mind, it's been executed from the console and has full permissions!")
+public class EffProxyServerExecute extends Effect {
 
-    private Expression<ClientPlayer> players;
+    private Expression<ClientServer> servers;
     private Expression<String> command;
 
     static {
-        Skript.registerEffect(EffProxyPlayerExecute.class, "make [(proxy|bungeecord|bungee|velocity) player[s]] %-proxyplayers% (execute|run) [[the] command] %string%");
+        Skript.registerEffect(EffProxyServerExecute.class, "make [(proxy|bungeecord|bungee|velocity) server[s]] %-proxyservers% (execute|run) [[the] command] %string%");
     }
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         command = (Expression<String>) expressions[1];
-        players = (Expression<ClientPlayer>) expressions[0];
+        servers = (Expression<ClientServer>) expressions[0];
         return true;
     }
 
@@ -47,8 +49,8 @@ public class EffProxyPlayerExecute extends Effect {
                 commandString = commandExpression.split("/")[1];
             }
 
-            ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.PLAYER_EXECUTE_COMMAND, true, true,
-                    new PlayerExecutableCommand(players.getArray(event), commandString)));
+            ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.CONSOLE_EXECUTE_COMMAND, true, true,
+                    new ConsoleExecutableCommand(servers.getArray(event), commandString)));
 
         }
 
@@ -56,6 +58,6 @@ public class EffProxyPlayerExecute extends Effect {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "effect proxy player command " + command.toString(event, b) + " for players " + players.toString(event, b);
+        return "effect console command " + command.toString(event, b) + " for servers " + servers.toString(event, b);
     }
 }

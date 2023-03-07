@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.spigot.managers;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
@@ -11,9 +10,9 @@ import tk.zulfengaming.zulfbungee.spigot.tasks.ConnectionTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
@@ -22,7 +21,10 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -46,24 +48,26 @@ public class ConnectionManager extends BukkitRunnable {
 
     private final LinkedBlockingQueue<LinkedList<Packet>> connectionPackets = new LinkedBlockingQueue<>();
 
-    private final CyclicBarrier connectionBarrier = new CyclicBarrier(2);
-    private final BukkitTask connectionTask;
+    private final Semaphore connectionBarrier = new Semaphore(0);
+    private final ConnectionTask connectionTask;
+
+    private final TaskManager taskManager;
 
     public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort, int timeOut) {
         this.pluginInstance = pluginIn;
-        this.connectionTask = pluginInstance.getTaskManager().newAsyncTask(new ConnectionTask(this, connectionBarrier, clientAddress, clientPort, serverAddress, serverPort, timeOut));
+        this.taskManager = pluginInstance.getTaskManager();
+        this.connectionTask = new ConnectionTask(this, connectionBarrier, clientAddress, clientPort, serverAddress, serverPort, timeOut);
     }
 
     @Override
     public void run() {
 
         Thread.currentThread().setName("ConnectionManager");
+        pluginInstance.warning("Attempting to connect...");
 
         do {
 
             try {
-
-                connectionBarrier.await();
 
                 while (registered.get() > 0) {
 
@@ -87,18 +91,17 @@ public class ConnectionManager extends BukkitRunnable {
 
                     }
 
-                    try {
-                        connectionPackets.put(packetsIn);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
+                    connectionPackets.put(packetsIn);
+
 
                 }
 
-            } catch (BrokenBarrierException ignored) {
-               // barrier only reset on shutdown, can be ignored
+                taskManager.newAsyncTask(connectionTask);
+                connectionBarrier.acquire();
+
+
             } catch (InterruptedException e) {
-                break;
+                Thread.currentThread().interrupt();
             }
 
         } while(running.get());
@@ -292,8 +295,7 @@ public class ConnectionManager extends BukkitRunnable {
                 connection.cancel();
             }
 
-            connectionBarrier.reset();
-            connectionTask.cancel();
+            connectionBarrier.release();
 
         }
 

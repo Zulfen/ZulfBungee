@@ -4,6 +4,7 @@ import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.entity.Player;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -32,11 +33,16 @@ public class PlayerSendMessage extends PacketHandler {
 
             BaseComponent[] components = BungeeConverter.convert(parsed);
 
-            getConnection().getPluginInstance()
-                   .getServer().getPlayer(clientPlayer.getUuid()).spigot().sendMessage(components);
+            Player player = getConnection().getPluginInstance()
+                    .getServer().getPlayer(clientPlayer.getUuid());
+
+            if (player != null) {
+               player.spigot().sendMessage(components);
+            }
 
 
         }
+
 
     }
 }

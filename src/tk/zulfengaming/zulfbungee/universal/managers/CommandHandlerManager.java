@@ -3,6 +3,7 @@ package tk.zulfengaming.zulfbungee.universal.managers;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.CheckUpdate;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.Debug;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.Servers;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptLoad;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptReload;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptUnload;
@@ -29,6 +30,7 @@ public class CommandHandlerManager<P> {
         addHandler(new ScriptUnload<>(mainServerIn));
         addHandler(new CheckUpdate<>(mainServerIn));
         addHandler(new Debug<>(mainServerIn));
+        addHandler(new Servers<>(mainServerIn));
     }
 
     public MainServer<P> getMainServer() {

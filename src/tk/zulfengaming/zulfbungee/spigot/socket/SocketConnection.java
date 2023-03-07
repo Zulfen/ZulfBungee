@@ -42,7 +42,7 @@ public class SocketConnection extends Connection {
 
     public void run() {
 
-        Thread.currentThread().setName("ClientConnection");
+        Thread.currentThread().setName(String.format("ClientConnection@%s", socket.getRemoteSocketAddress()));
 
         taskManager.newAsyncTask(dataInHandler);
         taskManager.newAsyncTask(dataOutHandler);
@@ -84,7 +84,14 @@ public class SocketConnection extends Connection {
                 }
 
             } catch (InterruptedException e) {
-                break;
+                Thread.currentThread().interrupt();
+
+            } catch (Exception e) {
+                pluginInstance.error("An unhandled exception occurred in a connection! Please report this to the plugin developers:");
+                pluginInstance.error("");
+                e.printStackTrace();
+                pluginInstance.error("");
+                shutdown();
             }
 
         } while (running.get());
@@ -107,6 +114,7 @@ public class SocketConnection extends Connection {
         } catch (InterruptedException e) {
             pluginInstance.error("That packet failed to send due to thread interruption?:");
             pluginInstance.error(packetIn.toString());
+            Thread.currentThread().interrupt();
         }
 
     }
@@ -123,10 +131,6 @@ public class SocketConnection extends Connection {
 
     public AtomicBoolean isConnected() {
         return socketConnected;
-    }
-
-    public int getTimeout() {
-        return 2000;
     }
 
     public void end() {

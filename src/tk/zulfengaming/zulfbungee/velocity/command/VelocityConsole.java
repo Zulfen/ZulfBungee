@@ -24,6 +24,7 @@ public class VelocityConsole implements ProxyCommandSender<ProxyServer> {
 
     @Override
     public void sendMessage(String message) {
-        velocity.getPlatform().sendMessage(velocity.getLegacyTextSerialiser().deserialize(message));
+        velocity.getPlatform().getConsoleCommandSource()
+                .sendMessage(velocity.getLegacyTextSerialiser().deserialize(message));
     }
 }

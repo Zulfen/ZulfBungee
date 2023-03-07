@@ -47,7 +47,7 @@ import java.util.UUID;
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
-    protected static final String VERSION = "0.9.0";
+    protected static final String VERSION = "0.9.1";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
@@ -220,7 +220,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
     @Override
     public String platformString() {
-        return String.format("Velocity (%s)", velocity.getVersion().getVersion());
+        return String.format("Velocity &a(%s)", velocity.getVersion().getVersion());
     }
 
     @Override
