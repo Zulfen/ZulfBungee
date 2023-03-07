@@ -22,6 +22,7 @@ public enum PacketTypes {
     KICK_EVENT,
     INVALID_CONFIGURATION, // unused for now
     GLOBAL_SCRIPT,
-    EXECUTE_COMMAND
+    PLAYER_EXECUTE_COMMAND,
+    CONSOLE_EXECUTE_COMMAND
 
 }

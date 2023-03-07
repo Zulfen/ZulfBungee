@@ -266,6 +266,7 @@ public abstract class MainServer<P> implements Runnable {
         return Optional.ofNullable(addressNames.get(addressIn));
     }
 
+
     public Optional<BaseServerConnection<P>> getConnection(String name) {
         return Optional.ofNullable(activeConnections.get(name));
     }

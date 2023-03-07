@@ -33,7 +33,7 @@ public class DataInHandler extends BukkitRunnable {
     @Override
     public void run() {
 
-        Thread.currentThread().setName("DataIn");
+        Thread.currentThread().setName(String.format("DataIn@%s", connection.getAddress()));
 
         do {
             try {
@@ -56,7 +56,7 @@ public class DataInHandler extends BukkitRunnable {
 
                 pluginInstance.warning("Proxy server appears to have disconnected!");
 
-                connection.isConnected().compareAndSet(true, false);
+                connection.shutdown();
 
             } catch (IOException e) {
 
@@ -66,8 +66,6 @@ public class DataInHandler extends BukkitRunnable {
                 pluginInstance.error("");
 
                 e.printStackTrace();
-
-                connection.isConnected().compareAndSet(true, false);
 
                 connection.shutdown();
 
@@ -84,7 +82,6 @@ public class DataInHandler extends BukkitRunnable {
     }
 
     public void disconnect() {
-        connection.isConnected().compareAndSet(true, false);
         queueIn.offer(Optional.empty());
     }
 

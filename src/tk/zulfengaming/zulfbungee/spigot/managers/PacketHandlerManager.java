@@ -30,6 +30,7 @@ public class PacketHandlerManager {
         addHandler(new GlobalScript(connectionIn));
         addHandler(new PlayerSendMessage(connectionIn));
         addHandler(new ProxyPlayerCommand(connectionIn));
+        addHandler(new ConsoleCommand(connectionIn));
     }
 
     public void addHandler(PacketHandler handlerIn) {

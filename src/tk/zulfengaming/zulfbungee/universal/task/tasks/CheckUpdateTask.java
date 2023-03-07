@@ -90,15 +90,15 @@ public class CheckUpdateTask<P> implements Supplier<Optional<UpdateResult>> {
                             senderIn.sendMessage(Constants.MESSAGE_PREFIX + "You appear to be using a development/testing version that hasn't been released yet.");
                             senderIn.sendMessage(Constants.MESSAGE_PREFIX + "Please report bugs directly to the developers!");
 
-                        } else if (notifySuccess) {
-
-                            senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("ZulfBungee is up to date! &e(%s)",
-                                    pluginInstance.getVersion())));
                         }
 
+                    } else if (notifySuccess) {
+                        senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("ZulfBungee is up to date! &e(%s)",
+                                    pluginInstance.getVersion())));
                     }
 
                 });
+
     }
 
 }
