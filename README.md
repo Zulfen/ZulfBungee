@@ -31,4 +31,5 @@ Please keep in mind that this plugin is currently in Alpha testing, so serious b
 
 - `zulfen.bungee.admin.update.check` /zulfbungee update check
 - `zulfen.bungee.admin.debug` /zulfbungee debug
-- `zulfen.bungee.admin.ping` /zulfbungee ping
+- `zulfen.bungee.admin.servers` /zulfbungee servers
+
