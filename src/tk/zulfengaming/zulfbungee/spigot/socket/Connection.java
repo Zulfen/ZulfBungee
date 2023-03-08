@@ -5,6 +5,7 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
 import java.net.SocketAddress;
 import java.util.Optional;
@@ -23,10 +24,13 @@ public abstract class Connection extends BukkitRunnable {
 
     protected final PacketHandlerManager packetHandlerManager;
 
+    protected final ClientInfo clientInfo;
+
     public Connection(ConnectionManager connectionManagerIn) {
         this.connectionManager = connectionManagerIn;
         this.pluginInstance = connectionManagerIn.getPluginInstance();
         this.packetHandlerManager = new PacketHandlerManager(this);
+        this.clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
         connectionManager.register();
     }
 
@@ -45,6 +49,10 @@ public abstract class Connection extends BukkitRunnable {
     }
 
     public abstract SocketAddress getAddress();
+
+    public ClientInfo getClientInfo() {
+        return clientInfo;
+    }
 
     public abstract void end();
 

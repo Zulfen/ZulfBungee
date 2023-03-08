@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.socket.objects.client;
 
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ClientPlayer implements Serializable {
@@ -22,8 +23,8 @@ public class ClientPlayer implements Serializable {
         this.server = serverIn;
     }
 
-    public ClientServer getServer() {
-        return server;
+    public Optional<ClientServer> getServer() {
+        return Optional.ofNullable(server);
     }
 
     public String getName() {

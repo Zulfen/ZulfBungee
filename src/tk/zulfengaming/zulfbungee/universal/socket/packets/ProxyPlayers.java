@@ -39,7 +39,7 @@ public class ProxyPlayers<P> extends PacketHandler<P> {
 
                 List<ZulfProxyPlayer<P>> players = getMainServer().getProxyPlayersFrom(server.getName());
                 for (ZulfProxyPlayer<P> player : players) {
-                    playersOut.add(new ClientPlayer(player.getName(), player.getUuid()));
+                    playersOut.add(new ClientPlayer(player.getName(), player.getUuid(), server));
                 }
 
             }

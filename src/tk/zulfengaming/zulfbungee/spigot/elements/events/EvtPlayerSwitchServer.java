@@ -14,6 +14,8 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
+import java.util.Optional;
+
 @Name("Proxy Player Switch Server")
 @Description("When a proxy player switches to another server.")
 public class EvtPlayerSwitchServer extends SkriptEvent {
@@ -32,7 +34,8 @@ public class EvtPlayerSwitchServer extends SkriptEvent {
         EventValues.registerEventValue(EventPlayerSwitchServer.class, ClientServer.class, new Getter<ClientServer, EventPlayerSwitchServer>() {
             @Override
             public ClientServer get(EventPlayerSwitchServer eventPlayerSwitchServer) {
-                return eventPlayerSwitchServer.getPlayer().getServer();
+                Optional<ClientServer> getServer = eventPlayerSwitchServer.getPlayer().getServer();
+                return getServer.orElse(null);
             }
         }, 0);
 
@@ -44,12 +47,12 @@ public class EvtPlayerSwitchServer extends SkriptEvent {
     }
 
     @Override
-    public boolean check(Event event) {
+    public boolean check(@NotNull Event event) {
         return true;
     }
 
     @Override
-    public String toString(Event event, boolean b) {
+    public @NotNull String toString(Event event, boolean b) {
         return "event player switch server";
     }
 }

@@ -213,6 +213,8 @@ public abstract class MainServer<P> implements Runnable {
                     new ClientServer(name, clientInfo), IncomingServerType.REMOVE
             }));
 
+        } else {
+            pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s", connectionIn.getAddress()));
         }
 
 

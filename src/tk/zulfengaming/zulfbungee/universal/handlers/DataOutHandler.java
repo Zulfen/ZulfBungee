@@ -58,22 +58,18 @@ public class DataOutHandler<P> implements Runnable {
 
     public void disconnect() {
 
-        if (connection.isSocketConnected().compareAndSet(true, false)) {
-            connection.end();
+        try {
+            queueOut.put(Optional.empty());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+
+        connection.end();
 
     }
 
     public void shutdown() {
-
-        try {
-            queueOut.put(Optional.empty());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         disconnect();
-
     }
 
     public BlockingQueue<Optional<Packet>> getQueue() {

@@ -14,6 +14,8 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerConnect;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
+import java.util.Optional;
+
 @Name("Proxy Player Connect")
 @Description("When a proxy player joins the proxy.")
 public class EvtPlayerProxyConnect extends SkriptEvent {
@@ -32,7 +34,8 @@ public class EvtPlayerProxyConnect extends SkriptEvent {
         EventValues.registerEventValue(EventPlayerServerConnect.class, ClientServer.class, new Getter<ClientServer, EventPlayerServerConnect>() {
             @Override
             public ClientServer get(EventPlayerServerConnect eventPlayerServerConnect) {
-                return eventPlayerServerConnect.getPlayer().getServer();
+                Optional<ClientServer> getServer = eventPlayerServerConnect.getPlayer().getServer();
+                return getServer.orElse(null);
             }
         }, 0);
     }
@@ -43,12 +46,12 @@ public class EvtPlayerProxyConnect extends SkriptEvent {
     }
 
     @Override
-    public boolean check(Event event) {
+    public boolean check(@NotNull Event event) {
         return true;
     }
 
     @Override
-    public String toString(Event event, boolean b) {
-        return null;
+    public @NotNull String toString(Event event, boolean b) {
+        return "event proxy player connect";
     }
 }

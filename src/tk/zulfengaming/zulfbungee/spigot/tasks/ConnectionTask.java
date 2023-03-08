@@ -46,9 +46,17 @@ public class ConnectionTask implements Runnable {
 
                 if (newSocket.isPresent()) {
 
-                    SocketConnection mainConnection = new SocketConnection(connectionManager, newSocket.get());
-                    connectionManager.addInactiveConnection(mainConnection);
-                    taskManager.newAsyncTask(mainConnection);
+                    Socket socket = newSocket.get();
+
+                    if (!connectionManager.isBlocked(socket.getRemoteSocketAddress())) {
+
+                        SocketConnection mainConnection = new SocketConnection(connectionManager, socket);
+                        connectionManager.addInactiveConnection(mainConnection);
+                        taskManager.newAsyncTask(mainConnection);
+
+                    } else {
+                        socket.close();
+                    }
 
                 }
 

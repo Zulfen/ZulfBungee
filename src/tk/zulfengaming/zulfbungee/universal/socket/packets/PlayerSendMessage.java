@@ -4,7 +4,9 @@ import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.Optional;
 
@@ -19,8 +21,18 @@ public class PlayerSendMessage<P> extends PacketHandler<P> {
 
         PlayerMessage playerMessage = (PlayerMessage) packetIn.getDataSingle();
 
-        Optional<BaseServerConnection<P>> connectionFromName = getMainServer().getConnection(playerMessage.getFromServer());
-        connectionFromName.ifPresent(pBaseServerConnection -> pBaseServerConnection.sendDirect(packetIn));
+        for (ClientPlayer clientPlayer : playerMessage.getToPlayers()) {
+
+            Optional<ZulfProxyPlayer<P>> getProxyPlayer = getProxy().getPlayer(clientPlayer);
+
+            getProxyPlayer.ifPresent(pZulfProxyPlayer -> {
+                Optional<BaseServerConnection<P>> getConnection = getMainServer().getConnection(pZulfProxyPlayer);
+                getConnection.ifPresent(pBaseServerConnection -> pBaseServerConnection.sendDirect(packetIn));
+            });
+
+
+        }
+
 
         return null;
 

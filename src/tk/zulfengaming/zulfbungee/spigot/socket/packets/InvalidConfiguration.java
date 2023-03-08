@@ -24,7 +24,7 @@ public class InvalidConfiguration extends PacketHandler {
         getConnection().getPluginInstance().warning("This client will not try and reconnect until this issue is fixed.");
         getConnection().getPluginInstance().warning("Check the proxy's console for more information.");
 
-        getConnection().shutdown();
+        getConnection().getConnectionManager().blockConnection(getConnection());
 
     }
 }
