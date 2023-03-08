@@ -34,6 +34,7 @@ public class ConnectionManager extends BukkitRunnable {
     private final ZulfBungeeSpigot pluginInstance;
     
     private final CopyOnWriteArrayList<Connection> allConnections = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<SocketAddress> blockedConnections = new CopyOnWriteArrayList<>();
 
     private final ConcurrentHashMap<SocketAddress, String> addressNames = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Connection> connectionNames = new ConcurrentHashMap<>();
@@ -272,6 +273,15 @@ public class ConnectionManager extends BukkitRunnable {
                     }
                 });
 
+    }
+
+    public void blockConnection(Connection connectionIn) {
+        blockedConnections.add(connectionIn.getAddress());
+        connectionIn.shutdown();
+    }
+
+    public boolean isBlocked(SocketAddress addressIn) {
+        return blockedConnections.contains(addressIn);
     }
 
     public void register() {

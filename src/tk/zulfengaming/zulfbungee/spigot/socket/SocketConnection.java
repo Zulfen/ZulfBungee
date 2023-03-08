@@ -1,6 +1,5 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
-import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
@@ -49,9 +48,7 @@ public class SocketConnection extends Connection {
 
         pluginInstance.logInfo(org.bukkit.ChatColor.GREEN + "Connection established with proxy!");
 
-        ClientInfo zulfServerInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
-
-        sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, zulfServerInfo));
+        sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
         sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
 
         do {

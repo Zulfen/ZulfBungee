@@ -60,9 +60,13 @@ public class DataInHandler<P> implements Runnable {
 
     public void disconnect() {
 
-        if (connection.isSocketConnected().compareAndSet(true, false) && queueIn.offer(Optional.empty())) {
-            connection.end();
+        try {
+            queueIn.put(Optional.empty());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+
+        connection.end();
 
     }
 
