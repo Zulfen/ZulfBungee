@@ -24,8 +24,8 @@ public class EffPlayerChangeServer extends Effect {
     private Expression<ClientServer> server;
 
     static {
-        Skript.registerEffect(EffPlayerChangeServer.class, "[(proxy|bungeecord|bungee|velocity) [player]] (send|transfer)" +
-                " %-proxyplayers% to [(proxy|bungeecord|bungee|velocity) [server[s]]] %-proxyserver%");
+        Skript.registerEffect(EffPlayerChangeServer.class, "[(proxy|bungeecord|bungee|velocity)] (send|transfer)" +
+                " [(proxy|bungeecord|bungee|velocity) [player[s]]] %-proxyplayers% to [(proxy|bungeecord|bungee|velocity) [server[s]]] %-proxyserver%");
     }
 
     @Override
