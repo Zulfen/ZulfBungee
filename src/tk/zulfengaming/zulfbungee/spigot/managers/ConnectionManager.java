@@ -78,7 +78,7 @@ public class ConnectionManager extends BukkitRunnable {
 
                         try {
 
-                            Optional<Packet> getPacket = connection.getSkriptPacketQueue().take();
+                            Optional<Packet> getPacket = connection.getSkriptPacketQueue().takeLast();
 
                             if (getPacket.isPresent()) {
                                 packetsIn.add(getPacket.get());

@@ -10,7 +10,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Connection extends BukkitRunnable {
@@ -19,7 +19,7 @@ public abstract class Connection extends BukkitRunnable {
 
     protected final AtomicBoolean running = new AtomicBoolean(true);
 
-    protected final LinkedBlockingQueue<Optional<Packet>> skriptPacketQueue = new LinkedBlockingQueue<>();
+    protected final LinkedBlockingDeque<Optional<Packet>> skriptPacketQueue = new LinkedBlockingDeque<>();
 
     protected final ZulfBungeeSpigot pluginInstance;
 
@@ -41,7 +41,7 @@ public abstract class Connection extends BukkitRunnable {
         return pluginInstance;
     }
 
-    public LinkedBlockingQueue<Optional<Packet>> getSkriptPacketQueue() {
+    public LinkedBlockingDeque<Optional<Packet>> getSkriptPacketQueue() {
         return skriptPacketQueue;
     }
 

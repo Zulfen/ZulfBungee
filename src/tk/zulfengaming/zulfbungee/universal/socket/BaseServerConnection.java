@@ -82,7 +82,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
                 if (socketConnected.get()) {
 
-                    Optional<Packet> packetIn = dataInHandler.getQueue().take();
+                    Optional<Packet> packetIn = dataInHandler.getQueue().takeLast();
 
                     if (packetIn.isPresent()) {
 
@@ -174,7 +174,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         try {
 
-            dataOutHandler.getQueue().put(Optional.of(packetIn));
+            dataOutHandler.getQueue().putLast(Optional.of(packetIn));
 
         } catch (InterruptedException e) {
             pluginInstance.error("That packet failed to send due to thread interruption?:");
