@@ -138,7 +138,10 @@ public abstract class MainServer<P> implements Runnable {
 
 
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                if (pluginInstance.isDebug()) {
+                    pluginInstance.warning("There was an error trying to establish a connection! Please consider restarting this proxy.");
+                    e.printStackTrace();
+                }
             }
 
         } while (running.get());

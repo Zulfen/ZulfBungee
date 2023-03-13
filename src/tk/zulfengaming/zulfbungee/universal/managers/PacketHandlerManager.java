@@ -20,7 +20,6 @@ public class PacketHandlerManager<P> {
         this.mainServer = mainServerIn;
 
         handlers.put(PacketTypes.GLOBAL_SCRIPT, new GlobalScript<>(this));
-        handlers.put(PacketTypes.HEARTBEAT, new Heartbeat<>(this));
         handlers.put(PacketTypes.NETWORK_VARIABLE_GET, new NetworkVariableGet<>(this));
         handlers.put(PacketTypes.NETWORK_VARIABLE_MODIFY, new NetworkVariableModify<>(this));
         handlers.put(PacketTypes.PLAYER_SEND_MESSAGE, new PlayerSendMessage<>(this));

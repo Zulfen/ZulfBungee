@@ -25,7 +25,7 @@ public class BungeeServerConnection extends BaseServerConnection<ProxyServer> {
 
         if (nameFromAddress.isPresent()) {
 
-            ServerInfo serverInfo = pluginInstance.getPlatform().getServersCopy().get(nameFromAddress.get());
+            ServerInfo serverInfo = pluginInstance.getPlatform().getServers().get(nameFromAddress.get());
 
             return serverInfo.getPlayers().stream()
                     .filter(Objects::nonNull)

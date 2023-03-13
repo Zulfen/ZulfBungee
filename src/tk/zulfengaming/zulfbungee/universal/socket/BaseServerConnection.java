@@ -13,8 +13,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptI
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.file.Files;
@@ -35,7 +33,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
     private final Socket socket;
 
     private final AtomicBoolean socketConnected = new AtomicBoolean(true);
-    private long ping = 0;
 
     private final SocketAddress address;
 
@@ -62,8 +59,14 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         this.address = socket.getRemoteSocketAddress();
 
-        this.dataOutHandler = new DataOutHandler<>(this, socketIn);
-        this.dataInHandler = new DataInHandler<>(this, socketIn);
+        try {
+            this.dataOutHandler = new DataOutHandler<>(this, socketIn);
+            this.dataInHandler = new DataInHandler<>(this, socketIn);
+        } catch (IOException e) {
+            end();
+            throw new IOException("Could not establish a connection properly!");
+        }
+
 
     }
 
@@ -220,34 +223,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
         return mainServer;
     }
 
-    public InputStream getInputStream() {
-
-        try {
-            if (socketConnected.get()) {
-                return socket.getInputStream();
-            } else {
-                throw new RuntimeException("Socket is not connected!");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public OutputStream getOutputStream() {
-
-        try {
-            if (socketConnected.get()) {
-                return socket.getOutputStream();
-            } else {
-                throw new RuntimeException("Socket is not connected!");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     public abstract List<ZulfProxyPlayer<P>> getPlayers();
 
     public ZulfBungeeProxy<P> getPluginInstance() {
@@ -258,13 +233,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
         return address;
     }
 
-    public long getPing() {
-        return ping;
-    }
-
-    public void setPing(long ping) {
-        this.ping = ping;
-    }
 
     public AtomicBoolean isSocketConnected() {
         return socketConnected;
