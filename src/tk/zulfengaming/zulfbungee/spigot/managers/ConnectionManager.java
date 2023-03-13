@@ -18,7 +18,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.*;
@@ -124,7 +123,9 @@ public class ConnectionManager extends BukkitRunnable {
             LinkedList<Packet> list = connectionPackets.take();
 
             if (!list.isEmpty()) {
-                return Optional.of(list.getFirst());
+                return list.stream()
+                        .filter(packet -> packet.getType() == packetIn.getType())
+                        .findFirst();
             }
 
         } catch (InterruptedException e) {
@@ -148,16 +149,14 @@ public class ConnectionManager extends BukkitRunnable {
 
         try {
 
-            LinkedList<Packet> list = connectionPackets.take();
+            LinkedList<Packet> packets = connectionPackets.take();
 
-            if (!list.isEmpty()) {
+            if (!packets.isEmpty()) {
 
-                return list.stream()
-                        .filter(packet -> packet.getDataArray().length > 0)
-                        .map(Packet::getDataSingle)
-                        .filter(Objects::nonNull)
-                        .filter(ClientPlayer.class::isInstance)
-                        .map(ClientPlayer.class::cast)
+                return packets.stream()
+                        .flatMap(packet -> Arrays.stream(packet.getDataArray()))
+                        .filter(data -> data instanceof ClientPlayer)
+                        .map(data -> (ClientPlayer) data)
                         .collect(Collectors.toList());
 
             }
