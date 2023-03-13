@@ -9,9 +9,9 @@ import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.IncomingServerType;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
@@ -39,7 +39,6 @@ public abstract class MainServer<P> implements Runnable {
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final AtomicBoolean serverSocketAvailable = new AtomicBoolean(false);
 
-    // hey, keep that to yourself!
     private ServerSocket serverSocket;
     private Socket socket;
 
@@ -88,7 +87,6 @@ public abstract class MainServer<P> implements Runnable {
 
     public void run() {
 
-
         do {
             try {
 
@@ -121,18 +119,26 @@ public abstract class MainServer<P> implements Runnable {
 
                 }
 
-            } catch (SocketException | EOFException ignored) {
+            } catch (SocketException | EOFException e) {
+
+                if (pluginInstance.isDebug() && e instanceof EOFException) {
+                    pluginInstance.warning("An uncommon error just occurred! This can be normal, but please report this to the developers!");
+                    e.printStackTrace();
+                }
+
+                try {
+
+                    if (socket != null) {
+                        socket.close();
+                    }
+
+                } catch (IOException ioException) {
+                    throw new RuntimeException(ioException);
+                }
+
 
             } catch (IOException e) {
-                pluginInstance.error("An error occurred while running the server!");
-                pluginInstance.error("Please report this error on GitHub or directly to the devs:");
-                pluginInstance.error("https://github.com/Zulfen/ZulfBungee/issues");
-                pluginInstance.error("");
-
-                e.printStackTrace();
-
-                break;
-
+                throw new RuntimeException(e);
             }
 
         } while (running.get());
@@ -141,12 +147,9 @@ public abstract class MainServer<P> implements Runnable {
     protected abstract BaseServerConnection<P> newConnection(Socket socketIn) throws IOException;
 
     private void acceptConnection(Socket socketIn) throws IOException {
-
         BaseServerConnection<P> connection = newConnection(socketIn);
-
         taskManager.newTask(connection);
         socketConnections.add(connection);
-
     }
 
     public void sendDirectToAllAsync(Packet packetIn) {
@@ -224,11 +227,12 @@ public abstract class MainServer<P> implements Runnable {
 
         if (running.compareAndSet(true, false)) {
 
-            if (socket != null) {
-                socket.close();
-            }
             if (serverSocket != null) {
                 serverSocket.close();
+            }
+
+            if (socket != null) {
+                socket.close();
             }
 
             for (BaseServerConnection<P> connection : socketConnections) {

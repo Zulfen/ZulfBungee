@@ -38,6 +38,7 @@ public interface ZulfBungeeProxy<P> {
     void broadcast(String messageIn, String serverNameIn);
 
     String getVersion();
+
     // make this a path tbh.
     File getPluginFolder();
 
@@ -48,5 +49,7 @@ public interface ZulfBungeeProxy<P> {
     String platformString();
 
     CheckUpdateTask<P> getUpdater();
+
+    boolean isDebug();
 
 }

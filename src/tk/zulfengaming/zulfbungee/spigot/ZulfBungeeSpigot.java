@@ -106,6 +106,10 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         return connectionManager;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
     // static reference for Skript only
     public static ZulfBungeeSpigot getPlugin() {
         return plugin;

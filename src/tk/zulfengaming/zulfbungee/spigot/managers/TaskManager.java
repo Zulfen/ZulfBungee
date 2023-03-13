@@ -3,10 +3,12 @@ package tk.zulfengaming.zulfbungee.spigot.managers;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public class TaskManager {
@@ -35,20 +37,8 @@ public class TaskManager {
         }
     }
 
-    public BukkitTask newAsyncTickTask(BukkitRunnable taskIn, int ticks) {
-        return taskIn.runTaskTimerAsynchronously(instance, 0, ticks);
-    }
-
     public void newMainThreadTask(Callable<Void> callableIn) {
         scheduler.callSyncMethod(instance, callableIn);
-    }
-
-    public <T> T submitCallable(Callable<T> callableIn) throws ExecutionException, InterruptedException {
-        if (!executorService.isShutdown()) {
-            return executorService.submit(callableIn).get();
-        } else {
-            throw new RejectedExecutionException("Shutting down - callable cannot be submitted.");
-        }
     }
 
     public <T> CompletableFuture<T> submitSupplier(Supplier<T> supplierIn) {

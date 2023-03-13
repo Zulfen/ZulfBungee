@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
@@ -19,9 +20,9 @@ public class DataOutHandler<P> implements Runnable {
 
     private final ObjectOutputStream outputStream;
 
-    public DataOutHandler(BaseServerConnection<P> connectionIn) throws IOException {
+    public DataOutHandler(BaseServerConnection<P> connectionIn, Socket socketIn) throws IOException {
         this.connection = connectionIn;
-        this.outputStream = new ObjectOutputStream(connectionIn.getOutputStream());
+        this.outputStream = new ObjectOutputStream(socketIn.getOutputStream());
     }
 
     @Override
@@ -69,7 +70,20 @@ public class DataOutHandler<P> implements Runnable {
     }
 
     public void shutdown() {
-        disconnect();
+
+        try {
+            queueOut.put(Optional.empty());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error closing output stream", e);
+        }
+
+
     }
 
     public BlockingQueue<Optional<Packet>> getQueue() {

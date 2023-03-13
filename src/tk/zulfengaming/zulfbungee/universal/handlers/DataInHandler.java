@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
@@ -22,10 +23,9 @@ public class DataInHandler<P> implements Runnable {
     private final ObjectInputStream inputStream;
 
 
-    public DataInHandler(BaseServerConnection<P> connectionIn) throws IOException {
+    public DataInHandler(BaseServerConnection<P> connectionIn, Socket socketIn) throws IOException {
         this.connection = connectionIn;
-        this.inputStream = new ObjectInputStream(connectionIn.getInputStream());
-
+        this.inputStream = new ObjectInputStream(socketIn.getInputStream());
     }
 
     @Override
@@ -46,6 +46,7 @@ public class DataInHandler<P> implements Runnable {
                 }
 
             } catch (InterruptedException | SocketException | EOFException e) {
+
                 disconnect();
 
             } catch (IOException | ClassNotFoundException e) {
@@ -71,7 +72,11 @@ public class DataInHandler<P> implements Runnable {
     }
 
     public void shutdown() {
-        disconnect();
+        try {
+            queueIn.put(Optional.empty());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public BlockingQueue<Optional<Packet>> getQueue() {
