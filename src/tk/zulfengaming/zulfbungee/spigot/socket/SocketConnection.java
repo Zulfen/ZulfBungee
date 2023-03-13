@@ -60,7 +60,7 @@ public class SocketConnection extends Connection {
 
                 if (socketConnected.get()) {
 
-                    Optional<Packet> packetIn = dataInHandler.getDataQueue().take();
+                    Optional<Packet> packetIn = dataInHandler.getDataQueue().takeLast();
 
                     if (packetIn.isPresent()) {
 
@@ -71,15 +71,15 @@ public class SocketConnection extends Connection {
                             packetHandlerManager.handlePacket(packet, socket.getRemoteSocketAddress());
 
                         } else {
-                            skriptPacketQueue.put(packetIn);
+                            skriptPacketQueue.putLast(packetIn);
                         }
 
                     } else {
-                        skriptPacketQueue.offer(Optional.empty());
+                        skriptPacketQueue.offerLast(Optional.empty());
                     }
 
                 } else {
-                    skriptPacketQueue.offer(Optional.empty());
+                    skriptPacketQueue.offerLast(Optional.empty());
                     shutdown();
                 }
 
@@ -104,7 +104,7 @@ public class SocketConnection extends Connection {
 
             if (socketConnected.get()) {
 
-                dataOutHandler.getDataQueue().put(Optional.of(packetIn));
+                dataOutHandler.getDataQueue().putLast(Optional.of(packetIn));
 
                 if (packetIn.getType() != PacketTypes.HEARTBEAT) {
                     pluginInstance.logDebug("Sent packet " + packetIn + "...");

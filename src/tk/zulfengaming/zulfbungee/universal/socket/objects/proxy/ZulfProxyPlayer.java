@@ -24,4 +24,9 @@ public abstract class ZulfProxyPlayer<P> implements ProxyCommandSender<P> {
 
     public abstract void disconnect(String reason);
 
+    @Override
+    public String toString() {
+        return String.format("ZulfProxyPlayer{name=%s, uuid=%s}", getName(), getUuid());
+    }
+
 }

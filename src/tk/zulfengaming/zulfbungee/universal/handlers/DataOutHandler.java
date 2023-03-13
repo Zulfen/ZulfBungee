@@ -10,13 +10,14 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataOutHandler<P> implements Runnable {
 
     private final BaseServerConnection<P> connection;
 
-    private final BlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
+    private final LinkedBlockingDeque<Optional<Packet>> queueOut = new LinkedBlockingDeque<>();
 
     private final ObjectOutputStream outputStream;
 
@@ -34,7 +35,7 @@ public class DataOutHandler<P> implements Runnable {
 
                 if (connection.isSocketConnected().get()) {
 
-                    Optional<Packet> packetOut = queueOut.take();
+                    Optional<Packet> packetOut = queueOut.takeLast();
 
                     if (packetOut.isPresent()) {
                         outputStream.writeObject(packetOut.get());
@@ -60,7 +61,7 @@ public class DataOutHandler<P> implements Runnable {
     public void disconnect() {
 
         try {
-            queueOut.put(Optional.empty());
+            queueOut.putLast(Optional.empty());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -72,7 +73,7 @@ public class DataOutHandler<P> implements Runnable {
     public void shutdown() {
 
         try {
-            queueOut.put(Optional.empty());
+            queueOut.putLast(Optional.empty());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -86,7 +87,7 @@ public class DataOutHandler<P> implements Runnable {
 
     }
 
-    public BlockingQueue<Optional<Packet>> getQueue() {
+    public LinkedBlockingDeque<Optional<Packet>> getQueue() {
         return queueOut;
     }
 
