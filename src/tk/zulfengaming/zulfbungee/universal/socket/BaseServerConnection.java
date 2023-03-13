@@ -62,8 +62,8 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         this.address = socket.getRemoteSocketAddress();
 
-        this.dataInHandler = new DataInHandler<>(this);
-        this.dataOutHandler = new DataOutHandler<>(this);
+        this.dataOutHandler = new DataOutHandler<>(this, socketIn);
+        this.dataInHandler = new DataInHandler<>(this, socketIn);
 
     }
 
@@ -130,7 +130,9 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
     public void end()  {
 
-        if (running.compareAndSet(true, false) && dataOutHandler.getQueue().offer(Optional.empty())) {
+        if (running.compareAndSet(true, false)) {
+
+            socketConnected.compareAndSet(true, false);
 
             mainServer.removeServerConnection(this);
 

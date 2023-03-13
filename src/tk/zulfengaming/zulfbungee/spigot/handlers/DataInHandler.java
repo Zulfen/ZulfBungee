@@ -8,6 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
@@ -23,10 +24,10 @@ public class DataInHandler extends BukkitRunnable {
 
     private final ObjectInputStream inputStream;
 
-    public DataInHandler(SocketConnection connectionIn) throws IOException {
+    public DataInHandler(SocketConnection connectionIn, Socket socketIn) throws IOException {
         this.connection = connectionIn;
         this.pluginInstance = connection.getPluginInstance();
-        this.inputStream = new ObjectInputStream(connection.getInputStream());
+        this.inputStream = new ObjectInputStream(socketIn.getInputStream());
     }
 
 
@@ -45,10 +46,6 @@ public class DataInHandler extends BukkitRunnable {
                     if (dataIn instanceof Packet) {
                         queueIn.put(Optional.of((Packet) dataIn));
                     }
-
-                } else {
-
-                    queueIn.put(Optional.empty());
 
                 }
 

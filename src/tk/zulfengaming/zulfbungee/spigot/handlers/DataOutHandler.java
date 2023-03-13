@@ -8,6 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
@@ -23,10 +24,10 @@ public class DataOutHandler extends BukkitRunnable {
 
     private final ZulfBungeeSpigot pluginInstance;
 
-    public DataOutHandler(SocketConnection connectionIn) throws IOException {
+    public DataOutHandler(SocketConnection connectionIn, Socket socketIn) throws IOException {
         this.connection = connectionIn;
         this.pluginInstance = connection.getPluginInstance();
-        this.outputStream = new ObjectOutputStream(connectionIn.getOutputStream());
+        this.outputStream = new ObjectOutputStream(socketIn.getOutputStream());
     }
 
 
@@ -77,6 +78,11 @@ public class DataOutHandler extends BukkitRunnable {
 
     public void disconnect() {
         queueOut.offer(Optional.empty());
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error closing output stream", e);
+        }
     }
 
     public void shutdown() {

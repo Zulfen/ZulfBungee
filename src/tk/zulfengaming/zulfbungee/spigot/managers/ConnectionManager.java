@@ -18,6 +18,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.*;
@@ -301,8 +302,9 @@ public class ConnectionManager extends BukkitRunnable {
         if (running.compareAndSet(true, false)) {
 
             for (Connection connection : allConnections) {
+
                 connection.shutdown();
-                connection.cancel();
+
             }
 
             connectionBarrier.release();

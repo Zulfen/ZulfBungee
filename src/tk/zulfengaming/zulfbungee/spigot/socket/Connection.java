@@ -7,6 +7,7 @@ import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,7 +27,7 @@ public abstract class Connection extends BukkitRunnable {
 
     protected final ClientInfo clientInfo;
 
-    public Connection(ConnectionManager connectionManagerIn) {
+    public Connection(ConnectionManager connectionManagerIn) throws IOException {
         this.connectionManager = connectionManagerIn;
         this.pluginInstance = connectionManagerIn.getPluginInstance();
         this.packetHandlerManager = new PacketHandlerManager(this);
@@ -56,7 +57,7 @@ public abstract class Connection extends BukkitRunnable {
 
     public abstract void end();
 
-    public void shutdown() {
+    public synchronized void shutdown() {
         connectionManager.deRegister();
         connectionManager.removeConnection(this);
         end();

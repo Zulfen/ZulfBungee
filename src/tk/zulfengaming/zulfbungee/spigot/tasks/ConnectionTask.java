@@ -1,19 +1,19 @@
 package tk.zulfengaming.zulfbungee.spigot.tasks;
 
-import org.bukkit.ChatColor;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.handlers.SocketHandler;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 
+import javax.net.SocketFactory;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RejectedExecutionException;
+import java.net.SocketException;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class ConnectionTask implements Runnable {
 
@@ -22,15 +22,28 @@ public class ConnectionTask implements Runnable {
 
     private final TaskManager taskManager;
 
-    private final SocketHandler socketHandler;
     private final Semaphore connectionBarrier;
+
+    private final InetAddress clientAddress;
+    private final int clientPort;
+
+    private final InetAddress serverAddress;
+    private final int serverPort;
 
     public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort, int timeOut) {
         this.connectionManager = connectionManagerIn;
-        this.socketHandler = new SocketHandler(clientAddress, clientPort, serverAddress, serverPort, timeOut);
+
+        this.clientAddress = clientAddress;
+        this.clientPort = clientPort;
+
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
+
+
         this.pluginInstance = connectionManager.getPluginInstance();
         this.taskManager = pluginInstance.getTaskManager();
         this.connectionBarrier = connectionBarrier;
+
     }
 
     @Override
@@ -38,42 +51,64 @@ public class ConnectionTask implements Runnable {
 
         Thread.currentThread().setName("ConnectionTask");
 
-        try {
+        int finished = 0;
 
-            if (connectionManager.getRegistered() < 1) {
+        pluginInstance.warning("Reconnecting every 2 seconds...");
 
-                Optional<Socket> newSocket = taskManager.submitCallable(socketHandler);
+        while (finished < 1 && connectionManager.isRunning().get()) {
 
-                if (newSocket.isPresent()) {
+            try {
 
-                    Socket socket = newSocket.get();
+                if (!connectionManager.isBlocked(new InetSocketAddress(serverAddress, serverPort))) {
 
-                    if (!connectionManager.isBlocked(socket.getRemoteSocketAddress())) {
+                    Socket socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort, clientAddress, clientPort);
 
-                        SocketConnection mainConnection = new SocketConnection(connectionManager, socket);
-                        connectionManager.addInactiveConnection(mainConnection);
-                        taskManager.newAsyncTask(mainConnection);
+                    SocketConnection socketConnection = new SocketConnection(connectionManager, socket);
+                    connectionManager.addInactiveConnection(socketConnection);
+                    taskManager.newAsyncTask(socketConnection);
 
-                    } else {
-                        socket.close();
+                    finished++;
+
+                    connectionBarrier.release();
+
+                }
+
+            } catch (EOFException | SocketException e) {
+
+                if (pluginInstance.isDebug()) {
+
+                    pluginInstance.warning("Could not connect to the proxy!:");
+
+                    StackTraceElement[] stackTrace = e.getStackTrace();
+
+                    for (int i = 0; i < Math.min(3, stackTrace.length); i++) {
+                        pluginInstance.warning(stackTrace[i].toString());
+                    }
+
+                    if (e instanceof EOFException) {
+                        pluginInstance.warning("This exception shouldn't normally occur - ideally, report this to the developers!");
                     }
 
                 }
 
+
+            } catch (IOException ex) {
+
+                if (pluginInstance.isDebug()) {
+                    ex.printStackTrace();
+                }
+
+            } finally {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
 
-        } catch (IOException e) {
-            pluginInstance.warning("Connection lost with proxy, attempting to connect every 2 seconds...");
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (RejectedExecutionException ignored) {
-            // ignored as we specifically throw this exception upon shutting down, we don't need to do any more work
-        } catch (ExecutionException e) {
-            pluginInstance.logDebug(ChatColor.RED + String.format("Error while creating socket: %s", e.getCause().getMessage()));
-        } finally {
-            connectionBarrier.release();
         }
 
-
     }
+
+
 }

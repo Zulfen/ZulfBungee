@@ -6,11 +6,8 @@ import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Optional;
@@ -34,17 +31,24 @@ public class SocketConnection extends Connection {
 
         this.taskManager = pluginInstance.getTaskManager();
         this.socket = socketIn;
-        this.dataOutHandler = new DataOutHandler(this);
-        this.dataInHandler = new DataInHandler(this);
+
+        try {
+            this.dataOutHandler = new DataOutHandler(this, socketIn);
+            this.dataInHandler = new DataInHandler(this, socketIn);
+        } catch (IOException e) {
+            shutdown();
+            throw new IOException("Could not establish a connection properly!");
+        }
+
 
     }
 
     public void run() {
 
-        Thread.currentThread().setName(String.format("ClientConnection@%s", socket.getRemoteSocketAddress()));
-
         taskManager.newAsyncTask(dataInHandler);
         taskManager.newAsyncTask(dataOutHandler);
+
+        Thread.currentThread().setName(String.format("ClientConnection@%s", socket.getRemoteSocketAddress()));
 
         pluginInstance.logInfo(org.bukkit.ChatColor.GREEN + "Connection established with proxy!");
 
@@ -65,7 +69,6 @@ public class SocketConnection extends Connection {
                         if (packet.shouldHandle()) {
 
                             packetHandlerManager.handlePacket(packet, socket.getRemoteSocketAddress());
-
 
                         } else {
                             skriptPacketQueue.put(packetIn);
@@ -136,46 +139,23 @@ public class SocketConnection extends Connection {
 
             socketConnected.compareAndSet(true, false);
 
+            if (dataInHandler != null && dataOutHandler != null) {
+
+                dataInHandler.shutdown();
+                dataOutHandler.shutdown();
+
+                dataInHandler.cancel();
+                dataOutHandler.cancel();
+
+            }
+
             try {
                 socket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
-            dataInHandler.shutdown();
-            dataOutHandler.shutdown();
 
-            dataInHandler.cancel();
-            dataOutHandler.cancel();
-
-        }
-
-    }
-
-    public InputStream getInputStream() {
-
-        try {
-            if (socketConnected.get()) {
-                return socket.getInputStream();
-            } else {
-                throw new RuntimeException("Socket is not connected!");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public OutputStream getOutputStream() {
-
-        try {
-            if (socketConnected.get()) {
-                return socket.getOutputStream();
-            } else {
-                throw new RuntimeException("Socket is not connected!");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
     }

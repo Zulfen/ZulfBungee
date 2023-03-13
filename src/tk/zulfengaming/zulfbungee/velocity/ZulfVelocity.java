@@ -83,6 +83,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
         this.isDebug = pluginConfig.getBoolean("debug");
         this.updater = new CheckUpdateTask<>(this);
 
+
     }
 
     @Subscribe
@@ -93,16 +94,15 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
             this.mainServer = new VelocityMainServer(pluginConfig.getInt("port"),
                     InetAddress.getByName(pluginConfig.getString("host")), this);
 
-            taskManager.newTask(mainServer);
-
         } catch (UnknownHostException e) {
             error("Could not start the server! (velocity)");
             throw new RuntimeException(e);
         }
 
-
         velocity.getEventManager().register(this, new VelocityEvents(mainServer));
         velocity.getCommandManager().register("zulfbungee", new VelocityCommand(new CommandHandlerManager<>(mainServer)));
+
+        taskManager.newTask(mainServer);
 
     }
 
@@ -225,6 +225,11 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     @Override
     public CheckUpdateTask<ProxyServer> getUpdater() {
         return updater;
+    }
+
+    @Override
+    public boolean isDebug() {
+        return isDebug;
     }
 
     public LegacyComponentSerializer getLegacyTextSerialiser() {
