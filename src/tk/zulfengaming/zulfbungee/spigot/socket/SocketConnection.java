@@ -70,16 +70,14 @@ public class SocketConnection extends Connection {
 
                             packetHandlerManager.handlePacket(packet, socket.getRemoteSocketAddress());
 
-                        } else {
-                            skriptPacketQueue.putLast(packetIn);
                         }
 
-                    } else {
-                        skriptPacketQueue.offerLast(Optional.empty());
                     }
 
+                    skriptPacketQueue.putLast(packetIn);
+
                 } else {
-                    skriptPacketQueue.offerLast(Optional.empty());
+                    skriptPacketQueue.putLast(Optional.empty());
                     shutdown();
                 }
 

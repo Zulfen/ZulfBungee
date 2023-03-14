@@ -21,10 +21,7 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -47,7 +44,7 @@ public class ConnectionManager extends BukkitRunnable {
 
     private final AtomicInteger registered = new AtomicInteger();
 
-    private final LinkedBlockingQueue<LinkedList<Packet>> connectionPackets = new LinkedBlockingQueue<>();
+    private final SynchronousQueue<LinkedList<Packet>> connectionPackets = new SynchronousQueue<>();
 
     private final Semaphore connectionBarrier = new Semaphore(0);
     private final ConnectionTask connectionTask;
@@ -109,6 +106,22 @@ public class ConnectionManager extends BukkitRunnable {
 
     }
 
+    private List<Packet> sendGetPacketList(Packet packetIn) {
+
+        if (registered.get() > 0) {
+            pluginInstance.warning("cool");
+            sendDirect(packetIn);
+            try {
+                return connectionPackets.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        return Collections.emptyList();
+
+    }
+
     public void sendDirect(Packet packetIn) {
         allConnections.forEach(connection -> connection.sendDirect(packetIn));
     }
@@ -116,20 +129,12 @@ public class ConnectionManager extends BukkitRunnable {
     // returns the first packet it gets from any of the connections. keep this in mind.
     public Optional<Packet> send(Packet packetIn) {
 
-        sendDirect(packetIn);
+        List<Packet> list = sendGetPacketList(packetIn);
 
-        try {
-
-            LinkedList<Packet> list = connectionPackets.take();
-
-            if (!list.isEmpty()) {
-                return list.stream()
-                        .filter(packet -> packet.getType() == packetIn.getType())
-                        .findFirst();
-            }
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if (!list.isEmpty()) {
+            return list.stream()
+                    .filter(packet -> packet.getType() == packetIn.getType())
+                    .findFirst();
         }
 
         return Optional.empty();
@@ -138,34 +143,21 @@ public class ConnectionManager extends BukkitRunnable {
 
     public List<ClientPlayer> getPlayers(ClientServer[] serversIn) {
 
+        List<Packet> packets;
+
         if (serversIn.length > 0) {
-            sendDirect(new Packet(PacketTypes.PROXY_PLAYERS,
+            packets = sendGetPacketList(new Packet(PacketTypes.PROXY_PLAYERS,
                     true, false, serversIn));
         } else {
-            sendDirect(new Packet(PacketTypes.PROXY_PLAYERS,
+            packets = sendGetPacketList(new Packet(PacketTypes.PROXY_PLAYERS,
                     true, false, new Object[0]));
         }
 
-
-        try {
-
-            LinkedList<Packet> packets = connectionPackets.take();
-
-            if (!packets.isEmpty()) {
-
-                return packets.stream()
-                        .flatMap(packet -> Arrays.stream(packet.getDataArray()))
-                        .filter(data -> data instanceof ClientPlayer)
-                        .map(data -> (ClientPlayer) data)
-                        .collect(Collectors.toList());
-
-            }
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        return Collections.emptyList();
+        return packets.stream()
+                .flatMap(packet -> Arrays.stream(packet.getDataArray()))
+                .filter(data -> data instanceof ClientPlayer)
+                .map(data -> (ClientPlayer) data)
+                .collect(Collectors.toList());
 
     }
 
