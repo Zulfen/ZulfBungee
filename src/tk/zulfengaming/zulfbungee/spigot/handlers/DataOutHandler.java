@@ -78,11 +78,6 @@ public class DataOutHandler extends BukkitRunnable {
 
     public void disconnect() {
         queueOut.offer(Optional.empty());
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Error closing output stream", e);
-        }
     }
 
     public void shutdown() {

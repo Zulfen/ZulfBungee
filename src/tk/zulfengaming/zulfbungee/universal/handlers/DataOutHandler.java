@@ -76,12 +76,6 @@ public class DataOutHandler<P> implements Runnable {
             Thread.currentThread().interrupt();
         }
 
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Error closing output stream", e);
-        }
-
 
     }
 
