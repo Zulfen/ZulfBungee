@@ -51,6 +51,9 @@ public class ConnectionManager extends BukkitRunnable {
 
     private final TaskManager taskManager;
 
+    // representation of this client as a server.
+    private ClientServer thisServer;
+
     public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort, int timeOut) {
         this.pluginInstance = pluginIn;
         this.taskManager = pluginInstance.getTaskManager();
@@ -185,18 +188,13 @@ public class ConnectionManager extends BukkitRunnable {
         return zulfServerInfo != null ? Optional.of(new ClientServer(nameIn, zulfServerInfo)) : Optional.empty();
     }
 
+    public void setThisServer(ClientServer thisServer) {
+        this.thisServer = thisServer;
+    }
+
     // returns the first assigned connection as of now.
     public Optional<ClientServer> getAsServer() {
-
-        Optional<Map.Entry<String, ClientInfo>> getFirst = proxyServers.entrySet().stream().findFirst();
-
-        if (getFirst.isPresent()) {
-            Map.Entry<String, ClientInfo> server = getFirst.get();
-            return Optional.of(new ClientServer(server.getKey(), server.getValue()));
-        }
-
-        return Optional.empty();
-
+        return Optional.ofNullable(thisServer);
     }
 
     public boolean proxyServerOnline(String nameIn) {

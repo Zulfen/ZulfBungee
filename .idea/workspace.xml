@@ -9,8 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.4 - slight clean up">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.4 - another cleanup">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ConnectionName.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ConnectionName.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,20 +132,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Alpha v0.7.8 - syntax simplification and global script reloading fix.">
-      <created>1660323781882</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1660323781882</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Alpha v0.7.9 - brought back and recoded the proxy server expression.">
-      <created>1660579972847</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1660579972847</updated>
     </task>
     <task id="LOCAL-00029" summary="Alpha v0.7.9 - brought back and recoded the proxy server expression.">
       <created>1660580104594</created>
@@ -474,7 +462,21 @@
       <option name="project" value="LOCAL" />
       <updated>1679167903583</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="Alpha v0.9.4 - slight clean up">
+      <created>1679169489546</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1679169489546</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Alpha v0.9.4 - another cleanup">
+      <created>1679169703546</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1679169703546</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -489,7 +491,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.8.2 - experimental Pterodactyl work around." />
     <MESSAGE value="Alpha v0.8.2 - removed security checks entirely." />
     <MESSAGE value="Alpha v0.8.2 - :3" />
     <MESSAGE value="Alpha v0.8.2 - duplicate connection fix (?)" />
@@ -514,7 +515,8 @@
     <MESSAGE value="Alpha v0.9.4 - more packet fixes" />
     <MESSAGE value="Alpha v0.9.4 - fixed network variables!" />
     <MESSAGE value="Alpha v0.9.4 - slight clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.4 - slight clean up" />
+    <MESSAGE value="Alpha v0.9.4 - another cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.4 - another cleanup" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
