@@ -100,7 +100,7 @@ public class ConnectionManager extends BukkitRunnable {
 
     }
 
-    private Queue<Packet> sendGetPacketList(Packet packetIn) {
+    private synchronized Queue<Packet> sendGetPacketList(Packet packetIn) {
 
         Queue<Packet> packetQueue = new LinkedList<>();
 
