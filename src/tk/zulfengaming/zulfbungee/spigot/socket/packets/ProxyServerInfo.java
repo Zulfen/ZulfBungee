@@ -10,6 +10,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.IncomingServer
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
 import java.net.SocketAddress;
+import java.util.stream.Stream;
 
 public class ProxyServerInfo extends PacketHandler {
 
@@ -21,22 +22,11 @@ public class ProxyServerInfo extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn, SocketAddress address) {
 
-        ConnectionManager connectionManager = getConnection().getConnectionManager();
+        ClientServer[] servers = Stream.of(packetIn.getDataArray())
+                .filter(ClientServer.class::isInstance)
+                .toArray(ClientServer[]::new);
 
-        ClientServer serverIn = (ClientServer) packetIn.getDataArray()[0];
-        IncomingServerType type = (IncomingServerType) packetIn.getDataArray()[1];
-
-        String serverName = serverIn.getName();
-        ClientInfo clientInfo = serverIn.getClientInfo();
-
-        switch (type) {
-            case ADD:
-                connectionManager.addProxyServer(serverName, clientInfo);
-                break;
-            case REMOVE:
-                connectionManager.removeProxyServer(serverName);
-                break;
-        }
+        getConnection().getConnectionManager().setProxyServers(servers);
 
     }
 }

@@ -36,7 +36,7 @@ public class ConnectionManager extends BukkitRunnable {
     private final ConcurrentHashMap<SocketAddress, String> addressNames = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Connection> connectionNames = new ConcurrentHashMap<>();
 
-    private final LinkedHashMap<String, ClientInfo> proxyServers = new LinkedHashMap<>();
+    private final ConcurrentHashMap<String, ClientInfo> proxyServers = new ConcurrentHashMap<>();
 
     private final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
 
@@ -44,7 +44,7 @@ public class ConnectionManager extends BukkitRunnable {
 
     private final AtomicInteger registered = new AtomicInteger();
 
-    private final SynchronousQueue<LinkedList<Packet>> connectionPackets = new SynchronousQueue<>();
+    private final LinkedBlockingQueue<Optional<Packet>> connectionPackets = new LinkedBlockingQueue<>();
 
     private final Semaphore connectionBarrier = new Semaphore(0);
     private final ConnectionTask connectionTask;
@@ -69,30 +69,24 @@ public class ConnectionManager extends BukkitRunnable {
 
                 while (registered.get() > 0) {
 
-                    LinkedList<Packet> packetsIn = new LinkedList<>();
-
                     for (Connection connection : allConnections) {
 
                         try {
 
-                            Optional<Packet> getPacket = connection.getSkriptPacketQueue().takeLast();
+                            Optional<Packet> getPacket = connection.getSkriptPacketQueue().take();
 
-                            if (getPacket.isPresent()) {
-                                packetsIn.add(getPacket.get());
-                            } else {
-                                break;
-                            }
+                            connectionPackets.put(getPacket);
 
                         } catch (InterruptedException e) {
-                            break;
+                            Thread.currentThread().interrupt();
                         }
 
                     }
 
-                    connectionPackets.put(packetsIn);
-
-
                 }
+
+                connectionPackets.put(Optional.empty());
+                connectionPackets.clear();
 
                 taskManager.newAsyncTask(connectionTask);
                 connectionBarrier.acquire();
@@ -106,19 +100,25 @@ public class ConnectionManager extends BukkitRunnable {
 
     }
 
-    private List<Packet> sendGetPacketList(Packet packetIn) {
+    private Queue<Packet> sendGetPacketList(Packet packetIn) {
+
+        Queue<Packet> packetQueue = new LinkedList<>();
 
         if (registered.get() > 0) {
-            pluginInstance.warning("cool");
+
             sendDirect(packetIn);
-            try {
-                return connectionPackets.take();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            for (int i = 0; i < allConnections.size(); i++) {
+                try {
+                    Optional<Packet> take = connectionPackets.take();
+                    take.ifPresent(packetQueue::offer);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
+
         }
 
-        return Collections.emptyList();
+        return packetQueue;
 
     }
 
@@ -128,22 +128,13 @@ public class ConnectionManager extends BukkitRunnable {
 
     // returns the first packet it gets from any of the connections. keep this in mind.
     public Optional<Packet> send(Packet packetIn) {
-
-        List<Packet> list = sendGetPacketList(packetIn);
-
-        if (!list.isEmpty()) {
-            return list.stream()
-                    .filter(packet -> packet.getType() == packetIn.getType())
-                    .findFirst();
-        }
-
-        return Optional.empty();
-
+        Queue<Packet> queue = sendGetPacketList(packetIn);
+        return Optional.ofNullable(queue.poll());
     }
 
     public List<ClientPlayer> getPlayers(ClientServer[] serversIn) {
 
-        List<Packet> packets;
+        Queue<Packet> packets;
 
         if (serversIn.length > 0) {
             packets = sendGetPacketList(new Packet(PacketTypes.PROXY_PLAYERS,
@@ -155,8 +146,8 @@ public class ConnectionManager extends BukkitRunnable {
 
         return packets.stream()
                 .flatMap(packet -> Arrays.stream(packet.getDataArray()))
-                .filter(data -> data instanceof ClientPlayer)
-                .map(data -> (ClientPlayer) data)
+                .filter(ClientPlayer.class::isInstance)
+                .map(ClientPlayer.class::cast)
                 .collect(Collectors.toList());
 
     }
@@ -176,14 +167,11 @@ public class ConnectionManager extends BukkitRunnable {
 
     }
 
-    public void addProxyServer(String nameIn, ClientInfo infoIn) {
-        if (!proxyServers.containsKey(nameIn)) {
-            proxyServers.put(nameIn, infoIn);
+    public void setProxyServers(ClientServer[] clientServers) {
+        proxyServers.clear();
+        for (ClientServer clientServer : clientServers) {
+            proxyServers.put(clientServer.getName(), clientServer.getClientInfo());
         }
-    }
-
-    public void removeProxyServer(String nameIn) {
-        proxyServers.remove(nameIn);
     }
 
     public List<ClientServer> getAllProxyServers() {
@@ -220,10 +208,12 @@ public class ConnectionManager extends BukkitRunnable {
     }
     
     public void addNamedConnection(String nameIn, Connection connectionIn) {
+
         if (!(addressNames.containsValue(nameIn) || connectionNames.containsKey(nameIn))) {
             addressNames.put(connectionIn.getAddress(), nameIn);
             connectionNames.put(nameIn, connectionIn);
         }
+
     }
 
     public void removeConnection(Connection connectionIn) {
@@ -303,6 +293,7 @@ public class ConnectionManager extends BukkitRunnable {
         }
 
     }
+
     public AtomicBoolean isRunning() {
         return running;
     }

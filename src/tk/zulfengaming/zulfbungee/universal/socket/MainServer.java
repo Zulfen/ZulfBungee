@@ -181,24 +181,17 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-    public void addActiveConnection(BaseServerConnection<P> connectionIn, String name) {
+    public void addActiveConnection(BaseServerConnection<P> connectionIn, String name, ClientInfo infoIn) {
 
         SocketAddress address = connectionIn.getAddress();
 
         addressNames.put(address, name);
         activeConnections.put(name, connectionIn);
+        clientInfos.put(name, infoIn);
 
-        Optional<ClientInfo> getClientInfo = getClientInfo(name);
+        pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
 
-        if (getClientInfo.isPresent()) {
-
-            pluginInstance.logInfo(ChatColour.GREEN + "Connection established with address: " + address);
-
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, new Object[]{
-                    new ClientServer(name, getClientInfo.get()), IncomingServerType.ADD
-            }));
-
-        }
+        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
 
     }
@@ -211,12 +204,12 @@ public abstract class MainServer<P> implements Runnable {
         if (name != null) {
 
             activeConnections.remove(name);
-            ClientInfo clientInfo = clientInfos.remove(name);
+            clientInfos.remove(name);
 
             pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
 
             sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, new Object[]{
-                    new ClientServer(name, clientInfo), IncomingServerType.REMOVE
+                    getClientServerArray()
             }));
 
         } else {
@@ -305,8 +298,10 @@ public abstract class MainServer<P> implements Runnable {
                 .flatMap(connection -> connection.getPlayers().stream()).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public void setClientInfo(String nameIn, ClientInfo clientInfoIn) {
-        clientInfos.put(nameIn, clientInfoIn);
+    private ClientServer[] getClientServerArray() {
+        return clientInfos.entrySet().stream()
+                .map(entry -> new ClientServer(entry.getKey(), entry.getValue()))
+                .toArray(ClientServer[]::new);
     }
 
     public Optional<ClientInfo> getClientInfo(String nameIn) {

@@ -22,7 +22,6 @@ public class ConnectionName extends PacketHandler {
         ConnectionManager connectionManager = getConnection().getConnectionManager();
 
         connectionManager.addNamedConnection(name, getConnection());
-        connectionManager.addProxyServer(name, getConnection().getClientInfo());
 
     }
 }

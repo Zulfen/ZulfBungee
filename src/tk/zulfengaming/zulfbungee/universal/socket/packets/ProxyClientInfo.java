@@ -38,8 +38,7 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
                 String name = info.getKey();
 
                 if (!getMainServer().getServerNames().contains(name)) {
-                    getMainServer().setClientInfo(name, clientInfo);
-                    getMainServer().addActiveConnection(connection, name);
+                    getMainServer().addActiveConnection(connection, name, clientInfo);
                     return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
                 }
 

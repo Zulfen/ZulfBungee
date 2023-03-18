@@ -12,13 +12,13 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataOutHandler extends BukkitRunnable {
 
     private final SocketConnection connection;
 
-    private final LinkedBlockingDeque<Optional<Packet>> queueOut = new LinkedBlockingDeque<>();
+    private final LinkedBlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
 
     private final ObjectOutputStream outputStream;
 
@@ -41,7 +41,7 @@ public class DataOutHandler extends BukkitRunnable {
 
                 if (connection.isConnected().get()) {
 
-                    Optional<Packet> packetOut = queueOut.takeLast();
+                    Optional<Packet> packetOut = queueOut.take();
 
                     if (packetOut.isPresent()) {
                         outputStream.writeObject(packetOut.get());
@@ -77,7 +77,7 @@ public class DataOutHandler extends BukkitRunnable {
     }
 
     public void disconnect() {
-        queueOut.offerLast(Optional.empty());
+        queueOut.offer(Optional.empty());
         try {
             outputStream.close();
         } catch (IOException e) {
@@ -89,7 +89,7 @@ public class DataOutHandler extends BukkitRunnable {
         disconnect();
     }
 
-    public LinkedBlockingDeque<Optional<Packet>> getDataQueue() {
+    public LinkedBlockingQueue<Optional<Packet>> getDataQueue() {
         return queueOut;
     }
 }

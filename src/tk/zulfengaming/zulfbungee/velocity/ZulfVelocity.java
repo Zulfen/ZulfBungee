@@ -46,7 +46,7 @@ import java.util.Optional;
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
-    protected static final String VERSION = "0.9.3";
+    protected static final String VERSION = "0.9.4";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
@@ -62,7 +62,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
     private final VelocityTaskManager taskManager;
 
-    private final VelocityConsole console = new VelocityConsole(this);
+    private final VelocityConsole console;
 
     private final LegacyComponentSerializer legacyTextSerialiser = LegacyComponentSerializer.builder()
             .character('&').
@@ -74,6 +74,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     public ZulfVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
 
         this.velocity = server;
+        this.console = new VelocityConsole(this);
         this.logger = logger;
         this.pluginFolderPath = dataDirectory;
         this.pluginConfig = new VelocityConfig(this);
@@ -82,7 +83,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
         this.isDebug = pluginConfig.getBoolean("debug");
         this.updater = new CheckUpdateTask<>(this);
-
 
     }
 
@@ -186,6 +186,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
     @Override
     public void broadcast(String messageIn) {
+        console.sendMessage(messageIn);
         for (RegisteredServer registeredServer : velocity.getAllServers()) {
             registeredServer.sendMessage(legacyTextSerialiser.deserialize(messageIn));
         }

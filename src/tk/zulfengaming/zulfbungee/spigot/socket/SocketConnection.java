@@ -60,24 +60,27 @@ public class SocketConnection extends Connection {
 
                 if (socketConnected.get()) {
 
-                    Optional<Packet> packetIn = dataInHandler.getDataQueue().takeLast();
+                    Optional<Packet> packetIn = dataInHandler.getDataQueue().take();
 
                     if (packetIn.isPresent()) {
 
                         Packet packet = packetIn.get();
 
                         if (packet.shouldHandle()) {
-
                             packetHandlerManager.handlePacket(packet, socket.getRemoteSocketAddress());
-
+                        } else {
+                            skriptPacketQueue.put(packetIn);
                         }
 
+                    } else {
+                        skriptPacketQueue.put(Optional.empty());
                     }
 
-                    skriptPacketQueue.putLast(packetIn);
+                    pluginInstance.logDebug(String.format("Received packet %s", packetIn));
+
 
                 } else {
-                    skriptPacketQueue.putLast(Optional.empty());
+                    skriptPacketQueue.put(Optional.empty());
                     shutdown();
                 }
 
@@ -102,7 +105,7 @@ public class SocketConnection extends Connection {
 
             if (socketConnected.get()) {
 
-                dataOutHandler.getDataQueue().putLast(Optional.of(packetIn));
+                dataOutHandler.getDataQueue().put(Optional.of(packetIn));
 
                 if (packetIn.getType() != PacketTypes.HEARTBEAT) {
                     pluginInstance.logDebug("Sent packet " + packetIn + "...");

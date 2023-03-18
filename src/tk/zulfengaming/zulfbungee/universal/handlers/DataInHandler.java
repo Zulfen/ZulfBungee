@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 // issue must be here
 
@@ -17,7 +17,7 @@ public class DataInHandler<P> implements Runnable {
 
     private final BaseServerConnection<P> connection;
 
-    private final LinkedBlockingDeque<Optional<Packet>> queueIn = new LinkedBlockingDeque<>();
+    private final LinkedBlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
 
     private final ObjectInputStream inputStream;
 
@@ -39,7 +39,7 @@ public class DataInHandler<P> implements Runnable {
                     Object dataIn = inputStream.readObject();
 
                     if (dataIn instanceof Packet) {
-                        queueIn.putLast(Optional.of((Packet) dataIn));
+                        queueIn.put(Optional.of((Packet) dataIn));
                     }
 
                 }
@@ -61,7 +61,7 @@ public class DataInHandler<P> implements Runnable {
     public void disconnect() {
 
         try {
-            queueIn.putLast(Optional.empty());
+            queueIn.put(Optional.empty());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -72,13 +72,13 @@ public class DataInHandler<P> implements Runnable {
 
     public void shutdown() {
         try {
-            queueIn.putLast(Optional.empty());
+            queueIn.put(Optional.empty());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
 
-    public LinkedBlockingDeque<Optional<Packet>> getQueue() {
+    public LinkedBlockingQueue<Optional<Packet>> getQueue() {
         return queueIn;
     }
 

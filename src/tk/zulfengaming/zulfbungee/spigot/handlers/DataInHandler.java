@@ -13,12 +13,13 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataInHandler extends BukkitRunnable {
 
     private final SocketConnection connection;
 
-    private final LinkedBlockingDeque<Optional<Packet>> queueIn = new LinkedBlockingDeque<>();
+    private final LinkedBlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
 
     private final ZulfBungeeSpigot pluginInstance;
 
@@ -44,7 +45,7 @@ public class DataInHandler extends BukkitRunnable {
                     Object dataIn = inputStream.readObject();
 
                     if (dataIn instanceof Packet) {
-                        queueIn.putLast(Optional.of((Packet) dataIn));
+                        queueIn.put(Optional.of((Packet) dataIn));
                     }
 
                 }
@@ -79,14 +80,14 @@ public class DataInHandler extends BukkitRunnable {
     }
 
     public void disconnect() {
-        queueIn.offerLast(Optional.empty());
+        queueIn.offer(Optional.empty());
     }
 
     public void shutdown() {
         disconnect();
     }
 
-    public LinkedBlockingDeque<Optional<Packet>> getDataQueue() {
+    public LinkedBlockingQueue<Optional<Packet>> getDataQueue() {
         return queueIn;
     }
 
