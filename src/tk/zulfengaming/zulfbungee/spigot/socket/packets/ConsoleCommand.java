@@ -1,14 +1,11 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerExecutableCommand;
 
 import java.net.SocketAddress;
 

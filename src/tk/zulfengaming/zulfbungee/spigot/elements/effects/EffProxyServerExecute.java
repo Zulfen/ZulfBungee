@@ -12,10 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ConsoleExecutableCommand;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerExecutableCommand;
 
 @Name("Proxy Server Execute Command")
 @Description("Makes a proxy server execute a command. Keep in mind, it's been executed from the console and has full permissions!")
