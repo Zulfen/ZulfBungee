@@ -45,6 +45,7 @@ public class NetworkVariableModify<P> extends PacketHandler<P> {
                         storage.addToVariable(variable.getName(), variable.getValueArray());
                         break;
                     case REMOVE:
+                    case RESET:
                         storage.removeFromVariable(variable.getName(), variable.getValueArray());
                         break;
 

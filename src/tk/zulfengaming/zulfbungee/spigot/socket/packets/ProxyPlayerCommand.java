@@ -7,7 +7,7 @@ import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerExecutableCommand;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 import java.net.SocketAddress;
 
@@ -21,16 +21,17 @@ public class ProxyPlayerCommand extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn, SocketAddress address) {
 
-        PlayerExecutableCommand command = (PlayerExecutableCommand) packetIn.getDataSingle();
+        ClientPlayerDataContainer playerDataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
+
         ZulfBungeeSpigot zulfBungeeSpigot = getConnection().getPluginInstance();
 
-        for (ClientPlayer clientPlayer : command.getPlayers()) {
+        for (ClientPlayer clientPlayer : playerDataContainer.getPlayers()) {
 
             Player bukkitPlayer = zulfBungeeSpigot.getServer().getPlayer(clientPlayer.getUuid());
 
             if (bukkitPlayer != null) {
                 zulfBungeeSpigot.getTaskManager().newMainThreadTask(() -> {
-                    bukkitPlayer.performCommand(command.getCommand());
+                    bukkitPlayer.performCommand((String) playerDataContainer.getDataSingle());
                     return null;
                 });
             }

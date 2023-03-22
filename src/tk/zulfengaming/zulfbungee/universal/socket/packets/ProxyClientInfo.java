@@ -22,7 +22,6 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
-
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
         // Returns a map of

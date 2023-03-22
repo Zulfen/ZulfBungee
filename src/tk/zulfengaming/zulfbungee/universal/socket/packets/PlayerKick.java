@@ -20,7 +20,7 @@ public class PlayerKick<P> extends PacketHandler<P> {
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         ClientPlayerDataContainer container = (ClientPlayerDataContainer) packetIn.getDataSingle();
-        String message = (String) container.getData();
+        String message = (String) container.getDataSingle();
 
         for (ClientPlayer player : container.getPlayers()) {
             Optional<ZulfProxyPlayer<P>> proxyPlayer = getProxy().getPlayer(player);

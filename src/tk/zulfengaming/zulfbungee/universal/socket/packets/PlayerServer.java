@@ -22,13 +22,11 @@ public class PlayerServer<P> extends PacketHandler<P> {
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
         ClientPlayer playerIn = (ClientPlayer) packetIn.getDataSingle();
-
         Optional<ZulfProxyPlayer<P>> player = getProxy().getPlayer(playerIn);
 
         if (player.isPresent()) {
 
             ZulfProxyServer<P> server = player.get().getServer();
-
             String name = server.getName();
 
             return new Packet(PacketTypes.PLAYER_SERVER, false, false, name);

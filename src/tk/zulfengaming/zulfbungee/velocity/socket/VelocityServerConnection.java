@@ -31,7 +31,6 @@ public class VelocityServerConnection extends BaseServerConnection<ProxyServer> 
         if (nameFromAddress.isPresent()) {
 
             Optional<RegisteredServer> server = pluginInstance.getPlatform().getServer(nameFromAddress.get());
-
             return server.<List<ZulfProxyPlayer<ProxyServer>>>map(registeredServer -> registeredServer.getPlayersConnected().stream()
                     .map(player -> new VelocityPlayer(player, (ZulfVelocity) pluginInstance))
                     .collect(Collectors.toList())).orElse(Collections.emptyList());

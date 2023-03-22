@@ -13,7 +13,7 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerExecutableCommand;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 @Name("Proxy Player Execute Command")
 @Description("Makes a proxy player execute a command (on the Spigot server)")
@@ -48,7 +48,7 @@ public class EffProxyPlayerExecute extends Effect {
             }
 
             ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.PLAYER_EXECUTE_COMMAND, true, true,
-                    new PlayerExecutableCommand(players.getArray(event), commandString)));
+                    new ClientPlayerDataContainer(commandString, players.getArray(event))));
 
         }
 

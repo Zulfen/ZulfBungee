@@ -11,12 +11,11 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
-import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 import java.util.Optional;
 
@@ -45,7 +44,7 @@ public class EffPlayerSendMessage extends Effect {
         Optional<ClientServer> asServer = connection.getAsServer();
 
         asServer.ifPresent(server -> connection.sendDirect(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,
-                false, true, new PlayerMessage(server, players.getArray(event), message.getSingle(event)))));
+                false, true, new ClientPlayerDataContainer(message.getSingle(event), players.getArray(event)))));
 
     }
 

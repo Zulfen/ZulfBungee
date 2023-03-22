@@ -13,12 +13,8 @@ import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Broadcast;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
-
-import java.util.Optional;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientServerDataContainer;
 
 @Name("Broadcast")
 @Description("Broadcasts a message.")
@@ -44,9 +40,9 @@ public class EffProxyBroadcast extends Effect {
         ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
 
         if (servers != null) {
-            connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true, new Broadcast(servers.getArray(event), message.getSingle(event))));
+            connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true, new ClientServerDataContainer(servers.getArray(event), message.getSingle(event))));
         } else {
-            connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true,  new Broadcast(new ClientServer[0], message.getSingle(event))));
+            connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true,  new ClientServerDataContainer(new ClientServer[0], message.getSingle(event))));
         }
 
     }

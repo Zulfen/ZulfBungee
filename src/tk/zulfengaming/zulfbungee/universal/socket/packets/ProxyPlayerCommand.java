@@ -5,7 +5,7 @@ import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerExecutableCommand;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.Optional;
@@ -19,9 +19,9 @@ public class ProxyPlayerCommand<P> extends PacketHandler<P> {
     @Override
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
-        PlayerExecutableCommand playerExecutableCommand = (PlayerExecutableCommand) packetIn.getDataSingle();
+        ClientPlayerDataContainer playerDataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
 
-        for (ClientPlayer clientPlayer : playerExecutableCommand.getPlayers()) {
+        for (ClientPlayer clientPlayer : playerDataContainer.getPlayers()) {
 
             Optional<ZulfProxyPlayer<P>> player = getProxy().getPlayer(clientPlayer);
 

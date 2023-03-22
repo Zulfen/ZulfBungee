@@ -10,7 +10,7 @@ import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.PlayerMessage;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 import java.net.SocketAddress;
 import java.util.List;
@@ -24,12 +24,12 @@ public class PlayerSendMessage extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn, SocketAddress address) {
 
-        PlayerMessage playerMessage = (PlayerMessage) packetIn.getDataSingle();
-        String message = playerMessage.getMessage();
+        ClientPlayerDataContainer dataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
+        String message = (String) dataContainer.getDataSingle();
 
         List<MessageComponent> parsed = ChatMessages.parse(message);
 
-        for (ClientPlayer clientPlayer : playerMessage.getToPlayers()) {
+        for (ClientPlayer clientPlayer : dataContainer.getPlayers()) {
 
             BaseComponent[] components = BungeeConverter.convert(parsed);
 

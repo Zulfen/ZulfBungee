@@ -5,7 +5,7 @@ import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Broadcast;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientServerDataContainer;
 
 public class ProxyBroadcast<P> extends PacketHandler<P> {
 
@@ -16,15 +16,17 @@ public class ProxyBroadcast<P> extends PacketHandler<P> {
     @Override
     public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
 
-        Broadcast broadcast = (Broadcast) packetIn.getDataSingle();
-        ClientServer[] servers = broadcast.getServers();
+        ClientServerDataContainer dataContainer = (ClientServerDataContainer) packetIn.getDataSingle();
+        ClientServer[] servers = dataContainer.getServers();
+
+        String message = (String) dataContainer.getData();
 
         if (servers.length > 0) {
             for (ClientServer server : servers) {
-                getProxy().broadcast(broadcast.getMessage(), server.getName());
+                getProxy().broadcast(message, server.getName());
             }
         } else {
-            getProxy().broadcast(broadcast.getMessage());
+            getProxy().broadcast(message);
         }
 
         return null;
