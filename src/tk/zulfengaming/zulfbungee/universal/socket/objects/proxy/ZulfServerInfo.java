@@ -3,7 +3,7 @@ package tk.zulfengaming.zulfbungee.universal.socket.objects.proxy;
 import java.net.SocketAddress;
 import java.util.Collection;
 
-public class ZulfServerInfo<P> {
+public class ZulfServerInfo {
 
     private final SocketAddress socketAddress;
 

@@ -118,7 +118,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         ProxiedPlayer player = getProxy().getPlayer(nameIn);
 
         if (player != null) {
-            return Optional.of(new BungeePlayer<>(player));
+            return Optional.of(new BungeePlayer(player));
         }
 
         return Optional.empty();
@@ -131,7 +131,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
         ProxiedPlayer player = getProxy().getPlayer(clientPlayerIn.getUuid());
 
         if (player != null) {
-            return Optional.of(new BungeePlayer<>(player));
+            return Optional.of(new BungeePlayer(player));
         }
 
         return Optional.empty();
@@ -152,13 +152,13 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public Map<String, ZulfServerInfo<ProxyServer>> getServersCopy() {
+    public Map<String, ZulfServerInfo> getServersCopy() {
 
-        HashMap<String, ZulfServerInfo<ProxyServer>>
+        HashMap<String, ZulfServerInfo>
                 serverMap = new HashMap<>();
 
         for (ServerInfo bungeeInfo : getProxy().getServers().values()) {
-            serverMap.put(bungeeInfo.getName(), new ZulfServerInfo<>
+            serverMap.put(bungeeInfo.getName(), new ZulfServerInfo
                     (bungeeInfo.getSocketAddress()));
         }
 

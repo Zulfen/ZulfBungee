@@ -25,7 +25,7 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
         // Returns a map of
-        for (Map.Entry<String, ZulfServerInfo<P>> info : getProxy().getServersCopy().entrySet()) {
+        for (Map.Entry<String, ZulfServerInfo> info : getProxy().getServersCopy().entrySet()) {
 
             InetSocketAddress infoSockAddr = (InetSocketAddress) info.getValue().getSocketAddress();
 

@@ -166,15 +166,15 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public Map<String, ZulfServerInfo<ProxyServer>> getServersCopy() {
+    public Map<String, ZulfServerInfo> getServersCopy() {
 
-        HashMap<String, ZulfServerInfo<ProxyServer>> serversMap = new HashMap<>();
+        HashMap<String, ZulfServerInfo> serversMap = new HashMap<>();
 
         for (RegisteredServer server : velocity.getAllServers()) {
 
             ServerInfo serverInfo = server.getServerInfo();
 
-            ZulfServerInfo<ProxyServer> zulfInfo = new ZulfServerInfo<>(serverInfo.getAddress());
+            ZulfServerInfo zulfInfo = new ZulfServerInfo(serverInfo.getAddress());
 
             serversMap.put(serverInfo.getName(), zulfInfo);
 

@@ -11,7 +11,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer
 
 import java.util.UUID;
 
-public class BungeePlayer<P> extends ZulfProxyPlayer<ProxyServer> {
+public class BungeePlayer extends ZulfProxyPlayer<ProxyServer> {
 
     private ZulfProxyServer server;
 

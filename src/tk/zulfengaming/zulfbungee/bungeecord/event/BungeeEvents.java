@@ -36,7 +36,7 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
             ServerInfo serverInfo = event.getServer().getInfo();
             Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverInfo.getName());
 
-            getClientInfo.ifPresent(clientInfo -> serverConnected(new ClientServer(serverInfo.getName(), clientInfo), new BungeePlayer<>(eventPlayer,
+            getClientInfo.ifPresent(clientInfo -> serverConnected(new ClientServer(serverInfo.getName(), clientInfo), new BungeePlayer(eventPlayer,
                     new BungeeServer(serverInfo))));
 
 
@@ -55,7 +55,7 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
 
             Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(toName);
 
-            getClientInfo.ifPresent(clientInfo -> switchServer(new ClientServer(toName, clientInfo), new BungeePlayer<>(eventPlayer)));
+            getClientInfo.ifPresent(clientInfo -> switchServer(new ClientServer(toName, clientInfo), new BungeePlayer(eventPlayer)));
 
         }
 

@@ -24,7 +24,7 @@ public class BungeeCommand extends Command implements TabExecutor {
 
             ProxiedPlayer bungeePlayer = (ProxiedPlayer) commandSender;
 
-            commandHandlerManager.handle(new BungeePlayer<>(bungeePlayer), argsIn);
+            commandHandlerManager.handle(new BungeePlayer(bungeePlayer), argsIn);
 
         } else {
 
@@ -43,7 +43,7 @@ public class BungeeCommand extends Command implements TabExecutor {
 
             ProxiedPlayer bungeePlayer = (ProxiedPlayer) commandSender;
 
-            return commandHandlerManager.onTabComplete(new BungeePlayer<>(bungeePlayer), strings);
+            return commandHandlerManager.onTabComplete(new BungeePlayer(bungeePlayer), strings);
 
         } else {
 

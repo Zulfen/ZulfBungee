@@ -2,6 +2,7 @@ package tk.zulfengaming.zulfbungee.universal.storage.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.storage.HikariSQLImpl;
 
@@ -18,18 +19,20 @@ public class H2Impl<P> extends HikariSQLImpl<P> {
 
         HikariConfig hikariConfig = new HikariConfig();
 
-        File path;
+        String pathString;
 
-        File oldPath = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase() + ".db");
+        File oldPath = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase() + ".db.mv.db");
+        File newPath = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase());
 
         // mistake with naming - .db suffix gets added automatically
         if (oldPath.exists()) {
-            path = oldPath;
+            getMainServer().getPluginInstance().logDebug(ChatColour.YELLOW + "Using old database path format!");
+            pathString = newPath.getAbsolutePath() + ".db";
         } else {
-            path = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase());
+            pathString = newPath.getAbsolutePath();
         }
 
-        String jdbcUrl = "jdbc:h2:" + path.getAbsolutePath() + ";mode=MySQL";
+        String jdbcUrl = "jdbc:h2:" + pathString + ";mode=MySQL";
 
         hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
         hikariConfig.addDataSourceProperty("URL", jdbcUrl);
