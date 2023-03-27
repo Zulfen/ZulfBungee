@@ -15,7 +15,7 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
 
     private final Player velocityPlayer;
 
-    private ZulfProxyServer<ProxyServer> server;
+    private ZulfProxyServer server;
     private final ZulfVelocity zulfVelocity;
     private final ProxyServer velocity;
 
@@ -59,7 +59,7 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
     }
 
     @Override
-    public ZulfProxyServer<ProxyServer> getServer() {
+    public ZulfProxyServer getServer() {
         return server;
     }
 
@@ -74,7 +74,7 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer> {
     }
 
     @Override
-    public void connect(ZulfProxyServer<ProxyServer> serverIn) {
+    public void connect(ZulfProxyServer serverIn) {
         Optional<RegisteredServer> server = velocity.getServer(serverIn.getName());
         server.ifPresent(registeredServer -> velocityPlayer.createConnectionRequest(registeredServer).connect());
     }

@@ -54,10 +54,10 @@ public class ConnectionManager extends BukkitRunnable {
     // representation of this client as a server.
     private ClientServer thisServer;
 
-    public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort, int timeOut) {
+    public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
         this.pluginInstance = pluginIn;
         this.taskManager = pluginInstance.getTaskManager();
-        this.connectionTask = new ConnectionTask(this, connectionBarrier, clientAddress, clientPort, serverAddress, serverPort, timeOut);
+        this.connectionTask = new ConnectionTask(this, connectionBarrier, clientAddress, clientPort, serverAddress, serverPort);
     }
 
     @Override
@@ -69,6 +69,8 @@ public class ConnectionManager extends BukkitRunnable {
         do {
 
             try {
+
+                connectionPackets.clear();
 
                 while (registered.get() > 0) {
 
@@ -89,7 +91,6 @@ public class ConnectionManager extends BukkitRunnable {
                 }
 
                 connectionPackets.put(Optional.empty());
-                connectionPackets.clear();
 
                 taskManager.newAsyncTask(connectionTask);
                 connectionBarrier.acquire();
@@ -100,6 +101,8 @@ public class ConnectionManager extends BukkitRunnable {
             }
 
         } while(running.get());
+
+        connectionPackets.offer(Optional.empty());
 
     }
 

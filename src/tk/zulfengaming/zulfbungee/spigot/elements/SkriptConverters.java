@@ -21,7 +21,7 @@ public class SkriptConverters {
 
         Converters.registerConverter(OfflinePlayer.class, ClientPlayer.class, offlinePlayer -> new ClientPlayer(offlinePlayer.getName(), offlinePlayer.getUniqueId()));
 
-        Converters.registerConverter(ZulfProxyServer.class, String.class, ZulfProxyServer::getName);
+        Converters.registerConverter(ClientServer.class, String.class, ClientServer::getName);
 
         Converters.registerConverter(ClientPlayer.class, String.class, ClientPlayer::getName);
 

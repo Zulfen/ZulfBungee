@@ -159,7 +159,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public Optional<ZulfProxyServer<ProxyServer>> getServer(ClientServer clientServerIn) {
+    public Optional<ZulfProxyServer> getServer(ClientServer clientServerIn) {
         Optional<RegisteredServer> server = velocity.getServer(clientServerIn.getName());
         return server.map(registeredServer -> new VelocityServer(registeredServer, this));
 

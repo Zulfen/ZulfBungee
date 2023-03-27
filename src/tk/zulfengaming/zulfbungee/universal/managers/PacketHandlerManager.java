@@ -35,6 +35,7 @@ public class PacketHandlerManager<P> {
         handlers.put(PacketTypes.CONSOLE_EXECUTE_COMMAND, new ConsoleCommand<>(this));
         handlers.put(PacketTypes.BROADCAST_MESSAGE, new ProxyBroadcast<>(this));
         handlers.put(PacketTypes.PROXY_PLAYER_PERMISSION, new ProxyPlayerPermission<>(this));
+        handlers.put(PacketTypes.CONNECTION_NAME, new ConnectionName<>(this));
 
     }
 

@@ -31,7 +31,7 @@ public interface ZulfBungeeProxy<P> {
     Optional<ZulfProxyPlayer<P>> getPlayer(String nameIn);
     Optional<ZulfProxyPlayer<P>> getPlayer(ClientPlayer clientPlayerIn);
 
-    Optional<ZulfProxyServer<P>> getServer(ClientServer serverIn);
+    Optional<ZulfProxyServer> getServer(ClientServer serverIn);
     Map<String, ZulfServerInfo<P>> getServersCopy();
 
     void broadcast(String messageIn);

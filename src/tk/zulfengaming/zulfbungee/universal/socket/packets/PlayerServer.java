@@ -2,7 +2,6 @@ package tk.zulfengaming.zulfbungee.universal.socket.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
@@ -26,7 +25,7 @@ public class PlayerServer<P> extends PacketHandler<P> {
 
         if (player.isPresent()) {
 
-            ZulfProxyServer<P> server = player.get().getServer();
+            ZulfProxyServer server = player.get().getServer();
             String name = server.getName();
 
             return new Packet(PacketTypes.PLAYER_SERVER, false, false, name);

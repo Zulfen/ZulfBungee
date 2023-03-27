@@ -29,30 +29,32 @@ public class ProxyClientInfo<P> extends PacketHandler<P> {
 
             InetSocketAddress infoSockAddr = (InetSocketAddress) info.getValue().getSocketAddress();
 
-            boolean portCheck = infoSockAddr.getPort() == clientInfo.getMinecraftPort();
-            boolean addressCheck = infoSockAddr.getAddress().equals(socketAddressIn.getAddress());
+            String name = info.getKey();
 
-            if (addressCheck && portCheck) {
+            if (!getMainServer().getServerNames().contains(name)) {
 
-                String name = info.getKey();
+                boolean portCheck = infoSockAddr.getPort() == clientInfo.getMinecraftPort();
+                boolean addressCheck = infoSockAddr.getAddress().equals(socketAddressIn.getAddress());
 
-                if (!getMainServer().getServerNames().contains(name)) {
+                if (addressCheck && portCheck) {
+
                     getMainServer().addActiveConnection(connection, name, clientInfo);
                     return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
+
+                } else if (!addressCheck) {
+
+                    getProxy().warning(String.format("We couldn't find the client with the address %s!", socketAddressIn.getAddress()));
+                    getProxy().warning("Please make sure that the address in your proxy's main config is valid!");
+                    getProxy().warning(String.format("Address check returned %s (%s compared to %s)", false, infoSockAddr.getAddress(), socketAddressIn.getAddress()));
+                    getProxy().warning(String.format("Port check returned %s (%s compared to %s)", portCheck, infoSockAddr.getPort(), clientInfo.getMinecraftPort()));
+
+                    connection.sendDirect(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, new Object[0]));
+                    break;
+
                 }
 
-
-            } else if (!addressCheck) {
-
-                getProxy().warning(String.format("We couldn't find the client with the address %s!", socketAddressIn.getAddress()));
-                getProxy().warning("Please make sure that the address in your proxy's main config is valid!");
-                getProxy().warning(String.format("Address check returned %s (%s compared to %s)", false, infoSockAddr.getAddress(), socketAddressIn.getAddress()));
-                getProxy().warning(String.format("Port check returned %s (%s compared to %s)", portCheck, infoSockAddr.getPort(), clientInfo.getMinecraftPort()));
-
-                connection.sendDirect(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, new Object[0]));
-                break;
-
             }
+
 
         }
 

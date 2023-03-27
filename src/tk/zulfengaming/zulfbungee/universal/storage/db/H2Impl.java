@@ -18,7 +18,17 @@ public class H2Impl<P> extends HikariSQLImpl<P> {
 
         HikariConfig hikariConfig = new HikariConfig();
 
-        File path = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase() + ".db");
+        File path;
+
+        File oldPath = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase() + ".db");
+
+        // mistake with naming - .db suffix gets added automatically
+        if (oldPath.exists()) {
+            path = oldPath;
+        } else {
+            path = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase());
+        }
+
         String jdbcUrl = "jdbc:h2:" + path.getAbsolutePath() + ";mode=MySQL";
 
         hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");

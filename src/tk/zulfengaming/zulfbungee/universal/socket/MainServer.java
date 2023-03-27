@@ -87,6 +87,7 @@ public abstract class MainServer<P> implements Runnable {
     public void run() {
 
         do {
+
             try {
 
                 if (serverSocketAvailable.get()) {
@@ -137,10 +138,12 @@ public abstract class MainServer<P> implements Runnable {
 
 
             } catch (IOException e) {
+
                 if (pluginInstance.isDebug()) {
                     pluginInstance.warning("There was an error trying to establish a connection! Please consider restarting this proxy.");
                     e.printStackTrace();
                 }
+
             }
 
         } while (running.get());
@@ -184,21 +187,27 @@ public abstract class MainServer<P> implements Runnable {
 
         SocketAddress address = connectionIn.getAddress();
 
-        addressNames.put(address, name);
-        activeConnections.put(name, connectionIn);
-        clientInfos.put(name, infoIn);
+        if (!activeConnections.containsKey(name)) {
 
-        pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
+            addressNames.put(address, name);
+            activeConnections.put(name, connectionIn);
+            clientInfos.put(name, infoIn);
 
-        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
+            pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
 
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
+
+        } else {
+            pluginInstance.warning(String.format("Server %s is already registered. Please change the forced-connection-name in the client's config to something different!", name));
+            connectionIn.sendDirect(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, new Object[0]));
+        }
 
     }
 
     public void removeServerConnection(BaseServerConnection<P> connectionIn) {
 
         socketConnections.remove(connectionIn);
-        String name = addressNames.get(connectionIn.getAddress());
+        String name = addressNames.remove(connectionIn.getAddress());
 
         if (name != null) {
 
@@ -280,9 +289,9 @@ public abstract class MainServer<P> implements Runnable {
         return Optional.ofNullable(activeConnections.get(playerIn.getServer().getName()));
     }
 
-    public List<ZulfProxyPlayer<P>> getProxyPlayersFrom(String nameIn) {
+    public List<ZulfProxyPlayer<P>> getProxyPlayersFrom(ClientServer clientServerIn) {
 
-        Optional<BaseServerConnection<P>> serverConnection = getConnection(nameIn);
+        Optional<BaseServerConnection<P>> serverConnection = getConnection(clientServerIn);
 
         if (serverConnection.isPresent()) {
             return serverConnection.get().getPlayers();

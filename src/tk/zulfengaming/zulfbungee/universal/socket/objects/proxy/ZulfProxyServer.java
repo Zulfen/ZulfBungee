@@ -1,7 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.socket.objects.proxy;
 
 
-public interface ZulfProxyServer<P> {
+public interface ZulfProxyServer {
     String getName();
-    ZulfServerInfo<P> getServerInfo();
 }

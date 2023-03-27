@@ -51,10 +51,6 @@ public abstract class Connection extends BukkitRunnable {
 
     public abstract SocketAddress getAddress();
 
-    public ClientInfo getClientInfo() {
-        return clientInfo;
-    }
-
     public abstract void end();
 
     public synchronized void shutdown() {

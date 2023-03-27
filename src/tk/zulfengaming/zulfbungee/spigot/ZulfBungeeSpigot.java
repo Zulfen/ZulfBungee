@@ -5,10 +5,8 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import tk.zulfengaming.zulfbungee.spigot.config.YamlConfig;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
-import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 
 import java.io.IOException;
@@ -19,12 +17,9 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
     // static reference so we can access it via Skript
     private static ZulfBungeeSpigot plugin;
-
     private boolean debug = false;
 
     private TaskManager taskManager;
-    private YamlConfig config;
-
     private ConnectionManager connectionManager;
 
     public void onEnable() {
@@ -34,19 +29,19 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventListeners(), this);
 
         taskManager = new TaskManager(this);
-        config = new YamlConfig(this);
+        saveDefaultConfig();
 
-        debug = config.getBoolean("debug");
+        debug = getConfig().getBoolean("debug");
 
         try {
 
-            InetAddress serverAddress = InetAddress.getByName(config.getString("server-host"));
-            InetAddress clientAddress = InetAddress.getByName(config.getString("client-host"));
+            InetAddress serverAddress = InetAddress.getByName(getConfig().getString("server-host"));
+            InetAddress clientAddress = InetAddress.getByName(getConfig().getString("client-host"));
 
-            int serverPort = config.getInt("server-port");
-            int clientPort = config.getInt("client-port");
+            int serverPort = getConfig().getInt("server-port");
+            int clientPort = getConfig().getInt("client-port");
 
-            connectionManager = new ConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort, config.getInt("connection-timeout"));
+            connectionManager = new ConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort);
             taskManager.newAsyncTask(connectionManager);
 
         } catch (UnknownHostException e) {
@@ -92,10 +87,6 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
     public void warning(String message) {
         getLogger().warning(message);
-    }
-
-    public YamlConfig getYamlConfig() {
-        return config;
     }
 
     public TaskManager getTaskManager() {

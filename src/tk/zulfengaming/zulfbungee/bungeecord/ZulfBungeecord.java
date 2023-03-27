@@ -32,7 +32,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServer> {
@@ -140,7 +139,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public Optional<ZulfProxyServer<ProxyServer>> getServer(ClientServer clientServerIn) {
+    public Optional<ZulfProxyServer> getServer(ClientServer clientServerIn) {
 
         ServerInfo bungeeServerInfo = getProxy().getServers().get(clientServerIn.getName());
 

@@ -8,19 +8,19 @@ server-host: "127.0.0.1"
 
 # The port which this client (this Spigot server) will bind to, so it can listen for the proxy.
 client-port: 8001
+# If you don't mind what port it chooses to bind to (e.g. your proxy and client are both on the same machine)
+# you can set this to true.
+choose-random-port: false
 
 # The IP this client will bind to.
 # This should usually be left as 0.0.0.0, or 127.0.0.1, but feel free to change this if you need to -
 # (i.e. you are on shared hosting / Pterodactyl)
 client-host: "0.0.0.0"
 
-# If your proxy cannot find the name of your server from
-
-# - Options -
-
-# How many milliseconds it will wait for a connection.
-# A timeout will be pronounced if the server does not respond in this time.
-connection-timeout: 2000
+# If your proxy cannot find the name of your server from its config, or if you want to define a custom one -
+# specify it here. This is usually always done automatically and can be left blank.
+# Ideally, make sure it matches the name that's defined in your proxy server software's config.
+forced-connection-name: ""
 
 
 # This will toggle the display of detailed messages about what is going to the console.

@@ -10,7 +10,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientP
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ProxyPlayerPermission<P> extends PacketHandler<P> {

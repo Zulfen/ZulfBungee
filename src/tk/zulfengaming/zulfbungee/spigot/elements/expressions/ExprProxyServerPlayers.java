@@ -22,13 +22,13 @@ import java.util.stream.Stream;
 public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
 
     static {
-        Skript.registerExpression(ExprProxyServerPlayers.class, ClientPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy|velocity) players [on %-proxyservers%]");
+        Skript.registerExpression(ExprProxyServerPlayers.class, ClientPlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] (bungeecord|bungee|proxy|velocity) players [on [server] %-proxyservers%]");
     }
 
     private Expression<ClientServer> servers;
 
     @Override
-    protected ClientPlayer[] get(@NotNull Event event) {
+    protected ClientPlayer @NotNull [] get(@NotNull Event event) {
 
         List<ClientPlayer> players;
 

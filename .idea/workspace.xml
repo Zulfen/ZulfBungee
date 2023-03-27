@@ -9,34 +9,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.4 - fix getting the current connection as a server.">
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/conditions/CondHasProxyPlayerPermission.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/skript/ClientServerDataContainer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerPermission.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option.">
+      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ConnectionName.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffPlayerSendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffPlayerSendMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffProxyBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffProxyBroadcast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffProxyPlayerExecute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/effects/EffProxyPlayerExecute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/PlayerSendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/PlayerSendMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyPlayerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyPlayerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyServerInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyServerInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ServerKickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ServerKickEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/IncomingServerType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/skript/Broadcast.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/skript/ClientPlayerDataContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/skript/ClientPlayerDataContainer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/skript/PlayerExecutableCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/client/skript/PlayerMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableModify.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableModify.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeePlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeeServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeeServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/socket/BungeeServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/socket/BungeeServerConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/ZulfBungeeSpigot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/ZulfBungeeSpigot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/config/YamlConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/SkriptConverters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/SkriptConverters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/expressions/ExprProxyServerPlayers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/expressions/ExprProxyServerPlayers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/SocketConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/SocketConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/tasks/ConnectionTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/tasks/ConnectionTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/ZulfBungeeProxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/ZulfBungeeProxy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/managers/PacketHandlerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/managers/PacketHandlerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/ZulfProxyPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/ZulfProxyPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/ZulfProxyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/ZulfProxyServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerKick.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerKick.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerSendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerSendMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerSwitchServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/PlayerSwitchServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyBroadcast.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyClientInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerOnline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerOnline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/socket/VelocityServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/socket/VelocityServerConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerPermission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayerPermission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/ProxyPlayers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/storage/db/H2Impl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/storage/db/H2Impl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/objects/VelocityPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/objects/VelocityPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/objects/VelocityServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/objects/VelocityServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +85,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="1.8" />
+  </component>
   <component name="ProblemsViewState">
     <option name="showToolbar" value="false" />
   </component>
@@ -105,7 +112,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.45517242&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -156,13 +163,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Alpha v0.7.9 - brought back and recoded the proxy server expression.">
-      <created>1660580938885</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1660580938885</updated>
     </task>
     <task id="LOCAL-00031" summary="Alpha v0.7.9 - restored old syntax but improved it!">
       <created>1660659193987</created>
@@ -500,7 +500,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679176689141</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="Alpha v0.9.5 - refactored some parts and added a condition for proxy player's permissions.">
+      <created>1679469064499</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1679469064499</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -515,8 +522,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.8.2 - :3" />
-    <MESSAGE value="Alpha v0.8.2 - duplicate connection fix (?)" />
     <MESSAGE value="Alpha v0.8.2 - added kick syntax!" />
     <MESSAGE value="Alpha v0.8.3 - network variable + servers patch" />
     <MESSAGE value="Alpha v0.8.3 - shutting down threads patch" />
@@ -540,7 +545,9 @@
     <MESSAGE value="Alpha v0.9.4 - slight clean up" />
     <MESSAGE value="Alpha v0.9.4 - another cleanup" />
     <MESSAGE value="Alpha v0.9.4 - fix getting the current connection as a server." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.4 - fix getting the current connection as a server." />
+    <MESSAGE value="Alpha v0.9.5 - refactored some parts and added a condition for proxy player's permissions." />
+    <MESSAGE value="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

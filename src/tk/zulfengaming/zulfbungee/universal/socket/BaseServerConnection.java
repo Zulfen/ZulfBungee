@@ -63,7 +63,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
             this.dataOutHandler = new DataOutHandler<>(this, socketIn);
             this.dataInHandler = new DataInHandler<>(this, socketIn);
         } catch (IOException e) {
-            end();
             throw new IOException("Could not establish a connection properly!");
         }
 
@@ -75,6 +74,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
         pluginInstance.getTaskManager().newTask(dataInHandler);
         pluginInstance.getTaskManager().newTask(dataOutHandler);
+
 
         do {
 
@@ -101,7 +101,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
                 }
 
             } catch (InterruptedException e) {
-                break;
+                Thread.currentThread().interrupt();
             }
 
         } while (running.get());
@@ -139,17 +139,15 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
             mainServer.removeServerConnection(this);
 
-            dataInHandler.shutdown();
-            dataOutHandler.shutdown();
+            if (dataInHandler != null && dataOutHandler != null) {
+                dataInHandler.shutdown();
+                dataOutHandler.shutdown();
+            }
 
             try {
-
                 socket.close();
-
             } catch (IOException e) {
-
                 pluginInstance.error("Error closing socket on connection " + address);
-
                 e.printStackTrace();
             }
         }
@@ -233,7 +231,6 @@ public abstract class BaseServerConnection<P> implements Runnable {
         return address;
     }
 
-
     public AtomicBoolean isSocketConnected() {
         return socketConnected;
     }
@@ -241,4 +238,5 @@ public abstract class BaseServerConnection<P> implements Runnable {
     public AtomicBoolean isRunning() {
         return running;
     }
+
 }

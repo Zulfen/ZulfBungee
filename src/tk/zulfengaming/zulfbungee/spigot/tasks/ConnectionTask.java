@@ -30,7 +30,8 @@ public class ConnectionTask implements Runnable {
     private final InetAddress serverAddress;
     private final int serverPort;
 
-    public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort, int timeOut) {
+    public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
+
         this.connectionManager = connectionManagerIn;
 
         this.clientAddress = clientAddress;
@@ -52,6 +53,7 @@ public class ConnectionTask implements Runnable {
         Thread.currentThread().setName("ConnectionTask");
 
         int finished = 0;
+        boolean chooseRandomPort = pluginInstance.getConfig().getBoolean("choose-random-port");
 
         pluginInstance.warning("Reconnecting every 2 seconds...");
 
@@ -61,7 +63,14 @@ public class ConnectionTask implements Runnable {
 
                 if (!connectionManager.isBlocked(new InetSocketAddress(serverAddress, serverPort))) {
 
-                    Socket socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort, clientAddress, clientPort);
+                    Socket socket;
+
+                    if (chooseRandomPort) {
+                        socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort);
+                    } else {
+                        socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort, clientAddress, clientPort);
+                    }
+
 
                     SocketConnection socketConnection = new SocketConnection(connectionManager, socket);
                     connectionManager.addInactiveConnection(socketConnection);

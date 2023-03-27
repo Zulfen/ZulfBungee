@@ -52,7 +52,14 @@ public class SocketConnection extends Connection {
 
         pluginInstance.logInfo(org.bukkit.ChatColor.GREEN + "Connection established with proxy!");
 
-        sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
+        String forcedName = pluginInstance.getConfig().getString("forced-connection-name");
+
+        if (forcedName.isEmpty()) {
+            sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
+        } else {
+            sendDirect(new Packet(PacketTypes.CONNECTION_NAME, true, true, new Object[]{forcedName, clientInfo}));
+        }
+
         sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
 
         do {
@@ -139,6 +146,7 @@ public class SocketConnection extends Connection {
         if (running.compareAndSet(true, false)) {
 
             socketConnected.compareAndSet(true, false);
+            skriptPacketQueue.offer(Optional.empty());
 
             if (dataInHandler != null && dataOutHandler != null) {
 

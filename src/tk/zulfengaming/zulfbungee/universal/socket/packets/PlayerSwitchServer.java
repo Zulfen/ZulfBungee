@@ -27,7 +27,7 @@ public class PlayerSwitchServer<P> extends PacketHandler<P> {
 
         if (clientServer != null) {
 
-            Optional<ZulfProxyServer<P>> server = getProxy().getServer(clientServer);
+            Optional<ZulfProxyServer> server = getProxy().getServer(clientServer);
 
             if (server.isPresent()) {
 

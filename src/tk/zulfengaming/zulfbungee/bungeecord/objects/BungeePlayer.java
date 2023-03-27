@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class BungeePlayer<P> extends ZulfProxyPlayer<ProxyServer> {
 
-    private ZulfProxyServer<ProxyServer> server;
+    private ZulfProxyServer server;
 
     private final String name;
 
@@ -52,7 +52,7 @@ public class BungeePlayer<P> extends ZulfProxyPlayer<ProxyServer> {
     }
 
     @Override
-    public ZulfProxyServer<ProxyServer> getServer() {
+    public ZulfProxyServer getServer() {
         return server;
     }
 
@@ -67,7 +67,7 @@ public class BungeePlayer<P> extends ZulfProxyPlayer<ProxyServer> {
     }
 
     @Override
-    public void connect(ZulfProxyServer<ProxyServer> serverIn) {
+    public void connect(ZulfProxyServer serverIn) {
         ServerInfo serverInfo = platform.getServerInfo(serverIn.getName());
         if (serverInfo != null) {
             bungeePlayer.connect(serverInfo);
