@@ -26,7 +26,7 @@ public class CondHasProxyPlayerPermission extends Condition {
 
     static {
         Skript.registerCondition(CondHasProxyPlayerPermission.class, "[(proxy|bungeecord|bungee|velocity) [player]] %-proxyplayers% (has|have) [the] permission[s] %strings%",
-                "[(proxy|bungeecord|bungee|velocity) [player]] (doesn't|does not|do not|don't) have [the] permission[s] %strings%");
+                "[(proxy|bungeecord|bungee|velocity) [player]] %-proxyplayers% (doesn't|does not|do not|don't) have [the] permission[s] %strings%");
     }
 
     @Override
@@ -37,7 +37,8 @@ public class CondHasProxyPlayerPermission extends Condition {
 
         if (response.isPresent()) {
             Packet packetIn = response.get();
-            return (boolean) packetIn.getDataSingle() == isNegated();
+            ZulfBungeeSpigot.getPlugin().warning(String.format("result: %s, isNegated: %s", packetIn.getDataSingle(), isNegated()));
+            return (boolean) packetIn.getDataSingle() != isNegated();
         }
 
         return isNegated();

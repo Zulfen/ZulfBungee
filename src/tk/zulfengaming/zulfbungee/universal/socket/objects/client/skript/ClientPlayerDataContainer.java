@@ -6,13 +6,18 @@ import java.io.Serializable;
 
 public class ClientPlayerDataContainer implements Serializable {
 
-    private final Object[] data = new Object[1];
+    private Object[] data = new Object[1];
 
     private ClientPlayer[] players = new ClientPlayer[1];
 
     public ClientPlayerDataContainer(Object dataIn, ClientPlayer[] playersIn) {
         this.data[0] = dataIn;
         this.players = playersIn;
+    }
+
+    public ClientPlayerDataContainer(Object[] dataIn, ClientPlayer playerIn) {
+        this.data = dataIn;
+        this.players[0] = playerIn;
     }
 
     public ClientPlayerDataContainer(Object dataIn, ClientPlayer playerIn) {
