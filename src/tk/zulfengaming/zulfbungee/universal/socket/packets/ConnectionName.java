@@ -21,7 +21,7 @@ public class ConnectionName<P> extends PacketHandler<P> {
 
         getMainServer().addActiveConnection(connection, name, clientInfo);
 
-        return new Packet(PacketTypes.CONNECTION_NAME, true, false, name);
+        return new Packet(PacketTypes.CONNECTION_NAME, true, true, name);
 
     }
 

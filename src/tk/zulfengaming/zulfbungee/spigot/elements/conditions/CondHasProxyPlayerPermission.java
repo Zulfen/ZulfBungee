@@ -50,10 +50,10 @@ public class CondHasProxyPlayerPermission extends Condition {
     }
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] expressions, int matchedPattern, @NotNull Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         this.expressionPlayer = (Expression<ClientPlayer>) expressions[0];
         this.permissions = (Expression<String>) expressions[1];
-        setNegated(parseResult.mark == 1);
+        setNegated(matchedPattern == 1);
         return true;
     }
 }
