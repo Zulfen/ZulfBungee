@@ -24,7 +24,7 @@ public class EffProxyBroadcast extends Effect {
     private Expression<String> message;
 
     static {
-        Skript.registerEffect(EffProxyBroadcast.class, "[(proxy|bungeecord|bungee|velocity)] broadcast [the [message]] %string% [(on|to) %-proxyservers%]");
+        Skript.registerEffect(EffProxyBroadcast.class, "(proxy|bungeecord|bungee|velocity) broadcast [the [message]] %string% [(on|to) %-proxyservers%]");
     }
 
     @Override
