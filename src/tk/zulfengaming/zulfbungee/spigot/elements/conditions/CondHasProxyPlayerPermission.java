@@ -38,7 +38,7 @@ public class CondHasProxyPlayerPermission extends Condition {
         if (response.isPresent()) {
             Packet packetIn = response.get();
             ZulfBungeeSpigot.getPlugin().warning(String.format("result: %s, isNegated: %s", packetIn.getDataSingle(), isNegated()));
-            return (boolean) packetIn.getDataSingle() != isNegated();
+            return (boolean) packetIn.getDataSingle() == isNegated();
         }
 
         return isNegated();
