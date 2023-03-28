@@ -1,5 +1,6 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
+import org.bukkit.ChatColor;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataInHandler;
 import tk.zulfengaming.zulfbungee.spigot.handlers.DataOutHandler;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
@@ -48,9 +49,11 @@ public class SocketConnection extends Connection {
         taskManager.newAsyncTask(dataInHandler);
         taskManager.newAsyncTask(dataOutHandler);
 
-        Thread.currentThread().setName(String.format("ClientConnection@%s", socket.getRemoteSocketAddress()));
+        SocketAddress socketAddress = socket.getRemoteSocketAddress();
 
-        pluginInstance.logInfo(org.bukkit.ChatColor.GREEN + "Connection established with proxy!");
+        Thread.currentThread().setName(String.format("ClientConnection@%s", socketAddress));
+
+        pluginInstance.logInfo(String.format("%sConnection established with proxy! (%s)", ChatColor.GREEN, socketAddress));
 
         String forcedName = pluginInstance.getConfig().getString("forced-connection-name");
 

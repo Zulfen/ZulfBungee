@@ -55,6 +55,10 @@ public class ConnectionTask implements Runnable {
         int finished = 0;
         boolean chooseRandomPort = pluginInstance.getConfig().getBoolean("choose-random-port");
 
+        if (chooseRandomPort) {
+            pluginInstance.logInfo("Connecting using a random port...");
+        }
+
         pluginInstance.warning("Reconnecting every 2 seconds...");
 
         while (finished < 1 && connectionManager.isRunning().get()) {
