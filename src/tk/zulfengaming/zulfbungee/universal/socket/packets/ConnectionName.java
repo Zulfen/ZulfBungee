@@ -4,6 +4,7 @@ import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 
 public class ConnectionName<P> extends PacketHandler<P> {
@@ -20,7 +21,7 @@ public class ConnectionName<P> extends PacketHandler<P> {
 
         getMainServer().addActiveConnection(connection, name, clientInfo);
 
-        return packetIn;
+        return new Packet(PacketTypes.CONNECTION_NAME, true, false, name);
 
     }
 
