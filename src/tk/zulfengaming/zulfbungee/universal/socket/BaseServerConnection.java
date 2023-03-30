@@ -60,8 +60,8 @@ public abstract class BaseServerConnection<P> implements Runnable {
         this.address = socket.getRemoteSocketAddress();
 
         try {
-            this.dataOutHandler = new DataOutHandler<>(this, socketIn);
             this.dataInHandler = new DataInHandler<>(this, socketIn);
+            this.dataOutHandler = new DataOutHandler<>(this, socketIn);
         } catch (IOException e) {
             throw new IOException("Could not establish a connection properly!");
         }

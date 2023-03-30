@@ -39,13 +39,10 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     private Logger logger;
 
     private BungeeConfig config;
-
     private MainServer<ProxyServer> mainServer;
-
     private BungeeTaskManager bungeeTaskManager;
 
     private CheckUpdateTask<ProxyServer> updater;
-
     private boolean isDebug = false;
 
     private final BungeeConsole console = new BungeeConsole(getProxy());

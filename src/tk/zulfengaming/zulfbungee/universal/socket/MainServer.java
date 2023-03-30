@@ -216,9 +216,7 @@ public abstract class MainServer<P> implements Runnable {
 
             pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
 
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, new Object[]{
-                    getClientServerArray()
-            }));
+            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
         } else {
             pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s", connectionIn.getAddress()));

@@ -4,9 +4,12 @@ import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
 import java.net.SocketAddress;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ProxyServerInfo extends PacketHandler {
@@ -19,11 +22,15 @@ public class ProxyServerInfo extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn, SocketAddress address) {
 
-        ClientServer[] servers = Stream.of(packetIn.getDataArray())
+        Map<String, ClientInfo> serverMap = Stream.of(packetIn.getDataArray())
                 .filter(ClientServer.class::isInstance)
-                .toArray(ClientServer[]::new);
+                .map(ClientServer.class::cast)
+                .collect(Collectors.toMap(
+                        ClientServer::getName,
+                        ClientServer::getClientInfo
+                ));
 
-        getConnection().getConnectionManager().setProxyServers(servers);
+        getConnection().getConnectionManager().setProxyServers(serverMap);
 
     }
 }

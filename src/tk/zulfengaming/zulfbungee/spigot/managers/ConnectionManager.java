@@ -1,5 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.managers;
 
+import ch.njol.skript.classes.Changer;
+import ch.njol.skript.registrations.Classes;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,6 +18,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -25,6 +28,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConnectionManager extends BukkitRunnable {
 
@@ -173,11 +177,31 @@ public class ConnectionManager extends BukkitRunnable {
 
     }
 
-    public void setProxyServers(ClientServer[] clientServers) {
-        proxyServers.clear();
-        for (ClientServer clientServer : clientServers) {
-            proxyServers.put(clientServer.getName(), clientServer.getClientInfo());
+    public void modifyNetworkVariable(Object[] delta, Changer.ChangeMode mode, String variableNameIn) {
+
+        Value[] values = new Value[0];
+
+        if (mode != Changer.ChangeMode.DELETE) {
+            values = Stream.of(delta)
+                    .map(Classes::serialize)
+                    .filter(Objects::nonNull)
+                    .map(value -> new Value(value.type, value.data))
+                    .toArray(Value[]::new);
         }
+
+        NetworkVariable variableOut = new NetworkVariable(variableNameIn, mode.name(), values);
+        sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
+
+    }
+
+    public void setProxyServers(Map<String, ClientInfo> serversIn) {
+
+        boolean changed = proxyServers.keySet().retainAll(serversIn.keySet());
+
+        if (!changed) {
+            proxyServers.putAll(serversIn);
+        }
+
     }
 
     public List<ClientServer> getAllProxyServers() {

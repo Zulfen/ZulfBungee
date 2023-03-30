@@ -7,24 +7,15 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.variables.SerializedVariable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
-import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
+import tk.zulfengaming.zulfbungee.spigot.util.VariableUtil;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 
 // Some code I have written here has been referenced from Skungee 2.0.0:
@@ -39,15 +30,12 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     private Variable<?> networkVariable;
 
     @Override
-    protected Object[] get(Event event) {
+    protected Object[] get(@NotNull Event event) {
 
         Optional<NetworkVariable> response = ZulfBungeeSpigot.getPlugin()
                 .getConnectionManager().requestNetworkVariable(networkVariable.getName().toString(event));
 
-        return response.map(networkVariable -> Stream.of(networkVariable.getValueArray())
-                .filter(Objects::nonNull)
-                .map(value -> Classes.deserialize(value.type, value.data))
-                .toArray(Object[]::new)).orElse(null);
+        return response.map(VariableUtil::toData).orElse(null);
 
     }
 
@@ -86,29 +74,12 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
     }
 
     @Override
-    public void change(@NotNull Event e, Object[] delta, Changer.ChangeMode mode) {
-
-        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
-
-        ArrayList<Value> valuesOut = new ArrayList<>();
-
-        if (!mode.equals(Changer.ChangeMode.DELETE)) {
-            for (Object o : delta) {
-                SerializedVariable.Value value = Classes.serialize(o);
-                if (value != null) {
-                    valuesOut.add(new Value(value.type, value.data));
-                }
-            }
-        }
-
-        NetworkVariable variableOut = new NetworkVariable(networkVariable.getName().toString(e), mode.name(), valuesOut.toArray(new Value[0]));
-
-        connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
-
+    public void change(@NotNull Event e, Object[] delta, Changer.@NotNull ChangeMode mode) {
+        ZulfBungeeSpigot.getPlugin().getConnectionManager().modifyNetworkVariable(delta, mode, networkVariable.getName().toString(e));
     }
 
     @Override
-    public Class<?> [] acceptChange(Changer.@NotNull ChangeMode mode) {
+    public Class<?>[] acceptChange(Changer.@NotNull ChangeMode mode) {
 
         if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) {
             return CollectionUtils.array(isSingle() ? Object.class : Object[].class);

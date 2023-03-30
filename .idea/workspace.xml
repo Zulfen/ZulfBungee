@@ -9,8 +9,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.5 - database fixes">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.5 - fix proxy player permission syntax">
+      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/ExprSecNetworkVariable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/util/VariableUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/bungee.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyServerInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyServerInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableGet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableGet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +42,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="multiplatform" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -82,7 +95,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.45517242&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -97,9 +110,9 @@
       <recent name="tk.zulfengaming.zulfbungee.bungeecord.command.subcommands" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="tk.zulfengaming.zulfbungee.spigot.elements.expressions" />
       <recent name="tk.zulfengaming.zulfbungee.universal.socket.packets" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.elements.conditions" />
-      <recent name="tk.zulfengaming.zulfbungee.spigot.elements.expressions" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.socket.packets" />
       <recent name="tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript" />
     </key>
@@ -133,55 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax.">
-      <created>1672017750478</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1672017750478</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Alpha v0.7.9 - had to remove ping event :( Fixed updater bug and added flexibility to syntax.">
-      <created>1672017843478</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1672017843478</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Alpha v0.8.0 - working on multiplatform support slowly.">
-      <created>1672361862185</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1672361862185</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Alpha v0.8.0 - initial multiplatform rewrite commit. Supports bungeecord only right now.">
-      <created>1672431828464</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1672431828464</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Alpha v0.8.0 - working multiplatform build.">
-      <created>1672953025108</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1672953025126</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Alpha v0.8.0 - remove a fullstop">
-      <created>1672953316236</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1672953316236</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Alpha v0.8.0 - change velocity name">
-      <created>1672954032134</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1672954032134</updated>
     </task>
     <task id="LOCAL-00040" summary="Alpha v0.8.0 - fixed command handler and syntax again hehe">
       <created>1673193044030</created>
@@ -477,7 +441,56 @@
       <option name="project" value="LOCAL" />
       <updated>1679937790089</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Alpha v0.9.5 - syntax adjustments">
+      <created>1680017116918</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1680017116919</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Alpha v0.9.5 - more verbose logging">
+      <created>1680019297972</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1680019297972</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Alpha v0.9.5 - small refactor">
+      <created>1680019582477</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1680019582478</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Alpha v0.9.5 - fix proxy player permission syntax">
+      <created>1680021321922</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1680021321922</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Alpha v0.9.5 - fix proxy player permission syntax">
+      <created>1680025821374</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1680025821374</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Alpha v0.9.5 - fix proxy player permission syntax">
+      <created>1680025945189</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1680025945189</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Alpha v0.9.5 - fix proxy player permission syntax">
+      <created>1680026269335</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1680026269336</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,10 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.8.3 - network variable + servers patch" />
-    <MESSAGE value="Alpha v0.8.3 - shutting down threads patch" />
-    <MESSAGE value="Alpha v0.8.3 - don't bother changing heartbeat tick time" />
-    <MESSAGE value="Alpha v0.8.3 - syntax fix" />
     <MESSAGE value="Alpha v0.8.4 - bungeecord getServers() fix" />
     <MESSAGE value="Alpha v0.8.5 - fix potential crash with network variables" />
     <MESSAGE value="Alpha v0.8.5 - removed response time setting." />
@@ -517,7 +526,11 @@
     <MESSAGE value="Alpha v0.9.5 - refactored some parts and added a condition for proxy player's permissions." />
     <MESSAGE value="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option." />
     <MESSAGE value="Alpha v0.9.5 - database fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.5 - database fixes" />
+    <MESSAGE value="Alpha v0.9.5 - syntax adjustments" />
+    <MESSAGE value="Alpha v0.9.5 - more verbose logging" />
+    <MESSAGE value="Alpha v0.9.5 - small refactor" />
+    <MESSAGE value="Alpha v0.9.5 - fix proxy player permission syntax" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.5 - fix proxy player permission syntax" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
