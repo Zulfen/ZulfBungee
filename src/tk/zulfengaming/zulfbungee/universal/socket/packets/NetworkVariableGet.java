@@ -8,6 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -36,9 +37,12 @@ public class NetworkVariableGet<P> extends PacketHandler<P> {
                 if (storedVariable.isPresent()) {
                     NetworkVariable variable = storedVariable.get();
                     connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable));
+                    return;
                 }
 
             }
+
+            connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Value[0]));
 
         });
 

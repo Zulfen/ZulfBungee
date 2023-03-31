@@ -18,7 +18,7 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
     private static String NAME;
 
     static {
-        Skript.registerExpression(ExprSecNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "[the [(retrieved|loaded)]] (proxy|network|bungeecord|bungee|velocity) variable");
+        Skript.registerExpression(ExprSecNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "[the [(retrieved|loaded)]] [(proxy|network|bungeecord|bungee|velocity)] variable");
     }
 
     @Override

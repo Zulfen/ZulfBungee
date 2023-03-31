@@ -7,7 +7,6 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.util.VariableUtil;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class SecNetworkVariable extends Section {
 
             if (!variableExpression.isLocal()) {
 
-                trigger = loadCode(sectionNode, "network variable execute", getParser().getCurrentEvents());
+                trigger = loadCode(sectionNode, "using network variable");
                 return true;
 
             } else {
@@ -56,6 +55,8 @@ public class SecNetworkVariable extends Section {
         TriggerItem item = walk(event, false);
 
         plugin.getTaskManager().newAsyncTask(() -> {
+
+            Thread.currentThread().setName("SecNetworkVariable");
 
             Optional<NetworkVariable> requestNetworkVariable = plugin.getConnectionManager()
                     .requestNetworkVariable(variableExpression.getName().toString(event));
