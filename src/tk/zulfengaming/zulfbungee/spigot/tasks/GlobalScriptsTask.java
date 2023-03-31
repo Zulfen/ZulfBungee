@@ -50,8 +50,8 @@ public class GlobalScriptsTask implements Supplier<File> {
                 }
                 break;
             case DELETE:
-                removeScript(scriptFile);
                 skriptProcess("disable");
+                removeScript(scriptFile);
                 break;
             case RELOAD:
                 reloadScript(scriptFile);

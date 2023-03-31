@@ -203,10 +203,18 @@ public abstract class BaseServerConnection<P> implements Runnable {
 
             try {
 
-                byte[] data = Files.readAllBytes(scriptPathIn);
+                if (actionIn != ScriptAction.DELETE) {
 
-                sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
-                        scriptName, playerOut, data)));
+                    byte[] data = Files.readAllBytes(scriptPathIn);
+
+                    sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
+                            scriptName, playerOut, data)));
+
+                } else {
+                    sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
+                            scriptName, playerOut, new byte[0])));
+                }
+
 
             } catch (IOException e) {
                 pluginInstance.error(String.format("Error while parsing script %s!", scriptName));
