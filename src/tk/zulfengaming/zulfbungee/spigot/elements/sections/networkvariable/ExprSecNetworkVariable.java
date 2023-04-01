@@ -77,7 +77,7 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
         }
     }
 
-    protected static void setNetworkVariable(NetworkVariable networkVariableIn) {
+    protected synchronized static void setNetworkVariable(NetworkVariable networkVariableIn) {
         NAME = networkVariableIn.getName();
         DATA = VariableUtil.toData(networkVariableIn);
     }

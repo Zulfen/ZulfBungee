@@ -9,9 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - update version number">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - section check to prevent inception" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,13 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Alpha v0.8.0 - another localhost fix">
-      <created>1675557086534</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1675557086534</updated>
     </task>
     <task id="LOCAL-00046" summary="Alpha v0.8.1 - experimental network variables + message fix">
       <created>1675887150049</created>
@@ -477,7 +468,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680362469721</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="Alpha v0.9.6 - section check to prevent inception">
+      <created>1680363072015</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1680363072015</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,7 +490,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.1 - added servers command, added proxy server command execution syntax, hopefully fixed thread safety issues, the updater and Velocity command quirks." />
     <MESSAGE value="Alpha v0.9.1 - bruh" />
     <MESSAGE value="Alpha v0.9.1 - im actually gonna cry wtf" />
     <MESSAGE value="Alpha v0.9.2 - fixed not all proxy servers showing up on every server and player messaging fixes." />
@@ -517,7 +514,8 @@
     <MESSAGE value="Alpha v0.9.6 - fixes errors with reloading deleted scripts." />
     <MESSAGE value="Alpha v0.9.6 - better script loading." />
     <MESSAGE value="Alpha v0.9.6 - update version number" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.6 - update version number" />
+    <MESSAGE value="Alpha v0.9.6 - section check to prevent inception" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.6 - section check to prevent inception" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
