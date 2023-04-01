@@ -94,7 +94,7 @@ public class ConnectionTask implements Runnable {
 
                     StackTraceElement[] stackTrace = e.getStackTrace();
 
-                    for (int i = 0; i < Math.min(3, stackTrace.length); i++) {
+                    for (int i = 0; i < Math.min(6, stackTrace.length); i++) {
                         pluginInstance.warning(stackTrace[i].toString());
                     }
 
