@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - section check to prevent inception" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - section check to prevent inception">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,13 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00046" summary="Alpha v0.8.1 - experimental network variables + message fix">
-      <created>1675887150049</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1675887150050</updated>
     </task>
     <task id="LOCAL-00047" summary="Alpha v0.8.2 - experimental Pterodactyl work around.">
       <created>1676048033917</created>
@@ -475,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680363072015</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="Alpha v0.9.6 - section check to prevent inception">
+      <created>1680363545238</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1680363545238</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -518,8 +521,43 @@
     <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.6 - section check to prevent inception" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java</url>
+          <line>88</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java</url>
+          <line>58</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java</url>
+          <line>64</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java</url>
+          <line>68</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
+        <PinnedItemInfo parentTag="sun.nio.fs.WindowsPath" memberName="pathForWin32Calls" />
         <PinnedItemInfo parentTag="java.util.concurrent.ThreadPoolExecutor$Worker" memberName="completedTasks" />
         <PinnedItemInfo parentTag="java.util.concurrent.atomic.AtomicBoolean" memberName="value" />
         <PinnedItemInfo parentTag="tk.zulfengaming.zulfbungee.spigot.managers.ClientListenerManager" memberName="zulfServerInfo" />

@@ -56,13 +56,13 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
                 Path scriptPath = pathWatchEvent.context();
 
-                if (scriptPath.getFileName().endsWith(".sk")) {
+                if (scriptPath.getFileName().toString().endsWith(".sk")) {
 
                     if (!scriptsMap.containsKey(scriptPath)) {
 
                         if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind)) {
 
-                            if (!scriptPath.getFileName().startsWith("-")) {
+                            if (!scriptPath.getFileName().toString().startsWith("-")) {
                                 scriptsMap.put(scriptPath, ScriptAction.NEW);
                             }
 
