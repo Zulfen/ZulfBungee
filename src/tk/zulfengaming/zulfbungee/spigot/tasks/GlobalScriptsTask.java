@@ -8,6 +8,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 public class GlobalScriptsTask implements Supplier<File> {
@@ -17,12 +18,18 @@ public class GlobalScriptsTask implements Supplier<File> {
     private final byte[] data;
 
     private final String scriptName;
+    private final File scriptFile;
+    private final File unloadedScriptFile;
     private final ScriptAction scriptAction;
     private final CommandSender sender;
 
     public GlobalScriptsTask(ZulfBungeeSpigot pluginInstanceIn, String scriptNameIn, ScriptAction scriptActionIn, CommandSender senderIn, byte[] dataIn) {
         this.pluginInstance = pluginInstanceIn;
         this.scriptName = scriptNameIn;
+        this.scriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
+                scriptName);
+        this.unloadedScriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
+                "-" + scriptName);
         this.scriptAction = scriptActionIn;
         this.sender = senderIn;
         this.data = dataIn;
@@ -33,28 +40,19 @@ public class GlobalScriptsTask implements Supplier<File> {
     public File get() {
 
         Thread.currentThread().setName("GlobalScriptsTask");
-
-        File scriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
-                    scriptName);
+        boolean exists = scriptFile.exists();
 
         switch (scriptAction) {
 
             // proxy may report this as new to its filesystem, but will already exist on client's filesystem.
-            case NEW:
-                if (!scriptFile.exists()) {
-                    newScript(scriptFile);
-                    skriptProcess("enable");
-                } else {
-                    reloadScript(scriptFile);
-                    skriptProcess("reload");
+            case DELETE:
+                if (exists) {
+                    skriptProcess("disable");
+                    removeScript();
                 }
                 break;
-            case DELETE:
-                skriptProcess("disable");
-                removeScript(scriptFile);
-                break;
             case RELOAD:
-                reloadScript(scriptFile);
+                reloadScript();
                 skriptProcess("reload");
                 break;
 
@@ -64,43 +62,64 @@ public class GlobalScriptsTask implements Supplier<File> {
 
     }
 
-    private void reloadScript(File fileInstance) {
-        removeScript(fileInstance);
-        newScript(fileInstance);
+    private void reloadScript() {
+        removeScript();
+        newScript();
     }
 
-    private void newScript(File fileInstance) {
+    private void newScript() {
 
         try {
 
-            boolean created = fileInstance.createNewFile();
+            boolean created = scriptFile.createNewFile();
 
             if (created) {
-
-                Files.write(fileInstance.toPath(), data);
-
+                Files.write(scriptFile.toPath(), data);
             }
 
         } catch (IOException e) {
-            pluginInstance.error(String.format("There was an error trying to save script %s:", fileInstance.getName()));
+            pluginInstance.error(String.format("There was an error trying to save script %s:", scriptFile.getName()));
             e.printStackTrace();
         }
 
     }
 
-    private void removeScript(File fileInstance) {
+    private void removeScript() {
 
-        if (fileInstance.exists()) {
-            if (!fileInstance.delete()) {
-                pluginInstance.warning(String.format("Script file %s could not be deleted.", fileInstance.getName()));
+        if (unloadedScriptFile.exists()) {
+            boolean delete = unloadedScriptFile.delete();
+            if (!delete) {
+                pluginInstance.warning(String.format("Couldn't delete unloaded script file %s", unloadedScriptFile.getName()));
             }
         }
+
+        if (scriptFile.exists()) {
+            boolean delete = scriptFile.delete();
+            if (!delete) {
+                pluginInstance.warning(String.format("Couldn't delete loaded script file %s", scriptFile.getName()));
+            }
+        }
+
 
     }
 
     private void skriptProcess(String commandAction) {
-        pluginInstance.getTaskManager().newPluginTask(Skript.getInstance(), () -> pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
-                commandAction, scriptName)));
+
+        pluginInstance.warning(commandAction);
+
+        try {
+            pluginInstance.getTaskManager().newMainThreadTask(() -> {
+                pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
+                        commandAction, scriptName));
+                return null;
+            }).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            pluginInstance.warning(String.format("Error processing script file %s:", scriptName));
+            e.printStackTrace();
+        }
+
     }
 
 }

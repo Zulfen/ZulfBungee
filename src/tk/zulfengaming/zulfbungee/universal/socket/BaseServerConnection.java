@@ -186,16 +186,15 @@ public abstract class BaseServerConnection<P> implements Runnable {
     }
 
     // input null into senderIn to make the console reload the scripts, not a player.
-    public void sendScript(Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender<P> senderIn) {
+    // name allows you to define a custom name if needed
+    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender<P> senderIn) {
 
         pluginInstance.getTaskManager().newTask(() -> {
-
-            String scriptName = scriptPathIn.getFileName().toString();
 
             ClientPlayer playerOut = null;
 
             if (senderIn != null) {
-                if (senderIn.isPlayer()) {
+                if (senderIn.isPlayer() && senderIn instanceof ZulfProxyPlayer) {
                     ZulfProxyPlayer<P> playerIn = (ZulfProxyPlayer<P>) senderIn;
                     playerOut = new ClientPlayer(playerIn.getName(), playerIn.getUuid());
                 }
@@ -211,7 +210,7 @@ public abstract class BaseServerConnection<P> implements Runnable {
                             scriptName, playerOut, data)));
 
                 } else {
-                    sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
+                    sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(ScriptAction.DELETE,
                             scriptName, playerOut, new byte[0])));
                 }
 

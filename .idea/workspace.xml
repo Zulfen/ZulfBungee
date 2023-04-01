@@ -9,21 +9,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.5 - fix proxy player permission syntax">
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/ExprSecNetworkVariable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/util/VariableUtil.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - fixes errors with reloading deleted scripts.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/bungee.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyServerInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/socket/packets/ProxyServerInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/managers/TaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/tasks/GlobalScriptsTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/tasks/GlobalScriptsTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptLoad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptLoad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptReload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptUnload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/command/subcommands/script/ScriptUnload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/config/ProxyConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/config/ProxyConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/BaseServerConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/MainServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableGet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/NetworkVariableGet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/GlobalScript.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/packets/GlobalScript.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,27 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Alpha v0.8.0 - fixed command handler and syntax again hehe">
-      <created>1673193044030</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1673193044030</updated>
-    </task>
-    <task id="LOCAL-00041" summary="Alpha v0.8.0 - more work">
-      <created>1674507125314</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1674507125314</updated>
-    </task>
-    <task id="LOCAL-00042" summary="Alpha v0.8.0 - fixed colour parsing, cleaned up somg code and hopefully fixed localhost bug.">
-      <created>1675552280674</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1675552280674</updated>
     </task>
     <task id="LOCAL-00043" summary="Alpha v0.8.0 - little fix">
       <created>1675552466791</created>
@@ -490,7 +466,28 @@
       <option name="project" value="LOCAL" />
       <updated>1680026269336</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="Alpha v0.9.6 - proxy servers fix, initial async network variable support.">
+      <created>1680211749753</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1680211749753</updated>
+    </task>
+    <task id="LOCAL-00090" summary="Alpha v0.9.6 - fixed network variable sections so that they are usable. Also fixed a potential crash with empty network variables.">
+      <created>1680281383303</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1680281383303</updated>
+    </task>
+    <task id="LOCAL-00091" summary="Alpha v0.9.6 - fixes errors with reloading deleted scripts.">
+      <created>1680286005010</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1680286005010</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -505,9 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.8.4 - bungeecord getServers() fix" />
-    <MESSAGE value="Alpha v0.8.5 - fix potential crash with network variables" />
-    <MESSAGE value="Alpha v0.8.5 - removed response time setting." />
     <MESSAGE value="Alpha v0.9.0 - client rewrite finished, starts up (at least)" />
     <MESSAGE value="Alpha v0.9.0 - added proxy player command syntax and fixed events bug with network variables." />
     <MESSAGE value="Alpha v0.9.1 - added servers command, added proxy server command execution syntax, hopefully fixed thread safety issues, the updater and Velocity command quirks." />
@@ -530,7 +524,10 @@
     <MESSAGE value="Alpha v0.9.5 - more verbose logging" />
     <MESSAGE value="Alpha v0.9.5 - small refactor" />
     <MESSAGE value="Alpha v0.9.5 - fix proxy player permission syntax" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.5 - fix proxy player permission syntax" />
+    <MESSAGE value="Alpha v0.9.6 - proxy servers fix, initial async network variable support." />
+    <MESSAGE value="Alpha v0.9.6 - fixed network variable sections so that they are usable. Also fixed a potential crash with empty network variables." />
+    <MESSAGE value="Alpha v0.9.6 - fixes errors with reloading deleted scripts." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.6 - fixes errors with reloading deleted scripts." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

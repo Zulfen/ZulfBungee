@@ -1,11 +1,11 @@
 package tk.zulfengaming.zulfbungee.universal.command.subcommands.script;
 
+import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
+import tk.zulfengaming.zulfbungee.universal.command.util.CommandUtils;
+import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
-import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
-import tk.zulfengaming.zulfbungee.universal.command.util.CommandUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class ScriptReload<P> extends CommandHandler<P> {
 
     private final WatchKey watchKey;
+    private final Path scriptsFolderPath;
 
     public ScriptReload(MainServer<P> mainServerIn) {
 
@@ -26,8 +27,10 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
             WatchService folderWatchService = FileSystems.getDefault().newWatchService();
 
-            this.watchKey = getMainServer().getPluginInstance().getConfig()
-                    .getScriptsFolderPath()
+            this.scriptsFolderPath = getMainServer().getPluginInstance().getConfig()
+                    .getScriptsFolderPath();
+
+            this.watchKey = scriptsFolderPath
                     .register(folderWatchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
 
 
@@ -42,7 +45,7 @@ public class ScriptReload<P> extends CommandHandler<P> {
     @SuppressWarnings("unchecked")
     public void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs) {
 
-        HashMap<String, ScriptAction> scriptsMap = new HashMap<>();
+        HashMap<Path, ScriptAction> scriptsMap = new HashMap<>();
 
         if (watchKey != null) {
 
@@ -51,18 +54,24 @@ public class ScriptReload<P> extends CommandHandler<P> {
                 WatchEvent.Kind<?> kind = event.kind();
                 WatchEvent<Path> pathWatchEvent = (WatchEvent<Path>) event;
 
-                String scriptName = pathWatchEvent.context().getFileName().toString();
+                Path scriptPath = pathWatchEvent.context();
 
-                if (scriptName.endsWith(".sk")) {
+                if (scriptPath.getFileName().endsWith(".sk")) {
 
-                    if (!scriptsMap.containsKey(scriptName)) {
+                    if (!scriptsMap.containsKey(scriptPath)) {
+
                         if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind)) {
-                            scriptsMap.put(scriptName, ScriptAction.NEW);
+
+                            if (!scriptPath.getFileName().startsWith("-")) {
+                                scriptsMap.put(scriptPath, ScriptAction.NEW);
+                            }
+
                         } else if (StandardWatchEventKinds.ENTRY_MODIFY.equals(kind)) {
-                            scriptsMap.put(scriptName, ScriptAction.RELOAD);
+                            scriptsMap.put(scriptPath, ScriptAction.RELOAD);
                         } else if (StandardWatchEventKinds.ENTRY_DELETE.equals(kind)) {
-                            scriptsMap.put(scriptName, ScriptAction.DELETE);
+                            scriptsMap.put(scriptPath, ScriptAction.DELETE);
                         }
+
                     }
 
                 }
@@ -86,11 +95,12 @@ public class ScriptReload<P> extends CommandHandler<P> {
             } else {
 
                 String scriptName = CommandUtils.getScriptNameArgs(separateArgs);
+                Path scriptPath = scriptsFolderPath.resolve(scriptName);
 
-                if (getMainServer().getPluginInstance().getConfig().getScripts().contains(scriptName)) {
+                if (Files.exists(scriptPath)) {
 
-                    HashMap<String, ScriptAction> tempScriptsMap = new HashMap<>(scriptsMap);
-                    tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptName));
+                    HashMap<Path, ScriptAction> tempScriptsMap = new HashMap<>(scriptsMap);
+                    tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptPath));
 
                     if (!tempScriptsMap.isEmpty()) {
                         getMainServer().syncScripts(tempScriptsMap, sender);
@@ -118,12 +128,18 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
         if (index == 0) {
 
-            ArrayList<String> suggestions = new ArrayList<>(getMainServer().getPluginInstance().getConfig().getScripts());
+            ArrayList<String> suggestions = new ArrayList<>();
 
-            if (!suggestions.isEmpty()) {
-                suggestions.add("all");
-                return suggestions;
+            for (String realName : getMainServer().getPluginInstance().getConfig().getScriptPaths().keySet()) {
+
+                if (!realName.startsWith("-")) {
+                    suggestions.add(realName);
+                }
+
             }
+
+           return suggestions;
+
 
         }
 

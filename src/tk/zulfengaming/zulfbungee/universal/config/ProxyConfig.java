@@ -8,13 +8,17 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ProxyConfig<P> {
 
     protected final File scriptsFolder;
     protected final Path scriptsFolderPath;
     protected final File configFile;
+
+    private final ArrayList<String> activeScripts = new ArrayList<>();
 
     protected ProxyConfig(ZulfBungeeProxy<P> instanceIn) {
 
@@ -64,9 +68,9 @@ public abstract class ProxyConfig<P> {
 
     }
 
-    public List<String> getScripts() {
+    public Map<String, Path> getScriptPaths() {
 
-        ArrayList<String> cachedScripts = new ArrayList<>();
+        HashMap<String, Path> cachedScripts = new HashMap<>();
 
         if (scriptsFolder.exists()) {
 
@@ -79,7 +83,7 @@ public abstract class ProxyConfig<P> {
                     String name = file.getName();
 
                     if (name.endsWith(".sk")) {
-                        cachedScripts.add(name);
+                        cachedScripts.put(name, file.toPath());
                     }
 
                 }
@@ -90,12 +94,20 @@ public abstract class ProxyConfig<P> {
 
     }
 
-    public Path getScriptsFolderPath() {
-        return scriptsFolderPath;
+    public void registerScript(String nameIn) {
+        activeScripts.add(nameIn);
     }
 
-    public Path getScriptPath(String scriptNameIn) {
-        return scriptsFolderPath.resolve(scriptNameIn);
+    public void unregisterScript(String nameIn) {
+        activeScripts.remove(nameIn);
+    }
+
+    public boolean isScriptActive(String nameIn) {
+        return activeScripts.contains(nameIn);
+    }
+
+    public Path getScriptsFolderPath() {
+        return scriptsFolderPath;
     }
 
     public abstract String getString(String node);

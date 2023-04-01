@@ -168,15 +168,25 @@ public abstract class MainServer<P> implements Runnable {
         }
     }
 
-    public void syncScripts(Map<String, ScriptAction> scriptNamesIn, ProxyCommandSender<P> senderIn) {
+    public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender<P> senderIn) {
 
         for (BaseServerConnection<P> connection : socketConnections) {
 
-            for (Map.Entry<String, ScriptAction> script : scriptNamesIn.entrySet()) {
+            for (Map.Entry<Path, ScriptAction> script : scriptNamesIn.entrySet()) {
+                String name = script.getKey().getFileName().toString();
+                connection.sendScript(name, script.getKey(), script.getValue(), senderIn);
+            }
 
-                Path scriptPath = pluginInstance.getConfig().getScriptPath(script.getKey());
-                connection.sendScript(scriptPath, script.getValue(), senderIn);
+        }
 
+    }
+
+    public void syncScripts(Map<String, Path> scriptNamesIn, ScriptAction scriptActionIn, ProxyCommandSender<P> senderIn) {
+
+        for (BaseServerConnection<P> connection : socketConnections) {
+
+            for (Map.Entry<String, Path> script : scriptNamesIn.entrySet()) {
+                connection.sendScript(script.getKey(), script.getValue(), scriptActionIn, senderIn);
             }
 
         }

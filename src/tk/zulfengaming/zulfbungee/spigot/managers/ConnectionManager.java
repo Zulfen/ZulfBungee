@@ -308,12 +308,17 @@ public class ConnectionManager extends BukkitRunnable {
         if (running.compareAndSet(true, false)) {
 
             for (Connection connection : allConnections) {
-
                 connection.shutdown();
-
             }
 
             connectionBarrier.release();
+
+            for (File scriptFile : scriptFiles) {
+                boolean delete = scriptFile.delete();
+                if (!delete) {
+                    pluginInstance.warning(String.format("Script %s could not be deleted. Does it exist?", scriptFile.getName()));
+                }
+            }
 
         }
 
