@@ -105,8 +105,6 @@ public class GlobalScriptsTask implements Supplier<File> {
 
     private void skriptProcess(String commandAction) {
 
-        pluginInstance.warning(commandAction);
-
         try {
             pluginInstance.getTaskManager().newMainThreadTask(() -> {
                 pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
