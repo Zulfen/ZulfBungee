@@ -65,18 +65,14 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
     @EventHandler
     public void onServerKick(ServerKickEvent event) {
 
-        if (event.getCause() == ServerKickEvent.Cause.SERVER) {
+        ProxiedPlayer player = event.getPlayer();
 
-            ProxiedPlayer player = event.getPlayer();
+        String serverName = event.getKickedFrom().getName();
 
-            String serverName = event.getKickedFrom().getName();
+        if (mainServer.getServerNames().contains(serverName)) {
 
-            if (mainServer.getServerNames().contains(serverName)) {
-
-                String legacyText = TextComponent.toLegacyText(event.getKickReasonComponent());
-                serverKick(new ClientPlayer(player.getName(), player.getUniqueId()), legacyText);
-
-            }
+            String legacyText = TextComponent.toLegacyText(event.getKickReasonComponent());
+            serverKick(new ClientPlayer(player.getName(), player.getUniqueId()), legacyText);
 
         }
 

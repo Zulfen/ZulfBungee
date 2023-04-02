@@ -9,7 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - fix reload command not doing path checks properly">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.6 - remove pesky debug message">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,13 +133,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Alpha v0.8.2 - removed security checks entirely.">
-      <created>1676059537588</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1676059537588</updated>
     </task>
     <task id="LOCAL-00049" summary="Alpha v0.8.2 - removed security checks entirely.">
       <created>1676059900969</created>
@@ -477,7 +470,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680365362001</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="Alpha v0.9.6 - remove pesky debug message">
+      <created>1680366112664</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1680366112664</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,7 +492,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.1 - im actually gonna cry wtf" />
     <MESSAGE value="Alpha v0.9.2 - fixed not all proxy servers showing up on every server and player messaging fixes." />
     <MESSAGE value="Alpha v0.9.2 - fix idk?" />
     <MESSAGE value="Alpha v0.9.2 - fix idk again?" />
@@ -517,7 +516,8 @@
     <MESSAGE value="Alpha v0.9.6 - update version number" />
     <MESSAGE value="Alpha v0.9.6 - section check to prevent inception" />
     <MESSAGE value="Alpha v0.9.6 - fix reload command not doing path checks properly" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.6 - fix reload command not doing path checks properly" />
+    <MESSAGE value="Alpha v0.9.6 - remove pesky debug message" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.6 - remove pesky debug message" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
