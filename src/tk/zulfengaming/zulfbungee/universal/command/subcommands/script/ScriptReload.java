@@ -55,14 +55,15 @@ public class ScriptReload<P> extends CommandHandler<P> {
                 WatchEvent<Path> pathWatchEvent = (WatchEvent<Path>) event;
 
                 Path scriptPath = pathWatchEvent.context();
+                String scriptName = scriptPath.getFileName().toString();
 
-                if (scriptPath.getFileName().toString().endsWith(".sk")) {
+                if (scriptName.endsWith(".sk")) {
 
                     if (!scriptsMap.containsKey(scriptPath)) {
 
                         if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind)) {
 
-                            if (!scriptPath.getFileName().toString().startsWith("-")) {
+                            if (!scriptName.startsWith("-")) {
                                 scriptsMap.put(scriptPath, ScriptAction.NEW);
                             }
 
@@ -130,7 +131,9 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
             ArrayList<String> suggestions = new ArrayList<>();
 
-            for (String realName : getMainServer().getPluginInstance().getConfig().getScriptPaths().keySet()) {
+            for (Path path : getMainServer().getPluginInstance().getConfig().getScriptPaths()) {
+
+                String realName = path.getFileName().toString();
 
                 if (!realName.startsWith("-")) {
                     suggestions.add(realName);

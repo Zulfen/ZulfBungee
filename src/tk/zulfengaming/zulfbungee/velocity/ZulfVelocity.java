@@ -204,8 +204,8 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
     }
 
     @Override
-    public File getPluginFolder() {
-        return pluginFolderPath.toFile();
+    public Path getPluginFolder() {
+        return pluginFolderPath;
     }
 
     @Override

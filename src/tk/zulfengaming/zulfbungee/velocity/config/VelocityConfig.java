@@ -21,7 +21,7 @@ public class VelocityConfig extends ProxyConfig<ProxyServer> {
         super(instanceIn);
 
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(
-                instanceIn.getPluginFolder().toPath().resolve("config.yml")).build();
+                instanceIn.getPluginFolder().resolve("config.yml")).build();
 
         try {
              this.loadedConfig = loader.load();

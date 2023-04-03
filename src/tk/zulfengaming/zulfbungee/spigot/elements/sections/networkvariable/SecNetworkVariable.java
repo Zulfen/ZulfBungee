@@ -3,10 +3,12 @@ package tk.zulfengaming.zulfbungee.spigot.elements.sections.networkvariable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.*;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.event.events.EventNetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 import java.util.List;
@@ -41,7 +43,8 @@ public class SecNetworkVariable extends Section {
 
             if (!variableExpression.isLocal()) {
 
-                trigger = loadCode(sectionNode, "using network variable");
+                trigger = loadCode(sectionNode, "using network variable", EventNetworkVariable.class);
+
                 return true;
 
             } else {
@@ -59,6 +62,11 @@ public class SecNetworkVariable extends Section {
     @Override
     protected TriggerItem walk(@NotNull Event event) {
 
+        // copies local variables from outside this section
+        Object localVars = Variables.copyLocalVariables(event);
+        EventNetworkVariable dummy = new EventNetworkVariable();
+        Variables.setLocalVariables(dummy, localVars);
+
         ZulfBungeeSpigot plugin = ZulfBungeeSpigot.getPlugin();
         TriggerItem item = walk(event, false);
 
@@ -70,7 +78,9 @@ public class SecNetworkVariable extends Section {
                     .requestNetworkVariable(variableExpression.getName().toString(event));
 
             requestNetworkVariable.ifPresent(ExprSecNetworkVariable::setNetworkVariable);
-            trigger.execute(event);
+
+            trigger.execute(dummy);
+
 
         });
 

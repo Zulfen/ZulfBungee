@@ -21,7 +21,7 @@ public class BungeeConfig extends ProxyConfig<ProxyServer> {
         ConfigurationProvider configObject = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
         try {
-            this.loadedConfig = configObject.load(configFile);
+            this.loadedConfig = configObject.load(configFile.toFile());
         } catch (IOException e) {
             instanceIn.error("Error loading config on bungee:");
             throw new RuntimeException(e);

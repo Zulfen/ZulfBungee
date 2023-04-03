@@ -88,7 +88,8 @@ public class ScriptLoad<P> extends CommandHandler<P> {
 
         if (index == 0) {
 
-            return getMainServer().getPluginInstance().getConfig().getScriptPaths().keySet().stream()
+            return getMainServer().getPluginInstance().getConfig().getScriptPaths().stream()
+                    .map(path -> path.getFileName().toString())
                     .filter(realName -> realName.startsWith("-"))
                     .map(realName -> realName.substring(1))
                     .collect(Collectors.toList());

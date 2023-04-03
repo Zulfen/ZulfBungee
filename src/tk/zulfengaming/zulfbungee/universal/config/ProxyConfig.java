@@ -11,28 +11,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class ProxyConfig<P> {
 
-    protected final File scriptsFolder;
-    protected final Path scriptsFolderPath;
-    protected final File configFile;
+    protected final Path scriptsFolder;
+    protected final Path configFile;
 
     private final ArrayList<String> activeScripts = new ArrayList<>();
 
     protected ProxyConfig(ZulfBungeeProxy<P> instanceIn) {
 
-        File dataFolder = instanceIn.getPluginFolder();
-        this.configFile = new File(dataFolder, "config.yml");
+        Path dataFolder = instanceIn.getPluginFolder();
+        this.configFile = dataFolder.resolve("config.yml");
 
-        if (!dataFolder.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            dataFolder.mkdir();
-
+        if (!Files.exists(dataFolder)) {
+            try {
+                Files.createDirectory(dataFolder);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not create plugin's folder!");
+            }
         }
 
 
-        if (!configFile.exists()) {
+        if (!Files.exists(configFile)) {
 
             try {
 
@@ -40,7 +44,7 @@ public abstract class ProxyConfig<P> {
 
                 if (jarConfig != null) {
                     Files.copy(jarConfig, // This will copy your default config.yml from the jar
-                            configFile.toPath());
+                            configFile);
                 }
 
 
@@ -52,15 +56,14 @@ public abstract class ProxyConfig<P> {
 
         }
 
-        this.scriptsFolder = new File(dataFolder, "scripts");
-        this.scriptsFolderPath = scriptsFolder.toPath();
+        this.scriptsFolder = dataFolder.resolve("scripts");
 
-        if (!scriptsFolder.exists()) {
+        if (!Files.exists(scriptsFolder)) {
 
-            boolean directoryCreation = scriptsFolder.mkdir();
-
-            if (!directoryCreation) {
-                instanceIn.error("Error creating scripts folder! Global scripts will not work.");
+            try {
+                Files.createDirectory(scriptsFolder);
+            } catch (IOException e) {
+                throw new RuntimeException("Error creating scripts folder! Global scripts will not work.", e);
             }
 
         }
@@ -68,29 +71,20 @@ public abstract class ProxyConfig<P> {
 
     }
 
-    public Map<String, Path> getScriptPaths() {
+    public List<Path> getScriptPaths() {
 
-        HashMap<String, Path> cachedScripts = new HashMap<>();
+        try (Stream<Path> pathStream = Files.list(scriptsFolder)) {
 
-        if (scriptsFolder.exists()) {
+            return pathStream
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().endsWith(".sk"))
+                    .collect(Collectors.toList());
 
-            File[] files = scriptsFolder.listFiles(File::isFile);
 
-            if (files != null) {
-
-                for (File file : files) {
-
-                    String name = file.getName();
-
-                    if (name.endsWith(".sk")) {
-                        cachedScripts.put(name, file.toPath());
-                    }
-
-                }
-            }
+        } catch (IOException e) {
+            throw new RuntimeException("Could not list files in scripts directory!", e);
         }
 
-        return cachedScripts;
 
     }
 
@@ -107,7 +101,7 @@ public abstract class ProxyConfig<P> {
     }
 
     public Path getScriptsFolderPath() {
-        return scriptsFolderPath;
+        return scriptsFolder;
     }
 
     public abstract String getString(String node);

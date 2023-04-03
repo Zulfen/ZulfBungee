@@ -11,6 +11,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public interface ZulfBungeeProxy<P> {
     String getVersion();
 
     // make this a path tbh.
-    File getPluginFolder();
+    Path getPluginFolder();
 
     ProxyCommandSender<P> getConsole();
 

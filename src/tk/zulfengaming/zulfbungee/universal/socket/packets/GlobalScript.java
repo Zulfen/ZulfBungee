@@ -8,7 +8,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 public class GlobalScript<P> extends PacketHandler<P> {
 
@@ -27,10 +26,11 @@ public class GlobalScript<P> extends PacketHandler<P> {
 
             getProxy().getTaskManager().newTask(() -> {
 
-                for (Map.Entry<String, Path> script : config.getScriptPaths().entrySet()) {
-                    if (!script.getKey().startsWith("-")) {
-                        connection.sendScript(script.getKey(), script.getValue(), ScriptAction.RELOAD, null);
-                        config.registerScript(script.getKey());
+                for (Path script : config.getScriptPaths()) {
+                    String scriptName = script.getFileName().toString();
+                    if (!scriptName.startsWith("-")) {
+                        connection.sendScript(scriptName, script, ScriptAction.RELOAD, null);
+                        config.registerScript(scriptName);
                     }
                 }
 

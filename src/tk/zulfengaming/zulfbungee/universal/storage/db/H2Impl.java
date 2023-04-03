@@ -7,6 +7,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.storage.HikariSQLImpl;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class H2Impl<P> extends HikariSQLImpl<P> {
 
@@ -20,16 +22,17 @@ public class H2Impl<P> extends HikariSQLImpl<P> {
         HikariConfig hikariConfig = new HikariConfig();
 
         String pathString;
+        Path pluginFolder = getMainServer().getPluginInstance().getPluginFolder();
 
-        File oldPath = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase() + ".db.mv.db");
-        File newPath = new File(getMainServer().getPluginInstance().getPluginFolder(), getDatabase());
+        Path oldPath = pluginFolder.resolve(getDatabase() + ".db.mv.db");
+        Path newPath = pluginFolder.resolve(getDatabase());
 
         // mistake with naming - .db suffix gets added automatically
-        if (oldPath.exists()) {
+        if (Files.exists(oldPath)) {
             getMainServer().getPluginInstance().logDebug(ChatColour.YELLOW + "Using old database path format!");
-            pathString = newPath.getAbsolutePath() + ".db";
+            pathString = newPath.toAbsolutePath() + ".db";
         } else {
-            pathString = newPath.getAbsolutePath();
+            pathString = newPath.toAbsolutePath().toString();
         }
 
         String jdbcUrl = "jdbc:h2:" + pathString + ";mode=MySQL";
