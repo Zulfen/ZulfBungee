@@ -9,10 +9,8 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptA
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ScriptReload<P> extends CommandHandler<P> {
 
@@ -54,20 +52,14 @@ public class ScriptReload<P> extends CommandHandler<P> {
                 WatchEvent.Kind<?> kind = event.kind();
                 WatchEvent<Path> pathWatchEvent = (WatchEvent<Path>) event;
 
-                Path scriptPath = pathWatchEvent.context();
+                Path scriptPath = scriptsFolderPath.resolve(pathWatchEvent.context());
                 String scriptName = scriptPath.getFileName().toString();
 
                 if (scriptName.endsWith(".sk")) {
 
                     if (!scriptsMap.containsKey(scriptPath)) {
 
-                        if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind)) {
-
-                            if (!scriptName.startsWith("-")) {
-                                scriptsMap.put(scriptPath, ScriptAction.NEW);
-                            }
-
-                        } else if (StandardWatchEventKinds.ENTRY_MODIFY.equals(kind)) {
+                        if (StandardWatchEventKinds.ENTRY_MODIFY.equals(kind) || StandardWatchEventKinds.ENTRY_CREATE.equals(kind)) {
                             scriptsMap.put(scriptPath, ScriptAction.RELOAD);
                         } else if (StandardWatchEventKinds.ENTRY_DELETE.equals(kind)) {
                             scriptsMap.put(scriptPath, ScriptAction.DELETE);
@@ -79,8 +71,9 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
             }
 
-        }
+            watchKey.reset();
 
+        }
 
         if (separateArgs.length != 0) {
 
@@ -89,8 +82,16 @@ public class ScriptReload<P> extends CommandHandler<P> {
                 if (scriptsMap.isEmpty()) {
                     sender.sendMessage(Constants.MESSAGE_PREFIX + "No scripts have been updated, as they haven't been modified.");
                 } else {
+
                     getMainServer().syncScripts(scriptsMap, sender);
-                    sender.sendMessage(String.format(Constants.MESSAGE_PREFIX + "%s script(s) have been updated: %s", scriptsMap.size(), scriptsMap.keySet()));
+
+                    List<String> scriptNames = scriptsMap.keySet().stream()
+                            .map(Path::getFileName)
+                            .map(Path::toString)
+                            .collect(Collectors.toList());
+
+                    sender.sendMessage(String.format(Constants.MESSAGE_PREFIX + "%s script(s) have been updated: %s", scriptsMap.size(), scriptNames));
+
                 }
 
             } else {
@@ -100,11 +101,10 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
                 if (Files.exists(scriptPath)) {
 
-                    HashMap<Path, ScriptAction> tempScriptsMap = new HashMap<>(scriptsMap);
-                    tempScriptsMap.keySet().retainAll(Collections.singletonList(scriptPath));
+                    scriptsMap.keySet().retainAll(Collections.singletonList(scriptPath));
 
-                    if (!tempScriptsMap.isEmpty()) {
-                        getMainServer().syncScripts(tempScriptsMap, sender);
+                    if (!scriptsMap.isEmpty()) {
+                        getMainServer().syncScripts(scriptsMap, sender);
                         sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script %s was updated.", scriptName));
                     } else {
                         sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script %s has not been updated!", scriptName));

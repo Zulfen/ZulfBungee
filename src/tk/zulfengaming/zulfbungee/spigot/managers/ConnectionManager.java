@@ -269,7 +269,7 @@ public class ConnectionManager extends BukkitRunnable {
         getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(pluginInstance, infoIn.getScriptName(), action, sender, infoIn.getScriptData()))
                 .thenAccept(file -> {
                     switch (action) {
-                        case NEW:
+                        case RELOAD:
                             if (!scriptFiles.contains(file)) {
                                 scriptFiles.add(file);
                             }
