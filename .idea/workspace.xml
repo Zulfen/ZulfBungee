@@ -9,8 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.7 - fixed bugs with global script system">
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/event/events/EventNetworkVariable.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.7 - idk why but this event didn't get commited">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/ExprSecNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/ExprSecNetworkVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,13 +135,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00052" summary="Alpha v0.8.2 - added kick syntax!">
-      <created>1676074303326</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1676074303326</updated>
     </task>
     <task id="LOCAL-00053" summary="Alpha v0.8.3 - network variable + servers patch">
       <created>1676389912605</created>
@@ -477,7 +472,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680703795829</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="Alpha v0.9.7 - idk why but this event didn't get commited">
+      <created>1680704295960</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1680704295960</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,7 +494,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.3 - mainly Bungeecord fixes" />
     <MESSAGE value="Alpha v0.9.3 - players fix, packets fix" />
     <MESSAGE value="Alpha v0.9.4 - more packet fixes" />
     <MESSAGE value="Alpha v0.9.4 - fixed network variables!" />
@@ -517,7 +518,8 @@
     <MESSAGE value="Alpha v0.9.7 - fix error with bungeecord kick event" />
     <MESSAGE value="Alpha v0.9.7 - migrated config to use Paths instead of Files" />
     <MESSAGE value="Alpha v0.9.7 - fixed bugs with global script system" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.7 - fixed bugs with global script system" />
+    <MESSAGE value="Alpha v0.9.7 - idk why but this event didn't get commited" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.7 - idk why but this event didn't get commited" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

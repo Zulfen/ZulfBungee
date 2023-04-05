@@ -77,7 +77,11 @@ public class SecNetworkVariable extends Section {
             Optional<NetworkVariable> requestNetworkVariable = plugin.getConnectionManager()
                     .requestNetworkVariable(variableExpression.getName().toString(event));
 
-            requestNetworkVariable.ifPresent(ExprSecNetworkVariable::setNetworkVariable);
+            if (requestNetworkVariable.isPresent()) {
+                ExprSecNetworkVariable.setNetworkVariable(requestNetworkVariable.get());
+            } else {
+                ExprSecNetworkVariable.clear();
+            }
 
             trigger.execute(dummy);
 
