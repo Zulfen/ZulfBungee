@@ -14,9 +14,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Network
 import java.util.List;
 import java.util.Optional;
 
-// Referenced from https://github.com/Ankoki/SkJade/blob/2.0/src/main/java/com/ankoki/skjade/elements/binflop/elements/SecBinflopCreate.java, a part of SkJade.
-// (understanding how the Section API works is a little difficult!)
-
 public class SecNetworkVariable extends Section {
 
     private Trigger trigger;
