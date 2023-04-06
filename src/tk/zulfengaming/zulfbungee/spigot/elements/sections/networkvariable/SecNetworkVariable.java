@@ -9,10 +9,13 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventNetworkVariable;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class SecNetworkVariable extends Section {
 
@@ -64,18 +67,34 @@ public class SecNetworkVariable extends Section {
         EventNetworkVariable dummy = new EventNetworkVariable();
         Variables.setLocalVariables(dummy, localVars);
 
-        ZulfBungeeSpigot plugin = ZulfBungeeSpigot.getPlugin();
+        ConnectionManager connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        TaskManager taskManager = ZulfBungeeSpigot.getPlugin().getTaskManager();
+
         TriggerItem item = walk(event, false);
 
-        plugin.getTaskManager().newAsyncTask(() -> {
+        taskManager.newAsyncTask(() -> {
 
             Thread.currentThread().setName("SecNetworkVariable");
 
-            Optional<NetworkVariable> requestNetworkVariable = plugin.getConnectionManager()
+            Optional<NetworkVariable> requestNetworkVariable = connectionManager
                     .requestNetworkVariable(variableExpression.getName().toString(event));
 
             if (requestNetworkVariable.isPresent()) {
-                ExprSecNetworkVariable.setNetworkVariable(requestNetworkVariable.get());
+
+                try {
+
+                    // bukkit won't like it if we do anything with the world async, doing this to be sure
+                    taskManager.newMainThreadTask(() -> {
+                        ExprSecNetworkVariable.setNetworkVariable(requestNetworkVariable.get());
+                        return null;
+                    }).get();
+
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+
             } else {
                 ExprSecNetworkVariable.clear();
             }

@@ -20,10 +20,6 @@ public class TaskManager {
         this.scheduler = instance.getServer().getScheduler();
     }
 
-    public void newPluginTask(Plugin pluginIn, Runnable taskIn) {
-        scheduler.runTask(pluginIn, taskIn);
-    }
-
     public void newAsyncTask(BukkitRunnable taskIn) {
         taskIn.runTaskAsynchronously(instance);
     }
