@@ -83,9 +83,11 @@ public class SecNetworkVariable extends Section {
 
                 try {
 
+                    NetworkVariable variable = requestNetworkVariable.get();
+
                     // bukkit won't like it if we do anything with the world async, doing this to be sure
                     taskManager.newMainThreadTask(() -> {
-                        ExprSecNetworkVariable.setNetworkVariable(requestNetworkVariable.get());
+                        ExprSecNetworkVariable.setNetworkVariable(variable);
                         return null;
                     }).get();
 
