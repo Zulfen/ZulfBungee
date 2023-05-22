@@ -85,7 +85,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
             } else {
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=? COLLATE SQL_Latin1_General_CP1_CI_AS");
 
                 preparedStatement.setString(1, name);
 

@@ -46,7 +46,7 @@ import java.util.Optional;
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer> {
 
-    protected static final String VERSION = "0.9.8-pre1";
+    protected static final String VERSION = "0.9.8-pre2";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
