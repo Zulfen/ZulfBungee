@@ -13,17 +13,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
     private final HikariDataSource dataSource;
+    private final boolean caseInsensitive;
 
     public HikariSQLImpl(MainServer<P> mainServerIn) {
         super(mainServerIn);
         this.dataSource = initialiseDataSource();
+        this.caseInsensitive = mainServerIn.getPluginInstance().getConfig().getBoolean("case-insensitive-variables");
     }
 
     protected abstract HikariDataSource initialiseDataSource();
@@ -58,11 +58,27 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
-            if (name.endsWith("::*")) {
+            String nameToRetrieve;
+            if (caseInsensitive) {
+                nameToRetrieve = name.toLowerCase();
+            } else {
+                nameToRetrieve = name;
+            }
 
-                String listName = name.split("::\\*")[0];
+            if (nameToRetrieve.endsWith("::*")) {
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
+                String listName = nameToRetrieve.split("::\\*")[0];
+                String sqlStatement;
+
+                if (caseInsensitive) {
+                    sqlStatement = "SELECT type, data " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) LIKE LOWER(?)";
+                } else {
+                    sqlStatement = "SELECT type, data FROM variables WHERE name LIKE ?";
+                }
+
+                PreparedStatement preparedStatement = tempConnection.prepareStatement(sqlStatement);
                 String finalisedQuery = "%" + listName + "::%";
 
                 preparedStatement.setString(1, finalisedQuery);
@@ -74,7 +90,6 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
                     String type = result.getString("type");
                     byte[] data = result.getBytes("data");
                     values.add(new Value(type, data));
-
                 }
 
                 if (!values.isEmpty()) {
@@ -85,9 +100,18 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
             } else {
 
-                PreparedStatement preparedStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=? COLLATE SQL_Latin1_General_CP1_CI_AS");
+                String sqlStatement;
+                if (caseInsensitive) {
+                    sqlStatement = "SELECT name, data, type " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) = LOWER(?)";
+                } else {
+                    sqlStatement = "SELECT data, type FROM variables WHERE name=?";
+                }
 
-                preparedStatement.setString(1, name);
+                PreparedStatement preparedStatement = tempConnection.prepareStatement(sqlStatement);
+
+                preparedStatement.setString(1, nameToRetrieve);
 
                 ResultSet result = preparedStatement.executeQuery();
 
@@ -118,9 +142,17 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
             String variableNameIn = variable.getName();
 
-            if (variableNameIn.endsWith("::*")) {
+            String nameToRetrieve;
+            if (caseInsensitive) {
+                nameToRetrieve = variableNameIn.toLowerCase();
+            } else {
+                nameToRetrieve = variableNameIn;
+            }
+
+
+            if (nameToRetrieve.endsWith("::*")) {
                 Value[] variableValuesIn = variable.getValueArray();
-                String variableNameInRoot = variableNameIn.split("::\\*")[0];
+                String variableNameInRoot = nameToRetrieve.split("::\\*")[0];
 
                 for (int i = 0; i < variableValuesIn.length; i++) {
 
@@ -150,7 +182,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                     PreparedStatement preparedStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
-                    preparedStatement.setString(1, variableNameIn);
+                    preparedStatement.setString(1, nameToRetrieve);
                     preparedStatement.setString(2, value.type);
                     preparedStatement.setBytes(3, value.data);
 
@@ -179,11 +211,27 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
+            String nameToRetrieve;
+            if (caseInsensitive) {
+                nameToRetrieve = name.toLowerCase();
+            } else {
+                nameToRetrieve = name;
+            }
+
             if (name.endsWith("::*")) {
 
-                String listName = name.split("::\\*")[0];
+                String listName = nameToRetrieve.split("::\\*")[0];
 
-                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
+                String sqlStatement;
+                if (caseInsensitive) {
+                    sqlStatement = "SELECT type, data " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) LIKE LOWER(?)";
+                } else {
+                    sqlStatement = "SELECT type, data FROM variables WHERE name LIKE ?";
+                }
+
+                PreparedStatement getStatement = tempConnection.prepareStatement(sqlStatement);
 
                 String finalisedQuery = "%" + listName + "::%";
 
@@ -223,9 +271,18 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                 Value value = values[0];
 
-                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+                String sqlStatement;
+                if (caseInsensitive) {
+                    sqlStatement = "SELECT name, data, type " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) = LOWER(?)";
+                } else {
+                    sqlStatement = "SELECT data, type FROM variables WHERE name=?";
+                }
 
-                getStatement.setString(1, name);
+                PreparedStatement getStatement = tempConnection.prepareStatement(sqlStatement);
+
+                getStatement.setString(1, nameToRetrieve);
 
                 ResultSet result = getStatement.executeQuery();
 
@@ -235,7 +292,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
-                    setStatement.setString(1, name);
+                    setStatement.setString(1, nameToRetrieve);
                     setStatement.setString(2, value.type);
                     setStatement.setBytes(3, bytesOut);
 
@@ -261,18 +318,33 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
             PreparedStatement preparedStatement;
+            String nameToRetrieve;
+            if (caseInsensitive) {
+                nameToRetrieve = name.toLowerCase();
+            } else {
+                nameToRetrieve = name;
+            }
 
             if (name.endsWith("::*")) {
 
-                preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name LIKE ?");
+                String sqlStatement;
+                if (caseInsensitive) {
+                    sqlStatement = "DELETE " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) LIKE LOWER(?)";
+                } else {
+                    sqlStatement = "DELETE FROM variables WHERE name LIKE ?";
+                }
 
-                String listName = name.split("::\\*")[0];
+                preparedStatement = tempConnection.prepareStatement(sqlStatement);
+
+                String listName = nameToRetrieve.split("::\\*")[0];
                 String finalisedQuery = "%" + listName + "::%";
 
                 preparedStatement.setString(1, finalisedQuery);
 
             } else {
-                preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE name=?");
+                preparedStatement = tempConnection.prepareStatement("DELETE FROM variables WHERE LOWER(name) = LOWER(?)");
                 preparedStatement.setString(1, name);
 
             }
@@ -294,11 +366,27 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
+            String nameToRetrieve;
+            if (caseInsensitive) {
+                nameToRetrieve = name.toLowerCase();
+            } else {
+                nameToRetrieve = name;
+            }
+
             if (name.endsWith("::*")) {
 
-                String listName = name.split("::\\*")[0];
+                String listName = nameToRetrieve.split("::\\*")[0];
 
-                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT name, type, data FROM variables WHERE name LIKE ?");
+                String sqlStatement;
+                if (caseInsensitive) {
+                    sqlStatement = "SELECT name, type, data " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) LIKE LOWER(?)";
+                } else {
+                    sqlStatement = "SELECT name, type, data FROM variables WHERE name LIKE ?";
+                }
+
+                PreparedStatement getStatement = tempConnection.prepareStatement(sqlStatement);
 
                 String finalisedQuery = "%" + listName + "::%";
 
@@ -328,7 +416,16 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                 Value value = values[0];
 
-                PreparedStatement getStatement = tempConnection.prepareStatement("SELECT data, type FROM variables WHERE name=?");
+                String sqlStatement;
+                if (caseInsensitive) {
+                    sqlStatement = "SELECT data, type " +
+                            "FROM variables " +
+                            "WHERE LOWER(name) = LOWER(?)";
+                } else {
+                    sqlStatement = "SELECT data, type FROM variables WHERE name=?";
+                }
+
+                PreparedStatement getStatement = tempConnection.prepareStatement(sqlStatement);
 
                 getStatement.setString(1, name);
                 ResultSet result = getStatement.executeQuery();
@@ -339,7 +436,7 @@ public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
-                    setStatement.setString(1, name);
+                    setStatement.setString(1, nameToRetrieve);
                     setStatement.setString(2, value.type);
                     setStatement.setBytes(3, bytesOut);
 

@@ -25,6 +25,10 @@ global-scripts: true
 # If you have no clue what this does, just leave this as the default.
 storage-type: "h2"
 
+# Skript by default is case-insensitive for variable names, so this option is enabled by default.
+# If you are having problems with this, disable it here.
+case-insensitive-variables: true
+
 # Each option should be self-explanatory if you know what you are doing.
 
 # If you are using H2, this will not apply - these two settings only apply to remote databases.
