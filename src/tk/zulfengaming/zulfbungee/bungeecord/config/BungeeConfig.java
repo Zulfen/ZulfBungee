@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.bungeecord.config;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -10,7 +11,7 @@ import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 import java.io.IOException;
 import java.util.List;
 
-public class BungeeConfig extends ProxyConfig<ProxyServer> {
+public class BungeeConfig extends ProxyConfig<ProxyServer, ProxiedPlayer> {
 
     private final Configuration loadedConfig;
 

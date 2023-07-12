@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class CommandHandlerManager<P> {
+public class CommandHandlerManager<P, T> {
 
-    private final MainServer<P> mainServer;
+    private final MainServer<P, T> mainServer;
 
-    private final ArrayList<CommandHandler<P>> handler = new ArrayList<>();
+    private final ArrayList<CommandHandler<P, T>> handler = new ArrayList<>();
 
-    public CommandHandlerManager(MainServer<P> mainServerIn) {
+    public CommandHandlerManager(MainServer<P, T> mainServerIn) {
         this.mainServer = mainServerIn;
         addHandler(new ScriptReload<>(mainServerIn));
         addHandler(new ScriptLoad<>(mainServerIn));
@@ -33,19 +33,19 @@ public class CommandHandlerManager<P> {
         addHandler(new Servers<>(mainServerIn));
     }
 
-    public MainServer<P> getMainServer() {
+    public MainServer<P, T> getMainServer() {
         return mainServer;
     }
 
-    public void addHandler(CommandHandler<P> handlerIn) {
+    public void addHandler(CommandHandler<P, T> handlerIn) {
         handler.add(handlerIn);
     }
 
-    public void handle(ProxyCommandSender<P> sender, String[] argsIn) {
+    public void handle(ProxyCommandSender<P, T> sender, String[] argsIn) {
 
         if (argsIn.length > 0) {
 
-            Optional<CommandHandler<P>> handlerOptional = handler.stream()
+            Optional<CommandHandler<P, T>> handlerOptional = handler.stream()
                     .filter(pCommandHandler -> {
 
                         String[] requiredLabels = pCommandHandler.getRequiredLabels();
@@ -75,7 +75,7 @@ public class CommandHandlerManager<P> {
 
             if (handlerOptional.isPresent()) {
 
-                CommandHandler<P> handler = handlerOptional.get();
+                CommandHandler<P, T> handler = handlerOptional.get();
                 String mainPermission = handler.getBasePermission();
 
                 if (sender.hasPermission(mainPermission)) {
@@ -104,7 +104,7 @@ public class CommandHandlerManager<P> {
 
     }
 
-    public List<String> onTabComplete(ProxyCommandSender<P> commandSender, String[] strings) {
+    public List<String> onTabComplete(ProxyCommandSender<P, T> commandSender, String[] strings) {
 
         if (strings.length > 0) {
 
@@ -114,7 +114,7 @@ public class CommandHandlerManager<P> {
 
                 List<String> labels = new ArrayList<>();
 
-                for (CommandHandler<P> pCommandHandler : handler) {
+                for (CommandHandler<P, T> pCommandHandler : handler) {
 
                     if (pCommandHandler.getMainLabel().equals(mainLabel)) {
 

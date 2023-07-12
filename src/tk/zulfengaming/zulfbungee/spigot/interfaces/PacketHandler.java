@@ -4,8 +4,6 @@ import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
-import java.net.SocketAddress;
-
 public abstract class PacketHandler {
 
     private final PacketTypes[] types;
@@ -14,7 +12,7 @@ public abstract class PacketHandler {
 
     private final boolean isAsync;
 
-    public abstract void handlePacket(Packet packetIn, SocketAddress address);
+    public abstract void handlePacket(Packet packetIn);
 
     public PacketTypes[] getTypes() {
         return types;

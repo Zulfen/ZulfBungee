@@ -15,16 +15,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class ScriptUnload<P> extends CommandHandler<P> {
+public class ScriptUnload<P, T> extends CommandHandler<P, T> {
 
-    public ScriptUnload(MainServer<P> mainServerIn) {
+    public ScriptUnload(MainServer<P, T> mainServerIn) {
         super(mainServerIn, "zulfen.bungee.admin.script.unload", "scripts", "unload");
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
-        ProxyConfig<P> config = getMainServer().getPluginInstance().getConfig();
+        ProxyConfig<P, T> config = getMainServer().getPluginInstance().getConfig();
 
         if (separateArgs.length > 0) {
 

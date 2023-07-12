@@ -1,20 +1,38 @@
 package tk.zulfengaming.zulfbungee.velocity.objects;
 
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 
-public class VelocityServer implements ZulfProxyServer {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    private final String name;
+public class VelocityServer extends ZulfProxyServer<ProxyServer, Player> {
+
+    private final RegisteredServer server;
+    private final ZulfVelocity pluginInstance;
 
     public VelocityServer(RegisteredServer velocityServerIn, ZulfVelocity pluginIn) {
-        this.name = velocityServerIn.getServerInfo().getName();
+        super(velocityServerIn.getServerInfo().getName(), velocityServerIn.getServerInfo().getAddress());
+        this.server = velocityServerIn;
+        this.pluginInstance = pluginIn;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public List<ZulfProxyPlayer<ProxyServer, Player>> getPlayers() {
+        return server.getPlayersConnected().stream()
+                .map(player -> new VelocityPlayer(player, this, pluginInstance))
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public void sendData(String channelNameIn, byte[] dataOut) {
+        server.sendPluginMessage(MinecraftChannelIdentifier.from(channelNameIn), dataOut);
+    }
+
 
 }

@@ -9,41 +9,13 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-import java.util.UUID;
-
-public class BungeePlayer extends ZulfProxyPlayer<ProxyServer> {
-
-    private ZulfProxyServer server;
-
-    private final String name;
-
-    private final UUID uuid;
+public class BungeePlayer extends ZulfProxyPlayer<ProxyServer, ProxiedPlayer> {
 
     private final ProxiedPlayer bungeePlayer;
 
-    public BungeePlayer(ProxiedPlayer playerIn) {
-
-        super(net.md_5.bungee.api.ProxyServer.getInstance());
-        this.bungeePlayer = playerIn;
-        this.name = playerIn.getName();
-        this.uuid = playerIn.getUniqueId();
-
-        ServerInfo serverInfo = bungeePlayer.getServer().getInfo();
-
-        if (serverInfo != null) {
-            this.server = new BungeeServer(serverInfo);
-        }
-
-    }
-
     public BungeePlayer(ProxiedPlayer playerIn, BungeeServer serverIn) {
-
-        super(net.md_5.bungee.api.ProxyServer.getInstance());
+        super(net.md_5.bungee.api.ProxyServer.getInstance(), playerIn.getName(), playerIn.getUniqueId(), serverIn);
         this.bungeePlayer = playerIn;
-        this.name = playerIn.getName();
-        this.uuid = playerIn.getUniqueId();
-        this.server = serverIn;
-
     }
 
     private BaseComponent[] toComponent(String messageIn) {
@@ -52,22 +24,7 @@ public class BungeePlayer extends ZulfProxyPlayer<ProxyServer> {
     }
 
     @Override
-    public ZulfProxyServer getServer() {
-        return server;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    @Override
-    public void connect(ZulfProxyServer serverIn) {
+    public void connect(ZulfProxyServer<ProxyServer, ProxiedPlayer> serverIn) {
         ServerInfo serverInfo = platform.getServerInfo(serverIn.getName());
         if (serverInfo != null) {
             bungeePlayer.connect(serverInfo);

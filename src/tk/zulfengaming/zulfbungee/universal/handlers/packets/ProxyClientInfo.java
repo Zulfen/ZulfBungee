@@ -1,34 +1,33 @@
-package tk.zulfengaming.zulfbungee.universal.socket.packets;
+package tk.zulfengaming.zulfbungee.universal.handlers.packets;
 
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-public class ProxyClientInfo<P> extends PacketHandler<P> {
+public class ProxyClientInfo<P, T> extends PacketHandler<P, T> {
 
-    public ProxyClientInfo(PacketHandlerManager<P> packetHandlerManager) {
+    public ProxyClientInfo(PacketHandlerManager<P, T> packetHandlerManager) {
         super(packetHandlerManager);
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
+    public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connection) {
 
         ClientInfo clientInfo = (ClientInfo) packetIn.getDataSingle();
         InetSocketAddress socketAddressIn = (InetSocketAddress) connection.getAddress();
 
         // Returns a map of
-        for (Map.Entry<String, ZulfServerInfo> info : getProxy().getServersCopy().entrySet()) {
+        for (Map.Entry<String, ZulfProxyServer<P, T>> info : getProxy().getServersCopy().entrySet()) {
 
             InetSocketAddress infoSockAddr = (InetSocketAddress) info.getValue().getSocketAddress();
-
             String name = info.getKey();
 
             if (!getMainServer().getServerNames().contains(name)) {

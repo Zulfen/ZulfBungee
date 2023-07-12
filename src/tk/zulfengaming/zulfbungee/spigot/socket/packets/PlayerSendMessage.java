@@ -12,7 +12,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
-import java.net.SocketAddress;
 import java.util.List;
 
 public class PlayerSendMessage extends PacketHandler {
@@ -22,7 +21,7 @@ public class PlayerSendMessage extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         ClientPlayerDataContainer dataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
         String message = (String) dataContainer.getDataSingle();

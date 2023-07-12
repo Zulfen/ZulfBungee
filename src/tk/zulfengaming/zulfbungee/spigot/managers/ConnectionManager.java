@@ -7,7 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.socket.ChannelConnection;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
+import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.spigot.tasks.ConnectionTask;
 import tk.zulfengaming.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -21,7 +23,9 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptI
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.*;
 import java.util.concurrent.*;
@@ -58,6 +62,12 @@ public class ConnectionManager extends BukkitRunnable {
     // representation of this client as a server.
     private ClientServer thisServer;
 
+    public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress serverAddress, int serverPort) {
+        this.pluginInstance = pluginIn;
+        this.taskManager = pluginInstance.getTaskManager();
+        this.connectionTask = new ConnectionTask(this, connectionBarrier, serverAddress, serverPort);
+    }
+
     public ConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
         this.pluginInstance = pluginIn;
         this.taskManager = pluginInstance.getTaskManager();
@@ -82,8 +92,7 @@ public class ConnectionManager extends BukkitRunnable {
 
                         try {
 
-                            Optional<Packet> getPacket = connection.getSkriptPacketQueue().take();
-
+                            Optional<Packet> getPacket = connection.read();
                             connectionPackets.put(getPacket);
 
                         } catch (InterruptedException e) {
@@ -228,10 +237,6 @@ public class ConnectionManager extends BukkitRunnable {
         return proxyServers.containsKey(nameIn);
     }
 
-    public void addInactiveConnection(Connection connectionIn) {
-        allConnections.add(connectionIn);
-    }
-    
     public void addNamedConnection(String nameIn, Connection connectionIn) {
 
         if (!(addressNames.containsValue(nameIn) || connectionNames.containsKey(nameIn))) {
@@ -249,6 +254,7 @@ public class ConnectionManager extends BukkitRunnable {
         }
     }
 
+    // TODO: Re-do all of this at some point to buffer scripts instead of sending them in one large packet.
     public void processGlobalScript(@NotNull ScriptInfo infoIn) {
 
         ScriptAction action = infoIn.getScriptAction();
@@ -284,7 +290,22 @@ public class ConnectionManager extends BukkitRunnable {
 
     public void blockConnection(Connection connectionIn) {
         blockedConnections.add(connectionIn.getAddress());
-        connectionIn.shutdown();
+        connectionIn.destroy();
+    }
+
+    public void newChannelConnection(SocketAddress socketAddressIn) {
+        ChannelConnection channelConnection = new ChannelConnection(this, socketAddressIn);
+        finaliseConnection(channelConnection);
+    }
+
+    public void newSocketConnection(Socket socketIn) throws IOException {
+        SocketConnection socketConnection = new SocketConnection(this, socketIn);
+        finaliseConnection(socketConnection);
+    }
+
+    private void finaliseConnection(Connection connectionIn) {
+        allConnections.add(connectionIn);
+        taskManager.newAsyncTask(connectionIn);
     }
 
     public boolean isBlocked(SocketAddress addressIn) {
@@ -308,7 +329,7 @@ public class ConnectionManager extends BukkitRunnable {
         if (running.compareAndSet(true, false)) {
 
             for (Connection connection : allConnections) {
-                connection.shutdown();
+                connection.destroy();
             }
 
             connectionBarrier.release();

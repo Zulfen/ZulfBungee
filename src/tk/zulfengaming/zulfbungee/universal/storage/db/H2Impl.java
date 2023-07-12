@@ -10,9 +10,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class H2Impl<P> extends HikariSQLImpl<P> {
+public class H2Impl<P, T> extends HikariSQLImpl<P, T> {
 
-    public H2Impl(MainServer<P> mainServerIn) {
+    public H2Impl(MainServer<P, T> mainServerIn) {
         super(mainServerIn);
     }
 

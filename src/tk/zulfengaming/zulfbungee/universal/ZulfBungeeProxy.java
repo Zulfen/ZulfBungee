@@ -1,21 +1,24 @@
 package tk.zulfengaming.zulfbungee.universal;
 
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
+import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
+import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfServerInfo;
 import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
-import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface ZulfBungeeProxy<P> {
+public interface ZulfBungeeProxy<P, T> {
 
     void logDebug(String messageIn);
 
@@ -27,29 +30,47 @@ public interface ZulfBungeeProxy<P> {
 
     ProxyTaskManager getTaskManager();
 
-    ProxyConfig<P> getConfig();
+    ProxyConfig<P, T> getConfig();
 
-    Optional<ZulfProxyPlayer<P>> getPlayer(String nameIn);
-    Optional<ZulfProxyPlayer<P>> getPlayer(ClientPlayer clientPlayerIn);
+    Optional<ZulfProxyPlayer<P, T>> getPlayer(String nameIn);
+    default Optional<ZulfProxyPlayer<P, T>> getPlayer(ClientPlayer clientPlayerIn) {
+        return getPlayer(clientPlayerIn.getName());
+    }
 
-    Optional<ZulfProxyServer> getServer(ClientServer serverIn);
-    Map<String, ZulfServerInfo> getServersCopy();
+    List<ZulfProxyPlayer<P, T>> getAllPlayers();
+
+    Optional<ZulfProxyServer<P, T>> getServer(String serverNameIn);
+    default Optional<ZulfProxyServer<P, T>> getServer(ClientServer serverIn) {
+        return getServer(serverIn.getName());
+    }
+
+    NativePlayerConverter<T, P> getPlayerConverter();
+
+    Map<String, ZulfProxyServer<P, T>> getServersCopy();
+
+    Optional<MessageCallback> getMessagingCallback(String channelNameIn, String serverNameIn);
+    default MessageCallback getMessagingCallback(String channelNameIn, ZulfProxyServer<P, T> proxyServerIn) {
+        return dataIn -> proxyServerIn.sendData(channelNameIn, dataIn);
+    }
+    void registerMessageChannel(String channelNameIn);
+    void unregisterMessageChannel(String channelNameIn);
 
     void broadcast(String messageIn);
-    void broadcast(String messageIn, String serverNameIn);
+    void broadcast(String messageIn, ZulfProxyServer<P, T> serverIn);
 
     String getVersion();
 
-    // make this a path tbh.
     Path getPluginFolder();
 
-    ProxyCommandSender<P> getConsole();
+    ProxyCommandSender<P, T> getConsole();
 
     P getPlatform();
 
     String platformString();
 
-    CheckUpdateTask<P> getUpdater();
+    String getTransportType();
+
+    CheckUpdateTask<P, T> getUpdater();
 
     boolean isDebug();
 

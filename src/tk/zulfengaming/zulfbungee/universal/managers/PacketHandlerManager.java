@@ -1,21 +1,21 @@
 package tk.zulfengaming.zulfbungee.universal.managers;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.socket.packets.*;
+import tk.zulfengaming.zulfbungee.universal.handlers.packets.*;
 
 import java.util.EnumMap;
 import java.util.Optional;
 
-public class PacketHandlerManager<P> {
+public class PacketHandlerManager<P, T> {
 
-    private final EnumMap<PacketTypes, PacketHandler<P>> handlers = new EnumMap<>(PacketTypes.class);
-    private final MainServer<P> mainServer;
+    private final EnumMap<PacketTypes, PacketHandler<P, T>> handlers = new EnumMap<>(PacketTypes.class);
+    private final MainServer<P, T> mainServer;
 
-    public PacketHandlerManager(MainServer<P> mainServerIn) {
+    public PacketHandlerManager(MainServer<P, T> mainServerIn) {
 
         this.mainServer = mainServerIn;
 
@@ -36,15 +36,16 @@ public class PacketHandlerManager<P> {
         handlers.put(PacketTypes.BROADCAST_MESSAGE, new ProxyBroadcast<>(this));
         handlers.put(PacketTypes.PROXY_PLAYER_PERMISSION, new ProxyPlayerPermission<>(this));
         handlers.put(PacketTypes.CONNECTION_NAME, new ConnectionName<>(this));
+        handlers.put(PacketTypes.HEARTBEAT_PROXY, new HeartbeatProxy<>(this));
 
     }
 
-    public Optional<PacketHandler<P>> getHandler(PacketTypes type) {
+    public Optional<PacketHandler<P, T>> getHandler(PacketTypes type) {
         return Optional.ofNullable(handlers.get(type));
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time
-    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
+    public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connection) {
         PacketTypes type = packetIn.getType();
         if (getHandler(type).isPresent()) {
             return getHandler(type).get().handlePacket(packetIn, connection);
@@ -53,7 +54,7 @@ public class PacketHandlerManager<P> {
         }
     }
 
-    public MainServer<P> getMainServer() {
+    public MainServer<P, T> getMainServer() {
         return mainServer;
     }
 

@@ -7,7 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
-import java.net.SocketAddress;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,7 +19,7 @@ public class ProxyServerInfo extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         Map<String, ClientInfo> serverMap = Stream.of(packetIn.getDataArray())
                 .filter(ClientServer.class::isInstance)

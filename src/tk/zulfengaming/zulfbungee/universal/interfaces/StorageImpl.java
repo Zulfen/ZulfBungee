@@ -6,13 +6,13 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.util.Optional;
 
-public abstract class StorageImpl<P> {
+public abstract class StorageImpl<P, T> {
 
-    private final MainServer<P> mainServer;
+    private final MainServer<P, T> mainServer;
 
     private final String host, port, username, password, database;
 
-    public StorageImpl(MainServer<P> mainServerIn) {
+    public StorageImpl(MainServer<P, T> mainServerIn) {
         this.mainServer = mainServerIn;
 
         this.host = mainServerIn.getPluginInstance().getConfig().getString("storage-host");
@@ -58,7 +58,7 @@ public abstract class StorageImpl<P> {
 
     public abstract void shutdown();
 
-    public MainServer<P> getMainServer() {
+    public MainServer<P, T> getMainServer() {
         return mainServer;
     }
 }

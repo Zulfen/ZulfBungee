@@ -18,6 +18,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     // static reference so we can access it via Skript
     private static ZulfBungeeSpigot plugin;
     private boolean debug = false;
+    private String transportType;
 
     private TaskManager taskManager;
     private ConnectionManager connectionManager;
@@ -35,13 +36,24 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
         try {
 
+            transportType = getConfig().getString("transport-type");
             InetAddress serverAddress = InetAddress.getByName(getConfig().getString("server-host"));
-            InetAddress clientAddress = InetAddress.getByName(getConfig().getString("client-host"));
-
             int serverPort = getConfig().getInt("server-port");
-            int clientPort = getConfig().getInt("client-port");
 
-            connectionManager = new ConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort);
+            if (transportType.equalsIgnoreCase("socket")) {
+
+
+                InetAddress clientAddress = InetAddress.getByName(getConfig().getString("client-host"));
+
+
+                int clientPort = getConfig().getInt("client-port");
+
+                connectionManager = new ConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort);
+
+            } else if (transportType.equalsIgnoreCase("pluginmessage")) {
+                connectionManager = new ConnectionManager(this, serverAddress, serverPort);
+            }
+
             taskManager.newAsyncTask(connectionManager);
 
         } catch (UnknownHostException e) {
@@ -91,6 +103,10 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
     public TaskManager getTaskManager() {
         return taskManager;
+    }
+
+    public String getTransportType() {
+        return transportType;
     }
 
     public ConnectionManager getConnectionManager() {

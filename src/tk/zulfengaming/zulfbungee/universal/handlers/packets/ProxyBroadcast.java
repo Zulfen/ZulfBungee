@@ -1,20 +1,23 @@
-package tk.zulfengaming.zulfbungee.universal.socket.packets;
+package tk.zulfengaming.zulfbungee.universal.handlers.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientServerDataContainer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-public class ProxyBroadcast<P> extends PacketHandler<P> {
+import java.util.Optional;
 
-    public ProxyBroadcast(PacketHandlerManager<P> packetHandlerManager) {
+public class ProxyBroadcast<P, T> extends PacketHandler<P, T> {
+
+    public ProxyBroadcast(PacketHandlerManager<P, T> packetHandlerManager) {
         super(packetHandlerManager);
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connection) {
+    public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connection) {
 
         ClientServerDataContainer dataContainer = (ClientServerDataContainer) packetIn.getDataSingle();
         ClientServer[] servers = dataContainer.getServers();
@@ -23,7 +26,9 @@ public class ProxyBroadcast<P> extends PacketHandler<P> {
 
         if (servers.length > 0) {
             for (ClientServer server : servers) {
-                getProxy().broadcast(message, server.getName());
+                Optional<ZulfProxyServer<P, T>> proxyServer = getProxy().getServer(server);
+                proxyServer.ifPresent(zulfProxyServer -> getProxy().broadcast(message, zulfProxyServer));
+
             }
         } else {
             getProxy().broadcast(message);

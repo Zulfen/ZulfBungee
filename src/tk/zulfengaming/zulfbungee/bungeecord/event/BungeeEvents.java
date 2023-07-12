@@ -3,27 +3,33 @@ package tk.zulfengaming.zulfbungee.bungeecord.event;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
-import net.md_5.bungee.api.event.ServerKickEvent;
-import net.md_5.bungee.api.event.ServerSwitchEvent;
+import net.md_5.bungee.api.connection.Server;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
+import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
+import tk.zulfengaming.zulfbungee.universal.socket.ChannelMainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.util.Optional;
 
-public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  {
+public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implements Listener {
 
-    public BungeeEvents(MainServer<ProxyServer> mainServerIn) {
+    private final NativePlayerConverter<ProxiedPlayer, ProxyServer> playerConverter;
+
+    public BungeeEvents(MainServer<ProxyServer, ProxiedPlayer> mainServerIn) {
         super(mainServerIn);
+         this.playerConverter = mainServer.getPluginInstance().getPlayerConverter();
     }
 
     @EventHandler
@@ -36,9 +42,10 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
             ServerInfo serverInfo = event.getServer().getInfo();
             Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverInfo.getName());
 
-            getClientInfo.ifPresent(clientInfo -> serverConnected(new ClientServer(serverInfo.getName(), clientInfo), new BungeePlayer(eventPlayer,
-                    new BungeeServer(serverInfo))));
+            ZulfProxyPlayer<ProxyServer, ProxiedPlayer> bungeePlayer = new BungeePlayer(eventPlayer,
+                    new BungeeServer(serverInfo));
 
+            getClientInfo.ifPresent(info -> serverConnected(new ClientServer(serverInfo.getName(), info), bungeePlayer));
 
         }
     }
@@ -51,11 +58,16 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
 
         if (event.getFrom() != null) {
 
-            String toName = eventPlayer.getServer().getInfo().getName();
+            ServerInfo serverInfo = eventPlayer.getServer().getInfo();
 
-            Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(toName);
+            Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverInfo.getName());
 
-            getClientInfo.ifPresent(clientInfo -> switchServer(new ClientServer(toName, clientInfo), new BungeePlayer(eventPlayer)));
+            Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> proxyPlayerOptional = playerConverter.apply(eventPlayer);
+
+            proxyPlayerOptional.ifPresent(optionalPlayer
+                    -> getClientInfo.ifPresent(info
+                    -> serverConnected(new ClientServer(serverInfo.getName(), info), optionalPlayer)));
+
 
         }
 
@@ -96,4 +108,32 @@ public class BungeeEvents extends ProxyEvents<ProxyServer> implements Listener  
         }
 
     }
+
+    @EventHandler
+    public void onPluginMessageReceived(PluginMessageEvent event) {
+
+        mainServer.getPluginInstance().error("Haiii");
+        mainServer.getPluginInstance().error(event.getTag());
+
+        if (event.getTag().equals("zproxy:channel")) {
+
+            String serverName;
+            if (event.getReceiver() instanceof ProxiedPlayer) {
+                ProxiedPlayer receiver = (ProxiedPlayer) event.getReceiver();
+                serverName = receiver.getServer().getInfo().getName();
+            } else if (event.getReceiver() instanceof Server) {
+                Server receiver = (Server) event.getReceiver();
+                serverName = receiver.getInfo().getName();
+            } else {
+                return;
+            }
+
+            if (mainServer instanceof ChannelMainServer) {
+                ChannelMainServer<ProxyServer, ProxiedPlayer> channelMainServer = (ChannelMainServer<ProxyServer, ProxiedPlayer>) mainServer;
+                channelMainServer.proccessPluginMessage(serverName, event.getData());
+            }
+
+        }
+    }
+
 }

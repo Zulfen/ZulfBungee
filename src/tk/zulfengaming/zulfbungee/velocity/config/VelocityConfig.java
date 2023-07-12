@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.velocity.config;
 
 import com.google.common.reflect.TypeToken;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -12,11 +13,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class VelocityConfig extends ProxyConfig<ProxyServer> {
+public class VelocityConfig extends ProxyConfig<ProxyServer, Player> {
 
     private final ConfigurationNode loadedConfig;
 
-    public VelocityConfig(ZulfBungeeProxy<ProxyServer> instanceIn) {
+    public VelocityConfig(ZulfBungeeProxy<ProxyServer, Player> instanceIn) {
 
         super(instanceIn);
 

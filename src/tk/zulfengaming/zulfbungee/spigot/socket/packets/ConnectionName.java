@@ -7,7 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
-import java.net.SocketAddress;
 import java.util.Optional;
 
 public class ConnectionName extends PacketHandler {
@@ -18,7 +17,7 @@ public class ConnectionName extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         String name = (String) packetIn.getDataSingle();
         ConnectionManager connectionManager = getConnection().getConnectionManager();

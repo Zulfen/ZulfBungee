@@ -1,5 +1,20 @@
 # - Key Setup -
 
+# This chooses what communication method ZulfBungee uses.
+# pluginmessage requires no setup, but requires you to enter a connection name (see below).
+# socket requires more setup but allows for more flexible setups.
+# Generally, if you don't know what this means, leave it as pluginmessage.
+transport-type: "pluginmessage"
+
+# This will toggle the display of detailed messages about what is going to the console.
+# When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!
+debug: false
+
+# Enables or disables global scripts.
+global-scripts: true
+
+# - Socket Setup -
+
 # This is the port that this server will bind to, which will it listen for incoming connections on.
 port: 8000
 
@@ -8,14 +23,6 @@ port: 8000
 # (i.e. you are on shared hosting / Pterodactyl)
 host: "0.0.0.0"
 
-# - Options -
-
-# This will toggle the display of detailed messages about what is going to the console.
-# When filing a bug report / checking for issues, this is extremely useful to know what exactly went wrong!
-debug: false
-
-# Enables or disables global scripts.
-global-scripts: true
 
 # - Storage -
 
@@ -31,7 +38,7 @@ case-insensitive-variables: true
 
 # Each option should be self-explanatory if you know what you are doing.
 
-# If you are using H2, this will not apply - these two settings only apply to remote databases.
+# If you are using H2, this will not apply - these two settings only apply to remote databases like MySQL.
 storage-host: "localhost"
 storage-port: 3306
 
@@ -41,7 +48,7 @@ storage-password: "password"
 
 storage-database: "database"
 
-# [MySQL Setup]
+# - MySQL Setup -
 
 # If you get errors in console because of SSL, disable it here, but it's better to set up SSL on the MySQL server.
 mysql-use-ssl: true

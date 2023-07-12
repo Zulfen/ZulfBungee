@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class VelocityTaskManager implements ProxyTaskManager {
 
@@ -23,6 +24,11 @@ public class VelocityTaskManager implements ProxyTaskManager {
     @Override
     public void newTask(Runnable taskIn) {
         tasks.add(scheduler.buildTask(zulfVelocity, taskIn).schedule());
+    }
+
+    @Override
+    public void newRepeatingTask(Runnable taskIn, long amountIn, TimeUnit timeUnitIn) {
+        tasks.add(scheduler.buildTask(zulfVelocity, taskIn).repeat(amountIn, timeUnitIn).schedule());
     }
 
     @Override

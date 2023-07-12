@@ -6,6 +6,7 @@ import tk.zulfengaming.zulfbungee.bungeecord.ZulfBungeecord;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeTaskManager implements ProxyTaskManager {
 
@@ -24,6 +25,11 @@ public class BungeeTaskManager implements ProxyTaskManager {
     public void newTask(Runnable taskIn) {
         ScheduledTask theTask = scheduler.runAsync(instance, taskIn);
         tasks.add(theTask);
+    }
+
+    @Override
+    public void newRepeatingTask(Runnable taskIn, long amountIn, TimeUnit timeUnitIn) {
+        scheduler.schedule(instance, taskIn, amountIn, timeUnitIn);
     }
 
     public void shutdown() {

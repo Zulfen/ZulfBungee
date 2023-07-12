@@ -8,8 +8,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
-import java.net.SocketAddress;
-
 public class ServerKickEvent extends PacketHandler {
 
     public ServerKickEvent(Connection connectionIn) {
@@ -18,7 +16,7 @@ public class ServerKickEvent extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         ClientPlayerDataContainer container = (ClientPlayerDataContainer) packetIn.getDataSingle();
 

@@ -3,15 +3,11 @@ package tk.zulfengaming.zulfbungee.spigot.tasks;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
-import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 
 import javax.net.SocketFactory;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketException;
+import java.net.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -24,11 +20,20 @@ public class ConnectionTask implements Runnable {
 
     private final Semaphore connectionBarrier;
 
-    private final InetAddress clientAddress;
-    private final int clientPort;
+    private InetAddress clientAddress;
+    private int clientPort;
 
     private final InetAddress serverAddress;
     private final int serverPort;
+
+    public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress serverAddress, int serverPort) {
+        this.connectionManager = connectionManagerIn;
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
+        this.pluginInstance = connectionManager.getPluginInstance();
+        this.taskManager = pluginInstance.getTaskManager();
+        this.connectionBarrier = connectionBarrier;
+    }
 
     public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
 
@@ -39,7 +44,6 @@ public class ConnectionTask implements Runnable {
 
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
-
 
         this.pluginInstance = connectionManager.getPluginInstance();
         this.taskManager = pluginInstance.getTaskManager();
@@ -65,20 +69,30 @@ public class ConnectionTask implements Runnable {
 
             try {
 
-                if (!connectionManager.isBlocked(new InetSocketAddress(serverAddress, serverPort))) {
+                SocketAddress proxyAddress = new InetSocketAddress(serverAddress, serverPort);
+                String transportType = pluginInstance.getTransportType();
 
-                    Socket socket;
+                if (!connectionManager.isBlocked(proxyAddress)) {
+                    if (transportType.equalsIgnoreCase("socket")) {
 
-                    if (chooseRandomPort) {
-                        socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort);
+                        Socket socket;
+
+                        if (chooseRandomPort) {
+                            socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort);
+                        } else {
+                            socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort, clientAddress, clientPort);
+                        }
+
+                        connectionManager.newSocketConnection(socket);
+
+
+                    } else if (transportType.equalsIgnoreCase("pluginmessage")) {
+                        // passes in the IP of the proxy which is only used for the sake of the existing system
+                        // which requires one.
+                        connectionManager.newChannelConnection(proxyAddress);
                     } else {
-                        socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort, clientAddress, clientPort);
+                        throw new RuntimeException("Invalid transport type! Please refer to the config.");
                     }
-
-
-                    SocketConnection socketConnection = new SocketConnection(connectionManager, socket);
-                    connectionManager.addInactiveConnection(socketConnection);
-                    taskManager.newAsyncTask(socketConnection);
 
                     finished++;
 

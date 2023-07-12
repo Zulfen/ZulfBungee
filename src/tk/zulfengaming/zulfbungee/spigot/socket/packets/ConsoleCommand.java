@@ -7,8 +7,6 @@ import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
-import java.net.SocketAddress;
-
 public class ConsoleCommand extends PacketHandler {
 
     public ConsoleCommand(Connection connectionIn) {
@@ -17,7 +15,7 @@ public class ConsoleCommand extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         String command = (String) packetIn.getDataSingle();
         ZulfBungeeSpigot zulfBungeeSpigot = getConnection().getPluginInstance();

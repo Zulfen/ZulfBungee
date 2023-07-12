@@ -12,12 +12,12 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ScriptReload<P> extends CommandHandler<P> {
+public class ScriptReload<P, T> extends CommandHandler<P, T> {
 
     private final WatchKey watchKey;
     private final Path scriptsFolderPath;
 
-    public ScriptReload(MainServer<P> mainServerIn) {
+    public ScriptReload(MainServer<P, T> mainServerIn) {
 
         super(mainServerIn, "zulfen.bungee.admin.script.reload", "scripts", "reload");
 
@@ -41,7 +41,7 @@ public class ScriptReload<P> extends CommandHandler<P> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
         HashMap<Path, ScriptAction> scriptsMap = new HashMap<>();
 

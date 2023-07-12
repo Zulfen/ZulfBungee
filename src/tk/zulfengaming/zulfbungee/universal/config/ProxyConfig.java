@@ -2,27 +2,23 @@ package tk.zulfengaming.zulfbungee.universal.config;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class ProxyConfig<P> {
+public abstract class ProxyConfig<P, T> {
 
     protected final Path scriptsFolder;
     protected final Path configFile;
 
     private final ArrayList<String> activeScripts = new ArrayList<>();
 
-    protected ProxyConfig(ZulfBungeeProxy<P> instanceIn) {
+    protected ProxyConfig(ZulfBungeeProxy<P, T> instanceIn) {
 
         Path dataFolder = instanceIn.getPluginFolder();
         this.configFile = dataFolder.resolve("config.yml");

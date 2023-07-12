@@ -8,28 +8,30 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientP
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
-public class ProxyEvents<P> {
+import java.util.UUID;
 
-    protected final MainServer<P> mainServer;
+public class ProxyEvents<P, T> {
 
-    public ProxyEvents(MainServer<P> mainServerIn) {
+    protected final MainServer<P, T> mainServer;
+
+    public ProxyEvents(MainServer<P, T> mainServerIn) {
         this.mainServer = mainServerIn;
     }
 
-    protected void serverConnected(ClientServer toServer, ZulfProxyPlayer<P> playerIn) {
+    protected void serverConnected(ClientServer toServer, ZulfProxyPlayer<P, T> proxyPlayerIn) {
 
         mainServer.sendDirectToAllAsync(new Packet(PacketTypes.CONNECT_EVENT, false, true,
-                new ClientPlayer(playerIn.getName(), playerIn.getUuid(), toServer)));
+                new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), toServer)));
 
-        if (playerIn.hasPermission("zulfen.admin")) {
-            mainServer.getPluginInstance().getUpdater().checkUpdate(playerIn, false);
+        if (proxyPlayerIn.hasPermission("zulfen.admin")) {
+            mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);
         }
 
     }
 
-    protected void switchServer(ClientServer toServer, ZulfProxyPlayer<P> playerIn) {
+    protected void switchServer(ClientServer toServer, String nameIn, UUID uuidIn) {
         mainServer.sendDirectToAllAsync(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true,
-                new ClientPlayer(playerIn.getName(), playerIn.getUuid(), toServer)));
+                new ClientPlayer(nameIn, uuidIn, toServer)));
     }
 
     protected void serverKick(ClientPlayer playerIn, String reason) {

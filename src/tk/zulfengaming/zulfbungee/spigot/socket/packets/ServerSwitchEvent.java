@@ -7,8 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 
-import java.net.SocketAddress;
-
 public class ServerSwitchEvent extends PacketHandler {
 
     public ServerSwitchEvent(Connection connectionIn) {
@@ -17,7 +15,7 @@ public class ServerSwitchEvent extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         ClientPlayer player = (ClientPlayer) packetIn.getDataSingle();
 

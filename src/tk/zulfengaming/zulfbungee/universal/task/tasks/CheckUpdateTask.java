@@ -18,11 +18,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 
-public class CheckUpdateTask<P> implements Supplier<Optional<UpdateResult>> {
+public class CheckUpdateTask<P, T> implements Supplier<Optional<UpdateResult>> {
 
-    private final ZulfBungeeProxy<P> pluginInstance;
+    private final ZulfBungeeProxy<P, T> pluginInstance;
 
-    public CheckUpdateTask(ZulfBungeeProxy<P> instanceIn) {
+    public CheckUpdateTask(ZulfBungeeProxy<P, T> instanceIn) {
         this.pluginInstance = instanceIn;
     }
 
@@ -68,7 +68,7 @@ public class CheckUpdateTask<P> implements Supplier<Optional<UpdateResult>> {
         return Optional.empty();
     }
 
-    public void checkUpdate(ProxyCommandSender<P> senderIn, boolean notifySuccess) {
+    public void checkUpdate(ProxyCommandSender<P, T> senderIn, boolean notifySuccess) {
 
         CompletableFuture.supplyAsync(this)
                 .thenAccept(updateResult -> {

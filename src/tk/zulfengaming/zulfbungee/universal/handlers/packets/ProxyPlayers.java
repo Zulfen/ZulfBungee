@@ -1,29 +1,30 @@
-package tk.zulfengaming.zulfbungee.universal.socket.packets;
+package tk.zulfengaming.zulfbungee.universal.handlers.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ProxyPlayers<P> extends PacketHandler<P> {
+public class ProxyPlayers<P, T> extends PacketHandler<P, T> {
 
-    public ProxyPlayers(PacketHandlerManager<P> packetHandlerManager) {
+    public ProxyPlayers(PacketHandlerManager<P, T> packetHandlerManager) {
         super(packetHandlerManager);
     }
 
     @Override
-    public Packet handlePacket(Packet packetIn, BaseServerConnection<P> connectionIn) {
+    public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connectionIn) {
 
         ArrayList<ClientPlayer> playersOut = new ArrayList<>();
 
@@ -37,17 +38,22 @@ public class ProxyPlayers<P> extends PacketHandler<P> {
 
             for (ClientServer server : servers) {
 
-                List<ZulfProxyPlayer<P>> players = getMainServer().getProxyPlayersFrom(server);
-                for (ZulfProxyPlayer<P> player : players) {
-                    playersOut.add(new ClientPlayer(player.getName(), player.getUuid(), server));
+                Optional<ZulfProxyServer<P, T>> zulfProxyServer = getProxy().getServer(server);
+
+                if (zulfProxyServer.isPresent()) {
+                    List<ZulfProxyPlayer<P, T>> players = zulfProxyServer.get().getPlayers();
+                    for (ZulfProxyPlayer<P, T> player : players) {
+                        playersOut.add(new ClientPlayer(player.getName(), player.getUuid(), server));
+                    }
                 }
+
 
             }
 
 
         } else {
 
-            playersOut = getMainServer().getAllPlayers().stream()
+            playersOut = getProxy().getAllPlayers().stream()
                     .map(player -> new ClientPlayer(player.getName(), player.getUuid()))
                     .collect(Collectors.toCollection(ArrayList::new));
 

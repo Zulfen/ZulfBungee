@@ -9,8 +9,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
-import java.net.SocketAddress;
-
 public class ProxyPlayerCommand extends PacketHandler {
 
     public ProxyPlayerCommand(Connection connectionIn) {
@@ -19,7 +17,7 @@ public class ProxyPlayerCommand extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         ClientPlayerDataContainer playerDataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
 

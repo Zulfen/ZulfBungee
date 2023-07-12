@@ -24,6 +24,10 @@ public class TaskManager {
         taskIn.runTaskAsynchronously(instance);
     }
 
+    public void newRepeatingTask(BukkitRunnable taskIn, int ticks) {
+        taskIn.runTaskTimerAsynchronously(instance, 0, ticks);
+    }
+
     public void newAsyncTask(Runnable runnableIn) {
         if (instance.isEnabled()) {
             scheduler.runTaskAsynchronously(instance, runnableIn);

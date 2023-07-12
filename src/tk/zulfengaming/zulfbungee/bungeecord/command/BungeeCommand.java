@@ -6,13 +6,18 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
+import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+
+import java.util.Collections;
+import java.util.Optional;
 
 public class BungeeCommand extends Command implements TabExecutor {
 
-    private final CommandHandlerManager<ProxyServer> commandHandlerManager;
+    private final CommandHandlerManager<ProxyServer, ProxiedPlayer> commandHandlerManager;
 
-    public BungeeCommand(CommandHandlerManager<ProxyServer> handlerIn) {
+    public BungeeCommand(CommandHandlerManager<ProxyServer, ProxiedPlayer> handlerIn) {
         super("zulfbungee");
         this.commandHandlerManager = handlerIn;
     }
@@ -24,7 +29,7 @@ public class BungeeCommand extends Command implements TabExecutor {
 
             ProxiedPlayer bungeePlayer = (ProxiedPlayer) commandSender;
 
-            commandHandlerManager.handle(new BungeePlayer(bungeePlayer), argsIn);
+            commandHandlerManager.handle(new BungeePlayer(bungeePlayer, new BungeeServer(bungeePlayer.getServer().getInfo())), argsIn);
 
         } else {
 
@@ -42,8 +47,14 @@ public class BungeeCommand extends Command implements TabExecutor {
         if (commandSender instanceof ProxiedPlayer) {
 
             ProxiedPlayer bungeePlayer = (ProxiedPlayer) commandSender;
+            Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> proxyPlayer = commandHandlerManager.getMainServer()
+                    .getPluginInstance().getPlayerConverter().apply(bungeePlayer);
 
-            return commandHandlerManager.onTabComplete(new BungeePlayer(bungeePlayer), strings);
+            if (proxyPlayer.isPresent()) {
+                return commandHandlerManager.onTabComplete(proxyPlayer.get(), strings);
+            }
+
+            return Collections.emptyList();
 
         } else {
 

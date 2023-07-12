@@ -3,9 +3,10 @@ package tk.zulfengaming.zulfbungee.bungeecord.command;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 
-public class BungeeConsole implements ProxyCommandSender<ProxyServer> {
+public class BungeeConsole implements ProxyCommandSender<ProxyServer, ProxiedPlayer> {
 
     private final ProxyServer proxyServer;
 

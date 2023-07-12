@@ -7,7 +7,6 @@ import tk.zulfengaming.zulfbungee.spigot.socket.packets.*;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 
-import java.net.SocketAddress;
 import java.util.ArrayList;
 
 
@@ -51,7 +50,7 @@ public class PacketHandlerManager {
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         PacketHandler handler = getHandler(packetIn);
 
@@ -59,11 +58,11 @@ public class PacketHandlerManager {
             taskManager.newAsyncTask(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    handler.handlePacket(packetIn, address);
+                    handler.handlePacket(packetIn);
                 }
             });
         } else {
-            handler.handlePacket(packetIn, address);
+            handler.handlePacket(packetIn);
         }
 
     }

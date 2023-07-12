@@ -1,18 +1,33 @@
 package tk.zulfengaming.zulfbungee.bungeecord.objects;
 
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
-public class BungeeServer implements ZulfProxyServer {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    private final String name;
+public class BungeeServer extends ZulfProxyServer<ProxyServer, ProxiedPlayer> {
 
-    public BungeeServer(net.md_5.bungee.api.config.ServerInfo bungeeInfoIn) {
-        this.name = bungeeInfoIn.getName();
+    private final ServerInfo serverInfo;
+
+    public BungeeServer(ServerInfo serverInfoIn) {
+        super(serverInfoIn.getName(), serverInfoIn.getSocketAddress());
+        this.serverInfo = serverInfoIn;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public List<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> getPlayers() {
+        return serverInfo.getPlayers().stream()
+                .map(proxiedPlayer -> new BungeePlayer(proxiedPlayer, this))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void sendData(String channelNameIn, byte[] dataOut) {
+        serverInfo.sendData(channelNameIn, dataOut);
     }
 
 }

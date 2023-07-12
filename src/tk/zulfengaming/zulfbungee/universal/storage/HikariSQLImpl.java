@@ -15,12 +15,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-public abstract class HikariSQLImpl<P> extends StorageImpl<P> {
+public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
     private final HikariDataSource dataSource;
     private final boolean caseInsensitive;
 
-    public HikariSQLImpl(MainServer<P> mainServerIn) {
+    public HikariSQLImpl(MainServer<P, T> mainServerIn) {
         super(mainServerIn);
         this.dataSource = initialiseDataSource();
         this.caseInsensitive = mainServerIn.getPluginInstance().getConfig().getBoolean("case-insensitive-variables");

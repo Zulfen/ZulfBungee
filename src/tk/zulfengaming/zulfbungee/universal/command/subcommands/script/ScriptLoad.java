@@ -15,17 +15,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class ScriptLoad<P> extends CommandHandler<P> {
+public class ScriptLoad<P, T> extends CommandHandler<P, T> {
 
-    private final ProxyConfig<P> config;
+    private final ProxyConfig<P, T> config;
 
-    public ScriptLoad(MainServer<P> mainServerIn) {
+    public ScriptLoad(MainServer<P, T> mainServerIn) {
         super(mainServerIn, "zulfen.bungee.admin.script.load", "scripts", "load");
         this.config = mainServerIn.getPluginInstance().getConfig();
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
         if (separateArgs.length > 0) {
 
@@ -64,7 +64,7 @@ public class ScriptLoad<P> extends CommandHandler<P> {
 
     }
 
-    private void loadScript(String scriptName, Path scriptPathIn, ProxyCommandSender<P> senderIn) {
+    private void loadScript(String scriptName, Path scriptPathIn, ProxyCommandSender<P, T> senderIn) {
 
         if (getMainServer().areClientsConnected()) {
 

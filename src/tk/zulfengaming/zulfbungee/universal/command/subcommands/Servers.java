@@ -3,21 +3,21 @@ package tk.zulfengaming.zulfbungee.universal.command.subcommands;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
-import tk.zulfengaming.zulfbungee.universal.socket.BaseServerConnection;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 
 import java.net.SocketAddress;
 import java.util.Optional;
 import java.util.Set;
 
-public class Servers<P> extends CommandHandler<P> {
+public class Servers<P, T> extends CommandHandler<P, T> {
 
-    public Servers(MainServer<P> mainServerIn) {
+    public Servers(MainServer<P, T> mainServerIn) {
         super(mainServerIn, "zulfen.bungee.admin.servers", "servers");
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
         Set<String> serverNames = getMainServer().getServerNames();
 
@@ -27,7 +27,7 @@ public class Servers<P> extends CommandHandler<P> {
 
             for (String name : serverNames) {
 
-                Optional<BaseServerConnection<P>> getConnection = getMainServer().getConnection(name);
+                Optional<ProxyServerConnection<P, T>> getConnection = getMainServer().getConnection(name);
 
                 if (getConnection.isPresent()) {
                     SocketAddress address = getConnection.get().getAddress();

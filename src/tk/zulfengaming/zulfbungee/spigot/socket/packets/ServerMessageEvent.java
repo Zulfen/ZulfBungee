@@ -7,8 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
 
-import java.net.SocketAddress;
-
 public class ServerMessageEvent extends PacketHandler {
 
     public ServerMessageEvent(Connection connectionIn) {
@@ -17,7 +15,7 @@ public class ServerMessageEvent extends PacketHandler {
     }
 
     @Override
-    public void handlePacket(Packet packetIn, SocketAddress address) {
+    public void handlePacket(Packet packetIn) {
 
         ServerMessage message = (ServerMessage) packetIn.getDataSingle();
 

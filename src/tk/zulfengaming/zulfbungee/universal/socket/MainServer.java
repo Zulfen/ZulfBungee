@@ -4,8 +4,11 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
+import tk.zulfengaming.zulfbungee.universal.handlers.socket.ProxyChannelCommHandler;
+import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyCommHandler;
+import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
@@ -13,6 +16,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
 
@@ -20,53 +24,37 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
-public abstract class MainServer<P> implements Runnable {
+public class MainServer<P, T> {
     // plugin instance !!!
 
-    private final ZulfBungeeProxy<P> pluginInstance;
+    protected final ZulfBungeeProxy<P, T> pluginInstance;
 
-    // setting up the server
-    private final int port;
-    private final InetAddress hostAddress;
+    protected final CopyOnWriteArrayList<ProxyServerConnection<P, T>> connections = new CopyOnWriteArrayList<>();
 
-    private final AtomicBoolean running = new AtomicBoolean(true);
-    private final AtomicBoolean serverSocketAvailable = new AtomicBoolean(false);
+    protected final ConcurrentHashMap<SocketAddress, String> addressNames = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<String, ProxyServerConnection<P, T>> activeConnections = new ConcurrentHashMap<>();
 
-    private ServerSocket serverSocket;
-    private Socket socket;
+    protected final ConcurrentHashMap<String, ClientInfo> clientInfos = new ConcurrentHashMap<>();
 
-    private final CopyOnWriteArrayList<BaseServerConnection<P>> socketConnections = new CopyOnWriteArrayList<>();
-
-    private final ConcurrentHashMap<SocketAddress, String> addressNames = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, BaseServerConnection<P>> activeConnections = new ConcurrentHashMap<>();
-
-    private final ConcurrentHashMap<String, ClientInfo> clientInfos = new ConcurrentHashMap<>();
-
-    // quite neat
-    private final PacketHandlerManager<P> packetManager;
-    private final ProxyTaskManager taskManager;
+    protected final ProxyTaskManager taskManager;
 
     // storage
-    private StorageImpl<P> storage;
+    private StorageImpl<P, T> storage;
 
-    public MainServer(int port, InetAddress address, ZulfBungeeProxy<P> instanceIn) {
+    public MainServer(ZulfBungeeProxy<P, T> instanceIn) {
 
-        this.hostAddress = address;
-        this.port = port;
         this.pluginInstance = instanceIn;
-
-        this.packetManager = new PacketHandlerManager<>(this);
         this.taskManager = instanceIn.getTaskManager();
 
         pluginInstance.getTaskManager().newTask(() -> {
 
-            Optional<StorageImpl<P>> newStorage = setupStorage();
+            Optional<StorageImpl<P, T>> newStorage = setupStorage();
 
             if (newStorage.isPresent()) {
 
@@ -83,79 +71,11 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-
-    public void run() {
-
-        do {
-
-            try {
-
-                if (serverSocketAvailable.get()) {
-
-                    socket = serverSocket.accept();
-                    acceptConnection(socket);
-
-
-                } else {
-
-                    try {
-
-                        serverSocket = new ServerSocket(port, 50, hostAddress);
-
-                    } catch (IOException e) {
-
-                        pluginInstance.error("There was an error trying to start the server!");
-                        pluginInstance.error("Please check your config to see if the port and host you specified is valid / not being used by another process.");
-                        pluginInstance.error("Once you have done this, please restart this proxy server!");
-                        pluginInstance.error("");
-                        pluginInstance.error(e.toString());
-
-                        break;
-                    }
-
-                    serverSocketAvailable.compareAndSet(false, true);
-
-                    pluginInstance.logInfo(ChatColour.GREEN + "Waiting for connections on " + hostAddress + ":" + port);
-
-                }
-
-            } catch (SocketException | EOFException e) {
-
-                if (pluginInstance.isDebug() && e instanceof EOFException) {
-                    pluginInstance.warning("An uncommon error just occurred! This can be normal, but please report this to the developers!");
-                    e.printStackTrace();
-                }
-
-                try {
-
-                    if (socket != null) {
-                        socket.close();
-                    }
-
-                } catch (IOException ioException) {
-                    throw new RuntimeException(ioException);
-                }
-
-
-            } catch (IOException e) {
-
-                if (pluginInstance.isDebug()) {
-                    pluginInstance.warning("There was an error trying to establish a connection! Please consider restarting this proxy.");
-                    e.printStackTrace();
-                }
-
-            }
-
-        } while (running.get());
+    protected void startConnection(ProxyServerConnection<P, T> connectionIn) {
+        taskManager.newTask(connectionIn);
+        connections.add(connectionIn);
     }
 
-    protected abstract BaseServerConnection<P> newConnection(Socket socketIn) throws IOException;
-
-    private void acceptConnection(Socket socketIn) throws IOException {
-        BaseServerConnection<P> connection = newConnection(socketIn);
-        taskManager.newTask(connection);
-        socketConnections.add(connection);
-    }
 
     public void sendDirectToAllAsync(Packet packetIn) {
         taskManager.newTask(() -> sendDirectToAll(packetIn));
@@ -163,14 +83,14 @@ public abstract class MainServer<P> implements Runnable {
 
     public void sendDirectToAll(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
-        for (BaseServerConnection<P> connection : socketConnections) {
+        for (ProxyServerConnection<P, T> connection : connections) {
             connection.sendDirect(packetIn);
         }
     }
 
-    public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender<P> senderIn) {
+    public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender<P, T> senderIn) {
 
-        for (BaseServerConnection<P> connection : socketConnections) {
+        for (ProxyServerConnection<P, T> connection : connections) {
 
             for (Map.Entry<Path, ScriptAction> script : scriptNamesIn.entrySet()) {
                 String name = script.getKey().getFileName().toString();
@@ -181,9 +101,9 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-    public void syncScripts(Map<String, Path> scriptNamesIn, ScriptAction scriptActionIn, ProxyCommandSender<P> senderIn) {
+    public void syncScripts(Map<String, Path> scriptNamesIn, ScriptAction scriptActionIn, ProxyCommandSender<P, T> senderIn) {
 
-        for (BaseServerConnection<P> connection : socketConnections) {
+        for (ProxyServerConnection<P, T> connection : connections) {
 
             for (Map.Entry<String, Path> script : scriptNamesIn.entrySet()) {
                 connection.sendScript(script.getKey(), script.getValue(), scriptActionIn, senderIn);
@@ -193,7 +113,7 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-    public void addActiveConnection(BaseServerConnection<P> connectionIn, String name, ClientInfo infoIn) {
+    public void addActiveConnection(ProxyServerConnection<P, T> connectionIn, String name, ClientInfo infoIn) {
 
         SocketAddress address = connectionIn.getAddress();
 
@@ -214,15 +134,19 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
-    public void removeServerConnection(BaseServerConnection<P> connectionIn) {
+    public void removeServerConnection(ProxyServerConnection<P, T> connectionIn) {
 
-        socketConnections.remove(connectionIn);
+        connections.remove(connectionIn);
         String name = addressNames.remove(connectionIn.getAddress());
 
         if (name != null) {
 
             activeConnections.remove(name);
             clientInfos.remove(name);
+
+            if (connectionIn instanceof ChannelServerConnection) {
+                pluginInstance.unregisterMessageChannel(String.format("zproxy:channel:%s", name));
+            }
 
             pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
 
@@ -235,33 +159,22 @@ public abstract class MainServer<P> implements Runnable {
 
     }
 
+
     public void end() throws IOException {
 
-        if (running.compareAndSet(true, false)) {
+        for (ProxyServerConnection<P, T> connection : connections) {
+            connection.destroy();
+        }
 
-            if (serverSocket != null) {
-                serverSocket.close();
-            }
-
-            if (socket != null) {
-                socket.close();
-            }
-
-            for (BaseServerConnection<P> connection : socketConnections) {
-                connection.end();
-            }
-
-            if (storage != null) {
-                storage.shutdown();
-            }
-
+        if (storage != null) {
+            storage.shutdown();
         }
 
     }
 
-    private Optional<StorageImpl<P>> setupStorage() {
+    private Optional<StorageImpl<P, T>> setupStorage() {
 
-        StorageImpl<P> newStorage = null;
+        StorageImpl<P, T> newStorage = null;
 
         String storageChoice = pluginInstance.getConfig().getString("storage-type");
 
@@ -280,39 +193,18 @@ public abstract class MainServer<P> implements Runnable {
         return activeConnections.keySet();
     }
 
-    public Optional<String> getNameFromAddress(SocketAddress addressIn) {
-        return Optional.ofNullable(addressNames.get(addressIn));
-    }
-
-
-    public Optional<BaseServerConnection<P>> getConnection(String name) {
+    public Optional<ProxyServerConnection<P, T>> getConnection(String name) {
         return Optional.ofNullable(activeConnections.get(name));
     }
 
-    public Optional<BaseServerConnection<P>> getConnection(ClientServer serverIn) {
+    public Optional<ProxyServerConnection<P, T>> getConnection(ClientServer serverIn) {
         return Optional.ofNullable(activeConnections.get(serverIn.getName()));
     }
 
-    public Optional<BaseServerConnection<P>> getConnection(ZulfProxyPlayer<P> playerIn) {
+    public Optional<ProxyServerConnection<P, T>> getConnection(ZulfProxyPlayer<P, T> playerIn) {
         return Optional.ofNullable(activeConnections.get(playerIn.getServer().getName()));
     }
 
-    public List<ZulfProxyPlayer<P>> getProxyPlayersFrom(ClientServer clientServerIn) {
-
-        Optional<BaseServerConnection<P>> serverConnection = getConnection(clientServerIn);
-
-        if (serverConnection.isPresent()) {
-            return serverConnection.get().getPlayers();
-        }
-
-        return Collections.emptyList();
-
-    }
-
-    public List<ZulfProxyPlayer<P>> getAllPlayers() {
-        return socketConnections.stream()
-                .flatMap(connection -> connection.getPlayers().stream()).collect(Collectors.toCollection(ArrayList::new));
-    }
 
     private ClientServer[] getClientServerArray() {
         return clientInfos.entrySet().stream()
@@ -325,18 +217,14 @@ public abstract class MainServer<P> implements Runnable {
     }
 
     public boolean areClientsConnected() {
-        return socketConnections.size() > 0;
+        return connections.size() > 0;
     }
 
-    public PacketHandlerManager<P> getPacketManager() {
-        return packetManager;
-    }
-
-    public Optional<StorageImpl<P>> getStorage() {
+    public Optional<StorageImpl<P, T>> getStorage() {
         return Optional.ofNullable(storage);
     }
 
-    public ZulfBungeeProxy<P> getPluginInstance() {
+    public ZulfBungeeProxy<P, T> getPluginInstance() {
         return pluginInstance;
     }
 

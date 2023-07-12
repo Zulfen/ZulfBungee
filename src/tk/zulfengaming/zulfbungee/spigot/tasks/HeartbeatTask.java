@@ -23,7 +23,7 @@ public class HeartbeatTask extends BukkitRunnable {
 
         if (connectionManager.getRegistered() > 0) {
             timeBefore = System.currentTimeMillis();
-            connectionManager.sendDirect(new Packet(PacketTypes.HEARTBEAT, true, true, ping));
+            connectionManager.sendDirect(new Packet(PacketTypes.HEARTBEAT_PROXY, true, true, ping));
         }
 
     }
