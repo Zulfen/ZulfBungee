@@ -25,7 +25,7 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    protected Optional<Packet> readPacket() {
+    public Optional<Packet> readPacket() {
 
         try {
             Object readObject = inputStream.readObject();

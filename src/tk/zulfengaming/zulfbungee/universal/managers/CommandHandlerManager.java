@@ -4,6 +4,7 @@ import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.CheckUpdate;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.Debug;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.Servers;
+import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptList;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptLoad;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptReload;
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptUnload;
@@ -28,6 +29,7 @@ public class CommandHandlerManager<P, T> {
         addHandler(new ScriptReload<>(mainServerIn));
         addHandler(new ScriptLoad<>(mainServerIn));
         addHandler(new ScriptUnload<>(mainServerIn));
+        addHandler(new ScriptList<>(mainServerIn));
         addHandler(new CheckUpdate<>(mainServerIn));
         addHandler(new Debug<>(mainServerIn));
         addHandler(new Servers<>(mainServerIn));

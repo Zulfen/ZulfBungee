@@ -1,14 +1,13 @@
 package tk.zulfengaming.zulfbungee.universal.managers;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.packets.*;
 import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
-import tk.zulfengaming.zulfbungee.universal.handlers.packets.*;
 
 import java.util.EnumMap;
-import java.util.Optional;
 
 public class PacketHandlerManager<P, T> {
 
@@ -36,19 +35,15 @@ public class PacketHandlerManager<P, T> {
         handlers.put(PacketTypes.BROADCAST_MESSAGE, new ProxyBroadcast<>(this));
         handlers.put(PacketTypes.PROXY_PLAYER_PERMISSION, new ProxyPlayerPermission<>(this));
         handlers.put(PacketTypes.CONNECTION_NAME, new ConnectionName<>(this));
-        handlers.put(PacketTypes.HEARTBEAT_PROXY, new HeartbeatProxy<>(this));
 
-    }
-
-    public Optional<PacketHandler<P, T>> getHandler(PacketTypes type) {
-        return Optional.ofNullable(handlers.get(type));
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time
     public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connection) {
         PacketTypes type = packetIn.getType();
-        if (getHandler(type).isPresent()) {
-            return getHandler(type).get().handlePacket(packetIn, connection);
+        PacketHandler<P, T> handler = handlers.get(type);
+        if (handler != null) {
+            return handler.handlePacket(packetIn, connection);
         } else {
             throw new RuntimeException(String.format("Could not find handler for packet type %s", type));
         }

@@ -24,39 +24,39 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
     protected final ZulfBungeeProxy<P, T> pluginInstance;
     protected final PacketHandlerManager<P, T> packetHandlerManager;
 
-    protected final ProxyCommHandler<P, T> proxyCommHandler;
+    protected ProxyCommHandler<P, T> proxyCommHandler;
 
     protected final AtomicBoolean connected = new AtomicBoolean(true);
-    protected final AtomicBoolean isActive = new AtomicBoolean(false);
 
     protected final SocketAddress socketAddress;
 
-    public ProxyServerConnection(MainServer<P, T> mainServerIn, ProxyCommHandler<P, T> commHandlerIn, SocketAddress socketAddressIn) {
+    public ProxyServerConnection(MainServer<P, T> mainServerIn, SocketAddress socketAddressIn) {
         this.mainServer = mainServerIn;
         this.pluginInstance = mainServer.getPluginInstance();
         this.socketAddress = socketAddressIn;
         this.packetHandlerManager = new PacketHandlerManager<>(mainServerIn);
-        this.proxyCommHandler = commHandlerIn;
-        proxyCommHandler.setServerConnection(this);
     }
 
     @Override
     public void run() {
-        proxyCommHandler.start();
+        assert proxyCommHandler != null : "Comm Handler is null!";
         while (connected.get()) {
-            Optional<Packet> read = proxyCommHandler.read();
+            Optional<Packet> read = proxyCommHandler.readPacket();
             read.ifPresent(this::processPacket);
         }
     }
 
     public void sendDirect(Packet packetIn) {
+        assert proxyCommHandler != null : "Comm Handler is null!";
         proxyCommHandler.send(packetIn);
         if (packetIn.getType() != PacketTypes.HEARTBEAT_PROXY) {
-            pluginInstance.logDebug("Sent packet " + packetIn + "...");
+            pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
         }
     }
 
     public void destroy() {
+        assert proxyCommHandler != null : "Comm Handler is null!";
+        pluginInstance.error("Called!");
         if (connected.compareAndSet(true, false)) {
             proxyCommHandler.destroy();
             mainServer.removeServerConnection(this);
@@ -124,8 +124,9 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     }
 
-    public ProxyCommHandler<P, T> getProxyCommHandler() {
-        return proxyCommHandler;
+    public void setProxyCommHandler(ProxyCommHandler<P, T> proxyCommHandlerIn) {
+        this.proxyCommHandler = proxyCommHandlerIn;
+        proxyCommHandler.setServerConnection(this);
     }
 
     public SocketAddress getAddress() {
@@ -138,10 +139,6 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     public ZulfBungeeProxy<P, T> getPluginInstance() {
         return pluginInstance;
-    }
-
-    public AtomicBoolean isConnected() {
-        return connected;
     }
 
 }

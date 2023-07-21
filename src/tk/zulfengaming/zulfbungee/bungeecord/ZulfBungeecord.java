@@ -176,15 +176,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public Optional<MessageCallback> getMessagingCallback(String channelNameIn, String serverNameIn) {
-        ServerInfo serverInfo = getProxy().getServerInfo(serverNameIn);
-        if (serverInfo != null) {
-            return Optional.of(dataIn -> serverInfo.sendData(channelNameIn, dataIn));
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public void registerMessageChannel(String channelNameIn) {
         getProxy().registerChannel(channelNameIn);
     }

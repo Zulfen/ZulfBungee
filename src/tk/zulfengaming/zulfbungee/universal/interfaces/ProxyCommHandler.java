@@ -15,7 +15,7 @@ public abstract class ProxyCommHandler<P, T> {
     protected ProxyServerConnection<P, T> connection;
     protected final ZulfBungeeProxy<P, T> pluginInstance;
 
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
 
     protected final LinkedBlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
     protected final LinkedBlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
@@ -26,38 +26,26 @@ public abstract class ProxyCommHandler<P, T> {
 
     public void setServerConnection(ProxyServerConnection<P, T> connection) {
         this.connection = connection;
-    }
-
-    public void start() {
-        if (isRunning.compareAndSet(false, true)) {
-            ProxyTaskManager taskManager = pluginInstance.getTaskManager();
-            taskManager.newTask(this::dataInLoop);
-            taskManager.newTask(this::dataOutLoop);
-        }
-    }
-
-    private void dataInLoop() {
-        while (isRunning.get()) {
-            try {
-                queueIn.put(readPacket());
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        ProxyTaskManager taskManager = pluginInstance.getTaskManager();
+        taskManager.newTask(this::dataOutLoop);
     }
 
     private void dataOutLoop() {
         while (isRunning.get()) {
             try {
                 Optional<Packet> possiblePacket = queueOut.take();
-                possiblePacket.ifPresent(this::writePacket);
+                if (possiblePacket.isPresent()) {
+                    writePacket(possiblePacket.get());
+                } else {
+                    break;
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
     }
 
-    protected abstract Optional<Packet> readPacket();
+    public abstract Optional<Packet> readPacket();
     protected abstract void writePacket(Packet toWrite);
 
     protected void freeResources() {}
@@ -65,6 +53,7 @@ public abstract class ProxyCommHandler<P, T> {
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {
             queueIn.offer(Optional.empty());
+            queueOut.offer(Optional.empty());
             freeResources();
             connection.destroy();
         }
@@ -72,16 +61,6 @@ public abstract class ProxyCommHandler<P, T> {
 
     public void send(Packet packetIn) {
         queueOut.offer(Optional.of(packetIn));
-    }
-
-
-    public Optional<Packet> read() {
-        try {
-            return queueIn.take();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        return Optional.empty();
     }
 
 

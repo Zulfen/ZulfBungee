@@ -9,7 +9,8 @@ import java.net.Socket;
 public class SocketServerConnection<P, T> extends ProxyServerConnection<P, T> {
 
     public SocketServerConnection(MainServer<P, T> mainServerIn, Socket socketIn) throws IOException {
-        super(mainServerIn, new ProxySocketCommHandler<>(mainServerIn.getPluginInstance(), socketIn), socketIn.getRemoteSocketAddress());
+        super(mainServerIn, socketIn.getRemoteSocketAddress());
+        setProxyCommHandler(new ProxySocketCommHandler<>(mainServerIn.getPluginInstance(), socketIn));
     }
 
 }

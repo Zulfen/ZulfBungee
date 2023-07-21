@@ -1,6 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.socket.packets;
 
 import tk.zulfengaming.zulfbungee.spigot.interfaces.PacketHandler;
+import tk.zulfengaming.zulfbungee.spigot.managers.ChannelConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -20,9 +21,7 @@ public class ConnectionName extends PacketHandler {
     public void handlePacket(Packet packetIn) {
 
         String name = (String) packetIn.getDataSingle();
-        ConnectionManager connectionManager = getConnection().getConnectionManager();
-
-        connectionManager.addNamedConnection(name, getConnection());
+        ConnectionManager connectionManager = getConnection().getPluginInstance().getConnectionManager();
 
         Optional<ClientServer> proxyServer = connectionManager.getProxyServer(name);
         proxyServer.ifPresent(connectionManager::setThisServer);

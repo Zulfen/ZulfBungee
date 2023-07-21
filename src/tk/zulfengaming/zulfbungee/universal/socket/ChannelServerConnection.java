@@ -8,9 +8,16 @@ import java.net.SocketAddress;
 
 public class ChannelServerConnection<P, T> extends ProxyServerConnection<P, T> {
 
+    private final ProxyChannelCommHandler<P, T> proxyChannelCommHandler;
+
     public ChannelServerConnection(MainServer<P, T> mainServerIn, MessageCallback messageCallbackIn, SocketAddress socketAddressIn) {
-        super(mainServerIn, new ProxyChannelCommHandler<>(mainServerIn.getPluginInstance(), messageCallbackIn), socketAddressIn);
+        super(mainServerIn, socketAddressIn);
+        this.proxyChannelCommHandler = new ProxyChannelCommHandler<>(pluginInstance, messageCallbackIn);
+        setProxyCommHandler(proxyChannelCommHandler);
     }
 
+    public ProxyChannelCommHandler<P, T> getProxyChannelCommHandler() {
+        return proxyChannelCommHandler;
+    }
 
 }

@@ -1,7 +1,5 @@
 package tk.zulfengaming.zulfbungee.universal;
 
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
@@ -48,10 +46,6 @@ public interface ZulfBungeeProxy<P, T> {
 
     Map<String, ZulfProxyServer<P, T>> getServersCopy();
 
-    Optional<MessageCallback> getMessagingCallback(String channelNameIn, String serverNameIn);
-    default MessageCallback getMessagingCallback(String channelNameIn, ZulfProxyServer<P, T> proxyServerIn) {
-        return dataIn -> proxyServerIn.sendData(channelNameIn, dataIn);
-    }
     void registerMessageChannel(String channelNameIn);
     void unregisterMessageChannel(String channelNameIn);
 

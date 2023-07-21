@@ -37,11 +37,6 @@ public class BungeePlayer extends ZulfProxyPlayer<ProxyServer, ProxiedPlayer> {
     }
 
     @Override
-    public boolean isPlayer() {
-        return true;
-    }
-
-    @Override
     public boolean hasPermission(String permission) {
         return bungeePlayer.hasPermission(permission);
     }

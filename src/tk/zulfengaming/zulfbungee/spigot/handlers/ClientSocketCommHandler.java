@@ -25,7 +25,7 @@ public class ClientSocketCommHandler extends ClientCommHandler {
     }
 
     @Override
-    protected Optional<Packet> readPacket() {
+    public Optional<Packet> readPacket() {
 
         try {
             Object readObject = inputStream.readObject();

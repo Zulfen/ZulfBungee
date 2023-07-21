@@ -29,7 +29,7 @@ public class ProxyServerInfo extends PacketHandler {
                         ClientServer::getClientInfo
                 ));
 
-        getConnection().getConnectionManager().setProxyServers(serverMap);
+        getConnection().getPluginInstance().getConnectionManager().setProxyServers(serverMap);
 
     }
 }

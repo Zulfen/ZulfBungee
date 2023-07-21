@@ -4,9 +4,6 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
-import tk.zulfengaming.zulfbungee.universal.handlers.socket.ProxyChannelCommHandler;
-import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyCommHandler;
 import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
@@ -16,11 +13,9 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
 import java.nio.file.Path;
@@ -82,6 +77,7 @@ public class MainServer<P, T> {
     }
 
     public void sendDirectToAll(Packet packetIn) {
+        pluginInstance.error(connections.toString());
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
         for (ProxyServerConnection<P, T> connection : connections) {
             connection.sendDirect(packetIn);
@@ -117,43 +113,33 @@ public class MainServer<P, T> {
 
         SocketAddress address = connectionIn.getAddress();
 
-        if (!activeConnections.containsKey(name)) {
+        addressNames.put(address, name);
+        activeConnections.put(name, connectionIn);
+        clientInfos.put(name, infoIn);
 
-            addressNames.put(address, name);
-            activeConnections.put(name, connectionIn);
-            clientInfos.put(name, infoIn);
+        pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
 
-            pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
+        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
+    }
 
-        } else {
-            pluginInstance.warning(String.format("Server %s is already registered. Please change the forced-connection-name in the client's config to something different!", name));
-            connectionIn.sendDirect(new Packet(PacketTypes.INVALID_CONFIGURATION, false, true, new Object[0]));
-        }
-
+    public void removeServerConnection(String name, SocketAddress address) {
+        activeConnections.remove(name);
+        clientInfos.remove(name);
+        pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", address, name));
+        sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
     }
 
     public void removeServerConnection(ProxyServerConnection<P, T> connectionIn) {
 
+        SocketAddress socketAddress = connectionIn.getAddress();
         connections.remove(connectionIn);
-        String name = addressNames.remove(connectionIn.getAddress());
+        String name = addressNames.remove(socketAddress);
 
         if (name != null) {
-
-            activeConnections.remove(name);
-            clientInfos.remove(name);
-
-            if (connectionIn instanceof ChannelServerConnection) {
-                pluginInstance.unregisterMessageChannel(String.format("zproxy:channel:%s", name));
-            }
-
-            pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", connectionIn.getAddress(), name));
-
-            sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
-
+            removeServerConnection(name, socketAddress);
         } else {
-            pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s", connectionIn.getAddress()));
+            pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s", socketAddress));
         }
 
 

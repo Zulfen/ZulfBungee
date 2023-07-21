@@ -26,8 +26,9 @@ public class BungeeServer extends ZulfProxyServer<ProxyServer, ProxiedPlayer> {
     }
 
     @Override
-    public void sendData(String channelNameIn, byte[] dataOut) {
-        serverInfo.sendData(channelNameIn, dataOut);
+    public boolean sendData(String channelNameIn, byte[] dataOut) {
+        ProxyServer.getInstance().getLogger().severe(String.format("Hi! Sending to %s", serverInfo.getName()));
+        return serverInfo.sendData(channelNameIn, dataOut, false);
     }
 
 }

@@ -7,6 +7,9 @@ import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.messages.ChannelMessageSource;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
 import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
@@ -77,9 +80,32 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
 
     @Subscribe
     public void onPluginMessageEvent(PluginMessageEvent event) {
-        mainServer.getPluginInstance().warning("Hai");
-        event.setResult(PluginMessageEvent.ForwardResult.handled());
-        //mainServer.processPluginMessage(event.getIdentifier().getId(), event.getData());
+
+        if (event.getIdentifier().equals(MinecraftChannelIdentifier.from("zproxy:channel"))) {
+
+            event.setResult(PluginMessageEvent.ForwardResult.handled());
+            ChannelMessageSource source = event.getSource();
+
+            String serverName;
+            if (source instanceof Player) {
+                Player player = (Player) source;
+                Optional<ServerConnection> serverOptional = player.getCurrentServer();
+                if (serverOptional.isPresent()) {
+                    serverName = serverOptional.get().getServerInfo().getName();
+                } else {
+                    return;
+                }
+            } else if (source instanceof ServerConnection) {
+                ServerConnection serverConnection = (ServerConnection) source;
+                serverName = serverConnection.getServerInfo().getName();
+            } else {
+                return;
+            }
+
+            pluginMessage(serverName, event.getData());
+
+        }
+
     }
 
 }

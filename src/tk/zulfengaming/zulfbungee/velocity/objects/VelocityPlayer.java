@@ -24,11 +24,6 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer, Player> {
     }
 
     @Override
-    public boolean isPlayer() {
-        return true;
-    }
-
-    @Override
     public boolean hasPermission(String permission) {
         return velocityPlayer.hasPermission(permission);
     }

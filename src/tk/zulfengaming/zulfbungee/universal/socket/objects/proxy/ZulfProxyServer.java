@@ -26,6 +26,6 @@ public abstract class ZulfProxyServer<P, T> {
     // we do this when requested instead of in the constructor for performance
     public abstract List<ZulfProxyPlayer<P, T>> getPlayers();
 
-    public abstract void sendData(String channelNameIn, byte[] dataOut);
+    public abstract boolean sendData(String channelNameIn, byte[] dataOut);
 
 }

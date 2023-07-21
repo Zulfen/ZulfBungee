@@ -37,9 +37,11 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    protected Optional<Packet> readPacket() {
+    public Optional<Packet> readPacket() {
         try {
-            return queueIn.take();
+            Optional<Packet> take = queueIn.take();
+            pluginInstance.error("Recieved from input: " + take);
+            return take;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -55,7 +57,13 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
             objectOutputStream.writeObject(toWrite);
             objectOutputStream.flush();
 
-            messageCallback.sendData(byteArrayOutputStream.toByteArray());
+            boolean hasSent = messageCallback.sendData(byteArrayOutputStream.toByteArray());
+
+            if(!hasSent) {
+                connection.destroy();
+            }
+
+            pluginInstance.error("Written: " + toWrite);
 
         } catch (IOException e) {
             pluginInstance.error("Error trying to serialise packet for plugin messaging!:");

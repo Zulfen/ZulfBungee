@@ -1,5 +1,5 @@
 package tk.zulfengaming.zulfbungee.universal.interfaces;
 
 public interface MessageCallback {
-    void sendData(byte[] dataIn);
+    boolean sendData(byte[] dataIn);
 }

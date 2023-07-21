@@ -3,7 +3,6 @@ package tk.zulfengaming.zulfbungee.bungeecord.event;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.*;
@@ -13,13 +12,12 @@ import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeePlayer;
 import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
 import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
-import tk.zulfengaming.zulfbungee.universal.socket.ChannelMainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.util.Optional;
 
@@ -112,9 +110,6 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
     @EventHandler
     public void onPluginMessageReceived(PluginMessageEvent event) {
 
-        mainServer.getPluginInstance().error("Haiii");
-        mainServer.getPluginInstance().error(event.getTag());
-
         if (event.getTag().equals("zproxy:channel")) {
 
             String serverName;
@@ -128,10 +123,7 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
                 return;
             }
 
-            if (mainServer instanceof ChannelMainServer) {
-                ChannelMainServer<ProxyServer, ProxiedPlayer> channelMainServer = (ChannelMainServer<ProxyServer, ProxiedPlayer>) mainServer;
-                channelMainServer.proccessPluginMessage(serverName, event.getData());
-            }
+            pluginMessage(serverName, event.getData());
 
         }
     }

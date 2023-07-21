@@ -1,6 +1,5 @@
 package tk.zulfengaming.zulfbungee.spigot.managers;
 
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -22,10 +21,6 @@ public class TaskManager {
 
     public void newAsyncTask(BukkitRunnable taskIn) {
         taskIn.runTaskAsynchronously(instance);
-    }
-
-    public void newRepeatingTask(BukkitRunnable taskIn, int ticks) {
-        taskIn.runTaskTimerAsynchronously(instance, 0, ticks);
     }
 
     public void newAsyncTask(Runnable runnableIn) {

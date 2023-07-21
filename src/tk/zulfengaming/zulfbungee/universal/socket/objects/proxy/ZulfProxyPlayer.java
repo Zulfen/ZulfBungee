@@ -32,6 +32,11 @@ public abstract class ZulfProxyPlayer<P, T> implements ProxyCommandSender<P, T> 
         return uuid;
     }
 
+    @Override
+    public boolean isPlayer() {
+        return true;
+    }
+
     public abstract void connect(ZulfProxyServer<P, T> serverIn);
 
     public abstract void disconnect(String reason);

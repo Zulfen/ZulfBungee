@@ -3,15 +3,20 @@ package tk.zulfengaming.zulfbungee.spigot;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
+import tk.zulfengaming.zulfbungee.spigot.managers.ChannelConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.SocketConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.Semaphore;
 
 public class ZulfBungeeSpigot extends JavaPlugin {
 
@@ -23,16 +28,22 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     private TaskManager taskManager;
     private ConnectionManager connectionManager;
 
+    private ProtocolManager protocolManager;
+
+    private final Semaphore playerWait = new Semaphore(0);
+
     public void onEnable() {
 
         plugin = this;
 
-        getServer().getPluginManager().registerEvents(new EventListeners(), this);
+        getServer().getPluginManager().registerEvents(new EventListeners(this), this);
 
         taskManager = new TaskManager(this);
         saveDefaultConfig();
 
         debug = getConfig().getBoolean("debug");
+
+        protocolManager = ProtocolLibrary.getProtocolManager();
 
         try {
 
@@ -40,21 +51,16 @@ public class ZulfBungeeSpigot extends JavaPlugin {
             InetAddress serverAddress = InetAddress.getByName(getConfig().getString("server-host"));
             int serverPort = getConfig().getInt("server-port");
 
-            if (transportType.equalsIgnoreCase("socket")) {
-
-
+            if (transportType.equalsIgnoreCase("pluginmessage")) {
+                connectionManager = new ChannelConnectionManager(this, serverAddress, serverPort);
+            } else {
                 InetAddress clientAddress = InetAddress.getByName(getConfig().getString("client-host"));
-
-
                 int clientPort = getConfig().getInt("client-port");
-
-                connectionManager = new ConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort);
-
-            } else if (transportType.equalsIgnoreCase("pluginmessage")) {
-                connectionManager = new ConnectionManager(this, serverAddress, serverPort);
+                SocketConnectionManager socketConnectionManager = new SocketConnectionManager(this, clientAddress, clientPort, serverAddress, serverPort);
+                connectionManager = socketConnectionManager;
+                taskManager.newAsyncTask(socketConnectionManager);
             }
 
-            taskManager.newAsyncTask(connectionManager);
 
         } catch (UnknownHostException e) {
 
@@ -79,6 +85,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     }
 
     public void onDisable() {
+        playerWait.release();
         connectionManager.shutdown();
         taskManager.shutdown();
     }
@@ -111,6 +118,22 @@ public class ZulfBungeeSpigot extends JavaPlugin {
 
     public ConnectionManager getConnectionManager() {
         return connectionManager;
+    }
+
+    public void acquireChannelWait() {
+        try {
+            playerWait.acquire();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
+    }
+
+    public void releaseChannelWait() {
+        playerWait.release();
     }
 
     public boolean isDebug() {

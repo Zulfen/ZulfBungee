@@ -3,8 +3,6 @@ package tk.zulfengaming.zulfbungee.universal.socket;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.handlers.socket.ProxyChannelCommHandler;
 import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyCommHandler;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -19,11 +17,6 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
         super(instanceIn);
         pluginInstance.registerMessageChannel("zproxy:channel");
 
-        for (ZulfProxyServer<P, T> server : pluginInstance.getServersCopy().values()) {
-            acceptMessagingConnection(server.getSocketAddress(), server.getName(), pluginInstance.getMessagingCallback(
-                    "zproxy:channel", server));
-        }
-
     }
 
     @Override
@@ -32,7 +25,7 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
         super.end();
     }
 
-    private void acceptMessagingConnection(SocketAddress addressIn, String serverName, MessageCallback callbackIn) {
+    public void acceptMessagingConnection(SocketAddress addressIn, String serverName, MessageCallback callbackIn) {
         ChannelServerConnection<P, T> connection = new ChannelServerConnection<>(this, callbackIn, addressIn);
         channelConnections.put(serverName, connection);
         startConnection(connection);
@@ -40,14 +33,25 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
 
     public void proccessPluginMessage(String serverNameIn, byte[] dataIn) {
 
+        pluginInstance.error("Processed message");
+
         if (channelConnections.containsKey(serverNameIn)) {
-            ProxyCommHandler<P, T> getHandler = channelConnections.get(serverNameIn).getProxyCommHandler();
-            if (getHandler instanceof ProxyChannelCommHandler) {
-                ProxyChannelCommHandler<P, T> channelCommHandler = (ProxyChannelCommHandler<P, T>) getHandler;
-                channelCommHandler.provideBytes(dataIn);
-            }
+            ProxyChannelCommHandler<P, T> channelCommHandler = channelConnections.get(serverNameIn).getProxyChannelCommHandler();
+            channelCommHandler.provideBytes(dataIn);
         }
 
+    }
+
+    public boolean isChannelConnectionActive(String nameIn) {
+        return channelConnections.containsKey(nameIn);
+    }
+
+    @Override
+    public void removeServerConnection(String name, SocketAddress address) {
+        channelConnections.remove(name);
+        // we register the channel again just to be sure
+        pluginInstance.registerMessageChannel("zproxy:channel");
+        super.removeServerConnection(name, address);
     }
 
 }

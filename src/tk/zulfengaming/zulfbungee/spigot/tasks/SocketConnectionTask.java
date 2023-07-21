@@ -1,8 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.tasks;
 
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
-import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.SocketConnectionManager;
 
 import javax.net.SocketFactory;
 import java.io.EOFException;
@@ -11,31 +10,20 @@ import java.net.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class ConnectionTask implements Runnable {
+public class SocketConnectionTask implements Runnable {
 
-    private final ConnectionManager connectionManager;
+    private final SocketConnectionManager connectionManager;
     private final ZulfBungeeSpigot pluginInstance;
-
-    private final TaskManager taskManager;
 
     private final Semaphore connectionBarrier;
 
-    private InetAddress clientAddress;
-    private int clientPort;
+    private final InetAddress clientAddress;
+    private final int clientPort;
 
     private final InetAddress serverAddress;
     private final int serverPort;
 
-    public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress serverAddress, int serverPort) {
-        this.connectionManager = connectionManagerIn;
-        this.serverAddress = serverAddress;
-        this.serverPort = serverPort;
-        this.pluginInstance = connectionManager.getPluginInstance();
-        this.taskManager = pluginInstance.getTaskManager();
-        this.connectionBarrier = connectionBarrier;
-    }
-
-    public ConnectionTask(ConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
+    public SocketConnectionTask(SocketConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
 
         this.connectionManager = connectionManagerIn;
 
@@ -46,7 +34,6 @@ public class ConnectionTask implements Runnable {
         this.serverPort = serverPort;
 
         this.pluginInstance = connectionManager.getPluginInstance();
-        this.taskManager = pluginInstance.getTaskManager();
         this.connectionBarrier = connectionBarrier;
 
     }
@@ -73,6 +60,7 @@ public class ConnectionTask implements Runnable {
                 String transportType = pluginInstance.getTransportType();
 
                 if (!connectionManager.isBlocked(proxyAddress)) {
+
                     if (transportType.equalsIgnoreCase("socket")) {
 
                         Socket socket;
@@ -86,16 +74,9 @@ public class ConnectionTask implements Runnable {
                         connectionManager.newSocketConnection(socket);
 
 
-                    } else if (transportType.equalsIgnoreCase("pluginmessage")) {
-                        // passes in the IP of the proxy which is only used for the sake of the existing system
-                        // which requires one.
-                        connectionManager.newChannelConnection(proxyAddress);
-                    } else {
-                        throw new RuntimeException("Invalid transport type! Please refer to the config.");
                     }
 
                     finished++;
-
                     connectionBarrier.release();
 
                 }

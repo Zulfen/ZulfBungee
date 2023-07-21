@@ -30,8 +30,8 @@ public class VelocityServer extends ZulfProxyServer<ProxyServer, Player> {
     }
 
     @Override
-    public void sendData(String channelNameIn, byte[] dataOut) {
-        server.sendPluginMessage(MinecraftChannelIdentifier.from(channelNameIn), dataOut);
+    public boolean sendData(String channelNameIn, byte[] dataOut) {
+        return server.sendPluginMessage(MinecraftChannelIdentifier.from(channelNameIn), dataOut);
     }
 
 

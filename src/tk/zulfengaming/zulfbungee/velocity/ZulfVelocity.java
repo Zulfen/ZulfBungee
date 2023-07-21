@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
-import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
 import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
@@ -104,13 +103,11 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
 
             if (transportType.equalsIgnoreCase("pluginmessage")) {
                 mainServer = new ChannelMainServer<>(this);
-            } else if (transportType.equalsIgnoreCase("socket")) {
+            } else {
                 SocketMainServer<ProxyServer, Player> socketMainServer = new SocketMainServer<>(pluginConfig.getInt("port"),
                         InetAddress.getByName(pluginConfig.getString("host")), this);
                 taskManager.newTask(socketMainServer);
                 mainServer = socketMainServer;
-            } else {
-                throw new RuntimeException("Invalid transport type chosen! Please check the config.");
             }
 
             velocity.getEventManager().register(this, new VelocityEvents(mainServer));
@@ -200,14 +197,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
         }
 
         return serversMap;
-
-    }
-
-    @Override
-    public Optional<MessageCallback> getMessagingCallback(String channelNameIn, String serverNameIn) {
-        Optional<RegisteredServer> server = velocity.getServer(serverNameIn);
-        return server.map(registeredServer ->
-                dataIn -> registeredServer.sendPluginMessage(MinecraftChannelIdentifier.from(channelNameIn), dataIn));
 
     }
 

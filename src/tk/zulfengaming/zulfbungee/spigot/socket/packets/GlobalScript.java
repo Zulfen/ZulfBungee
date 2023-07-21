@@ -17,7 +17,7 @@ public class GlobalScript extends PacketHandler {
     public void handlePacket(Packet packetIn) {
 
         ScriptInfo scriptInfo = (ScriptInfo) packetIn.getDataSingle();
-        getConnection().getConnectionManager().processGlobalScript(scriptInfo);
+        getConnection().getPluginInstance().getConnectionManager().processGlobalScript(scriptInfo);
 
     }
 }
