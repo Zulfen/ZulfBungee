@@ -9,7 +9,7 @@ import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerDisconnec
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerServerKick;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
 import tk.zulfengaming.zulfbungee.spigot.event.events.EventProxyMessage;
-import tk.zulfengaming.zulfbungee.spigot.managers.ChannelConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 
 public class EventListeners implements Listener {

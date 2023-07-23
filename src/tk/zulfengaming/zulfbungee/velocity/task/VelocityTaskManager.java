@@ -27,11 +27,6 @@ public class VelocityTaskManager implements ProxyTaskManager {
     }
 
     @Override
-    public void newRepeatingTask(Runnable taskIn, long amountIn, TimeUnit timeUnitIn) {
-        tasks.add(scheduler.buildTask(zulfVelocity, taskIn).repeat(amountIn, timeUnitIn).schedule());
-    }
-
-    @Override
     public void shutdown() {
         for (ScheduledTask task : tasks) {
             task.cancel();

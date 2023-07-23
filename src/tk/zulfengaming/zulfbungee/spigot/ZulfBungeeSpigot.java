@@ -8,9 +8,9 @@ import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.zulfengaming.zulfbungee.spigot.event.EventListeners;
-import tk.zulfengaming.zulfbungee.spigot.managers.ChannelConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
-import tk.zulfengaming.zulfbungee.spigot.managers.SocketConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.connections.SocketConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
 
 import java.io.IOException;

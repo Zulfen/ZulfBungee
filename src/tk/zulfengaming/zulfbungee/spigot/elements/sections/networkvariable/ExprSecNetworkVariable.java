@@ -9,7 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.util.VariableUtil;
+import tk.zulfengaming.zulfbungee.spigot.util.SkriptVariableUtil;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 public class ExprSecNetworkVariable extends SimpleExpression<Object> {
@@ -85,7 +85,7 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
     protected synchronized static void setNetworkVariable(NetworkVariable networkVariableIn) {
         NAME = networkVariableIn.getName();
-        DATA = VariableUtil.toData(networkVariableIn);
+        DATA = SkriptVariableUtil.toData(networkVariableIn);
     }
 
 }

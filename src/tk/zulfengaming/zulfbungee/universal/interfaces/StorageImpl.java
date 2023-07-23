@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.interfaces;
 
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 

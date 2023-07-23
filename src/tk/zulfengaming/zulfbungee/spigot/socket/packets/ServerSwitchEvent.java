@@ -6,6 +6,8 @@ import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 
 public class ServerSwitchEvent extends PacketHandler {
 
@@ -17,10 +19,11 @@ public class ServerSwitchEvent extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn) {
 
-        ClientPlayer player = (ClientPlayer) packetIn.getDataSingle();
+        ClientPlayerDataContainer dataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
+        ClientServer fromServer = (ClientServer) dataContainer.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                new EventPlayerSwitchServer(player)
+                new EventPlayerSwitchServer(fromServer, dataContainer.getPlayers()[0])
         );
 
     }

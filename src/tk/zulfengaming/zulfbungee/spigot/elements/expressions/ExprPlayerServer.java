@@ -27,23 +27,32 @@ public class ExprPlayerServer extends SimplePropertyExpression<ClientPlayer, Cli
 
     @Override
     public ClientServer convert(ClientPlayer proxyPlayer) {
+        Optional<ClientServer> serverOptional = proxyPlayer.getServer();
 
-        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        if (serverOptional.isPresent()) {
 
-        Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
+            return serverOptional.get();
 
-        if (send.isPresent()) {
+        } else {
 
-            Packet packetIn = send.get();
+            ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+            Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
 
-            if (packetIn.getDataArray().length != 0) {
+            if (send.isPresent()) {
 
-                Optional<ClientServer> optionalProxyServer = connection.getProxyServer((String) packetIn.getDataSingle());
-                if (optionalProxyServer.isPresent()) {
-                    return optionalProxyServer.get();
+                Packet packetIn = send.get();
+
+                if (packetIn.getDataArray().length != 0) {
+
+                    Optional<ClientServer> optionalProxyServer = connection.getProxyServer((String) packetIn.getDataSingle());
+                    if (optionalProxyServer.isPresent()) {
+                        return optionalProxyServer.get();
+                    }
+
                 }
 
             }
+
 
         }
 

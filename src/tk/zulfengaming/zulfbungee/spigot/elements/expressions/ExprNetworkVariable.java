@@ -12,7 +12,7 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.util.VariableUtil;
+import tk.zulfengaming.zulfbungee.spigot.util.SkriptVariableUtil;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 import java.util.Optional;
@@ -27,21 +27,21 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
         Skript.registerExpression(ExprNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "(proxy|network|bungeecord|bungee|velocity) variable %objects%");
     }
 
-    private Variable<?> networkVariable;
+    private Variable<?> givenVariable;
 
     @Override
     protected Object[] get(@NotNull Event event) {
 
         Optional<NetworkVariable> response = ZulfBungeeSpigot.getPlugin()
-                .getConnectionManager().requestNetworkVariable(networkVariable.getName().toString(event));
+                .getConnectionManager().requestNetworkVariable(givenVariable.getName().toString(event));
 
-        return response.map(VariableUtil::toData).orElse(null);
+        return response.map(SkriptVariableUtil::toData).orElse(null);
 
     }
 
     @Override
     public boolean isSingle() {
-        return !networkVariable.isList();
+        return !givenVariable.isList();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return networkVariable.toString(event, b);
+        return givenVariable.toString(event, b);
     }
 
     @Override
@@ -60,12 +60,12 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
         Expression<?> expression = expressions[0];
 
         if (expression instanceof Variable) {
-            networkVariable = (Variable<?>) expressions[0];
+            givenVariable = (Variable<?>) expressions[0];
         } else {
             return false;
         }
 
-        if (networkVariable.isLocal()) {
+        if (givenVariable.isLocal()) {
             Skript.error("A network variable cannot be a local variable!");
             return false;
         }
@@ -75,7 +75,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     public void change(@NotNull Event e, Object[] delta, Changer.@NotNull ChangeMode mode) {
-        ZulfBungeeSpigot.getPlugin().getConnectionManager().modifyNetworkVariable(delta, mode, networkVariable.getName().toString(e));
+        ZulfBungeeSpigot.getPlugin().getConnectionManager().modifyNetworkVariable(delta, mode, givenVariable.getName().toString(e));
     }
 
     @Override

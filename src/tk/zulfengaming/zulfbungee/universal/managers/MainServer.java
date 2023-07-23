@@ -1,15 +1,15 @@
-package tk.zulfengaming.zulfbungee.universal.socket;
+package tk.zulfengaming.zulfbungee.universal.managers;
 
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
@@ -189,6 +189,20 @@ public class MainServer<P, T> {
 
     public Optional<ProxyServerConnection<P, T>> getConnection(ZulfProxyPlayer<P, T> playerIn) {
         return Optional.ofNullable(activeConnections.get(playerIn.getServer().getName()));
+    }
+
+    public Optional<ClientPlayer> toClientPlayer(ZulfProxyPlayer<P, T> proxyPlayerIn) {
+
+        String serverName = proxyPlayerIn.getServer().getName();
+        ClientInfo clientInfo = clientInfos.get(serverName);
+
+        if (clientInfo != null) {
+            ClientServer clientServer = new ClientServer(serverName, clientInfo);
+            return Optional.of(new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer));
+        }
+
+        return Optional.empty();
+
     }
 
 

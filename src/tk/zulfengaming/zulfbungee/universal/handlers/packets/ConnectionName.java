@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.handlers.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;

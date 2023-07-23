@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientChannelCommHandler;
+import tk.zulfengaming.zulfbungee.spigot.handlers.transport.ClientChannelCommHandler;
 
 import java.net.SocketAddress;
 

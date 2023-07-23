@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.spigot.tasks;
 
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.managers.SocketConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.managers.connections.SocketConnectionManager;
 
 import javax.net.SocketFactory;
 import java.io.EOFException;

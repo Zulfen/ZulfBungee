@@ -18,9 +18,9 @@ import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
-import tk.zulfengaming.zulfbungee.universal.socket.ChannelMainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.SocketMainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.transport.ChannelMainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.transport.SocketMainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
 
-    protected static final String VERSION = "0.9.8-pre2";
+    protected static final String VERSION = "0.9.8-pre3";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
@@ -70,7 +70,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
             .hexColors()
             .build();
 
-    private final NativePlayerConverter<Player, ProxyServer> playerConverter = new NativePlayerConverter<Player, ProxyServer>() {
+    private final NativePlayerConverter<ProxyServer, Player> playerConverter = new NativePlayerConverter<ProxyServer, Player>() {
         @Override
         public Optional<ZulfProxyPlayer<ProxyServer, Player>> apply(Player nativePlayer) {
             Optional<ServerConnection> optionalServerConnection = nativePlayer.getCurrentServer();
@@ -183,7 +183,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
     }
 
     @Override
-    public NativePlayerConverter<Player, ProxyServer> getPlayerConverter() {
+    public NativePlayerConverter<ProxyServer, Player> getPlayerConverter() {
         return playerConverter;
     }
 
@@ -251,11 +251,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
     @Override
     public String platformString() {
         return String.format("Velocity &a(%s)", velocity.getVersion().getVersion());
-    }
-
-    @Override
-    public String getTransportType() {
-        return transportType;
     }
 
     @Override

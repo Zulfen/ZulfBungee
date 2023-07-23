@@ -1,8 +1,8 @@
 package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import org.bukkit.ChatColor;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientSocketCommHandler;
-import tk.zulfengaming.zulfbungee.spigot.managers.SocketConnectionManager;
+import tk.zulfengaming.zulfbungee.spigot.handlers.transport.ClientSocketCommHandler;
+import tk.zulfengaming.zulfbungee.spigot.managers.connections.SocketConnectionManager;
 
 import java.io.IOException;
 import java.net.Socket;

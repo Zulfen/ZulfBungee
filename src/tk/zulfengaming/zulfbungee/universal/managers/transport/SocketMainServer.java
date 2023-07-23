@@ -1,7 +1,9 @@
-package tk.zulfengaming.zulfbungee.universal.socket;
+package tk.zulfengaming.zulfbungee.universal.managers.transport;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.transport.SocketServerConnection;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -14,8 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SocketMainServer<P, T> extends MainServer<P, T> implements Runnable {
 
     // setting up the server
-    private int port;
-    private InetAddress hostAddress;
+    private final int port;
+    private final InetAddress hostAddress;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final AtomicBoolean serverSocketAvailable = new AtomicBoolean(false);

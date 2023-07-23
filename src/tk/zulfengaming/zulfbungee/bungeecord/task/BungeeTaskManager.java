@@ -27,11 +27,6 @@ public class BungeeTaskManager implements ProxyTaskManager {
         tasks.add(theTask);
     }
 
-    @Override
-    public void newRepeatingTask(Runnable taskIn, long amountIn, TimeUnit timeUnitIn) {
-        scheduler.schedule(instance, taskIn, amountIn, timeUnitIn);
-    }
-
     public void shutdown() {
 
         for (ScheduledTask task : tasks) {

@@ -1,33 +1,39 @@
-package tk.zulfengaming.zulfbungee.universal.interfaces;
+package tk.zulfengaming.zulfbungee.spigot.interfaces.transport;
 
-import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
+import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.managers.TaskManager;
+import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 // issue must be here
 
-public abstract class ProxyCommHandler<P, T> {
+public abstract class ClientCommHandler {
 
-    protected ProxyServerConnection<P, T> connection;
-    protected final ZulfBungeeProxy<P, T> pluginInstance;
+    protected Connection connection;
+    protected final ZulfBungeeSpigot pluginInstance;
 
-    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+    protected final AtomicBoolean isRunning = new AtomicBoolean(true);
 
     protected final LinkedBlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
     protected final LinkedBlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
 
-    public ProxyCommHandler(ZulfBungeeProxy<P, T> pluginInstanceIn) {
+    public ClientCommHandler(ZulfBungeeSpigot pluginInstanceIn) {
         this.pluginInstance = pluginInstanceIn;
     }
 
-    public void setServerConnection(ProxyServerConnection<P, T> connection) {
+    public void setConnection(Connection connection) {
         this.connection = connection;
-        ProxyTaskManager taskManager = pluginInstance.getTaskManager();
-        taskManager.newTask(this::dataOutLoop);
+    }
+
+
+    public void start() {
+        TaskManager taskManager = pluginInstance.getTaskManager();
+        taskManager.newAsyncTask(this::dataOutLoop);
     }
 
     private void dataOutLoop() {
@@ -52,6 +58,7 @@ public abstract class ProxyCommHandler<P, T> {
 
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {
+            pluginInstance.error("called again");
             queueIn.offer(Optional.empty());
             queueOut.offer(Optional.empty());
             freeResources();
@@ -60,7 +67,15 @@ public abstract class ProxyCommHandler<P, T> {
     }
 
     public void send(Packet packetIn) {
-        queueOut.offer(Optional.of(packetIn));
+        try {
+            queueOut.put(Optional.of(packetIn));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public ZulfBungeeSpigot getPluginInstance() {
+        return pluginInstance;
     }
 
 

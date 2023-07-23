@@ -6,7 +6,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import io.netty.buffer.ByteBuf;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientChannelCommHandler;
+import tk.zulfengaming.zulfbungee.spigot.handlers.transport.ClientChannelCommHandler;
 
 public class ChannelPayload extends PacketAdapter {
 

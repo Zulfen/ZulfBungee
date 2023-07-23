@@ -5,7 +5,7 @@ import tk.zulfengaming.zulfbungee.universal.command.util.CommandUtils;
 import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
 import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 
 import java.io.IOException;

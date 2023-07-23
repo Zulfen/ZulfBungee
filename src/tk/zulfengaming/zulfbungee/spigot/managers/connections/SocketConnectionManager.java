@@ -1,6 +1,7 @@
-package tk.zulfengaming.zulfbungee.spigot.managers;
+package tk.zulfengaming.zulfbungee.spigot.managers.connections;
 
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.spigot.socket.SocketConnection;
 import tk.zulfengaming.zulfbungee.spigot.tasks.SocketConnectionTask;

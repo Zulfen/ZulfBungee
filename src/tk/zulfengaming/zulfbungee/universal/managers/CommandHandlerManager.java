@@ -10,7 +10,6 @@ import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptRel
 import tk.zulfengaming.zulfbungee.universal.command.subcommands.script.ScriptUnload;
 import tk.zulfengaming.zulfbungee.universal.command.util.Constants;
 import tk.zulfengaming.zulfbungee.universal.handlers.CommandHandler;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +21,7 @@ public class CommandHandlerManager<P, T> {
 
     private final MainServer<P, T> mainServer;
 
-    private final ArrayList<CommandHandler<P, T>> handler = new ArrayList<>();
+    private final ArrayList<CommandHandler<P, T>> handlers = new ArrayList<>();
 
     public CommandHandlerManager(MainServer<P, T> mainServerIn) {
         this.mainServer = mainServerIn;
@@ -40,14 +39,14 @@ public class CommandHandlerManager<P, T> {
     }
 
     public void addHandler(CommandHandler<P, T> handlerIn) {
-        handler.add(handlerIn);
+        handlers.add(handlerIn);
     }
 
     public void handle(ProxyCommandSender<P, T> sender, String[] argsIn) {
 
         if (argsIn.length > 0) {
 
-            Optional<CommandHandler<P, T>> handlerOptional = handler.stream()
+            Optional<CommandHandler<P, T>> handlerOptional = handlers.stream()
                     .filter(pCommandHandler -> {
 
                         String[] requiredLabels = pCommandHandler.getRequiredLabels();
@@ -115,8 +114,7 @@ public class CommandHandlerManager<P, T> {
             if (!mainLabel.isEmpty()) {
 
                 List<String> labels = new ArrayList<>();
-
-                for (CommandHandler<P, T> pCommandHandler : handler) {
+                for (CommandHandler<P, T> pCommandHandler : handlers) {
 
                     if (pCommandHandler.getMainLabel().equals(mainLabel)) {
 
@@ -148,7 +146,7 @@ public class CommandHandlerManager<P, T> {
 
             } else {
 
-                return handler.stream()
+                return handlers.stream()
                         .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
                         .map(CommandHandler::getMainLabel)
                         .collect(Collectors.toList());
@@ -158,7 +156,7 @@ public class CommandHandlerManager<P, T> {
 
         } else {
 
-            return handler.stream()
+            return handlers.stream()
                     .filter(pCommandHandler -> commandSender.hasPermission(pCommandHandler.getBasePermission()))
                     .map(CommandHandler::getMainLabel)
                     .collect(Collectors.toList());

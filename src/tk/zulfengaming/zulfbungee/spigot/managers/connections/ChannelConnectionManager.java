@@ -1,6 +1,8 @@
-package tk.zulfengaming.zulfbungee.spigot.managers;
+package tk.zulfengaming.zulfbungee.spigot.managers.connections;
 
+import org.bukkit.ChatColor;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
+import tk.zulfengaming.zulfbungee.spigot.managers.ConnectionManager;
 import tk.zulfengaming.zulfbungee.spigot.socket.ChannelConnection;
 import tk.zulfengaming.zulfbungee.spigot.socket.Connection;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -62,6 +64,7 @@ public class ChannelConnectionManager extends ConnectionManager {
         if (channelConnection != null) {
             channelConnection.destroy();
         }
+        pluginInstance.logInfo(ChatColor.GREEN + "Waiting for a player to join...");
         channelConnection = new ChannelConnection(pluginInstance,  socketAddress);
         pluginInstance.getTaskManager().newAsyncTask(channelConnection);
     }

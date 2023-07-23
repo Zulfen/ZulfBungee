@@ -11,49 +11,34 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.ChannelMessageSource;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.kyori.adventure.text.Component;
 import tk.zulfengaming.zulfbungee.universal.event.ProxyEvents;
-import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.velocity.ZulfVelocity;
+import tk.zulfengaming.zulfbungee.velocity.objects.VelocityPlayer;
+import tk.zulfengaming.zulfbungee.velocity.objects.VelocityServer;
 
 import java.util.Optional;
 
 public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
 
     private final ZulfVelocity zulfVelocity;
-    private final NativePlayerConverter<Player, ProxyServer> playerConverter;
 
     public VelocityEvents(MainServer<ProxyServer, Player> mainServerIn) {
         super(mainServerIn);
         this.zulfVelocity = (ZulfVelocity) mainServerIn.getPluginInstance();
-        this.playerConverter = zulfVelocity.getPlayerConverter();
     }
 
     @Subscribe
     public void onServerConnected(ServerConnectedEvent serverConnectedEvent) {
 
-        RegisteredServer server;
-
-        if (!serverConnectedEvent.getPreviousServer().isPresent()) {
-            server = serverConnectedEvent.getServer();
-        } else {
-            server = serverConnectedEvent.getPreviousServer().get();
-        }
-
-        String serverName = server.getServerInfo().getName();
-
-        Optional<ClientInfo> getClientInfo = mainServer.getClientInfo(serverName);
+        RegisteredServer server = serverConnectedEvent.getServer();
+        VelocityServer velocityServer = new VelocityServer(server, zulfVelocity);
 
         Player eventPlayer = serverConnectedEvent.getPlayer();
-        Optional<ZulfProxyPlayer<ProxyServer, Player>> proxyPlayerOptional = playerConverter.apply(eventPlayer);
+        VelocityPlayer velocityPlayer = new VelocityPlayer(eventPlayer, velocityServer, zulfVelocity);
 
-        getClientInfo.ifPresent(info -> proxyPlayerOptional.
-                ifPresent(proxyPlayer ->
-                        serverConnected(new ClientServer(serverName, info), proxyPlayer)));
+        serverConnected(velocityPlayer);
 
     }
 
@@ -61,21 +46,25 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
     public void onKickedFromServer(KickedFromServerEvent kickedFromServerEvent) {
 
         Player velocityPlayer = kickedFromServerEvent.getPlayer();
-        ClientPlayer playerOut = new ClientPlayer(velocityPlayer.getUsername(), velocityPlayer.getUniqueId());
+        Optional<Component> optionalReason = kickedFromServerEvent.getServerKickReason();
 
-        if (kickedFromServerEvent.getServerKickReason().isPresent()) {
-            serverKick(playerOut, zulfVelocity.getLegacyTextSerializer()
-                    .serialize(kickedFromServerEvent.getServerKickReason().get()));
+        if (optionalReason.isPresent()) {
+            serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(),
+                    zulfVelocity.getLegacyTextSerializer().serialize(optionalReason.get()));
         } else {
-            serverKick(playerOut, "");
+            serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(), "");
         }
+
 
     }
 
     @Subscribe
     public void onDisconnect(DisconnectEvent disconnectEvent) {
         Player velocityPlayer = disconnectEvent.getPlayer();
-        serverDisconnect(new ClientPlayer(velocityPlayer.getUsername(), velocityPlayer.getUniqueId()));
+        Optional<ServerConnection> serverOptional = velocityPlayer.getCurrentServer();
+        serverOptional.ifPresent(serverConnection -> serverDisconnect(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(),
+                serverConnection.getServerInfo().getName()));
+
     }
 
     @Subscribe

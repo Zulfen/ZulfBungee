@@ -10,7 +10,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class SkriptConverters {
 
@@ -32,8 +31,7 @@ public class SkriptConverters {
             if (playerRequest.isPresent()) {
                 Packet packet = playerRequest.get();
                 if (packet.getDataArray().length != 0) {
-                    UUID uuid = (UUID) packet.getDataSingle();
-                    return new ClientPlayer(s, uuid);
+                    return (ClientPlayer) packet.getDataSingle();
                 }
             }
 

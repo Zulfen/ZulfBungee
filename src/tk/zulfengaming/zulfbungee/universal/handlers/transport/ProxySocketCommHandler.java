@@ -1,7 +1,7 @@
-package tk.zulfengaming.zulfbungee.universal.handlers.socket;
+package tk.zulfengaming.zulfbungee.universal.handlers.transport;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyCommHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.ProxyCommHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.io.IOException;
@@ -33,7 +33,9 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
                 return Optional.of((Packet) readObject);
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            if (pluginInstance.isDebug()) {
+                e.printStackTrace();
+            }
             destroy();
         }
 
@@ -47,7 +49,9 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
             outputStream.writeObject(toWrite);
             outputStream.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            if (pluginInstance.isDebug()) {
+                e.printStackTrace();
+            }
             destroy();
         }
     }
@@ -57,8 +61,10 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
         try {
             socket.close();
         } catch (IOException e) {
-            pluginInstance.error("Error closing socket on connection " + connection.getAddress());
-            e.printStackTrace();
+            if (pluginInstance.isDebug()) {
+                pluginInstance.error("Error closing socket on connection " + connection.getAddress());
+                e.printStackTrace();
+            }
         }
     }
 

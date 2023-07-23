@@ -1,9 +1,9 @@
 package tk.zulfengaming.zulfbungee.universal.handlers;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 public abstract class PacketHandler<P, T> {

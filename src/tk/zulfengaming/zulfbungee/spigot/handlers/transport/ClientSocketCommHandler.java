@@ -1,7 +1,7 @@
-package tk.zulfengaming.zulfbungee.spigot.handlers;
+package tk.zulfengaming.zulfbungee.spigot.handlers.transport;
 
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientCommHandler;
+import tk.zulfengaming.zulfbungee.spigot.interfaces.transport.ClientCommHandler;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.io.IOException;

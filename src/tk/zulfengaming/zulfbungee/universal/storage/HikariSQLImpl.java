@@ -4,16 +4,18 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
 import tk.zulfengaming.zulfbungee.universal.command.util.ChatColour;
 import tk.zulfengaming.zulfbungee.universal.interfaces.StorageImpl;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
-import tk.zulfengaming.zulfbungee.universal.storage.util.ValueOperation;
+import tk.zulfengaming.zulfbungee.universal.storage.util.variable.UniversalVariableUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 
 public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
@@ -288,7 +290,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
                 if (result.next()) {
 
-                    byte[] bytesOut = ValueOperation.add(result.getBytes("data"), value, result.getString("type"));
+                    byte[] bytesOut = UniversalVariableUtils.add(result.getBytes("data"), value, result.getString("type"));
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 
@@ -432,7 +434,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
                 if (result.next()) {
 
-                    byte[] bytesOut = ValueOperation.subtract(result.getBytes("data"), value, result.getString("type"));
+                    byte[] bytesOut = UniversalVariableUtils.subtract(result.getBytes("data"), value, result.getString("type"));
 
                     PreparedStatement setStatement = tempConnection.prepareStatement("INSERT INTO variables (name, type, data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=?, type=?");
 

@@ -12,7 +12,7 @@ public class Packet implements Serializable {
 
     private final boolean shouldHandle;
 
-    private Object[] data = new Object[1];
+    protected Object[] data = new Object[1];
 
     // these arguments should be self-explanatory, but the field shouldHandle could be
     // seen as misleading.

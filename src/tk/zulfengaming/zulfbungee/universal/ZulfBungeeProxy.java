@@ -2,7 +2,6 @@ package tk.zulfengaming.zulfbungee.universal;
 
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 import tk.zulfengaming.zulfbungee.universal.config.ProxyConfig;
-import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
 import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
 import tk.zulfengaming.zulfbungee.universal.managers.ProxyTaskManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -42,7 +41,7 @@ public interface ZulfBungeeProxy<P, T> {
         return getServer(serverIn.getName());
     }
 
-    NativePlayerConverter<T, P> getPlayerConverter();
+    NativePlayerConverter<P, T> getPlayerConverter();
 
     Map<String, ZulfProxyServer<P, T>> getServersCopy();
 
@@ -61,8 +60,6 @@ public interface ZulfBungeeProxy<P, T> {
     P getPlatform();
 
     String platformString();
-
-    String getTransportType();
 
     CheckUpdateTask<P, T> getUpdater();
 

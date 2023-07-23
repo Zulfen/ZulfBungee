@@ -1,9 +1,10 @@
-package tk.zulfengaming.zulfbungee.universal.interfaces;
+package tk.zulfengaming.zulfbungee.universal.socket;
 
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
+import tk.zulfengaming.zulfbungee.universal.handlers.ProxyCommHandler;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -72,7 +73,7 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
             ClientPlayer playerOut = null;
 
             if (senderIn != null) {
-                if (senderIn.isPlayer() && senderIn instanceof ZulfProxyPlayer) {
+                if (senderIn.isPlayer()) {
                     ZulfProxyPlayer<P, T> playerIn = (ZulfProxyPlayer<P, T>) senderIn;
                     playerOut = new ClientPlayer(playerIn.getName(), playerIn.getUuid());
                 }

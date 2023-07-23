@@ -7,7 +7,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class VariableUtil {
+public class SkriptVariableUtil {
 
     public static Object[] toData(NetworkVariable networkVariableIn) {
 

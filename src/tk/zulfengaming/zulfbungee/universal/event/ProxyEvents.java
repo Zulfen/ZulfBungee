@@ -1,7 +1,8 @@
 package tk.zulfengaming.zulfbungee.universal.event;
 
-import tk.zulfengaming.zulfbungee.universal.socket.ChannelMainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.transport.ChannelMainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
@@ -21,31 +22,49 @@ public class ProxyEvents<P, T> {
         this.mainServer = mainServerIn;
     }
 
-    protected void serverConnected(ClientServer toServer, ZulfProxyPlayer<P, T> proxyPlayerIn) {
+    private Optional<ClientServer> toClientServer(String nameIn) {
+        Optional<ClientInfo> infoOptional = mainServer.getClientInfo(nameIn);
+        return infoOptional.map(info -> new ClientServer(nameIn, info));
+    }
 
-        mainServer.sendDirectToAllAsync(new Packet(PacketTypes.CONNECT_EVENT, false, true,
-                new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), toServer)));
+    protected void serverConnected(ZulfProxyPlayer<P, T> proxyPlayerIn) {
 
-        if (proxyPlayerIn.hasPermission("zulfen.admin")) {
-            mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);
+        Optional<ClientServer> serverOptional = toClientServer(proxyPlayerIn.getServer().getName());
+
+        if (serverOptional.isPresent()) {
+
+            mainServer.sendDirectToAllAsync(new Packet(PacketTypes.CONNECT_EVENT, false, true,
+                    new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), serverOptional.get())));
+
+            if (proxyPlayerIn.hasPermission("zulfen.admin")) {
+                mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);
+            }
+
         }
 
     }
 
-    protected void switchServer(ClientServer toServer, String nameIn, UUID uuidIn) {
-        mainServer.sendDirectToAllAsync(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true,
-                new ClientPlayer(nameIn, uuidIn, toServer)));
+    protected void switchServer(String toServerName, String fromServerName, String nameIn, UUID uuidIn) {
+
+        Optional<ClientServer> transferTo = toClientServer(toServerName);
+        Optional<ClientServer> transferFrom = toClientServer(fromServerName);
+
+        if (transferFrom.isPresent() && transferTo.isPresent()) {
+            mainServer.sendDirectToAllAsync(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true,
+                    new ClientPlayerDataContainer(transferFrom.get(), new ClientPlayer(nameIn, uuidIn, transferTo.get()))));
+        }
+
     }
 
-    protected void serverKick(ClientPlayer playerIn, String reason) {
+    protected void serverKick(String nameIn, UUID uuidIn, String reason) {
         mainServer.sendDirectToAllAsync(new Packet(PacketTypes.KICK_EVENT, false, true,
-                new ClientPlayerDataContainer(reason, playerIn)));
-
+                new ClientPlayerDataContainer(reason, new ClientPlayer(nameIn, uuidIn))));
     }
 
-    protected void serverDisconnect(ClientPlayer playerIn) {
-        mainServer.sendDirectToAllAsync(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
-                playerIn));
+    protected void serverDisconnect(String nameIn, UUID uuidIn, String previousServerName) {
+        Optional<ClientServer> serverOptional = toClientServer(previousServerName);
+        serverOptional.ifPresent(clientServer -> mainServer.sendDirectToAllAsync(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
+                new ClientPlayerDataContainer(clientServer, new ClientPlayer(nameIn, uuidIn)))));
     }
 
     protected synchronized void pluginMessage(String serverNameIn, byte[] dataIn) {

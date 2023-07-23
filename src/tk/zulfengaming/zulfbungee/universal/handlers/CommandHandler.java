@@ -1,6 +1,6 @@
 package tk.zulfengaming.zulfbungee.universal.handlers;
 
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 
 import java.util.Collection;

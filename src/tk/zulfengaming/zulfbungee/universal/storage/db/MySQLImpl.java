@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.storage.db;
 
 import com.zaxxer.hikari.HikariDataSource;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.storage.HikariSQLImpl;
 
 public class MySQLImpl<P, T> extends HikariSQLImpl<P, T> {

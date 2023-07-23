@@ -1,8 +1,9 @@
-package tk.zulfengaming.zulfbungee.universal.socket;
+package tk.zulfengaming.zulfbungee.universal.socket.transport;
 
-import tk.zulfengaming.zulfbungee.universal.handlers.socket.ProxyChannelCommHandler;
+import tk.zulfengaming.zulfbungee.universal.handlers.transport.ProxyChannelCommHandler;
 import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ProxyServerConnection;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 
 import java.net.SocketAddress;
 

@@ -1,11 +1,13 @@
-package tk.zulfengaming.zulfbungee.universal.storage.util;
+package tk.zulfengaming.zulfbungee.universal.storage.util.variable;
 
 import com.google.common.primitives.Longs;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ValueOperation {
+public class UniversalVariableUtils {
 
     public static byte[] add(byte[] fromDB, Value toDB, String fromType) {
 

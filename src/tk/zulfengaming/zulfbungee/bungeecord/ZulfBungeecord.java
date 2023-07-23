@@ -15,13 +15,11 @@ import tk.zulfengaming.zulfbungee.bungeecord.objects.BungeeServer;
 import tk.zulfengaming.zulfbungee.bungeecord.task.BungeeTaskManager;
 import tk.zulfengaming.zulfbungee.universal.ZulfBungeeProxy;
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
-import tk.zulfengaming.zulfbungee.universal.interfaces.MessageCallback;
 import tk.zulfengaming.zulfbungee.universal.interfaces.NativePlayerConverter;
 import tk.zulfengaming.zulfbungee.universal.managers.CommandHandlerManager;
-import tk.zulfengaming.zulfbungee.universal.socket.ChannelMainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.MainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.SocketMainServer;
-import tk.zulfengaming.zulfbungee.universal.socket.SocketServerConnection;
+import tk.zulfengaming.zulfbungee.universal.managers.transport.ChannelMainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.transport.SocketMainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import tk.zulfengaming.zulfbungee.universal.task.tasks.CheckUpdateTask;
@@ -45,11 +43,9 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     private CheckUpdateTask<ProxyServer, ProxiedPlayer> updater;
     private boolean isDebug = false;
 
-    private String transportType;
-
     private final BungeeConsole console = new BungeeConsole(getProxy());
 
-    private final NativePlayerConverter<ProxiedPlayer, ProxyServer> playerConverter = new NativePlayerConverter<ProxiedPlayer, ProxyServer>() {
+    private final NativePlayerConverter<ProxyServer, ProxiedPlayer> playerConverter = new NativePlayerConverter<ProxyServer, ProxiedPlayer>() {
         @Override
         public Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> apply(ProxiedPlayer nativePlayer) {
             if (nativePlayer != null) {
@@ -69,16 +65,14 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
         try {
 
-            transportType = config.getString("transport-type");
+            String transportType = config.getString("transport-type");
 
             if (transportType.equalsIgnoreCase("pluginmessage")) {
                 mainServer = new ChannelMainServer<>(this);
-            } else if (transportType.equalsIgnoreCase("socket")) {
+            } else {
                 SocketMainServer<ProxyServer, ProxiedPlayer> socketMainServer = new SocketMainServer<>(config.getInt("port"), InetAddress.getByName(config.getString("host")), this);
                 bungeeTaskManager.newTask(socketMainServer);
                 mainServer = socketMainServer;
-            } else {
-                throw new RuntimeException("Invalid transport type chosen! Please check the config.");
             }
 
             CommandHandlerManager<ProxyServer, ProxiedPlayer> commandHandlerManager = new CommandHandlerManager<>(mainServer);
@@ -158,7 +152,7 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
-    public NativePlayerConverter<ProxiedPlayer, ProxyServer> getPlayerConverter() {
+    public NativePlayerConverter<ProxyServer, ProxiedPlayer> getPlayerConverter() {
         return playerConverter;
     }
 
@@ -228,11 +222,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     @Override
     public String platformString() {
         return String.format("Bungeecord (%s)", getProxy().getVersion());
-    }
-
-    @Override
-    public String getTransportType() {
-        return transportType;
     }
 
     @Override

@@ -2,8 +2,7 @@ package tk.zulfengaming.zulfbungee.spigot.socket;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot;
-import tk.zulfengaming.zulfbungee.spigot.handlers.ClientChannelCommHandler;
-import tk.zulfengaming.zulfbungee.spigot.interfaces.ClientCommHandler;
+import tk.zulfengaming.zulfbungee.spigot.interfaces.transport.ClientCommHandler;
 import tk.zulfengaming.zulfbungee.spigot.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
@@ -106,10 +105,6 @@ public abstract class Connection extends BukkitRunnable {
 
     public SocketAddress getAddress() {
         return socketAddress;
-    }
-
-    public String getForcedName() {
-        return forcedName;
     }
 
     public ZulfBungeeSpigot getPluginInstance() {

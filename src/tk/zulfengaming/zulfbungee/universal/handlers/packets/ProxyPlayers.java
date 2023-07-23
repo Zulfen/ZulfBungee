@@ -1,7 +1,7 @@
 package tk.zulfengaming.zulfbungee.universal.handlers.packets;
 
 import tk.zulfengaming.zulfbungee.universal.handlers.PacketHandler;
-import tk.zulfengaming.zulfbungee.universal.interfaces.ProxyServerConnection;
+import tk.zulfengaming.zulfbungee.universal.socket.ProxyServerConnection;
 import tk.zulfengaming.zulfbungee.universal.managers.PacketHandlerManager;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
@@ -43,7 +43,10 @@ public class ProxyPlayers<P, T> extends PacketHandler<P, T> {
                 if (zulfProxyServer.isPresent()) {
                     List<ZulfProxyPlayer<P, T>> players = zulfProxyServer.get().getPlayers();
                     for (ZulfProxyPlayer<P, T> player : players) {
-                        playersOut.add(new ClientPlayer(player.getName(), player.getUuid(), server));
+                        Optional<ClientPlayer> clientPlayerOptional = getMainServer().toClientPlayer(player);
+                        if (clientPlayerOptional.isPresent()) {
+                            playersOut.add(clientPlayerOptional.get());
+                        }
                     }
                 }
 
@@ -54,7 +57,9 @@ public class ProxyPlayers<P, T> extends PacketHandler<P, T> {
         } else {
 
             playersOut = getProxy().getAllPlayers().stream()
-                    .map(player -> new ClientPlayer(player.getName(), player.getUuid()))
+                    .map(proxyPlayer -> getMainServer().toClientPlayer(proxyPlayer))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .collect(Collectors.toCollection(ArrayList::new));
 
 
