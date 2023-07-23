@@ -65,9 +65,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
     @Override
     public Optional<Packet> readPacket() {
         try {
-            Optional<Packet> take = queueIn.take();
-            pluginInstance.error("Recieved from input: " + take);
-            return take;
+            return queueIn.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

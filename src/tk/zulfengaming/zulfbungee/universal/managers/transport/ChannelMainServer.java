@@ -35,8 +35,6 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
 
     public void proccessPluginMessage(String serverNameIn, byte[] dataIn) {
 
-        pluginInstance.error("Processed message");
-
         if (channelConnections.containsKey(serverNameIn)) {
             ProxyChannelCommHandler<P, T> channelCommHandler = channelConnections.get(serverNameIn).getProxyChannelCommHandler();
             channelCommHandler.provideBytes(dataIn);

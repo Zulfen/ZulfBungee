@@ -7,7 +7,6 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
 
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 // issue must be here
@@ -58,7 +57,6 @@ public abstract class ClientCommHandler {
 
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {
-            pluginInstance.error("called again");
             queueIn.offer(Optional.empty());
             queueOut.offer(Optional.empty());
             freeResources();

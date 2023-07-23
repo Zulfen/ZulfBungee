@@ -57,7 +57,6 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     public void destroy() {
         assert proxyCommHandler != null : "Comm Handler is null!";
-        pluginInstance.error("Called!");
         if (connected.compareAndSet(true, false)) {
             proxyCommHandler.destroy();
             mainServer.removeServerConnection(this);

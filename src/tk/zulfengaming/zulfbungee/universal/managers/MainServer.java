@@ -77,7 +77,6 @@ public class MainServer<P, T> {
     }
 
     public void sendDirectToAll(Packet packetIn) {
-        pluginInstance.error(connections.toString());
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
         for (ProxyServerConnection<P, T> connection : connections) {
             connection.sendDirect(packetIn);

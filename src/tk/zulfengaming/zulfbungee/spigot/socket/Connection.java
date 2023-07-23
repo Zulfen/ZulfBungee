@@ -92,7 +92,6 @@ public abstract class Connection extends BukkitRunnable {
     }
 
     public void destroy() {
-        pluginInstance.error("called");
         if (connected.compareAndSet(true, false)) {
             clientCommHandler.destroy();
         }
