@@ -25,7 +25,6 @@ public class ClientChannelCommHandler extends ClientCommHandler {
         pluginInstance.getServer().getMessenger().registerOutgoingPluginChannel(pluginInstance, "zproxy:channel");
         this.channelPayload = new ChannelPayload(this);
         pluginInstance.getProtocolManager().addPacketListener(channelPayload);
-
     }
 
     public void provideBytes(byte[] bytesIn) {
