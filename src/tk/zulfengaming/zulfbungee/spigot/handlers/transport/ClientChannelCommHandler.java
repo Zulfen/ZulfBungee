@@ -83,7 +83,9 @@ public class ClientChannelCommHandler extends ClientCommHandler {
         Collection<? extends Player> onlinePlayers = pluginInstance.getServer().getOnlinePlayers();
         if (onlinePlayers.isEmpty()) {
             pluginInstance.acquireChannelWait();
-            pluginInstance.logInfo(ChatColor.GREEN + "Connection established to the proxy! (using messaging channels)");
+            if (pluginInstance.isEnabled()) {
+                pluginInstance.logInfo(ChatColor.GREEN + "Connection established to the proxy! (using messaging channels)");
+            }
         }
 
         if (pluginInstance.isEnabled()) {
