@@ -12,7 +12,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 public class ExprPreviousServer extends EventValueExpression<ClientServer> {
 
     static {
-        Skript.registerExpression(ExprPreviousServer.class, ClientServer.class, ExpressionType.SIMPLE, "[the] [event-]previous server");
+        Skript.registerExpression(ExprPreviousServer.class, ClientServer.class, ExpressionType.SIMPLE, "(event-previousserver|[the] previous server)");
     }
 
     public ExprPreviousServer() {

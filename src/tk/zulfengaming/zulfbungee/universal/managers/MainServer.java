@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainServer<P, T> {
-    // plugin instance !!!
 
     protected final ZulfBungeeProxy<P, T> pluginInstance;
 
@@ -40,7 +39,7 @@ public class MainServer<P, T> {
     protected final ProxyTaskManager taskManager;
 
     // storage
-    private StorageImpl<P, T> storage;
+    private volatile StorageImpl<P, T> storage;
 
     public MainServer(ZulfBungeeProxy<P, T> instanceIn) {
 
@@ -86,12 +85,10 @@ public class MainServer<P, T> {
     public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender<P, T> senderIn) {
 
         for (ProxyServerConnection<P, T> connection : connections) {
-
             for (Map.Entry<Path, ScriptAction> script : scriptNamesIn.entrySet()) {
                 String name = script.getKey().getFileName().toString();
                 connection.sendScript(name, script.getKey(), script.getValue(), senderIn);
             }
-
         }
 
     }
@@ -99,11 +96,9 @@ public class MainServer<P, T> {
     public void syncScripts(Map<String, Path> scriptNamesIn, ScriptAction scriptActionIn, ProxyCommandSender<P, T> senderIn) {
 
         for (ProxyServerConnection<P, T> connection : connections) {
-
             for (Map.Entry<String, Path> script : scriptNamesIn.entrySet()) {
                 connection.sendScript(script.getKey(), script.getValue(), scriptActionIn, senderIn);
             }
-
         }
 
     }
@@ -111,13 +106,11 @@ public class MainServer<P, T> {
     public void addActiveConnection(ProxyServerConnection<P, T> connectionIn, String name, ClientInfo infoIn) {
 
         SocketAddress address = connectionIn.getAddress();
-
         addressNames.put(address, name);
         activeConnections.put(name, connectionIn);
         clientInfos.put(name, infoIn);
 
         pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
-
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
     }
@@ -197,7 +190,10 @@ public class MainServer<P, T> {
 
         if (clientInfo != null) {
             ClientServer clientServer = new ClientServer(serverName, clientInfo);
-            return Optional.of(new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer));
+            Optional<InetSocketAddress> optionalVirtHost = proxyPlayerIn.getVirtualHost();
+            return optionalVirtHost.map(inetSocketAddress
+                    -> Optional.of(new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer, inetSocketAddress))).orElseGet(()
+                    -> Optional.of(new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer)));
         }
 
         return Optional.empty();

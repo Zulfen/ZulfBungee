@@ -9,6 +9,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
+import java.net.InetSocketAddress;
+import java.util.Optional;
+
 public class BungeePlayer extends ZulfProxyPlayer<ProxyServer, ProxiedPlayer> {
 
     private final ProxiedPlayer bungeePlayer;
@@ -45,4 +48,10 @@ public class BungeePlayer extends ZulfProxyPlayer<ProxyServer, ProxiedPlayer> {
     public void sendMessage(String message) {
         bungeePlayer.sendMessage(toComponent(message));
     }
+
+    @Override
+    public Optional<InetSocketAddress> getVirtualHost() {
+        return Optional.of(bungeePlayer.getPendingConnection().getVirtualHost());
+    }
+
 }

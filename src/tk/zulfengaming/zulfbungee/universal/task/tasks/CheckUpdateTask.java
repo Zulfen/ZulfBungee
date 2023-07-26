@@ -80,20 +80,20 @@ public class CheckUpdateTask<P, T> implements Supplier<Optional<UpdateResult>> {
 
                         if (versionStatus == VersionStatus.STABLE) {
 
-                            senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("A new update to ZulfBungee is available! &e(%s)",
+                            senderIn.sendPluginMessage(String.format(String.format("A new update to ZulfBungee is available! &e(%s)",
                                     getUpdaterResult.getLatestVersion())));
-                            senderIn.sendMessage(Constants.MESSAGE_PREFIX + "Copy this link into a browser for a direct download:");
-                            senderIn.sendMessage(Constants.MESSAGE_PREFIX + String.format("&3&n%s", getUpdaterResult.getDownloadURL()));
+                            senderIn.sendPluginMessage("Copy this link into a browser for a direct download:");
+                            senderIn.sendPluginMessage(String.format("&3&n%s", getUpdaterResult.getDownloadURL()));
 
                         } else if (versionStatus == VersionStatus.TESTING) {
 
-                            senderIn.sendMessage(Constants.MESSAGE_PREFIX + "You appear to be using a development/testing version that hasn't been released yet.");
-                            senderIn.sendMessage(Constants.MESSAGE_PREFIX + "Please report bugs directly to the developers!");
+                            senderIn.sendPluginMessage("You appear to be using a development/testing version that hasn't been released yet.");
+                            senderIn.sendPluginMessage("Please report bugs directly to the developers!");
 
                         }
 
                     } else if (notifySuccess) {
-                        senderIn.sendMessage(String.format(Constants.MESSAGE_PREFIX + String.format("ZulfBungee is up to date! &e(%s)",
+                        senderIn.sendPluginMessage(String.format(String.format("ZulfBungee is up to date! &e(%s)",
                                     pluginInstance.getVersion())));
                     }
 

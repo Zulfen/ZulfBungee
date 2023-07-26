@@ -3,6 +3,9 @@ package tk.zulfengaming.zulfbungee.universal.socket.objects.proxy;
 
 import tk.zulfengaming.zulfbungee.universal.command.ProxyCommandSender;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class ZulfProxyPlayer<P, T> implements ProxyCommandSender<P, T> {
@@ -31,6 +34,8 @@ public abstract class ZulfProxyPlayer<P, T> implements ProxyCommandSender<P, T> 
     public UUID getUuid() {
         return uuid;
     }
+
+    public abstract Optional<InetSocketAddress> getVirtualHost();
 
     @Override
     public boolean isPlayer() {

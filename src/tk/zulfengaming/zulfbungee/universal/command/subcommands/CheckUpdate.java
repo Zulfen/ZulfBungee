@@ -13,7 +13,7 @@ public class CheckUpdate<P, T> extends CommandHandler<P, T> {
 
     @Override
     public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
-        sender.sendMessage(Constants.MESSAGE_PREFIX + "Checking for an update...");
+        sender.sendPluginMessage("Checking for an update...");
         getMainServer().getPluginInstance().getUpdater().checkUpdate(sender, true);
     }
 }

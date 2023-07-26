@@ -80,7 +80,7 @@ public class ScriptReload<P, T> extends CommandHandler<P, T> {
             if (separateArgs[0].equals("all")) {
 
                 if (scriptsMap.isEmpty()) {
-                    sender.sendMessage(Constants.MESSAGE_PREFIX + "No scripts have been updated, as they haven't been modified.");
+                    sender.sendPluginMessage("No scripts have been updated, as they haven't been modified.");
                 } else {
 
                     getMainServer().syncScripts(scriptsMap, sender);
@@ -90,7 +90,7 @@ public class ScriptReload<P, T> extends CommandHandler<P, T> {
                             .map(Path::toString)
                             .collect(Collectors.toList());
 
-                    sender.sendMessage(String.format(Constants.MESSAGE_PREFIX + "%s script(s) have been updated: %s", scriptsMap.size(), scriptNames));
+                    sender.sendPluginMessage(String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptNames));
 
                 }
 
@@ -105,21 +105,21 @@ public class ScriptReload<P, T> extends CommandHandler<P, T> {
 
                     if (!scriptsMap.isEmpty()) {
                         getMainServer().syncScripts(scriptsMap, sender);
-                        sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script %s was updated.", scriptName));
+                        sender.sendPluginMessage(String.format("Script %s was updated.", scriptName));
                     } else {
-                        sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script %s has not been updated!", scriptName));
+                        sender.sendPluginMessage(String.format("The script %s has not been updated!", scriptName));
                     }
 
                 } else {
 
-                    sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script &o%s &rdoes not exist! Please try retyping the command.",
+                    sender.sendPluginMessage(String.format("The script &o%s &rdoes not exist! Please try retyping the command.",
                             scriptName));
 
                 }
             }
 
         } else {
-            sender.sendMessage(Constants.MESSAGE_PREFIX + "Please specify a script to reload.");
+            sender.sendPluginMessage("Please specify a script to reload.");
         }
     }
 

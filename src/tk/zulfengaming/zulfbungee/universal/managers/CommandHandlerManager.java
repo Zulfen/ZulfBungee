@@ -92,15 +92,15 @@ public class CommandHandlerManager<P, T> {
                     handler.handleCommand(sender, extraArgs);
 
                 } else {
-                    sender.sendMessage(Constants.MESSAGE_PREFIX + "You don't have permission to run this command!");
+                    sender.sendPluginMessage("You don't have permission to run this command!");
                 }
 
             } else {
-                sender.sendMessage(Constants.MESSAGE_PREFIX + "That sub command does not exist! Please read the documentation.");
+                sender.sendPluginMessage("That sub command does not exist! Please read the documentation.");
             }
 
         } else {
-            sender.sendMessage(Constants.MESSAGE_PREFIX + "Please input a sub-command");
+            sender.sendPluginMessage("Please input a sub-command");
         }
 
     }

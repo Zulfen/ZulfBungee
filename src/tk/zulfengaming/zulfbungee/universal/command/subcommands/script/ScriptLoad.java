@@ -54,12 +54,12 @@ public class ScriptLoad<P, T> extends CommandHandler<P, T> {
                 }
 
             } else {
-                sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script &o%s &rdoes not exist! Please try retyping the command.",
+                sender.sendPluginMessage(String.format("The script &o%s &rdoes not exist! Please try retyping the command.",
                         scriptName));
             }
 
         } else {
-            sender.sendMessage(Constants.MESSAGE_PREFIX + "Please specify a script to load.");
+            sender.sendPluginMessage("Please specify a script to load.");
         }
 
     }
@@ -71,14 +71,14 @@ public class ScriptLoad<P, T> extends CommandHandler<P, T> {
             if (!config.isScriptActive(scriptName)) {
                 getMainServer().syncScripts(Collections.singletonMap(scriptName, scriptPathIn), ScriptAction.RELOAD, senderIn);
                 config.registerScript(scriptName);
-                senderIn.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas loaded.", scriptName));
+                senderIn.sendPluginMessage(String.format("Script &o%s &rwas loaded.", scriptName));
             } else {
-                senderIn.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script &o%s &rhas already been loaded!",
+                senderIn.sendPluginMessage(String.format("The script &o%s &rhas already been loaded!",
                         scriptName));
             }
 
         } else {
-            senderIn.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script %s was was not loaded as no clients are connected!", scriptName));
+            senderIn.sendPluginMessage(String.format("Script %s was was not loaded as no clients are connected!", scriptName));
         }
 
     }

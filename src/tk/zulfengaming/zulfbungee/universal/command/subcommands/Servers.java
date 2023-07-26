@@ -23,7 +23,7 @@ public class Servers<P, T> extends CommandHandler<P, T> {
 
         if (!serverNames.isEmpty()) {
 
-            sender.sendMessage(Constants.MESSAGE_PREFIX + "Listing all connected proxy servers...");
+            sender.sendPluginMessage("Listing all connected proxy servers...");
 
             for (String name : serverNames) {
 
@@ -31,14 +31,14 @@ public class Servers<P, T> extends CommandHandler<P, T> {
 
                 if (getConnection.isPresent()) {
                     SocketAddress address = getConnection.get().getAddress();
-                    sender.sendMessage(String.format("%s%s &a(%s)", Constants.MESSAGE_PREFIX, name, address));
+                    sender.sendPluginMessage(String.format("%s &a(%s)", name, address));
                 }
 
             }
 
         } else {
 
-            sender.sendMessage(Constants.MESSAGE_PREFIX + "No proxy servers are connected yet!");
+            sender.sendPluginMessage("No proxy servers are connected yet!");
 
         }
 

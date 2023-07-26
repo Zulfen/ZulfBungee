@@ -29,12 +29,12 @@ public class ProxyEvents<P, T> {
 
     protected void serverConnected(ZulfProxyPlayer<P, T> proxyPlayerIn) {
 
-        Optional<ClientServer> serverOptional = toClientServer(proxyPlayerIn.getServer().getName());
+        Optional<ClientPlayer> playerOptional = mainServer.toClientPlayer(proxyPlayerIn);
 
-        if (serverOptional.isPresent()) {
+        if (playerOptional.isPresent()) {
 
             mainServer.sendDirectToAllAsync(new Packet(PacketTypes.CONNECT_EVENT, false, true,
-                    new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), serverOptional.get())));
+                    playerOptional.get()));
 
             if (proxyPlayerIn.hasPermission("zulfen.admin")) {
                 mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);

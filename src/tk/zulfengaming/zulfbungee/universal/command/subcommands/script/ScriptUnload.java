@@ -40,7 +40,7 @@ public class ScriptUnload<P, T> extends CommandHandler<P, T> {
                     if (getMainServer().areClientsConnected()) {
 
                         getMainServer().syncScripts(Collections.singletonMap(scriptPath, ScriptAction.DELETE), sender);
-                        sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas unloaded.", scriptName));
+                        sender.sendPluginMessage(String.format("Script &o%s &rwas unloaded.", scriptName));
                         config.unregisterScript(scriptName);
 
                         try {
@@ -51,21 +51,21 @@ public class ScriptUnload<P, T> extends CommandHandler<P, T> {
                         }
 
                     } else {
-                        sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("Script &o%s &rwas not unloaded as no clients are connected!", scriptName));
+                        sender.sendPluginMessage(String.format("Script &o%s &rwas not unloaded as no clients are connected!", scriptName));
                     }
 
                 } else {
-                    sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script &o%s &rhas already been unloaded!",
+                    sender.sendPluginMessage(String.format("The script &o%s &rhas already been unloaded!",
                             fileName.substring(1)));
                 }
 
             } else {
-                sender.sendMessage(Constants.MESSAGE_PREFIX + String.format("The script &o%s &rdoes not exist! Please try retyping the command.",
+                sender.sendPluginMessage(String.format("The script &o%s &rdoes not exist! Please try retyping the command.",
                         scriptName));
             }
 
         } else {
-            sender.sendMessage(Constants.MESSAGE_PREFIX + "Please specify a script to unload.");
+            sender.sendPluginMessage("Please specify a script to unload.");
         }
 
 

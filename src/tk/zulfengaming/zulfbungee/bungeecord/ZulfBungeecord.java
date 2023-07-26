@@ -189,7 +189,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     public void broadcast(String messageIn, ZulfProxyServer<ProxyServer, ProxiedPlayer> serverIn) {
 
         ServerInfo serverInfo = getProxy().getServerInfo(serverIn.getName());
-
         if (serverInfo != null) {
             for (ProxiedPlayer player : serverInfo.getPlayers()) {
                 player.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes
