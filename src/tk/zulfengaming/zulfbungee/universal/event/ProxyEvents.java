@@ -1,15 +1,14 @@
 package tk.zulfengaming.zulfbungee.universal.event;
 
-import tk.zulfengaming.zulfbungee.universal.managers.transport.ChannelMainServer;
 import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
+import tk.zulfengaming.zulfbungee.universal.managers.transport.ChannelMainServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
-import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 
 import java.util.Optional;
@@ -30,18 +29,12 @@ public class ProxyEvents<P, T> {
 
     protected void serverConnected(ZulfProxyPlayer<P, T> proxyPlayerIn) {
 
-        Optional<ClientPlayer> playerOptional = mainServer.toClientPlayer(proxyPlayerIn);
+        mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.CONNECT_EVENT, () -> mainServer.toClientPlayer(proxyPlayerIn)));
 
-        if (playerOptional.isPresent()) {
-
-            mainServer.sendDirectToAllAsync(new Packet(PacketTypes.CONNECT_EVENT, false, true,
-                    playerOptional.get()));
-
-            if (proxyPlayerIn.hasPermission("zulfen.admin")) {
-                mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);
-            }
-
+        if (proxyPlayerIn.hasPermission("zulfen.admin")) {
+            mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);
         }
+
 
     }
 

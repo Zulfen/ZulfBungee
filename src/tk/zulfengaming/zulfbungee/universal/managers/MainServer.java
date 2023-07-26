@@ -112,6 +112,7 @@ public class MainServer<P, T> {
 
     }
 
+    //
     public void addActiveConnection(ProxyServerConnection<P, T> connectionIn, String name, ClientInfo infoIn) {
 
         SocketAddress address = connectionIn.getAddress();
@@ -121,6 +122,14 @@ public class MainServer<P, T> {
 
         pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
+
+        while (unsentEventPackets.peek() != null) {
+            EventPacket eventPacket = unsentEventPackets.poll();
+            boolean callbackSuccessful = eventPacket.processCallback();
+            if (callbackSuccessful) {
+                connectionIn.sendDirect(eventPacket);
+            }
+        }
 
     }
 
@@ -222,14 +231,6 @@ public class MainServer<P, T> {
 
     public boolean areClientsConnected() {
         return connections.size() > 0;
-    }
-
-    public boolean remainingEventPackets() {
-        return unsentEventPackets.peek() != null;
-    }
-
-    public EventPacket pollEventPacket() {
-        return unsentEventPackets.poll();
     }
 
     public Optional<StorageImpl<P, T>> getStorage() {

@@ -9,12 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Added a virtual host expression">
-      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/EventPacket.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available.">
+      <change afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/interfaces/EventCallback.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/event/ProxyEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/event/ProxyEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/managers/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/managers/MainServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/ProxyServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/ProxyServerConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/Packet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/EventPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/universal/socket/objects/proxy/EventPacket.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +27,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -135,13 +137,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00058" summary="Alpha v0.8.5 - fix potential crash with network variables">
-      <created>1676478591533</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1676478591533</updated>
     </task>
     <task id="LOCAL-00059" summary="Alpha v0.8.5 - fix potential crash with network variables">
       <created>1676478869053</created>
@@ -479,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690390247141</updated>
     </task>
-    <option name="localTasksCounter" value="107" />
+    <task id="LOCAL-00107" summary="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available.">
+      <created>1690391731617</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1690391731617</updated>
+    </task>
+    <option name="localTasksCounter" value="108" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -494,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.5 - refactored some parts and added a condition for proxy player's permissions." />
     <MESSAGE value="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option." />
     <MESSAGE value="Alpha v0.9.5 - database fixes" />
     <MESSAGE value="Alpha v0.9.5 - syntax adjustments" />
@@ -519,7 +520,8 @@
     <MESSAGE value="Alpha v0.9.8 - General event fixes (I honestly have written so much I forgot)" />
     <MESSAGE value="Alpha v0.9.8 - Removing debug messages" />
     <MESSAGE value="Alpha v0.9.8 - Added a virtual host expression" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Added a virtual host expression" />
+    <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

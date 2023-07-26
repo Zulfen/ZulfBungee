@@ -36,6 +36,11 @@ public class Packet implements Serializable {
         this.data[0] = dataIn;
     }
 
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn) {
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+    }
 
     public PacketTypes getType() {
         return type;

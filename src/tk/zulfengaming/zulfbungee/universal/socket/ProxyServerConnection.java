@@ -10,6 +10,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.PacketTypes;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.io.IOException;
@@ -42,10 +43,6 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
     public void run() {
 
         assert proxyCommHandler != null : "Comm Handler is null!";
-
-        while (mainServer.remainingEventPackets()) {
-            sendDirect(mainServer.pollEventPacket());
-        }
 
         while (connected.get()) {
             Optional<Packet> read = proxyCommHandler.readPacket();
