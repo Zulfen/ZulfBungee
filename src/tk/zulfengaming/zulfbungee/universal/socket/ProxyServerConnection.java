@@ -40,11 +40,18 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     @Override
     public void run() {
+
         assert proxyCommHandler != null : "Comm Handler is null!";
+
+        while (mainServer.remainingEventPackets()) {
+            sendDirect(mainServer.pollEventPacket());
+        }
+
         while (connected.get()) {
             Optional<Packet> read = proxyCommHandler.readPacket();
             read.ifPresent(this::processPacket);
         }
+
     }
 
     public void sendDirect(Packet packetIn) {

@@ -5,6 +5,7 @@ import tk.zulfengaming.zulfbungee.universal.managers.MainServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.Packet;
@@ -50,20 +51,20 @@ public class ProxyEvents<P, T> {
         Optional<ClientServer> transferFrom = toClientServer(fromServerName);
 
         if (transferFrom.isPresent() && transferTo.isPresent()) {
-            mainServer.sendDirectToAllAsync(new Packet(PacketTypes.SERVER_SWITCH_EVENT, false, true,
+            mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.SERVER_SWITCH_EVENT,
                     new ClientPlayerDataContainer(transferFrom.get(), new ClientPlayer(nameIn, uuidIn, transferTo.get()))));
         }
 
     }
 
     protected void serverKick(String nameIn, UUID uuidIn, String reason) {
-        mainServer.sendDirectToAllAsync(new Packet(PacketTypes.KICK_EVENT, false, true,
+        mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.KICK_EVENT,
                 new ClientPlayerDataContainer(reason, new ClientPlayer(nameIn, uuidIn))));
     }
 
     protected void serverDisconnect(String nameIn, UUID uuidIn, String previousServerName) {
         Optional<ClientServer> serverOptional = toClientServer(previousServerName);
-        serverOptional.ifPresent(clientServer -> mainServer.sendDirectToAllAsync(new Packet(PacketTypes.DISCONNECT_EVENT, false, true,
+        serverOptional.ifPresent(clientServer -> mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.DISCONNECT_EVENT,
                 new ClientPlayerDataContainer(clientServer, new ClientPlayer(nameIn, uuidIn)))));
     }
 

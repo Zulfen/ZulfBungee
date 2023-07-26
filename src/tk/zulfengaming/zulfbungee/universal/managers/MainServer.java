@@ -12,6 +12,7 @@ import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientInfo;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.ClientServer;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import tk.zulfengaming.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import tk.zulfengaming.zulfbungee.universal.storage.db.H2Impl;
 import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
@@ -19,10 +20,9 @@ import tk.zulfengaming.zulfbungee.universal.storage.db.MySQLImpl;
 import java.io.IOException;
 import java.net.*;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainServer<P, T> {
@@ -35,6 +35,8 @@ public class MainServer<P, T> {
     protected final ConcurrentHashMap<String, ProxyServerConnection<P, T>> activeConnections = new ConcurrentHashMap<>();
 
     protected final ConcurrentHashMap<String, ClientInfo> clientInfos = new ConcurrentHashMap<>();
+
+    protected final ConcurrentLinkedQueue<EventPacket> unsentEventPackets = new ConcurrentLinkedQueue<>();
 
     protected final ProxyTaskManager taskManager;
 
@@ -75,11 +77,18 @@ public class MainServer<P, T> {
         taskManager.newTask(() -> sendDirectToAll(packetIn));
     }
 
+    // this method is usually used for announcing state changes or events, so we should keep track of
+    // unsent packets and send them when a connection is available.
     public void sendDirectToAll(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
-        for (ProxyServerConnection<P, T> connection : connections) {
-            connection.sendDirect(packetIn);
+        if (!connections.isEmpty()) {
+            for (ProxyServerConnection<P, T> connection : connections) {
+                connection.sendDirect(packetIn);
+            }
+        } else if (packetIn instanceof EventPacket) {
+            unsentEventPackets.offer((EventPacket) packetIn);
         }
+
     }
 
     public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender<P, T> senderIn) {
@@ -213,6 +222,14 @@ public class MainServer<P, T> {
 
     public boolean areClientsConnected() {
         return connections.size() > 0;
+    }
+
+    public boolean remainingEventPackets() {
+        return unsentEventPackets.peek() != null;
+    }
+
+    public EventPacket pollEventPacket() {
+        return unsentEventPackets.poll();
     }
 
     public Optional<StorageImpl<P, T>> getStorage() {
