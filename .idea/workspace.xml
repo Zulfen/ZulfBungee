@@ -9,9 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fix disconnect event.">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Bungeecord fixes.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeeServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeeServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,13 +132,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00063" summary="Alpha v0.9.0 - client rewrite finished, starts up (at least)">
-      <created>1677955106701</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1677955106702</updated>
     </task>
     <task id="LOCAL-00064" summary="Alpha v0.9.0 - added proxy player command syntax and fixed events bug with network variables.">
       <created>1678028144331</created>
@@ -476,7 +469,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690415666479</updated>
     </task>
-    <option name="localTasksCounter" value="112" />
+    <task id="LOCAL-00112" summary="Alpha v0.9.8 - Bungeecord fixes.">
+      <created>1690416805941</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1690416805941</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -491,7 +491,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.5 - syntax adjustments" />
     <MESSAGE value="Alpha v0.9.5 - more verbose logging" />
     <MESSAGE value="Alpha v0.9.5 - small refactor" />
     <MESSAGE value="Alpha v0.9.5 - fix proxy player permission syntax" />
@@ -516,7 +515,8 @@
     <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
     <MESSAGE value="Alpha v0.9.8 - Actually fixed dropping event packets now." />
     <MESSAGE value="Alpha v0.9.8 - Fix disconnect event." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fix disconnect event." />
+    <MESSAGE value="Alpha v0.9.8 - Bungeecord fixes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Bungeecord fixes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

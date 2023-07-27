@@ -96,19 +96,28 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
 
     }
 
+    private void chooseSocketServer() throws UnknownHostException {
+        SocketMainServer<ProxyServer, Player> socketMainServer = new SocketMainServer<>(pluginConfig.getInt("port"),
+                InetAddress.getByName(pluginConfig.getString("host")), this);
+        taskManager.newTask(socketMainServer);
+        mainServer = socketMainServer;
+    }
+
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
         try {
 
-            if (transportType.equalsIgnoreCase("pluginmessage")) {
-                mainServer = new ChannelMainServer<>(this);
+            if (transportType != null) {
+                if (transportType.equalsIgnoreCase("pluginmessage")) {
+                    mainServer = new ChannelMainServer<>(this);
+                } else {
+                    chooseSocketServer();
+                }
             } else {
-                SocketMainServer<ProxyServer, Player> socketMainServer = new SocketMainServer<>(pluginConfig.getInt("port"),
-                        InetAddress.getByName(pluginConfig.getString("host")), this);
-                taskManager.newTask(socketMainServer);
-                mainServer = socketMainServer;
+                chooseSocketServer();
             }
+
 
             velocity.getEventManager().register(this, new VelocityEvents(mainServer));
             velocity.getCommandManager().register("zulfbungee", new VelocityCommand(new CommandHandlerManager<>(mainServer)));
