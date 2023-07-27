@@ -76,7 +76,9 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
 
             String serverName = player.getServer().getInfo().getName();
 
-            serverDisconnect(player.getName(), player.getUniqueId(), serverName);
+            if (mainServer.getServerNames().contains(serverName)) {
+                serverDisconnect(player.getName(), player.getUniqueId(), serverName);
+            }
 
         }
 

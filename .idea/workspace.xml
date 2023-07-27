@@ -9,8 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Actually fixed dropping event packets now.">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fix disconnect event.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeeServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tk/zulfengaming/zulfbungee/bungeecord/objects/BungeeServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,20 +132,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00061" summary="Alpha v0.8.5 - removed response time setting.">
-      <created>1676492648360</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1676492648361</updated>
-    </task>
-    <task id="LOCAL-00062" summary="Alpha v0.8.5 - removed response time setting.">
-      <created>1676492665514</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1676492665515</updated>
     </task>
     <task id="LOCAL-00063" summary="Alpha v0.9.0 - client rewrite finished, starts up (at least)">
       <created>1677955106701</created>
@@ -475,7 +462,21 @@
       <option name="project" value="LOCAL" />
       <updated>1690401293272</updated>
     </task>
-    <option name="localTasksCounter" value="110" />
+    <task id="LOCAL-00110" summary="Alpha v0.9.8 - Fix disconnect event.">
+      <created>1690415637004</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1690415637005</updated>
+    </task>
+    <task id="LOCAL-00111" summary="Alpha v0.9.8 - Fix disconnect event.">
+      <created>1690415666479</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1690415666479</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -490,7 +491,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.5 - database fixes" />
     <MESSAGE value="Alpha v0.9.5 - syntax adjustments" />
     <MESSAGE value="Alpha v0.9.5 - more verbose logging" />
     <MESSAGE value="Alpha v0.9.5 - small refactor" />
@@ -515,7 +515,8 @@
     <MESSAGE value="Alpha v0.9.8 - Added a virtual host expression" />
     <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
     <MESSAGE value="Alpha v0.9.8 - Actually fixed dropping event packets now." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Actually fixed dropping event packets now." />
+    <MESSAGE value="Alpha v0.9.8 - Fix disconnect event." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fix disconnect event." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
