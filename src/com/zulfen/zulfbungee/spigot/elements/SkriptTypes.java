@@ -1,0 +1,74 @@
+package com.zulfen.zulfbungee.spigot.elements;
+
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.expressions.base.EventValueExpression;
+import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.registrations.Classes;
+import org.jetbrains.annotations.NotNull;
+import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
+import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
+
+public class SkriptTypes {
+
+    static {
+        Classes.registerClass(new ClassInfo<>(ClientPlayer.class, "proxyplayer")
+                .user("proxyplayers?")
+                .name("Proxy Player")
+                .description("Represents a player on the Bungeecord network.")
+                .defaultExpression(new EventValueExpression<>(ClientPlayer.class))
+                .parser(new Parser<ClientPlayer>() {
+
+                    @Override
+                    public ClientPlayer parse(@NotNull String s, @NotNull ParseContext context) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(ClientPlayer proxyPlayer, int i) {
+                        return proxyPlayer.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(ClientPlayer proxyPlayer) {
+                        return proxyPlayer.getName();
+                    }
+
+                }));
+
+        Classes.registerClass(new ClassInfo<>(ClientServer.class, "proxyserver")
+                .user("proxyservers?")
+                .name("Proxy Server")
+                .description("Represents a network variable.")
+                .defaultExpression(new EventValueExpression<>(ClientServer.class))
+                .parser(new Parser<ClientServer>() {
+
+                    @Override
+                    public ClientServer parse(@NotNull String s, @NotNull ParseContext context) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(ClientServer zulfProxyServer, int i) {
+                        return zulfProxyServer.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(ClientServer zulfProxyServer) {
+                        return zulfProxyServer.getName();
+                    }
+
+                }));
+
+    }
+}
