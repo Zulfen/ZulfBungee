@@ -55,12 +55,7 @@ public class PacketHandlerManager {
         PacketHandler handler = getHandler(packetIn);
 
         if (handler.isAsync()) {
-            taskManager.newAsyncTask(new BukkitRunnable() {
-                @Override
-                public void run() {
-                    handler.handlePacket(packetIn);
-                }
-            });
+            taskManager.newAsyncTask(() -> handler.handlePacket(packetIn));
         } else {
             handler.handlePacket(packetIn);
         }
