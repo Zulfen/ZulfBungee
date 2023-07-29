@@ -26,7 +26,7 @@ public class SkriptConverters {
         Converters.registerConverter(String.class, ClientPlayer.class, s -> {
 
             Optional<Packet> playerRequest = ZulfBungeeSpigot.getPlugin().getConnectionManager()
-                    .send(new Packet(PacketTypes.PROXY_PLAYER_UUID, true, false, s));
+                    .send(new Packet(PacketTypes.PROXY_PLAYER_UUID, true, true, s));
 
             if (playerRequest.isPresent()) {
                 Packet packet = playerRequest.get();

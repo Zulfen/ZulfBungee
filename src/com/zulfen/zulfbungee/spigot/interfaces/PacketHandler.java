@@ -8,7 +8,7 @@ public abstract class PacketHandler {
 
     private final PacketTypes[] types;
 
-    private final Connection connection;
+    private final Connection<?> connection;
 
     private final boolean isAsync;
 
@@ -18,11 +18,11 @@ public abstract class PacketHandler {
         return types;
     }
 
-    public Connection getConnection() {
+    public Connection<?> getConnection() {
         return connection;
     }
 
-    public PacketHandler(Connection connectionIn, boolean isAsync, PacketTypes... types){
+    public PacketHandler(Connection<?> connectionIn, boolean isAsync, PacketTypes... types){
         this.connection = connectionIn;
         this.types = types;
         this.isAsync = isAsync;

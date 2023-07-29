@@ -78,7 +78,7 @@ public class MainServer<P, T> {
     }
 
     // this method is usually used for announcing state changes or events, so we should keep track of
-    // unsent packets and send them when a connection is available.
+    // unsent packets and sendDirect them when a connection is available.
     public void sendDirectToAll(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
         if (!connections.isEmpty()) {
@@ -86,7 +86,9 @@ public class MainServer<P, T> {
                 connection.sendDirect(packetIn);
             }
         } else if (packetIn instanceof EventPacket) {
-            unsentEventPackets.offer((EventPacket) packetIn);
+            if (packetIn.getType() != PacketTypes.PROXY_CLIENT_INFO) {
+                unsentEventPackets.offer((EventPacket) packetIn);
+            }
         }
 
     }
@@ -127,7 +129,7 @@ public class MainServer<P, T> {
             EventPacket eventPacket = unsentEventPackets.poll();
             boolean callbackSuccessful = eventPacket.processCallback();
             if (callbackSuccessful) {
-                connectionIn.sendDirect(eventPacket);
+                    connectionIn.sendDirect(eventPacket);
             }
         }
 
@@ -157,6 +159,8 @@ public class MainServer<P, T> {
 
 
     public void end() throws IOException {
+
+        pluginInstance.logInfo(ChatColour.GREEN + "Shutting down ZulfBungee... goodbye!");
 
         for (ProxyServerConnection<P, T> connection : connections) {
             connection.destroy();

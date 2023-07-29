@@ -6,17 +6,16 @@ import ch.njol.skript.SkriptAddon;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.zulfen.zulfbungee.spigot.event.EventListeners;
+import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
+import com.zulfen.zulfbungee.spigot.managers.TaskManager;
+import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.connections.SocketConnectionManager;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
-import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
-import com.zulfen.zulfbungee.spigot.managers.TaskManager;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.Semaphore;
 
 public class ZulfBungeeSpigot extends JavaPlugin {
 
@@ -26,16 +25,13 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     private String transportType;
 
     private TaskManager taskManager;
-    private ConnectionManager connectionManager;
+    private ConnectionManager<?> connectionManager;
 
     private ProtocolManager protocolManager;
-
-    private final Semaphore playerWait = new Semaphore(0);
 
     public void onEnable() {
 
         plugin = this;
-
         getServer().getPluginManager().registerEvents(new EventListeners(this), this);
 
         taskManager = new TaskManager(this);
@@ -74,7 +70,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         // Registers the addon
         try {
 
-            addon.loadClasses("tk.zulfengaming.zulfbungee.spigot", "elements");
+            addon.loadClasses("com.zulfen.zulfbungee.spigot", "elements");
             logInfo(ChatColor.GREEN + "The addon loaded successfully!");
 
         } catch (SkriptAPIException | IOException e) {
@@ -85,7 +81,6 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     }
 
     public void onDisable() {
-        playerWait.release();
         connectionManager.shutdown();
         taskManager.shutdown();
     }
@@ -116,25 +111,14 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         return transportType;
     }
 
-    public ConnectionManager getConnectionManager() {
+    public ConnectionManager<?> getConnectionManager() {
         return connectionManager;
-    }
-
-    public void acquireChannelWait() {
-        try {
-            playerWait.acquire();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 
     public ProtocolManager getProtocolManager() {
         return protocolManager;
     }
 
-    public void releaseChannelWait() {
-        playerWait.release();
-    }
 
     public boolean isDebug() {
         return debug;

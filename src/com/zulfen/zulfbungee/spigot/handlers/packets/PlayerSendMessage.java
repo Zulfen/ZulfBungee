@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PlayerSendMessage extends PacketHandler {
 
-    public PlayerSendMessage(Connection connectionIn) {
+    public PlayerSendMessage(Connection<?> connectionIn) {
         super(connectionIn, false, PacketTypes.PLAYER_SEND_MESSAGE);
     }
 

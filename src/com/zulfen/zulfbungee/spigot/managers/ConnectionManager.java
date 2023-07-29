@@ -3,11 +3,14 @@ package com.zulfen.zulfbungee.spigot.managers;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.registrations.Classes;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
+import com.zulfen.zulfbungee.spigot.socket.Connection;
 import com.zulfen.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
+import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
+import com.zulfen.zulfbungee.universal.socket.objects.client.HandshakePacket;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
@@ -15,38 +18,66 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
-import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.SocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class ConnectionManager {
+public abstract class ConnectionManager<T> {
 
     protected final ZulfBungeeSpigot pluginInstance;
     protected final ConcurrentHashMap<String, ClientInfo> proxyServers = new ConcurrentHashMap<>();
 
+    protected final CopyOnWriteArrayList<Connection<T>> allConnections = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<SocketAddress> blockedConnections = new CopyOnWriteArrayList<>();
+
     protected final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
 
     protected final AtomicBoolean running = new AtomicBoolean(true);
+
+    private final T connectionFactory;
 
     protected final TaskManager taskManager;
 
     // representation of this client as a server.
     private ClientServer thisServer;
 
-    public ConnectionManager(ZulfBungeeSpigot pluginIn) {
+    public ConnectionManager(ZulfBungeeSpigot pluginIn, Class<T> connectionFactoryClass) {
+
         this.pluginInstance = pluginIn;
         this.taskManager = pluginInstance.getTaskManager();
+
+        try {
+
+            Constructor<?> constructor = connectionFactoryClass.getConstructor(getClass());
+            Object possibleConnFactory = constructor.newInstance(this);
+            connectionFactory = connectionFactoryClass.cast(possibleConnFactory);
+
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public abstract void sendDirect(Packet packetIn);
+    protected abstract void sendDirectImpl(Packet packetIn);
 
-    // returns the first packet it gets from any of the connections. keep this in mind.
+    public boolean sendDirect(Packet packetIn) {
+        if (allConnections.size() > 0 || packetIn instanceof HandshakePacket) {
+            sendDirectImpl(packetIn);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public abstract Optional<Packet> send(Packet packetIn);
 
     public abstract List<ClientPlayer> getPlayers(ClientServer[] serversIn);
@@ -97,7 +128,22 @@ public abstract class ConnectionManager {
 
     }
 
-    public abstract void blockConnection(Connection connectionIn);
+    public void register(Connection<T> connectionIn) {
+        allConnections.add(connectionIn);
+    }
+
+    public void deRegister(Connection<T> connectionIn) {
+        allConnections.remove(connectionIn);
+    }
+
+    public void blockConnection(Connection<?> connectionIn) {
+        blockedConnections.add(connectionIn.getSocketAddress());
+        connectionIn.destroy();
+    }
+
+    public boolean isBlocked(SocketAddress addressIn) {
+        return blockedConnections.contains(addressIn);
+    }
 
     public List<ClientServer> getAllProxyServers() {
         return proxyServers.entrySet().stream()
@@ -158,6 +204,10 @@ public abstract class ConnectionManager {
 
         if (running.compareAndSet(true, false)) {
 
+            for (Connection<T> connection : allConnections) {
+                connection.destroy();
+            }
+
             for (File scriptFile : scriptFiles) {
                 boolean delete = scriptFile.delete();
                 if (!delete) {
@@ -167,6 +217,10 @@ public abstract class ConnectionManager {
 
         }
 
+    }
+
+    public T createNewConnection() {
+        return connectionFactory;
     }
 
     public AtomicBoolean isRunning() {

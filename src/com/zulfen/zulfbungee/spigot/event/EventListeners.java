@@ -1,16 +1,17 @@
 package com.zulfen.zulfbungee.spigot.event;
 
+import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerKick;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
 import com.zulfen.zulfbungee.spigot.event.events.EventProxyMessage;
+import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
+import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChannelEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
-import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 
 public class EventListeners implements Listener {
 
@@ -21,11 +22,13 @@ public class EventListeners implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChannelEvent(PlayerChannelEvent playerChannelEvent) {
+    public void onChannelEvent(PlayerChannelEvent playerChannelEvent) {
         if (playerChannelEvent.getChannel().equals("zproxy:channel")) {
-            if (pluginInstance.getConnectionManager() instanceof ChannelConnectionManager) {
+            ConnectionManager<?> connectionManager = pluginInstance.getConnectionManager();
+            if (connectionManager instanceof ChannelConnectionManager) {
+                ChannelConnectionManager channelConnectionManager = (ChannelConnectionManager) connectionManager;
                 if (pluginInstance.getServer().getOnlinePlayers().size() == 1) {
-                    pluginInstance.releaseChannelWait();
+                    channelConnectionManager.signalAvailableConnection();
                 }
             }
         }
@@ -33,7 +36,7 @@ public class EventListeners implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent playerDisconnectEvent) {
-        ConnectionManager connectionManager = pluginInstance.getConnectionManager();
+        ConnectionManager<?> connectionManager = pluginInstance.getConnectionManager();
         if (connectionManager instanceof ChannelConnectionManager) {
             ChannelConnectionManager channelConnectionManager = (ChannelConnectionManager) connectionManager;
             if (pluginInstance.getServer().getOnlinePlayers().size() == 1) {

@@ -20,31 +20,26 @@ public class NetworkVariableGet<P, T> extends PacketHandler<P, T> {
     @Override
     public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connection) {
 
-        getProxy().getTaskManager().newTask(() -> {
+        String variableName = (String) packetIn.getDataSingle();
 
-            String variableName = (String) packetIn.getDataSingle();
+        Optional<StorageImpl<P, T>> getStorage = getMainServer().getStorage();
 
-            Optional<StorageImpl<P, T>> getStorage = getMainServer().getStorage();
+        if (getStorage.isPresent()) {
 
-            if (getStorage.isPresent()) {
+            StorageImpl<P, T> storage = getStorage.get();
 
-                StorageImpl<P, T> storage = getStorage.get();
+            Optional<NetworkVariable> storedVariable = storage.getVariable(variableName);
 
-                Optional<NetworkVariable> storedVariable = storage.getVariable(variableName);
-
-                if (storedVariable.isPresent()) {
-                    NetworkVariable variable = storedVariable.get();
-                    connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable));
-                    return;
-                }
-
+            if (storedVariable.isPresent()) {
+                NetworkVariable variable = storedVariable.get();
+                return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable);
+            } else {
+                return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Value[0]);
             }
 
-            connection.sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Value[0]));
-
-        });
-
-        return null;
+        } else {
+            return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Value[0]);
+        }
 
     }
 }

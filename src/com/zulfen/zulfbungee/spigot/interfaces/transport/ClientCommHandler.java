@@ -1,75 +1,59 @@
 package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.spigot.managers.TaskManager;
 import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 // issue must be here
 
-public abstract class ClientCommHandler {
+public abstract class ClientCommHandler<T> {
 
-    protected Connection connection;
+    protected Connection<T> connection;
     protected final ZulfBungeeSpigot pluginInstance;
 
+    // Warning - RELEASE THIS SOMEWHERE!
+    protected final CountDownLatch awaitProperConnection = new CountDownLatch(1);
     protected final AtomicBoolean isRunning = new AtomicBoolean(true);
 
     protected final LinkedBlockingQueue<Optional<Packet>> queueIn = new LinkedBlockingQueue<>();
-    protected final LinkedBlockingQueue<Optional<Packet>> queueOut = new LinkedBlockingQueue<>();
 
     public ClientCommHandler(ZulfBungeeSpigot pluginInstanceIn) {
         this.pluginInstance = pluginInstanceIn;
     }
 
-    public void setConnection(Connection connection) {
+    public void setConnection(Connection<T> connection) {
         this.connection = connection;
     }
 
-
-    public void start() {
-        TaskManager taskManager = pluginInstance.getTaskManager();
-        taskManager.newAsyncTask(this::dataOutLoop);
-    }
-
-    private void dataOutLoop() {
-        while (isRunning.get()) {
-            try {
-                Optional<Packet> possiblePacket = queueOut.take();
-                if (possiblePacket.isPresent()) {
-                    writePacket(possiblePacket.get());
-                } else {
-                    break;
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
     public abstract Optional<Packet> readPacket();
-    protected abstract void writePacket(Packet toWrite);
+    public abstract void writePacket(Packet toWrite);
 
     protected void freeResources() {}
 
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {
+            awaitProperConnection.countDown();
             queueIn.offer(Optional.empty());
-            queueOut.offer(Optional.empty());
             freeResources();
             connection.destroy();
         }
     }
 
-    public void send(Packet packetIn) {
+    public void awaitProperConnection() {
         try {
-            queueOut.put(Optional.of(packetIn));
+            awaitProperConnection.await();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    public void signalProperConnection() {
+        awaitProperConnection.countDown();
     }
 
     public ZulfBungeeSpigot getPluginInstance() {

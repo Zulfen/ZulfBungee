@@ -3,12 +3,11 @@ package com.zulfen.zulfbungee.spigot.managers.connections;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.socket.ChannelConnection;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
-import org.bukkit.ChatColor;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -19,27 +18,30 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ChannelConnectionManager extends ConnectionManager {
+public class ChannelConnectionManager extends ConnectionManager<ChannelConnectionFactory> {
 
     private ChannelConnection channelConnection;
 
     private final SocketAddress socketAddress;
 
     public ChannelConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress serverAddress, int serverPort) {
-        super(pluginIn);
+        super(pluginIn, ChannelConnectionFactory.class);
         this.socketAddress = new InetSocketAddress(serverAddress, serverPort);
         newChannelConnection();
     }
 
     @Override
-    public void sendDirect(Packet packetIn) {
+    protected void sendDirectImpl(Packet packetIn) {
         channelConnection.sendDirect(packetIn);
     }
 
     @Override
     public Optional<Packet> send(Packet packetIn) {
-        channelConnection.sendDirect(packetIn);
-        return channelConnection.read();
+        if (sendDirect(packetIn)) {
+            return channelConnection.read();
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -61,17 +63,23 @@ public class ChannelConnectionManager extends ConnectionManager {
     }
 
     public void newChannelConnection() {
+
         if (channelConnection != null) {
             channelConnection.destroy();
         }
-        pluginInstance.logInfo(ChatColor.GREEN + "Waiting for a player to join...");
-        channelConnection = new ChannelConnection(pluginInstance,  socketAddress);
-        pluginInstance.getTaskManager().newAsyncTask(channelConnection);
+
+        channelConnection = createNewConnection()
+                .withAddress(socketAddress)
+                .compressLargePacketTo(5120)
+                .build();
+
+        channelConnection.start();
+
+
     }
 
-    @Override
-    public void blockConnection(Connection connectionIn) {
-        connectionIn.destroy();
+    public void signalAvailableConnection() {
+        channelConnection.getClientCommHandler().signalProperConnection();
     }
 
     @Override

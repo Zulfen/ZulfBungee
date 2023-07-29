@@ -1,6 +1,7 @@
 package com.zulfen.zulfbungee.spigot.handlers.transport;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
+import com.zulfen.zulfbungee.spigot.socket.factory.SocketConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientCommHandler;
 
@@ -10,7 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
 
-public class ClientSocketCommHandler extends ClientCommHandler {
+public class ClientSocketCommHandler extends ClientCommHandler<SocketConnectionFactory> {
 
     private final Socket socket;
 
@@ -22,6 +23,7 @@ public class ClientSocketCommHandler extends ClientCommHandler {
         this.socket = socketIn;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.inputStream = new ObjectInputStream(socket.getInputStream());
+        awaitProperConnection.countDown();
     }
 
     @Override
@@ -33,7 +35,9 @@ public class ClientSocketCommHandler extends ClientCommHandler {
                 return Optional.of((Packet) readObject);
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            if (pluginInstance.isDebug()) {
+                e.printStackTrace();
+            }
             destroy();
         }
 
@@ -42,12 +46,14 @@ public class ClientSocketCommHandler extends ClientCommHandler {
     }
 
     @Override
-    protected void writePacket(Packet toWrite) {
+    public synchronized void writePacket(Packet toWrite) {
         try {
             outputStream.writeObject(toWrite);
             outputStream.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            if (pluginInstance.isDebug()) {
+                e.printStackTrace();
+            }
             destroy();
         }
     }

@@ -1,5 +1,5 @@
 name: ZulfBungee
-main: tk.zulfengaming.zulfbungee.spigot.ZulfBungeeSpigot
+main: com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot
 version: 0.9.8-pre3
 author: zulfen
 website: https://github.com/Zulfen/ZulfBungee

@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerConnect;
@@ -9,7 +9,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 
 public class PlayerConnectEvent extends PacketHandler {
 
-    public PlayerConnectEvent(Connection connectionIn) {
+    public PlayerConnectEvent(Connection<?> connectionIn) {
         super(connectionIn, true, PacketTypes.CONNECT_EVENT);
 
     }
@@ -19,9 +19,11 @@ public class PlayerConnectEvent extends PacketHandler {
 
         ClientPlayer player = (ClientPlayer) packetIn.getDataSingle();
 
-        getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                new EventPlayerServerConnect(player)
-        );
+        if (player != null) {
+            getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
+                    new EventPlayerServerConnect(player)
+            );
+        }
 
     }
 }

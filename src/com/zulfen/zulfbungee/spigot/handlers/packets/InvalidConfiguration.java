@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.socket.Connection;
@@ -7,7 +7,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 
 public class InvalidConfiguration extends PacketHandler {
 
-    public InvalidConfiguration(Connection connectionIn) {
+    public InvalidConfiguration(Connection<?> connectionIn) {
         super(connectionIn, false, PacketTypes.INVALID_CONFIGURATION);
 
     }

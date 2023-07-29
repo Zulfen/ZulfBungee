@@ -27,27 +27,10 @@ public abstract class ProxyCommHandler<P, T> {
 
     public void setServerConnection(ProxyServerConnection<P, T> connection) {
         this.connection = connection;
-        ProxyTaskManager taskManager = pluginInstance.getTaskManager();
-        taskManager.newTask(this::dataOutLoop);
-    }
-
-    private void dataOutLoop() {
-        while (isRunning.get()) {
-            try {
-                Optional<Packet> possiblePacket = queueOut.take();
-                if (possiblePacket.isPresent()) {
-                    writePacket(possiblePacket.get());
-                } else {
-                    break;
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
     }
 
     public abstract Optional<Packet> readPacket();
-    protected abstract void writePacket(Packet toWrite);
+    public abstract void writePacket(Packet toWrite);
 
     protected void freeResources() {}
 
@@ -58,10 +41,6 @@ public abstract class ProxyCommHandler<P, T> {
             freeResources();
             connection.destroy();
         }
-    }
-
-    public void send(Packet packetIn) {
-        queueOut.offer(Optional.of(packetIn));
     }
 
 

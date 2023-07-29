@@ -7,7 +7,6 @@ import javax.net.SocketFactory;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.*;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class SocketConnectionTask implements Runnable {
@@ -15,15 +14,13 @@ public class SocketConnectionTask implements Runnable {
     private final SocketConnectionManager connectionManager;
     private final ZulfBungeeSpigot pluginInstance;
 
-    private final Semaphore connectionBarrier;
-
     private final InetAddress clientAddress;
     private final int clientPort;
 
     private final InetAddress serverAddress;
     private final int serverPort;
 
-    public SocketConnectionTask(SocketConnectionManager connectionManagerIn, Semaphore connectionBarrier, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
+    public SocketConnectionTask(SocketConnectionManager connectionManagerIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
 
         this.connectionManager = connectionManagerIn;
 
@@ -34,7 +31,6 @@ public class SocketConnectionTask implements Runnable {
         this.serverPort = serverPort;
 
         this.pluginInstance = connectionManager.getPluginInstance();
-        this.connectionBarrier = connectionBarrier;
 
     }
 
@@ -71,13 +67,16 @@ public class SocketConnectionTask implements Runnable {
                             socket = SocketFactory.getDefault().createSocket(serverAddress, serverPort, clientAddress, clientPort);
                         }
 
-                        connectionManager.newSocketConnection(socket);
+                        connectionManager.createNewConnection()
+                                .withSocket(socket)
+                                .build()
+                                .start();
+
 
 
                     }
 
                     finished++;
-                    connectionBarrier.release();
 
                 }
 

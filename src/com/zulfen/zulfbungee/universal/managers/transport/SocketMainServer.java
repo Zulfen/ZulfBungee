@@ -103,7 +103,6 @@ public class SocketMainServer<P, T> extends MainServer<P, T> implements Runnable
 
     @Override
     public void end() throws IOException {
-        super.end();
         if (running.compareAndSet(true, false)) {
             if (serverSocket != null) {
                 serverSocket.close();
@@ -112,6 +111,7 @@ public class SocketMainServer<P, T> extends MainServer<P, T> implements Runnable
                 socket.close();
             }
         }
+        super.end();
     }
 
 }

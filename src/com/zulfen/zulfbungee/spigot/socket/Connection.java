@@ -2,9 +2,11 @@ package com.zulfen.zulfbungee.spigot.socket;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientCommHandler;
+import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
+import com.zulfen.zulfbungee.universal.socket.objects.client.HandshakePacket;
 import org.bukkit.scheduler.BukkitRunnable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 
@@ -13,45 +15,55 @@ import java.util.Optional;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Connection extends BukkitRunnable {
+public abstract class Connection<T> extends BukkitRunnable {
 
+    protected final ConnectionManager<T> connectionManager;
     protected final ZulfBungeeSpigot pluginInstance;
     protected final PacketHandlerManager packetHandlerManager;
-    protected ClientCommHandler clientCommHandler;
+    protected ClientCommHandler<T> clientCommHandler;
 
     protected final ClientInfo clientInfo;
     protected final SocketAddress socketAddress;
 
-    protected final AtomicBoolean connected = new AtomicBoolean(true);
+    protected final AtomicBoolean connected = new AtomicBoolean(false);
 
     private final String forcedName;
     private final LinkedTransferQueue<Optional<Packet>> skriptQueue = new LinkedTransferQueue<>();
 
-    public Connection(ZulfBungeeSpigot pluginInstanceIn, SocketAddress socketAddressIn) {
+    public Connection(ConnectionManager<T> connectionManager, SocketAddress socketAddressIn) {
 
-        this.pluginInstance = pluginInstanceIn;
+        this.connectionManager = connectionManager;
+        this.pluginInstance = connectionManager.getPluginInstance();
         this.socketAddress = socketAddressIn;
         this.packetHandlerManager = new PacketHandlerManager(this);
 
         this.forcedName = pluginInstance.getConfig().getString("forced-connection-name");
 
-
-        this.clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort());
+        this.clientInfo = new ClientInfo(pluginInstance.getServer().getMaxPlayers(), pluginInstance.getServer().getPort(),
+                pluginInstance.getServer().getVersion());
 
     }
 
+    public void start() {
+        pluginInstance.getTaskManager().newAsyncTask(this);
+    }
+
+    public abstract void onRegister();
 
     @Override
     public void run() {
 
-        clientCommHandler.start();
-
         if (forcedName.isEmpty()) {
-            sendDirect(new Packet(PacketTypes.PROXY_CLIENT_INFO, true, true, clientInfo));
+            sendDirect(new HandshakePacket(PacketTypes.PROXY_CLIENT_INFO, clientInfo));
         } else {
-            sendDirect(new Packet(PacketTypes.CONNECTION_NAME, true, true, new Object[]{forcedName, clientInfo}));
+            sendDirect(new HandshakePacket(PacketTypes.CONNECTION_NAME, new Object[]{forcedName, clientInfo}));
         }
-        sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, true, true, new Object[0]));
+        sendDirect(new HandshakePacket(PacketTypes.GLOBAL_SCRIPT, new Object[0]));
+
+        clientCommHandler.awaitProperConnection();
+        connected.set(true);
+        connectionManager.register(this);
+        onRegister();
 
         while (connected.get()) {
 
@@ -64,11 +76,11 @@ public abstract class Connection extends BukkitRunnable {
                 if (packet.shouldHandle()) {
                     packetHandlerManager.handlePacket(packet);
                 } else {
-                    skriptQueue.put(read);
+                    skriptQueue.offer(read);
                 }
 
             } else {
-                skriptQueue.put(Optional.empty());
+                skriptQueue.offer(Optional.empty());
             }
 
         }
@@ -76,30 +88,40 @@ public abstract class Connection extends BukkitRunnable {
     }
 
     public void sendDirect(Packet packetIn) {
-        clientCommHandler.send(packetIn);
+        clientCommHandler.writePacket(packetIn);
         if (packetIn.getType() != PacketTypes.HEARTBEAT_PROXY) {
             pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
         }
     }
 
     public Optional<Packet> read() {
-        try {
-            return skriptQueue.take();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (connected.get()) {
+            try {
+                return skriptQueue.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         return Optional.empty();
     }
 
     public void destroy() {
-        if (connected.compareAndSet(true, false)) {
-            clientCommHandler.destroy();
-        }
+        connected.set(false);
+        clientCommHandler.destroy();
+        connectionManager.deRegister(this);
     }
 
-    protected void setClientCommHandler(ClientCommHandler handlerIn) {
+    protected void setClientCommHandler(ClientCommHandler<T> handlerIn) {
         this.clientCommHandler = handlerIn;
         clientCommHandler.setConnection(this);
+    }
+
+    public ClientCommHandler<T> getClientCommHandler() {
+        return clientCommHandler;
+    }
+
+    public SocketAddress getSocketAddress() {
+        return socketAddress;
     }
 
     public SocketAddress getAddress() {

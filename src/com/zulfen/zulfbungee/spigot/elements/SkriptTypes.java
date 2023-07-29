@@ -5,6 +5,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
@@ -66,6 +67,35 @@ public class SkriptTypes {
                     @Override
                     public @NotNull String toVariableNameString(ClientServer zulfProxyServer) {
                         return zulfProxyServer.getName();
+                    }
+
+                }));
+
+        Classes.registerClass(new ClassInfo<>(NetworkVariable.class, "networkvariable")
+                .user("networkvariables?")
+                .name("Network Variable")
+                .description("Represents a network variable.")
+                .defaultExpression(new EventValueExpression<>(NetworkVariable.class))
+                .parser(new Parser<NetworkVariable>() {
+
+                    @Override
+                    public NetworkVariable parse(@NotNull String s, @NotNull ParseContext context) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(NetworkVariable networkVariable, int i) {
+                        return networkVariable.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(NetworkVariable networkVariable) {
+                        return networkVariable.getName();
                     }
 
                 }));

@@ -99,7 +99,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    protected synchronized void writePacket(Packet inputPacket) {
+    public void writePacket(Packet inputPacket) {
 
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 

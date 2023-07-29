@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerKick;
@@ -10,7 +10,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ClientPlayer
 
 public class ServerKickEvent extends PacketHandler {
 
-    public ServerKickEvent(Connection connectionIn) {
+    public ServerKickEvent(Connection<?> connectionIn) {
         super(connectionIn, true, PacketTypes.KICK_EVENT);
 
     }

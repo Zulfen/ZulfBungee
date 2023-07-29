@@ -3,52 +3,38 @@ package com.zulfen.zulfbungee.spigot.managers.connections;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.socket.Connection;
-import com.zulfen.zulfbungee.spigot.socket.SocketConnection;
+import com.zulfen.zulfbungee.spigot.socket.factory.SocketConnectionFactory;
 import com.zulfen.zulfbungee.spigot.tasks.SocketConnectionTask;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class SocketConnectionManager extends ConnectionManager implements Runnable {
+public class SocketConnectionManager extends ConnectionManager<SocketConnectionFactory> implements Runnable {
 
-    private final AtomicInteger registered = new AtomicInteger();
     private final LinkedBlockingQueue<Optional<Packet>> connectionPackets = new LinkedBlockingQueue<>();
 
+    private final AtomicInteger registered = new AtomicInteger();
     private final Semaphore connectionBarrier = new Semaphore(0);
-    private final CopyOnWriteArrayList<SocketConnection> allConnections = new CopyOnWriteArrayList<>();
-    private final CopyOnWriteArrayList<SocketAddress> blockedConnections = new CopyOnWriteArrayList<>();
 
     private final SocketConnectionTask connectionTask;
 
     public SocketConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress clientAddress, int clientPort, InetAddress serverAddress, int serverPort) {
-        super(pluginIn);
-        this.connectionTask = new SocketConnectionTask(this, connectionBarrier, clientAddress, clientPort, serverAddress, serverPort);
-    }
-
-    @Override
-    public void sendDirect(Packet packetIn) {
-        allConnections.forEach(connection -> connection.sendDirect(packetIn));
+        super(pluginIn, SocketConnectionFactory.class);
+        this.connectionTask = new SocketConnectionTask(this, clientAddress, clientPort, serverAddress, serverPort);
     }
 
     private Queue<Packet> sendGetPacketList(Packet packetIn) {
 
         Queue<Packet> packetQueue = new LinkedList<>();
-
-        if (registered.get() > 0) {
-
-            sendDirect(packetIn);
+        if (sendDirect(packetIn)) {
             for (int i = 0; i < registered.get(); i++) {
                 try {
                     Optional<Packet> take = connectionPackets.take();
@@ -57,11 +43,15 @@ public class SocketConnectionManager extends ConnectionManager implements Runnab
                     Thread.currentThread().interrupt();
                 }
             }
-
         }
 
         return packetQueue;
 
+    }
+
+    @Override
+    protected void sendDirectImpl(Packet packetIn) {
+        allConnections.forEach(connection -> connection.sendDirect(packetIn));
     }
 
     @Override
@@ -102,7 +92,7 @@ public class SocketConnectionManager extends ConnectionManager implements Runnab
 
                 while (registered.get() > 0) {
 
-                    for (Connection connection : allConnections) {
+                    for (Connection<SocketConnectionFactory> connection : allConnections) {
 
                         try {
 
@@ -132,34 +122,22 @@ public class SocketConnectionManager extends ConnectionManager implements Runnab
 
     }
 
-    public boolean isBlocked(SocketAddress addressIn) {
-        return blockedConnections.contains(addressIn);
+    public void releaseConnectionBarrier() {
+        connectionBarrier.release();
     }
 
-    public void register() {
+    public void registerBefore() {
         registered.incrementAndGet();
     }
 
-    public void deRegister() {
+    @Override
+    public void deRegister(Connection<SocketConnectionFactory> connectionIn) {
         registered.decrementAndGet();
-    }
-
-    public void blockConnection(Connection connectionIn) {
-        blockedConnections.add(connectionIn.getAddress());
-        connectionIn.destroy();
-    }
-
-    public void newSocketConnection(Socket socketIn) throws IOException {
-        SocketConnection socketConnection = new SocketConnection(this, socketIn);
-        allConnections.add(socketConnection);
-        taskManager.newAsyncTask(socketConnection);
+        super.deRegister(connectionIn);
     }
 
     public void shutdown() {
         connectionBarrier.release();
-        for (SocketConnection connection : allConnections) {
-            connection.destroy();
-        }
         super.shutdown();
     }
 

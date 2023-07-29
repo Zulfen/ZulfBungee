@@ -44,7 +44,7 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    protected void writePacket(Packet toWrite) {
+    public synchronized void writePacket(Packet toWrite) {
         try {
             outputStream.writeObject(toWrite);
             outputStream.flush();

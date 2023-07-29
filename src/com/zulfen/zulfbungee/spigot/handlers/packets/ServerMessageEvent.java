@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.event.events.EventProxyMessage;
@@ -9,7 +9,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ServerMessag
 
 public class ServerMessageEvent extends PacketHandler {
 
-    public ServerMessageEvent(Connection connectionIn) {
+    public ServerMessageEvent(Connection<?> connectionIn) {
         super(connectionIn, true, PacketTypes.SERVER_SEND_MESSAGE_EVENT);
 
     }

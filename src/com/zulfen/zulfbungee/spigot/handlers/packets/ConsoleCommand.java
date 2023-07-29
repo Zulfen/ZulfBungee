@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import org.bukkit.command.ConsoleCommandSender;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -9,7 +9,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 
 public class ConsoleCommand extends PacketHandler {
 
-    public ConsoleCommand(Connection connectionIn) {
+    public ConsoleCommand(Connection<?> connectionIn) {
         super(connectionIn, true, PacketTypes.CONSOLE_EXECUTE_COMMAND);
 
     }

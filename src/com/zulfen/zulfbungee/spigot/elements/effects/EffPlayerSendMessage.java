@@ -27,7 +27,7 @@ public class EffPlayerSendMessage extends Effect {
     private Expression<String> message;
 
     static {
-        Skript.registerEffect(EffPlayerSendMessage.class, "[(proxy|bungeecord|bungee|velocity) [player]] (message|send|tell) [(proxy|bungeecord|bungee|velocity) [players]] %-proxyplayers% [the message] %string%");
+        Skript.registerEffect(EffPlayerSendMessage.class, "[(proxy|bungeecord|bungee|velocity) [player]] (message|sendDirect|tell) [(proxy|bungeecord|bungee|velocity) [players]] %-proxyplayers% [the message] %string%");
     }
 
     @Override
@@ -40,7 +40,7 @@ public class EffPlayerSendMessage extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
 
-        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        ConnectionManager<?> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
         Optional<ClientServer> asServer = connection.getAsServer();
 
         asServer.ifPresent(server -> connection.sendDirect(new Packet(PacketTypes.PLAYER_SEND_MESSAGE,

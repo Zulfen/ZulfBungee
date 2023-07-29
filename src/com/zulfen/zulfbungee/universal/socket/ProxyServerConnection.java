@@ -52,7 +52,7 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     public void sendDirect(Packet packetIn) {
         assert proxyCommHandler != null : "Comm Handler is null!";
-        proxyCommHandler.send(packetIn);
+        proxyCommHandler.writePacket(packetIn);
         if (packetIn.getType() != PacketTypes.HEARTBEAT_PROXY) {
             pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
         }

@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.socket.packets;
+package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class ConnectionName extends PacketHandler {
 
-    public ConnectionName(Connection connectionIn) {
+    public ConnectionName(Connection<?> connectionIn) {
         super(connectionIn, true, PacketTypes.CONNECTION_NAME);
 
     }
@@ -20,7 +20,7 @@ public class ConnectionName extends PacketHandler {
     public void handlePacket(Packet packetIn) {
 
         String name = (String) packetIn.getDataSingle();
-        ConnectionManager connectionManager = getConnection().getPluginInstance().getConnectionManager();
+        ConnectionManager<?> connectionManager = getConnection().getPluginInstance().getConnectionManager();
 
         Optional<ClientServer> proxyServer = connectionManager.getProxyServer(name);
         proxyServer.ifPresent(connectionManager::setThisServer);
