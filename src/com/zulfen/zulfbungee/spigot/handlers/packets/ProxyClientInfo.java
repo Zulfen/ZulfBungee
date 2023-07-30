@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ProxyServerInfo extends PacketHandler {
+public class ProxyClientInfo extends PacketHandler {
 
-    public ProxyServerInfo(Connection<?> connectionIn) {
+    public ProxyClientInfo(Connection<?> connectionIn) {
         super(connectionIn, false, PacketTypes.PROXY_CLIENT_INFO);
 
     }

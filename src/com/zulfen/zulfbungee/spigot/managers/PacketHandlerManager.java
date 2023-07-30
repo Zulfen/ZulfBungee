@@ -5,7 +5,6 @@ import com.zulfen.zulfbungee.spigot.socket.Connection;
 import com.zulfen.zulfbungee.spigot.handlers.packets.*;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class PacketHandlerManager {
         addHandler(new PlayerDisconnectEvent(connectionIn));
         addHandler(new PlayerConnectEvent(connectionIn));
         addHandler(new InvalidConfiguration(connectionIn));
-        addHandler(new ProxyServerInfo(connectionIn));
+        addHandler(new ProxyClientInfo(connectionIn));
         addHandler(new ServerKickEvent(connectionIn));
         addHandler(new GlobalScript(connectionIn));
         addHandler(new PlayerSendMessage(connectionIn));

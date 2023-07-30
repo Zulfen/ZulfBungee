@@ -1,6 +1,6 @@
 package com.zulfen.zulfbungee.spigot.socket;
 
-import com.zulfen.zulfbungee.spigot.handlers.transport.ClientSocketCommHandler;
+import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientSocketCommHandler;
 import com.zulfen.zulfbungee.spigot.managers.connections.SocketConnectionManager;
 import com.zulfen.zulfbungee.spigot.socket.factory.SocketConnectionFactory;
 import org.bukkit.ChatColor;

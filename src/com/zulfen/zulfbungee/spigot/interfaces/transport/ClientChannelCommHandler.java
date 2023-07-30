@@ -1,9 +1,8 @@
-package com.zulfen.zulfbungee.spigot.handlers.transport;
+package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.handlers.protocol.ChannelPayload;
-import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientCommHandler;
 import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
@@ -121,15 +120,14 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
     @Override
     public synchronized void writePacket(Packet inputPacket) {
 
-        pluginInstance.error("Packet in: " + inputPacket.getType());
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 
         if (fullPacketBytes.length > 20480) {
 
-            try (ByteArrayInputStream partialPacketBytes = new ByteArrayInputStream(fullPacketBytes)) {
+            try (ByteArrayInputStream packetBytes = new ByteArrayInputStream(fullPacketBytes)) {
 
-                byte[] newBytesOut = new byte[fullPacketBytes.length];
-                while (partialPacketBytes.read(newBytesOut, 0, maxPacketSize) != -1) {
+                byte[] newBytesOut = new byte[maxPacketSize];
+                while (packetBytes.read(newBytesOut, 0, maxPacketSize) != -1) {
                     PacketChunk packetChunk = new PacketChunk(inputPacket.getType(), new ZulfByteBuffer(newBytesOut),
                             false);
                     sendBytes(packetToBytes(packetChunk));
@@ -150,7 +148,6 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
     @Override
     public void destroy() {
-        pluginInstance.error("Bye!");
         pluginInstance.getProtocolManager().removePacketListener(channelPayload);
         super.destroy();
     }

@@ -1,5 +1,6 @@
 package com.zulfen.zulfbungee.bungeecord.event;
 
+import com.velocitypowered.api.proxy.ServerConnection;
 import com.zulfen.zulfbungee.bungeecord.objects.BungeePlayer;
 import com.zulfen.zulfbungee.bungeecord.objects.BungeeServer;
 import com.zulfen.zulfbungee.universal.event.ProxyEvents;
@@ -7,6 +8,7 @@ import com.zulfen.zulfbungee.universal.managers.MainServer;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.*;
@@ -89,13 +91,12 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
 
         if (event.getTag().equals("zproxy:channel")) {
 
+            Connection sender = event.getSender();
+
             String serverName;
-            if (event.getReceiver() instanceof ProxiedPlayer) {
-                ProxiedPlayer receiver = (ProxiedPlayer) event.getReceiver();
-                serverName = receiver.getServer().getInfo().getName();
-            } else if (event.getReceiver() instanceof Server) {
-                Server receiver = (Server) event.getReceiver();
-                serverName = receiver.getInfo().getName();
+            if (sender instanceof Server) {
+                Server server = (Server) sender;
+                serverName = server.getInfo().getName();
             } else {
                 return;
             }

@@ -8,7 +8,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.MinecraftKey;
 import io.netty.buffer.ByteBuf;
-import com.zulfen.zulfbungee.spigot.handlers.transport.ClientChannelCommHandler;
+import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientChannelCommHandler;
 
 import java.util.List;
 

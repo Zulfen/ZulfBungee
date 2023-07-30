@@ -67,7 +67,7 @@ public class SecNetworkVariable extends Section {
         EventNetworkVariable dummy = new EventNetworkVariable();
         Variables.setLocalVariables(dummy, localVars);
 
-        ConnectionManager connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        ConnectionManager<?> connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
         TaskManager taskManager = ZulfBungeeSpigot.getPlugin().getTaskManager();
 
         TriggerItem item = walk(event, false);

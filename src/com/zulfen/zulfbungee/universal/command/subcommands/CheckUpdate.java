@@ -15,4 +15,5 @@ public class CheckUpdate<P, T> extends CommandHandler<P, T> {
         sender.sendPluginMessage("Checking for an update...");
         getMainServer().getPluginInstance().getUpdater().checkUpdate(sender, true);
     }
+
 }

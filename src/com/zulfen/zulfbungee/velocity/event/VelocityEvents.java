@@ -76,15 +76,7 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
             ChannelMessageSource source = event.getSource();
 
             String serverName;
-            if (source instanceof Player) {
-                Player player = (Player) source;
-                Optional<ServerConnection> serverOptional = player.getCurrentServer();
-                if (serverOptional.isPresent()) {
-                    serverName = serverOptional.get().getServerInfo().getName();
-                } else {
-                    return;
-                }
-            } else if (source instanceof ServerConnection) {
+            if (source instanceof ServerConnection) {
                 ServerConnection serverConnection = (ServerConnection) source;
                 serverName = serverConnection.getServerInfo().getName();
             } else {

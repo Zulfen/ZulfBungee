@@ -26,6 +26,7 @@ public abstract class Connection<T> extends BukkitRunnable {
     protected final SocketAddress socketAddress;
 
     protected final AtomicBoolean connected = new AtomicBoolean(false);
+    private final AtomicBoolean running = new AtomicBoolean(true);
 
     private final String forcedName;
     private final LinkedTransferQueue<Optional<Packet>> skriptQueue = new LinkedTransferQueue<>();
@@ -106,9 +107,11 @@ public abstract class Connection<T> extends BukkitRunnable {
     }
 
     public void destroy() {
-        connected.set(false);
-        clientCommHandler.destroy();
-        connectionManager.deRegister(this);
+        if (running.compareAndSet(true, false)) {
+            connected.set(false);
+            clientCommHandler.destroy();
+            connectionManager.deRegister(this);
+        }
     }
 
     protected void setClientCommHandler(ClientCommHandler<T> handlerIn) {

@@ -1,9 +1,8 @@
-package com.zulfen.zulfbungee.spigot.handlers.transport;
+package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.socket.factory.SocketConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientCommHandler;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
