@@ -75,7 +75,6 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
 
         clientChannelConnection.start();
 
-
     }
 
     public void signalAvailableConnection() {
