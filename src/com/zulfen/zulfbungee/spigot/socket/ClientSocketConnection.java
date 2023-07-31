@@ -8,11 +8,11 @@ import org.bukkit.ChatColor;
 import java.io.IOException;
 import java.net.Socket;
 
-public class SocketConnection extends Connection<SocketConnectionFactory> {
+public class ClientSocketConnection extends Connection<SocketConnectionFactory> {
 
     private final SocketConnectionManager socketConnectionManager;
 
-    public SocketConnection(SocketConnectionManager connectionManagerIn, Socket socketIn) throws IOException {
+    public ClientSocketConnection(SocketConnectionManager connectionManagerIn, Socket socketIn) throws IOException {
         super(connectionManagerIn, socketIn.getRemoteSocketAddress());
         setClientCommHandler(new ClientSocketCommHandler(pluginInstance, socketIn));
         this.socketConnectionManager = connectionManagerIn;

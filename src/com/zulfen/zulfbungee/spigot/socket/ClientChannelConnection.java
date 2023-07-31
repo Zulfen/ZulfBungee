@@ -7,9 +7,9 @@ import org.bukkit.ChatColor;
 
 import java.net.SocketAddress;
 
-public class ChannelConnection extends Connection<ChannelConnectionFactory> {
+public class ClientChannelConnection extends Connection<ChannelConnectionFactory> {
 
-    public ChannelConnection(ChannelConnectionManager connectionManager, SocketAddress socketAddressIn, int compressPackets) {
+    public ClientChannelConnection(ChannelConnectionManager connectionManager, SocketAddress socketAddressIn, int compressPackets) {
         super(connectionManager, socketAddressIn);
         setClientCommHandler(new ClientChannelCommHandler(connectionManager.getPluginInstance(), compressPackets));
     }

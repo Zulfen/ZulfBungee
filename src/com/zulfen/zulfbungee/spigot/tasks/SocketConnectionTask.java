@@ -34,6 +34,7 @@ public class SocketConnectionTask implements Runnable {
 
     }
 
+    // TODO: Maybe schedule this as a repeating task instead?
     @Override
     public void run() {
 

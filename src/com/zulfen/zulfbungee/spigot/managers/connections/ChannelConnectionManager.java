@@ -2,7 +2,7 @@ package com.zulfen.zulfbungee.spigot.managers.connections;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
-import com.zulfen.zulfbungee.spigot.socket.ChannelConnection;
+import com.zulfen.zulfbungee.spigot.socket.ClientChannelConnection;
 import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class ChannelConnectionManager extends ConnectionManager<ChannelConnectionFactory> {
 
-    private ChannelConnection channelConnection;
+    private ClientChannelConnection clientChannelConnection;
 
     private final SocketAddress socketAddress;
 
@@ -32,13 +32,13 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
 
     @Override
     protected void sendDirectImpl(Packet packetIn) {
-        channelConnection.sendDirect(packetIn);
+        clientChannelConnection.sendDirect(packetIn);
     }
 
     @Override
     public Optional<Packet> send(Packet packetIn) {
         if (sendDirect(packetIn)) {
-            return channelConnection.read();
+            return clientChannelConnection.read();
         } else {
             return Optional.empty();
         }
@@ -64,27 +64,27 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
 
     public void newChannelConnection() {
 
-        if (channelConnection != null) {
-            channelConnection.destroy();
+        if (clientChannelConnection != null) {
+            clientChannelConnection.destroy();
         }
 
-        channelConnection = createNewConnection()
+        clientChannelConnection = createNewConnection()
                 .withAddress(socketAddress)
                 .compressLargePacketTo(5120)
                 .build();
 
-        channelConnection.start();
+        clientChannelConnection.start();
 
 
     }
 
     public void signalAvailableConnection() {
-        channelConnection.getClientCommHandler().signalProperConnection();
+        clientChannelConnection.getClientCommHandler().signalProperConnection();
     }
 
     @Override
     public void shutdown() {
-        channelConnection.destroy();
+        clientChannelConnection.destroy();
         super.shutdown();
     }
 

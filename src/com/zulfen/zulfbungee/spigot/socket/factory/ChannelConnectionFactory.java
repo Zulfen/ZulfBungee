@@ -2,11 +2,11 @@ package com.zulfen.zulfbungee.spigot.socket.factory;
 
 import com.zulfen.zulfbungee.spigot.interfaces.ConnectionFactory;
 import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
-import com.zulfen.zulfbungee.spigot.socket.ChannelConnection;
+import com.zulfen.zulfbungee.spigot.socket.ClientChannelConnection;
 
 import java.net.SocketAddress;
 
-public class ChannelConnectionFactory extends ConnectionFactory<ChannelConnection, ChannelConnectionManager> {
+public class ChannelConnectionFactory extends ConnectionFactory<ClientChannelConnection, ChannelConnectionManager> {
 
     private SocketAddress socketAddress;
     private int compressPackets;
@@ -26,8 +26,8 @@ public class ChannelConnectionFactory extends ConnectionFactory<ChannelConnectio
     }
 
     @Override
-    public ChannelConnection build() {
-        return new ChannelConnection(connectionManager, socketAddress, compressPackets);
+    public ClientChannelConnection build() {
+        return new ClientChannelConnection(connectionManager, socketAddress, compressPackets);
     }
 
 }

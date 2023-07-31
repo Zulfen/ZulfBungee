@@ -55,11 +55,9 @@ public abstract class ConnectionManager<T> {
         this.taskManager = pluginInstance.getTaskManager();
 
         try {
-
             Constructor<?> constructor = connectionFactoryClass.getConstructor(getClass());
             Object possibleConnFactory = constructor.newInstance(this);
             connectionFactory = connectionFactoryClass.cast(possibleConnFactory);
-
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);
