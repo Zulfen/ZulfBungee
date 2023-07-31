@@ -1,6 +1,5 @@
 package com.zulfen.zulfbungee.bungeecord.event;
 
-import com.velocitypowered.api.proxy.ServerConnection;
 import com.zulfen.zulfbungee.bungeecord.objects.BungeePlayer;
 import com.zulfen.zulfbungee.bungeecord.objects.BungeeServer;
 import com.zulfen.zulfbungee.universal.event.ProxyEvents;
