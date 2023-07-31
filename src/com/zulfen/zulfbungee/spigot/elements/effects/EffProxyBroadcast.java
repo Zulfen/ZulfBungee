@@ -37,7 +37,7 @@ public class EffProxyBroadcast extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
 
-        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        ConnectionManager<?> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
 
         if (servers != null) {
             connection.sendDirect(new Packet(PacketTypes.BROADCAST_MESSAGE, false, true, new ClientServerDataContainer(servers.getArray(event), message.getSingle(event))));

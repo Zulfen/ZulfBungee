@@ -33,7 +33,7 @@ public class EffServerSendMessage extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
 
-        ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        ConnectionManager<?> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
         Optional<ClientServer> getClientServer  = connection.getAsServer();
 
         if (getClientServer.isPresent()) {

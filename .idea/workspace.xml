@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - cleaning up some stuff">
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/connections/ChannelConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/connections/ChannelConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/event/BungeeEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/event/BungeeEvents.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,20 +145,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00070" summary="Alpha v0.9.2 - fix idk again?">
-      <created>1678737253150</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1678737253150</updated>
-    </task>
-    <task id="LOCAL-00071" summary="Alpha v0.9.3 - mainly Bungeecord fixes">
-      <created>1678740104678</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1678740104678</updated>
     </task>
     <task id="LOCAL-00072" summary="Alpha v0.9.3 - players fix, packets fix">
       <created>1678744270877</created>
@@ -489,7 +475,21 @@
       <option name="project" value="LOCAL" />
       <updated>1690807243765</updated>
     </task>
-    <option name="localTasksCounter" value="119" />
+    <task id="LOCAL-00119" summary="Alpha v0.9.8 - cleaning up some stuff">
+      <created>1690807755674</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1690807755674</updated>
+    </task>
+    <task id="LOCAL-00120" summary="Alpha v0.9.8 - cleaning up some stuff">
+      <created>1690807851156</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1690807851156</updated>
+    </task>
+    <option name="localTasksCounter" value="121" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
