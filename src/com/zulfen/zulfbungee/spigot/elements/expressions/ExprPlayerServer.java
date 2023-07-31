@@ -26,6 +26,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ClientPlayer, Cli
 
     @Override
     public ClientServer convert(ClientPlayer proxyPlayer) {
+
         Optional<ClientServer> serverOptional = proxyPlayer.getServer();
 
         if (serverOptional.isPresent()) {
@@ -34,7 +35,7 @@ public class ExprPlayerServer extends SimplePropertyExpression<ClientPlayer, Cli
 
         } else {
 
-            ConnectionManager connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+            ConnectionManager<?> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
             Optional<Packet> send = connection.send(new Packet(PacketTypes.PLAYER_SERVER, true, false, proxyPlayer));
 
             if (send.isPresent()) {
