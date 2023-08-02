@@ -213,13 +213,17 @@ public class MainServer<P, T> {
         if (clientInfo != null) {
             ClientServer clientServer = new ClientServer(serverName, clientInfo);
             Optional<InetSocketAddress> optionalVirtHost = proxyPlayerIn.getVirtualHost();
+
+            ClientPlayer player;
             if (optionalVirtHost.isPresent()) {
-                return Optional.of(new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer,
-                        proxyPlayerIn.getSocketAddress(), optionalVirtHost.get()));
+                InetSocketAddress virtualHost = optionalVirtHost.get();
+                player = new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer,
+                        proxyPlayerIn.getSocketAddress(), virtualHost);
             } else {
-                return Optional.of(new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer,
-                        proxyPlayerIn.getSocketAddress()));
+                player = new ClientPlayer(proxyPlayerIn.getName(), proxyPlayerIn.getUuid(), clientServer,
+                        proxyPlayerIn.getSocketAddress());
             }
+            return Optional.of(player);
         }
 
         return Optional.empty();
