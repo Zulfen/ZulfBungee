@@ -9,26 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - preparing for release">
-      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerIP.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyPlayerIP.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyPlayerVirtualHost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/objects/BungeePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/objects/BungeePlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptConverters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptConverters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/ClientCommHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientSocketCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientSocketCommHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - added a proxy player IP expression">
       <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/ZulfBungeeProxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/ZulfBungeeProxy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/MainServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/client/ClientPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/client/ClientPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/proxy/ZulfProxyPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/proxy/ZulfProxyPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/objects/VelocityPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/objects/VelocityPlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00074" summary="Alpha v0.9.4 - fixed network variables!">
-      <created>1679167543321</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1679167543321</updated>
     </task>
     <task id="LOCAL-00075" summary="Alpha v0.9.4 - slight clean up">
       <created>1679167903583</created>
@@ -507,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690808743971</updated>
     </task>
-    <option name="localTasksCounter" value="123" />
+    <task id="LOCAL-00123" summary="Alpha v0.9.8 - added a proxy player IP expression">
+      <created>1690984722297</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1690984722298</updated>
+    </task>
+    <option name="localTasksCounter" value="124" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -522,7 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.6 - update version number" />
     <MESSAGE value="Alpha v0.9.6 - section check to prevent inception" />
     <MESSAGE value="Alpha v0.9.6 - fix reload command not doing path checks properly" />
     <MESSAGE value="Alpha v0.9.6 - remove pesky debug message" />
@@ -547,7 +529,8 @@
     <MESSAGE value="Alpha v0.9.8 - potential security fixes" />
     <MESSAGE value="Alpha v0.9.8 - cleaning up some stuff" />
     <MESSAGE value="Alpha v0.9.8 - preparing for release" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - preparing for release" />
+    <MESSAGE value="Alpha v0.9.8 - added a proxy player IP expression" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - added a proxy player IP expression" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

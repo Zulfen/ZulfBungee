@@ -226,7 +226,6 @@ public class MainServer<P, T> {
 
     }
 
-
     private ClientServer[] getClientServerArray() {
         return clientInfos.entrySet().stream()
                 .map(entry -> new ClientServer(entry.getKey(), entry.getValue()))

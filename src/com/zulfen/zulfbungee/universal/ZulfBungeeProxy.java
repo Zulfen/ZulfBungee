@@ -33,7 +33,7 @@ public interface ZulfBungeeProxy<P, T> {
     Optional<ZulfProxyPlayer<P, T>> getPlayer(String nameIn);
     Optional<ZulfProxyPlayer<P, T>> getPlayer(UUID uuidIn);
     default Optional<ZulfProxyPlayer<P, T>> getPlayer(ClientPlayer clientPlayerIn) {
-        return getPlayer(clientPlayerIn.getName());
+        return getPlayer(clientPlayerIn.getUuid());
     }
 
     List<ZulfProxyPlayer<P, T>> getAllPlayers();
