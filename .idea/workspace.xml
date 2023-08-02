@@ -9,18 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Removed warning message about Waterfall">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/ZulfBungeeSpigot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/ZulfBungeeSpigot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptTypes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/NetworkVariableModify.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/NetworkVariableModify.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fixed network variable bugs" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -154,13 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00080" summary="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option.">
-      <created>1679931226904</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1679931226904</updated>
     </task>
     <task id="LOCAL-00081" summary="Alpha v0.9.5 - database fixes">
       <created>1679937790089</created>
@@ -498,7 +480,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690991246305</updated>
     </task>
-    <option name="localTasksCounter" value="129" />
+    <task id="LOCAL-00129" summary="Alpha v0.9.8 - Fixed network variable bugs">
+      <created>1691000132453</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1691000132498</updated>
+    </task>
+    <option name="localTasksCounter" value="130" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -513,7 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.7 - migrated config to use Paths instead of Files" />
     <MESSAGE value="Alpha v0.9.7 - fixed bugs with global script system" />
     <MESSAGE value="Alpha v0.9.7 - idk why but this event didn't get commited" />
     <MESSAGE value="Alpha v0.9.8 - initial rewrite, beginning API fixes." />
@@ -538,7 +526,8 @@
     <MESSAGE value="Alpha v0.9.8 - forgot to register handlers" />
     <MESSAGE value="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall" />
     <MESSAGE value="Alpha v0.9.8 - Removed warning message about Waterfall" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Removed warning message about Waterfall" />
+    <MESSAGE value="Alpha v0.9.8 - Fixed network variable bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fixed network variable bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -557,16 +546,6 @@
           <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java</url>
           <line>38</line>
           <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java</url>
-          <line>21</line>
-          <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
