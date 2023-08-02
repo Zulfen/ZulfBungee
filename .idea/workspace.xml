@@ -9,10 +9,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Removed warning message about Waterfall">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/event/BungeeEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/event/BungeeEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/ZulfBungeeSpigot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/ZulfBungeeSpigot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/NetworkVariableModify.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/NetworkVariableModify.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,13 +154,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00079" summary="Alpha v0.9.5 - refactored some parts and added a condition for proxy player's permissions.">
-      <created>1679469064499</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1679469064499</updated>
     </task>
     <task id="LOCAL-00080" summary="Alpha v0.9.5 - more refactoring, added a random port and forced connection name option.">
       <created>1679931226904</created>
@@ -491,7 +491,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690990220848</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <task id="LOCAL-00128" summary="Alpha v0.9.8 - Removed warning message about Waterfall">
+      <created>1690991246304</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1690991246305</updated>
+    </task>
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -506,7 +513,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.7 - fix error with bungeecord kick event" />
     <MESSAGE value="Alpha v0.9.7 - migrated config to use Paths instead of Files" />
     <MESSAGE value="Alpha v0.9.7 - fixed bugs with global script system" />
     <MESSAGE value="Alpha v0.9.7 - idk why but this event didn't get commited" />
@@ -531,25 +537,71 @@
     <MESSAGE value="Alpha v0.9.8 - fixed warning" />
     <MESSAGE value="Alpha v0.9.8 - forgot to register handlers" />
     <MESSAGE value="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall" />
+    <MESSAGE value="Alpha v0.9.8 - Removed warning message about Waterfall" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Removed warning message about Waterfall" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java</url>
-          <line>25</line>
-          <option name="timeStamp" value="4" />
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java</url>
+          <line>15</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerIP.java</url>
-          <line>24</line>
-          <option name="timeStamp" value="5" />
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java</url>
+          <line>20</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/PlayerConnectEvent.java</url>
-          <line>19</line>
-          <option name="timeStamp" value="6" />
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
+          <line>763</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
+          <line>760</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
+          <line>778</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/storage/HikariSQLImpl.java</url>
+          <line>82</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/storage/HikariSQLImpl.java</url>
+          <line>90</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/storage/HikariSQLImpl.java</url>
+          <line>96</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/storage/HikariSQLImpl.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

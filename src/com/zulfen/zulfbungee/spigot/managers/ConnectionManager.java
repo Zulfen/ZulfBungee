@@ -24,8 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -94,21 +93,37 @@ public abstract class ConnectionManager<T> {
         return Optional.empty();
 
     }
+    
+    private Value[] serializeVariable(Object[] delta) {
+       return Stream.of(delta)
+               .map(Classes::serialize)
+               .filter(Objects::nonNull)
+               .map(value -> new Value(value.type, value.data))
+               .toArray(Value[]::new); 
+    }
 
     public void modifyNetworkVariable(Object[] delta, Changer.ChangeMode mode, String variableNameIn) {
 
         Value[] values = new Value[0];
-
+        
         if (mode != Changer.ChangeMode.DELETE) {
-            values = Stream.of(delta)
-                    .map(Classes::serialize)
-                    .filter(Objects::nonNull)
-                    .map(value -> new Value(value.type, value.data))
-                    .toArray(Value[]::new);
+            if (pluginInstance.getServer().isPrimaryThread()) {
+                values = serializeVariable(delta);
+            } else {
+                try {
+                    values = taskManager.newMainThreadTask(() -> serializeVariable(delta)).get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
 
+        pluginInstance.logDebug(String.valueOf(values.length));
+
         NetworkVariable variableOut = new NetworkVariable(variableNameIn, mode.name(), values);
-        sendDirect(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
+        send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
 
     }
 

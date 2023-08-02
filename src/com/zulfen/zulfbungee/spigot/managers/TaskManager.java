@@ -29,7 +29,7 @@ public class TaskManager {
         }
     }
 
-    public Future<Void> newMainThreadTask(Callable<Void> callableIn) {
+    public <T> Future<T> newMainThreadTask(Callable<T> callableIn) {
         return scheduler.callSyncMethod(instance, callableIn);
     }
 

@@ -35,7 +35,11 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
         Optional<NetworkVariable> response = ZulfBungeeSpigot.getPlugin()
                 .getConnectionManager().requestNetworkVariable(givenVariable.getName().toString(event));
 
-        return response.map(SkriptVariableUtil::toData).orElse(null);
+        if (response.isPresent()) {
+            return SkriptVariableUtil.toData(response.get());
+        }
+
+        return null;
 
     }
 

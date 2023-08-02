@@ -4,6 +4,8 @@ import ch.njol.skript.registrations.Classes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -14,10 +16,12 @@ public class SkriptVariableUtil {
         Value[] valueArray = networkVariableIn.getValueArray();
 
         if (valueArray.length > 0) {
-            return Stream.of(networkVariableIn.getValueArray())
-                    .filter(Objects::nonNull)
-                    .map(value -> Classes.deserialize(value.type, value.data))
-                    .toArray(Object[]::new);
+            List<Object> list = new ArrayList<>();
+            for (Value value : networkVariableIn.getValueArray()) {
+                Object deserialize = Classes.deserialize(value.type, value.data);
+                list.add(deserialize);
+            }
+            return list.toArray(new Object[0]);
         }
 
         return null;

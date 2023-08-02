@@ -96,7 +96,6 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
         if (pluginInstance.isEnabled()) {
             pluginInstance.getServer().sendPluginMessage(pluginInstance, "zproxy:channel", toSend);
-            pluginInstance.logInfo("Written bytes over the plugin messaging channel...");
         }
 
     }

@@ -119,7 +119,6 @@ public class ZulfBungeeSpigot extends JavaPlugin {
         return protocolManager;
     }
 
-
     public boolean isDebug() {
         return debug;
     }
