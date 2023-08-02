@@ -4,30 +4,29 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
-import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 
 import java.net.InetSocketAddress;
 import java.util.Optional;
 
-public class ExprProxyPlayerVirtualHost extends SimplePropertyExpression<ClientPlayer, String> {
+public class ExprProxyPlayerIP extends SimplePropertyExpression<ClientPlayer, String> {
 
     static {
-        register(ExprProxyPlayerVirtualHost.class, String.class,"virtual host", "proxyplayers");
+        register(ExprProxyPlayerIP.class, String.class,"IP", "proxyplayers");
     }
 
     @Override
-    protected @NotNull String getPropertyName() {
-        return "virtual host";
+    protected String getPropertyName() {
+        return "IP Address";
     }
 
     @Override
     public String convert(ClientPlayer clientPlayer) {
-        Optional<InetSocketAddress> optionalVirtHost = clientPlayer.getVirtualHost();
-        if (optionalVirtHost.isPresent()) {
-            return optionalVirtHost.get().getAddress().toString();
+        Optional<InetSocketAddress> optionalIP = clientPlayer.getAddress();
+        if (optionalIP.isPresent()) {
+            return optionalIP.get().getAddress().toString();
         } else {
-            Optional<Packet> send = ZulfBungeeSpigot.getPlugin().getConnectionManager().send(new Packet(PacketTypes.PLAYER_VIRTUAL_HOST, true, true,
+            Optional<Packet> send = ZulfBungeeSpigot.getPlugin().getConnectionManager().send(new Packet(PacketTypes.PROXY_PLAYER_IP, true, true,
                     clientPlayer));
             if (send.isPresent()) {
                 Object[] dataArray = send.get().getDataArray();
@@ -40,7 +39,7 @@ public class ExprProxyPlayerVirtualHost extends SimplePropertyExpression<ClientP
     }
 
     @Override
-    public @NotNull Class<? extends String> getReturnType() {
+    public Class<? extends String> getReturnType() {
         return String.class;
     }
 }

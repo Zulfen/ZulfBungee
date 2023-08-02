@@ -1,6 +1,7 @@
 package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
+import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
 import com.zulfen.zulfbungee.spigot.socket.factory.SocketConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 

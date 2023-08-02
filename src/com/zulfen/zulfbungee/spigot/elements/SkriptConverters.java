@@ -8,6 +8,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
@@ -17,7 +18,14 @@ public class SkriptConverters {
 
         Converters.registerConverter(ClientPlayer.class, OfflinePlayer.class, player -> Bukkit.getOfflinePlayer(player.getUuid()));
 
-        Converters.registerConverter(OfflinePlayer.class, ClientPlayer.class, offlinePlayer -> new ClientPlayer(offlinePlayer.getName(), offlinePlayer.getUniqueId()));
+        Converters.registerConverter(OfflinePlayer.class, ClientPlayer.class, offlinePlayer -> {
+            if (offlinePlayer.isOnline()) {
+                Player onlinePlayer = offlinePlayer.getPlayer();
+                return new ClientPlayer(onlinePlayer.getName(), onlinePlayer.getUniqueId(), onlinePlayer.getAddress());
+            } else {
+                return new ClientPlayer(offlinePlayer.getName(), offlinePlayer.getUniqueId());
+            }
+        });
 
         Converters.registerConverter(ClientServer.class, String.class, ClientServer::getName);
 

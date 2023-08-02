@@ -131,6 +131,12 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     }
 
     @Override
+    public Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> getPlayer(UUID uuidIn) {
+        ProxiedPlayer player = getProxy().getPlayer(uuidIn);
+        return playerConverter.apply(player);
+    }
+
+    @Override
     public List<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> getAllPlayers() {
         return getProxy().getServers().values().stream()
                 .map(BungeeServer::new)

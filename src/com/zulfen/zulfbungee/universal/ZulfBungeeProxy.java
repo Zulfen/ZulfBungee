@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ZulfBungeeProxy<P, T> {
 
@@ -30,6 +31,7 @@ public interface ZulfBungeeProxy<P, T> {
     ProxyConfig<P, T> getConfig();
 
     Optional<ZulfProxyPlayer<P, T>> getPlayer(String nameIn);
+    Optional<ZulfProxyPlayer<P, T>> getPlayer(UUID uuidIn);
     default Optional<ZulfProxyPlayer<P, T>> getPlayer(ClientPlayer clientPlayerIn) {
         return getPlayer(clientPlayerIn.getName());
     }

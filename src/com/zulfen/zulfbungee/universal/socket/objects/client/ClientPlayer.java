@@ -12,6 +12,7 @@ public class ClientPlayer implements Serializable {
     private final UUID uuid;
 
     private ClientServer server;
+    private InetSocketAddress address;
     private InetSocketAddress virtualHost;
 
     public ClientPlayer(String name, UUID uuid) {
@@ -25,11 +26,25 @@ public class ClientPlayer implements Serializable {
         this.server = serverIn;
     }
 
-    public ClientPlayer(String name, UUID uuid, ClientServer serverIn, InetSocketAddress virHostIn) {
+    public ClientPlayer(String name, UUID uuid, ClientServer serverIn, InetSocketAddress addressIn, InetSocketAddress virHostIn) {
         this.name = name;
         this.uuid = uuid;
         this.server = serverIn;
+        this.address = addressIn;
         this.virtualHost = virHostIn;
+    }
+
+    public ClientPlayer(String name, UUID uuid, ClientServer serverIn, InetSocketAddress addressIn) {
+        this.name = name;
+        this.uuid = uuid;
+        this.server = serverIn;
+        this.address = addressIn;
+    }
+
+    public ClientPlayer(String name, UUID uuid, InetSocketAddress addressIn) {
+        this.name = name;
+        this.uuid = uuid;
+        this.address = addressIn;
     }
 
     public Optional<ClientServer> getServer() {
@@ -38,6 +53,10 @@ public class ClientPlayer implements Serializable {
 
     public Optional<InetSocketAddress> getVirtualHost() {
         return Optional.ofNullable(virtualHost);
+    }
+
+    public Optional<InetSocketAddress> getAddress() {
+        return Optional.ofNullable(address);
     }
 
     public String getName() {

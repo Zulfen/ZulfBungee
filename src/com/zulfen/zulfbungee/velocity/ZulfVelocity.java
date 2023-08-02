@@ -177,6 +177,12 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
     }
 
     @Override
+    public Optional<ZulfProxyPlayer<ProxyServer, Player>> getPlayer(UUID uuidIn) {
+        Optional<Player> velocityPlayerOptional = velocity.getPlayer(uuidIn);
+        return velocityPlayerOptional.flatMap(playerConverter);
+    }
+
+    @Override
     public List<ZulfProxyPlayer<ProxyServer, Player>> getAllPlayers() {
         return velocity.getAllPlayers().stream()
                 .map(playerConverter)

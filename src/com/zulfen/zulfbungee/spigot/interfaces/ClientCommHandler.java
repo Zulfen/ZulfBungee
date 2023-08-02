@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.spigot.interfaces.transport;
+package com.zulfen.zulfbungee.spigot.interfaces;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.socket.Connection;

@@ -3,6 +3,7 @@ package com.zulfen.zulfbungee.spigot.interfaces.transport;
 import com.comphenix.protocol.ProtocolManager;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.handlers.protocol.ChannelPayload;
+import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
 import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;

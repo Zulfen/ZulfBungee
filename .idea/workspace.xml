@@ -9,8 +9,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - cleaning up some stuff">
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprPlayerServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprPlayerServer.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - preparing for release">
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerIP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyPlayerIP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyPlayerVirtualHost.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/objects/BungeePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/objects/BungeePlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptConverters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/SkriptConverters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/ClientCommHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientSocketCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientSocketCommHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/ZulfBungeeProxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/ZulfBungeeProxy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/MainServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/client/ClientPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/client/ClientPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/proxy/ZulfProxyPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/proxy/ZulfProxyPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/objects/VelocityPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/objects/VelocityPlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,26 +81,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ToolWindowProblems.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
-    &quot;last.edited.regexp&quot;: &quot;Sample Text&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Java/ZulfBungee&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.45517242&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowProblems.ShowToolbar": "false",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last.edited.regexp": "Sample Text",
+    "last_opened_file_path": "D:/Java/ZulfBungee",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.45517242",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "Errors"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="tk.zulfengaming.zulfbungee.universal.command" />
@@ -145,13 +163,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00073" summary="Alpha v0.9.4 - more packet fixes">
-      <created>1678825690219</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1678825690234</updated>
     </task>
     <task id="LOCAL-00074" summary="Alpha v0.9.4 - fixed network variables!">
       <created>1679167543321</created>
@@ -489,7 +500,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690808477922</updated>
     </task>
-    <option name="localTasksCounter" value="122" />
+    <task id="LOCAL-00122" summary="Alpha v0.9.8 - preparing for release">
+      <created>1690808743971</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1690808743971</updated>
+    </task>
+    <option name="localTasksCounter" value="123" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -504,7 +522,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.6 - better script loading." />
     <MESSAGE value="Alpha v0.9.6 - update version number" />
     <MESSAGE value="Alpha v0.9.6 - section check to prevent inception" />
     <MESSAGE value="Alpha v0.9.6 - fix reload command not doing path checks properly" />
@@ -529,7 +546,8 @@
     <MESSAGE value="Alpha v0.9.8 - small adjustments" />
     <MESSAGE value="Alpha v0.9.8 - potential security fixes" />
     <MESSAGE value="Alpha v0.9.8 - cleaning up some stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - cleaning up some stuff" />
+    <MESSAGE value="Alpha v0.9.8 - preparing for release" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - preparing for release" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

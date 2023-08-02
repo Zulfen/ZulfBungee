@@ -18,7 +18,8 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer, Player> {
     private final ProxyServer velocity;
 
     public VelocityPlayer(Player velocityPlayerIn, ZulfProxyServer<ProxyServer, Player> serverIn, ZulfVelocity pluginIn) {
-        super(pluginIn.getPlatform(), velocityPlayerIn.getUsername(), velocityPlayerIn.getUniqueId(), serverIn);
+        super(pluginIn.getPlatform(), velocityPlayerIn.getUsername(), velocityPlayerIn.getUniqueId(),
+                velocityPlayerIn.getRemoteAddress(), serverIn);
         this.zulfVelocity = pluginIn;
         this.velocity = zulfVelocity.getPlatform();
         this.velocityPlayer = velocityPlayerIn;

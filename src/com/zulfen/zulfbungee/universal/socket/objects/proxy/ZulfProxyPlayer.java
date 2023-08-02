@@ -14,11 +14,13 @@ public abstract class ZulfProxyPlayer<P, T> implements ProxyCommandSender<P, T> 
     protected final UUID uuid;
 
     private final ZulfProxyServer<P, T> server;
+    private final InetSocketAddress address;
 
-    protected ZulfProxyPlayer(P platformIn, String nameIn, UUID uuidIn, ZulfProxyServer<P, T> serverIn) {
+    protected ZulfProxyPlayer(P platformIn, String nameIn, UUID uuidIn, InetSocketAddress addressIn, ZulfProxyServer<P, T> serverIn) {
         this.platform = platformIn;
         this.name = nameIn;
         this.uuid = uuidIn;
+        this.address = addressIn;
         this.server = serverIn;
     }
 
@@ -32,6 +34,10 @@ public abstract class ZulfProxyPlayer<P, T> implements ProxyCommandSender<P, T> 
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public InetSocketAddress getSocketAddress() {
+        return address;
     }
 
     public abstract Optional<InetSocketAddress> getVirtualHost();
