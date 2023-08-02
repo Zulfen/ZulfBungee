@@ -29,7 +29,7 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
     @Override
     public boolean isSingle() {
         if (DATA != null) return DATA.length == 1;
-        return true;
+        return false;
     }
 
     @Override
