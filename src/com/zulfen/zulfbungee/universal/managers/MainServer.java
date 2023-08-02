@@ -81,11 +81,16 @@ public class MainServer<P, T> {
     // unsent packets and sendDirect them when a connection is available.
     public void sendDirectToAll(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
+        boolean isEventPacket = packetIn instanceof EventPacket;
         if (!connections.isEmpty()) {
             for (ProxyServerConnection<P, T> connection : connections) {
-                connection.sendDirect(packetIn);
+                if (isEventPacket) {
+                    connection.sendEventPacket((EventPacket) packetIn);
+                } else {
+                    connection.sendDirect(packetIn);
+                }
             }
-        } else if (packetIn instanceof EventPacket) {
+        } else if (isEventPacket) {
             if (packetIn.getType() != PacketTypes.PROXY_CLIENT_INFO) {
                 unsentEventPackets.offer((EventPacket) packetIn);
             }
@@ -127,10 +132,7 @@ public class MainServer<P, T> {
 
         while (unsentEventPackets.peek() != null) {
             EventPacket eventPacket = unsentEventPackets.poll();
-            boolean callbackSuccessful = eventPacket.processCallback();
-            if (callbackSuccessful) {
-                    connectionIn.sendDirect(eventPacket);
-            }
+            connectionIn.sendEventPacket(eventPacket);
         }
 
     }

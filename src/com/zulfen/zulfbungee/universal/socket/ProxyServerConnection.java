@@ -10,6 +10,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
+import com.zulfen.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.io.IOException;
@@ -48,6 +49,13 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
             read.ifPresent(this::processPacket);
         }
 
+    }
+
+    public void sendEventPacket(EventPacket packetIn) {
+        boolean processCallback = packetIn.processCallback();
+        if (processCallback) {
+            sendDirect(packetIn);
+        }
     }
 
     public void sendDirect(Packet packetIn) {

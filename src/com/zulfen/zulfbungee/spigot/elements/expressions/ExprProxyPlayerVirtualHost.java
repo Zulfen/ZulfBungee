@@ -25,7 +25,7 @@ public class ExprProxyPlayerVirtualHost extends SimplePropertyExpression<ClientP
     public String convert(ClientPlayer clientPlayer) {
         Optional<InetSocketAddress> optionalVirtHost = clientPlayer.getVirtualHost();
         if (optionalVirtHost.isPresent()) {
-            return optionalVirtHost.get().getAddress().toString();
+            return optionalVirtHost.get().getHostString();
         } else {
             Optional<Packet> send = ZulfBungeeSpigot.getPlugin().getConnectionManager().send(new Packet(PacketTypes.PLAYER_VIRTUAL_HOST, true, true,
                     clientPlayer));

@@ -1,11 +1,5 @@
 package com.zulfen.zulfbungee.bungeecord;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Plugin;
 import com.zulfen.zulfbungee.bungeecord.command.BungeeCommand;
 import com.zulfen.zulfbungee.bungeecord.command.BungeeConsole;
 import com.zulfen.zulfbungee.bungeecord.config.BungeeConfig;
@@ -17,12 +11,18 @@ import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.interfaces.NativePlayerConverter;
 import com.zulfen.zulfbungee.universal.managers.CommandHandlerManager;
-import com.zulfen.zulfbungee.universal.managers.transport.ChannelMainServer;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
+import com.zulfen.zulfbungee.universal.managers.transport.ChannelMainServer;
 import com.zulfen.zulfbungee.universal.managers.transport.SocketMainServer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -42,6 +42,8 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
     private CheckUpdateTask<ProxyServer, ProxiedPlayer> updater;
     private boolean isDebug = false;
+
+    private boolean isWaterfall = false;
 
     private final BungeeConsole console = new BungeeConsole(getProxy());
 
@@ -65,6 +67,15 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
         try {
 
+            // Used to check if the server is running Waterfall. I could check the server brand, but this is easier.
+            try {
+                Class.forName("io.github.waterfallmc.waterfall.QueryResult");
+                isWaterfall = true;
+            } catch (ClassNotFoundException ignored) {
+                warning("You don't appear to be running Waterfall, which might affect how events get reported." +
+                        "The plugin will continue to work, but please considering switching if they don't work as expected!");
+            }
+
             String transportType = config.getString("transport-type");
 
             if (transportType.equalsIgnoreCase("pluginmessage")) {
@@ -75,12 +86,11 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
                 mainServer = socketMainServer;
             }
 
+
             CommandHandlerManager<ProxyServer, ProxiedPlayer> commandHandlerManager = new CommandHandlerManager<>(mainServer);
 
             getProxy().getPluginManager().registerListener(this, new BungeeEvents(mainServer));
             getProxy().getPluginManager().registerCommand(this, new BungeeCommand(commandHandlerManager));
-
-
 
         } catch (UnknownHostException e) {
             error("Could not start the server! (bungeecord)");
@@ -241,6 +251,10 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
 
     public BungeeTaskManager getTaskManager() {
         return bungeeTaskManager;
+    }
+
+    public boolean isWaterfall() {
+        return isWaterfall;
     }
 
 }
