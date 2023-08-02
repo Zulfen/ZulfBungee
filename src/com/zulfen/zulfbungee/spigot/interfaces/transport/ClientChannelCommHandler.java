@@ -60,7 +60,6 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
                 } else {
                     Packet packetIn = (Packet) readObject;
-                    pluginInstance.error(packetIn.getType().name());
                     queueIn.offer(Optional.of(packetIn));
                 }
 
