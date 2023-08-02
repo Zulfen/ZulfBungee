@@ -9,13 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - forgot to register handlers">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/event/BungeeEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/event/BungeeEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprProxyPlayerVirtualHost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/MainServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/MainServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/ProxyServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/ProxyServerConnection.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,13 +147,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00078" summary="Alpha v0.9.4 - fix getting the current connection as a server.">
-      <created>1679176689141</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1679176689141</updated>
     </task>
     <task id="LOCAL-00079" summary="Alpha v0.9.5 - refactored some parts and added a condition for proxy player's permissions.">
       <created>1679469064499</created>
@@ -494,7 +484,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690986506252</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <task id="LOCAL-00127" summary="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall">
+      <created>1690990220847</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1690990220848</updated>
+    </task>
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -509,7 +506,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.6 - remove pesky debug message" />
     <MESSAGE value="Alpha v0.9.7 - fix error with bungeecord kick event" />
     <MESSAGE value="Alpha v0.9.7 - migrated config to use Paths instead of Files" />
     <MESSAGE value="Alpha v0.9.7 - fixed bugs with global script system" />
@@ -534,7 +530,8 @@
     <MESSAGE value="Alpha v0.9.8 - added a proxy player IP expression" />
     <MESSAGE value="Alpha v0.9.8 - fixed warning" />
     <MESSAGE value="Alpha v0.9.8 - forgot to register handlers" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - forgot to register handlers" />
+    <MESSAGE value="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

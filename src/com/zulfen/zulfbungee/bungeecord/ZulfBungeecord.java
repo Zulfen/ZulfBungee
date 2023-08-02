@@ -72,8 +72,6 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
                 Class.forName("io.github.waterfallmc.waterfall.QueryResult");
                 isWaterfall = true;
             } catch (ClassNotFoundException ignored) {
-                warning("You don't appear to be running Waterfall, which might affect how events get reported." +
-                        "The plugin will continue to work, but please considering switching if they don't work as expected!");
             }
 
             String transportType = config.getString("transport-type");

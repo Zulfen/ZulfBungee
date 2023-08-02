@@ -68,6 +68,7 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
         ProxiedPlayer player = event.getPlayer();
         String serverName = event.getKickedFrom().getName();
 
+        // Waterfall is weird and fires this event even if you disconnect normally, but at least you can check the kick cause...
         if (bungeecordInstance.isWaterfall()) {
             if (event.getCause() == ServerKickEvent.Cause.LOST_CONNECTION) {
                 return;
