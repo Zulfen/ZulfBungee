@@ -46,7 +46,7 @@ public abstract class ConnectionManager<T> {
     protected final TaskManager taskManager;
 
     // representation of this client as a server.
-    private ClientServer thisServer;
+    private volatile ClientServer thisServer;
 
     public ConnectionManager(ZulfBungeeSpigot pluginIn, Class<T> connectionFactoryClass) {
 
