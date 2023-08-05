@@ -9,9 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Remove warning from config." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -145,13 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00092" summary="Alpha v0.9.6 - better script loading.">
-      <created>1680361622059</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1680361622060</updated>
     </task>
     <task id="LOCAL-00093" summary="Alpha v0.9.6 - update version number">
       <created>1680362469721</created>
@@ -489,7 +480,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691244954064</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="Alpha v0.9.8 - Remove warning from config.">
+      <created>1691250537240</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1691250537240</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -504,7 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - Added a virtual host expression" />
     <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
     <MESSAGE value="Alpha v0.9.8 - Actually fixed dropping event packets now." />
     <MESSAGE value="Alpha v0.9.8 - Fix disconnect event." />
@@ -529,7 +526,8 @@
     <MESSAGE value="Alpha v0.9.8 - Syntax fix." />
     <MESSAGE value="Alpha v0.9.8 - slight adjustment" />
     <MESSAGE value="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables." />
+    <MESSAGE value="Alpha v0.9.8 - Remove warning from config." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Remove warning from config." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -32,9 +32,9 @@ host: "0.0.0.0"
 # If you have no clue what this does, just leave this as the default.
 storage-type: "h2"
 
-# Skript by default is case-insensitive for variable names, so this option is enabled by default.
-# If you are having problems with this, disable it here.
-case-insensitive-variables: true
+# Skript by default is case-insensitive for variable names.
+# If you want this functionality, enable it here.
+case-insensitive-variables: false
 
 # Each option should be self-explanatory if you know what you are doing.
 
