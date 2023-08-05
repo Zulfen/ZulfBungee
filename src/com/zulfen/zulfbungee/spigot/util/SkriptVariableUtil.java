@@ -5,6 +5,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVaria
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SkriptVariableUtil {
@@ -14,12 +15,9 @@ public class SkriptVariableUtil {
         Value[] valueArray = networkVariableIn.getValueArray();
 
         if (valueArray.length > 0) {
-            List<Object> list = new ArrayList<>();
-            for (Value value : networkVariableIn.getValueArray()) {
-                Object deserialize = Classes.deserialize(value.type, value.data);
-                list.add(deserialize);
-            }
-            return list.toArray(new Object[0]);
+            return Arrays.stream(networkVariableIn.getValueArray())
+                    .map(value -> Classes.deserialize(value.type, value.data))
+                    .toArray(Object[]::new);
         }
 
         return null;

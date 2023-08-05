@@ -85,7 +85,7 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
     protected synchronized static void setNetworkVariable(NetworkVariable networkVariableIn) {
         NAME = networkVariableIn.getName();
-        DATA = SkriptVariableUtil.toData(networkVariableIn);
+        DATA = ZulfBungeeSpigot.getPlugin().getConnectionManager().toObjectArray(networkVariableIn.getValueArray());
     }
 
 }

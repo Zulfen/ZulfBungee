@@ -80,23 +80,8 @@ public class SecNetworkVariable extends Section {
                     .requestNetworkVariable(variableExpression.getName().toString(event));
 
             if (requestNetworkVariable.isPresent()) {
-
-                try {
-
-                    NetworkVariable variable = requestNetworkVariable.get();
-
-                    // bukkit won't like it if we do anything with the world async, doing this to be sure
-                    taskManager.newMainThreadTask(() -> {
-                        ExprSecNetworkVariable.setNetworkVariable(variable);
-                        return null;
-                    }).get();
-
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                } catch (ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-
+                NetworkVariable variable = requestNetworkVariable.get();
+                ExprSecNetworkVariable.setNetworkVariable(variable);
             } else {
                 ExprSecNetworkVariable.clear();
             }

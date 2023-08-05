@@ -21,6 +21,7 @@ public class ExprPreviousServer extends EventValueExpression<ClientServer> {
 
     @Override
     protected ClientServer[] get(@NotNull Event event) {
+
         if (event instanceof EventPlayerSwitchServer) {
             EventPlayerSwitchServer eventPlayerSwitchServer = (EventPlayerSwitchServer) event;
             return new ClientServer[]{eventPlayerSwitchServer.getFromServer()};
@@ -28,7 +29,9 @@ public class ExprPreviousServer extends EventValueExpression<ClientServer> {
             EventPlayerServerDisconnect eventPlayerServerDisconnect = (EventPlayerServerDisconnect) event;
             return new ClientServer[]{eventPlayerServerDisconnect.getLastServer()};
         }
+
         return null;
+
     }
 
     @Override
@@ -38,7 +41,11 @@ public class ExprPreviousServer extends EventValueExpression<ClientServer> {
 
     @Override
     public boolean init() {
-        return getParser().isCurrentEvent(EventPlayerSwitchServer.class) || getParser().isCurrentEvent(EventPlayerServerDisconnect.class);
+        boolean correctEvent = getParser().isCurrentEvent(EventPlayerSwitchServer.class) || getParser().isCurrentEvent(EventPlayerServerDisconnect.class);
+        if (!correctEvent) {
+            Skript.error("You can only use this expression in a switch server or connect event!");
+        }
+        return correctEvent;
     }
 
     @Override

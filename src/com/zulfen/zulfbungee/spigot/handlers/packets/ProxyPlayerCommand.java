@@ -12,7 +12,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ClientPlayer
 public class ProxyPlayerCommand extends PacketHandler {
 
     public ProxyPlayerCommand(Connection<?> connectionIn) {
-        super(connectionIn, true, PacketTypes.PLAYER_EXECUTE_COMMAND);
+        super(connectionIn, false, PacketTypes.PLAYER_EXECUTE_COMMAND);
 
     }
 

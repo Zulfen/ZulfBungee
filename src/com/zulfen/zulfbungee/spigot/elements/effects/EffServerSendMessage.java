@@ -23,25 +23,26 @@ import java.util.Optional;
 public class EffServerSendMessage extends Effect {
 
     private Expression<ClientServer> servers;
-    private Expression<String> message;
+    private Expression<Object> message;
     private Expression<String> title;
 
     static {
-        Skript.registerEffect(EffServerSendMessage.class, "[[(proxy|bungeecord|bungee|velocity)] [server]] message [(proxy|bungeecord|bungee|velocity) [server[s]]] %-proxyservers% [the message] %string% (named|called|[with] title[d]) %string%");
+        Skript.registerEffect(EffServerSendMessage.class, "[[(proxy|bungeecord|bungee|velocity)] [server]] message [(proxy|bungeecord|bungee|velocity) [server[s]]] %-proxyservers% [(the message|(with|the) data)] %objects% (named|called|[with] title[d]) %string%");
     }
 
     @Override
     protected void execute(@NotNull Event event) {
 
-        ConnectionManager<?> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager();
-        Optional<ClientServer> getClientServer  = connection.getAsServer();
+        ConnectionManager<?> connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        Optional<ClientServer> getClientServer  = connectionManager.getAsServer();
 
         if (getClientServer.isPresent()) {
 
-            ServerMessage messageOut = new ServerMessage(title.getSingle(event), message.getSingle(event), servers.getArray(event),
+            Object[] objects = message.getArray(event);
+            ServerMessage messageOut = new ServerMessage(title.getSingle(event), connectionManager.toValueArray(objects), servers.getArray(event),
                     getClientServer.get());
 
-            connection.sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
+            connectionManager.sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,
                     false, false, messageOut));
 
         }
@@ -56,7 +57,7 @@ public class EffServerSendMessage extends Effect {
     @Override
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         servers = (Expression<ClientServer>) expressions[0];
-        message = (Expression<String>) expressions[1];
+        message = (Expression<Object>) expressions[1];
         title = (Expression<String>) expressions[2];
         return true;
     }

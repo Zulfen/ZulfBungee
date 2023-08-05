@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class ServerMessage implements Serializable {
 
-    private final String message;
+    private final Value[] values;
 
     private final String title;
 
@@ -14,9 +14,9 @@ public class ServerMessage implements Serializable {
 
     private final ClientServer from;
 
-    public ServerMessage(String titleIn, String messageIn, ClientServer[] serversIn, ClientServer fromIn) {
+    public ServerMessage(String titleIn, Value[] valuesIn, ClientServer[] serversIn, ClientServer fromIn) {
         this.title = titleIn;
-        this.message = messageIn;
+        this.values = valuesIn;
         this.servers = serversIn;
         this.from = fromIn;
     }
@@ -25,8 +25,8 @@ public class ServerMessage implements Serializable {
         return title;
     }
 
-    public String getText() {
-        return message;
+    public Value[] getData() {
+        return values;
     }
 
     public ClientServer[] getServers() {

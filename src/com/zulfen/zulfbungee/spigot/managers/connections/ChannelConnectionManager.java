@@ -8,6 +8,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
+import org.bukkit.ChatColor;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -68,6 +69,7 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
             clientChannelConnection.destroy();
         }
 
+        pluginInstance.logInfo(ChatColor.GREEN + "Waiting for a player to join...");
         clientChannelConnection = createNewConnection()
                 .withAddress(socketAddress)
                 .compressLargePacketTo(5120)

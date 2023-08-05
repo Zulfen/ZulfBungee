@@ -8,6 +8,8 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ServerMessage;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventProxyMessage;
@@ -25,7 +27,13 @@ public class EvtServerMessage extends SkriptEvent {
         EventValues.registerEventValue(EventProxyMessage.class, String.class, new Getter<String, EventProxyMessage>() {
             @Override
             public String get(EventProxyMessage eventProxyMessage) {
-                return eventProxyMessage.getMessage().getText();
+                ServerMessage serverMessage = eventProxyMessage.getMessage();
+                Object possibleString = ZulfBungeeSpigot.getPlugin().getConnectionManager().toObjectArray(serverMessage.getData())[0];
+                if (possibleString instanceof String) {
+                    return (String) possibleString;
+                } else {
+                    return null;
+                }
             }
         }, 0);
 
@@ -48,7 +56,6 @@ public class EvtServerMessage extends SkriptEvent {
     public boolean check(Event event) {
         EventProxyMessage messageEvent = (EventProxyMessage) event;
         return messageEvent.getMessage().getTitle().equals(title.getSingle());
-
     }
 
     @Override

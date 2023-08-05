@@ -10,7 +10,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 public class ConsoleCommand extends PacketHandler {
 
     public ConsoleCommand(Connection<?> connectionIn) {
-        super(connectionIn, true, PacketTypes.CONSOLE_EXECUTE_COMMAND);
+        super(connectionIn, false, PacketTypes.CONSOLE_EXECUTE_COMMAND);
 
     }
 

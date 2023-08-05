@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ConnectionName extends PacketHandler {
 
     public ConnectionName(Connection<?> connectionIn) {
-        super(connectionIn, true, PacketTypes.CONNECTION_NAME);
+        super(connectionIn, false, PacketTypes.CONNECTION_NAME);
 
     }
 

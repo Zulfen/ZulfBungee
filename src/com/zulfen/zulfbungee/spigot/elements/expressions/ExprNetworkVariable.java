@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -31,12 +32,9 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     protected Object[] get(@NotNull Event event) {
-
-        Optional<NetworkVariable> response = ZulfBungeeSpigot.getPlugin()
-                .getConnectionManager().requestNetworkVariable(givenVariable.getName().toString(event));
-
-        return response.map(SkriptVariableUtil::toData).orElse(null);
-
+        ConnectionManager<?> connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
+        Optional<NetworkVariable> networkVariable = connectionManager.requestNetworkVariable(givenVariable.getName().toString(event));
+        return networkVariable.map(variable -> connectionManager.toObjectArray(variable.getValueArray())).orElse(null);
     }
 
     @Override

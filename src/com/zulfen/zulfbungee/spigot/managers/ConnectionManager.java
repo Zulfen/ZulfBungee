@@ -78,6 +78,69 @@ public abstract class ConnectionManager<T> {
     public abstract Optional<Packet> send(Packet packetIn);
 
     public abstract List<ClientPlayer> getPlayers(ClientServer[] serversIn);
+    
+    private Value[] serializeValues(Object[] delta) {
+        return Stream.of(delta)
+               .map(Classes::serialize)
+               .filter(Objects::nonNull)
+               .map(value -> new Value(value.type, value.data))
+               .toArray(Value[]::new);
+    }
+
+    private Object[] deserializeValues(Value[] valuesIn) {
+        return Stream.of(valuesIn)
+                .map(value -> Classes.deserialize(value.type, value.data))
+                .toArray(Object[]::new);
+    }
+
+    public Value[] toValueArray(Object[] delta) {
+
+        Value[] values = new Value[0];
+
+        if (pluginInstance.getServer().isPrimaryThread()) {
+            values = serializeValues(delta);
+        } else {
+            try {
+                values = taskManager.newMainThreadTask(() -> serializeValues(delta)).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return values;
+
+    }
+
+    public Object[] toObjectArray(Value[] valuesIn) {
+
+        Object[] dataOut = new Object[0];
+
+        if (pluginInstance.getServer().isPrimaryThread()) {
+            dataOut = deserializeValues(valuesIn);
+        } else {
+            try {
+                dataOut = taskManager.newMainThreadTask(() -> deserializeValues(valuesIn)).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return dataOut;
+
+    }
+
+    public void modifyNetworkVariable(Object[] delta, Changer.ChangeMode mode, String variableNameIn) {
+        Value[] values = new Value[0];
+        if (mode != Changer.ChangeMode.DELETE) {
+            values = toValueArray(delta);
+        }
+        NetworkVariable variableOut = new NetworkVariable(variableNameIn, mode.name(), values);
+        send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
+    }
 
     public Optional<NetworkVariable> requestNetworkVariable(String nameIn) {
 
@@ -91,39 +154,6 @@ public abstract class ConnectionManager<T> {
         }
 
         return Optional.empty();
-
-    }
-    
-    private Value[] serializeVariable(Object[] delta) {
-       return Stream.of(delta)
-               .map(Classes::serialize)
-               .filter(Objects::nonNull)
-               .map(value -> new Value(value.type, value.data))
-               .toArray(Value[]::new); 
-    }
-
-    public void modifyNetworkVariable(Object[] delta, Changer.ChangeMode mode, String variableNameIn) {
-
-        Value[] values = new Value[0];
-        
-        if (mode != Changer.ChangeMode.DELETE) {
-            if (pluginInstance.getServer().isPrimaryThread()) {
-                values = serializeVariable(delta);
-            } else {
-                try {
-                    values = taskManager.newMainThreadTask(() -> serializeVariable(delta)).get();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                } catch (ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        pluginInstance.logDebug(String.valueOf(values.length));
-
-        NetworkVariable variableOut = new NetworkVariable(variableNameIn, mode.name(), values);
-        send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
 
     }
 

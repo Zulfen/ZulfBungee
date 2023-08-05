@@ -7,6 +7,7 @@ import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
 import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
+import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
 import org.bukkit.entity.Player;
 
@@ -147,6 +148,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
     @Override
     public void destroy() {
+        connection.sendDirect(new Packet(PacketTypes.CLIENT_DISCONNECT, false, true));
         pluginInstance.getProtocolManager().removePacketListener(channelPayload);
         super.destroy();
     }
