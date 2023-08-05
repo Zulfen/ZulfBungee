@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fixed crash if player disconnects." />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Avoid unparsed literals in server send message effect.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffServerSendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffServerSendMessage.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -143,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00086" summary="Alpha v0.9.5 - fix proxy player permission syntax">
-      <created>1680025821374</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1680025821374</updated>
     </task>
     <task id="LOCAL-00087" summary="Alpha v0.9.5 - fix proxy player permission syntax">
       <created>1680025945189</created>
@@ -487,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691243686899</updated>
     </task>
-    <option name="localTasksCounter" value="135" />
+    <task id="LOCAL-00135" summary="Alpha v0.9.8 - Avoid unparsed literals in server send message effect.">
+      <created>1691244134941</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1691244134941</updated>
+    </task>
+    <option name="localTasksCounter" value="136" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -502,7 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - plugin messaging support sort of working, rewrite done" />
     <MESSAGE value="Alpha v0.9.8 - Plugin messaging now works!!" />
     <MESSAGE value="Alpha v0.9.8 - General event fixes (I honestly have written so much I forgot)" />
     <MESSAGE value="Alpha v0.9.8 - Removing debug messages" />
@@ -527,7 +529,8 @@
     <MESSAGE value="Alpha v0.9.8 - Nice graceful channel connection disconnect if server gets shutdown, variable serialization fixes and switched message event to be any data" />
     <MESSAGE value="Alpha v0.9.8 - deleted old class" />
     <MESSAGE value="Alpha v0.9.8 - Fixed crash if player disconnects." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fixed crash if player disconnects." />
+    <MESSAGE value="Alpha v0.9.8 - Avoid unparsed literals in server send message effect." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Avoid unparsed literals in server send message effect." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
