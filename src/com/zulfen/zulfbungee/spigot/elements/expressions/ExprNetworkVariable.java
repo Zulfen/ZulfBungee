@@ -13,7 +13,6 @@ import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.spigot.util.SkriptVariableUtil;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 import java.util.Optional;

@@ -1,7 +1,6 @@
 package com.zulfen.zulfbungee.velocity.event;
 
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
@@ -12,12 +11,12 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.ChannelMessageSource;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import com.zulfen.zulfbungee.velocity.objects.VelocityPlayer;
-import com.zulfen.zulfbungee.velocity.objects.VelocityServer;
-import net.kyori.adventure.text.Component;
 import com.zulfen.zulfbungee.universal.event.ProxyEvents;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
 import com.zulfen.zulfbungee.velocity.ZulfVelocity;
+import com.zulfen.zulfbungee.velocity.objects.VelocityPlayer;
+import com.zulfen.zulfbungee.velocity.objects.VelocityServer;
+import net.kyori.adventure.text.Component;
 
 import java.util.Optional;
 

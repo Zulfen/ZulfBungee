@@ -10,7 +10,6 @@ import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import com.zulfen.zulfbungee.spigot.util.SkriptVariableUtil;
 
 public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
