@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class EffServerSendMessage extends Effect {
 
     private Expression<ClientServer> servers;
-    private Expression<Object> message;
+    private Expression<?> message;
     private Expression<String> title;
 
     static {
@@ -57,8 +58,8 @@ public class EffServerSendMessage extends Effect {
     @Override
     public boolean init(Expression<?>[] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         servers = (Expression<ClientServer>) expressions[0];
-        message = (Expression<Object>) expressions[1];
         title = (Expression<String>) expressions[2];
-        return true;
+        message = LiteralUtils.defendExpression(expressions[1]);
+        return LiteralUtils.canInitSafely(message);
     }
 }
