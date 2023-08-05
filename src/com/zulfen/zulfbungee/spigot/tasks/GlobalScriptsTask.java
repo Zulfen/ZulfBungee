@@ -35,10 +35,10 @@ public class GlobalScriptsTask implements Supplier<File> {
     }
 
 
+    // TODO: I feel like this is a bit messy. I should re-do this at some point.
     @Override
     public File get() {
 
-        Thread.currentThread().setName("GlobalScriptsTask");
         boolean exists = scriptFile.exists();
 
         switch (scriptAction) {
