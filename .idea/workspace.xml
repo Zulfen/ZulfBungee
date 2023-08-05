@@ -9,12 +9,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - slight adjustment">
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConsoleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConsoleCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ProxyPlayerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ProxyPlayerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/tasks/GlobalScriptsTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/tasks/GlobalScriptsTask.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,27 +145,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00089" summary="Alpha v0.9.6 - proxy servers fix, initial async network variable support.">
-      <created>1680211749753</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1680211749753</updated>
-    </task>
-    <task id="LOCAL-00090" summary="Alpha v0.9.6 - fixed network variable sections so that they are usable. Also fixed a potential crash with empty network variables.">
-      <created>1680281383303</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1680281383303</updated>
-    </task>
-    <task id="LOCAL-00091" summary="Alpha v0.9.6 - fixes errors with reloading deleted scripts.">
-      <created>1680286005010</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1680286005010</updated>
     </task>
     <task id="LOCAL-00092" summary="Alpha v0.9.6 - better script loading.">
       <created>1680361622059</created>
@@ -493,7 +468,28 @@
       <option name="project" value="LOCAL" />
       <updated>1691244575883</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables.">
+      <created>1691244826250</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1691244826250</updated>
+    </task>
+    <task id="LOCAL-00139" summary="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables.">
+      <created>1691244854342</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1691244854342</updated>
+    </task>
+    <task id="LOCAL-00140" summary="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables.">
+      <created>1691244954064</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1691244954064</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -508,7 +504,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - Removing debug messages" />
     <MESSAGE value="Alpha v0.9.8 - Added a virtual host expression" />
     <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
     <MESSAGE value="Alpha v0.9.8 - Actually fixed dropping event packets now." />
@@ -533,7 +528,8 @@
     <MESSAGE value="Alpha v0.9.8 - Avoid unparsed literals in server send message effect." />
     <MESSAGE value="Alpha v0.9.8 - Syntax fix." />
     <MESSAGE value="Alpha v0.9.8 - slight adjustment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - slight adjustment" />
+    <MESSAGE value="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

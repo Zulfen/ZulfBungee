@@ -9,8 +9,6 @@ transport-type: "pluginmessage"
 # If your proxy cannot find the name of your server from its config, or if you want to define a custom one -
 # specify it here. This process is automatic if you are using sockets.
 # Make sure it matches the name that's defined in your proxy server software's config.
-
-# If you are using plugin messaging, this is REQUIRED.
 forced-connection-name: ""
 
 # This will toggle the display of detailed messages about what is going to the console.
