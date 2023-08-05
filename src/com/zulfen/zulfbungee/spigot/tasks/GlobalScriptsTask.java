@@ -104,20 +104,8 @@ public class GlobalScriptsTask implements Supplier<File> {
     }
 
     private void skriptProcess(String commandAction) {
-
-        try {
-            pluginInstance.getTaskManager().newMainThreadTask(() -> {
-                pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
-                        commandAction, scriptName));
-                return null;
-            }).get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            pluginInstance.warning(String.format("Error processing script file %s:", scriptName));
-            e.printStackTrace();
-        }
-
+        pluginInstance.getTaskManager().newMainThreadTask(() -> pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
+                commandAction, scriptName)));
     }
 
 }

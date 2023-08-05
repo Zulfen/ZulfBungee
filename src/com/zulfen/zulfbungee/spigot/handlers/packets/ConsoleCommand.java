@@ -21,11 +21,7 @@ public class ConsoleCommand extends PacketHandler {
         ZulfBungeeSpigot zulfBungeeSpigot = getConnection().getPluginInstance();
 
         ConsoleCommandSender consoleSender = zulfBungeeSpigot.getServer().getConsoleSender();
-
-        zulfBungeeSpigot.getTaskManager().newMainThreadTask(() -> {
-            zulfBungeeSpigot.getServer().dispatchCommand(consoleSender, command);
-            return null;
-        });
+        zulfBungeeSpigot.getTaskManager().newMainThreadTask(() -> zulfBungeeSpigot.getServer().dispatchCommand(consoleSender, command));
 
     }
 }

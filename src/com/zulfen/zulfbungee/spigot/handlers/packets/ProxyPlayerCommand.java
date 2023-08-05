@@ -28,10 +28,7 @@ public class ProxyPlayerCommand extends PacketHandler {
             Player bukkitPlayer = zulfBungeeSpigot.getServer().getPlayer(clientPlayer.getUuid());
 
             if (bukkitPlayer != null) {
-                zulfBungeeSpigot.getTaskManager().newMainThreadTask(() -> {
-                    bukkitPlayer.performCommand((String) playerDataContainer.getDataSingle());
-                    return null;
-                });
+                zulfBungeeSpigot.getTaskManager().newMainThreadTask(() -> bukkitPlayer.performCommand((String) playerDataContainer.getDataSingle()));
             }
 
         }

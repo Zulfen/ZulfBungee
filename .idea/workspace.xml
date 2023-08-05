@@ -9,9 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Avoid unparsed literals in server send message effect.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffServerSendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffServerSendMessage.java" afterDir="false" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - slight adjustment">
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConsoleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConsoleCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ProxyPlayerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ProxyPlayerCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/TaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/tasks/GlobalScriptsTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/tasks/GlobalScriptsTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,20 +149,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00087" summary="Alpha v0.9.5 - fix proxy player permission syntax">
-      <created>1680025945189</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
-      <option name="project" value="LOCAL" />
-      <updated>1680025945189</updated>
-    </task>
-    <task id="LOCAL-00088" summary="Alpha v0.9.5 - fix proxy player permission syntax">
-      <created>1680026269335</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
-      <option name="project" value="LOCAL" />
-      <updated>1680026269336</updated>
     </task>
     <task id="LOCAL-00089" summary="Alpha v0.9.6 - proxy servers fix, initial async network variable support.">
       <created>1680211749753</created>
@@ -490,7 +479,21 @@
       <option name="project" value="LOCAL" />
       <updated>1691244134941</updated>
     </task>
-    <option name="localTasksCounter" value="136" />
+    <task id="LOCAL-00136" summary="Alpha v0.9.8 - Syntax fix.">
+      <created>1691244470422</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1691244470422</updated>
+    </task>
+    <task id="LOCAL-00137" summary="Alpha v0.9.8 - slight adjustment">
+      <created>1691244575883</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1691244575883</updated>
+    </task>
+    <option name="localTasksCounter" value="138" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -505,8 +508,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - Plugin messaging now works!!" />
-    <MESSAGE value="Alpha v0.9.8 - General event fixes (I honestly have written so much I forgot)" />
     <MESSAGE value="Alpha v0.9.8 - Removing debug messages" />
     <MESSAGE value="Alpha v0.9.8 - Added a virtual host expression" />
     <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
@@ -530,7 +531,9 @@
     <MESSAGE value="Alpha v0.9.8 - deleted old class" />
     <MESSAGE value="Alpha v0.9.8 - Fixed crash if player disconnects." />
     <MESSAGE value="Alpha v0.9.8 - Avoid unparsed literals in server send message effect." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Avoid unparsed literals in server send message effect." />
+    <MESSAGE value="Alpha v0.9.8 - Syntax fix." />
+    <MESSAGE value="Alpha v0.9.8 - slight adjustment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - slight adjustment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

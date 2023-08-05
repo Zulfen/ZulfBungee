@@ -29,8 +29,12 @@ public class TaskManager {
         }
     }
 
-    public <T> Future<T> newMainThreadTask(Callable<T> callableIn) {
+    public <T> Future<T> returnableMainThreadTask(Callable<T> callableIn) {
         return scheduler.callSyncMethod(instance, callableIn);
+    }
+
+    public void newMainThreadTask(Runnable runnableIn) {
+        scheduler.runTask(instance, runnableIn);
     }
 
     public <T> CompletableFuture<T> submitSupplier(Supplier<T> supplierIn) {

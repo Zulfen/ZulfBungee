@@ -101,7 +101,7 @@ public abstract class ConnectionManager<T> {
             values = serializeValues(delta);
         } else {
             try {
-                values = taskManager.newMainThreadTask(() -> serializeValues(delta)).get();
+                values = taskManager.returnableMainThreadTask(() -> serializeValues(delta)).get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
@@ -121,7 +121,7 @@ public abstract class ConnectionManager<T> {
             dataOut = deserializeValues(valuesIn);
         } else {
             try {
-                dataOut = taskManager.newMainThreadTask(() -> deserializeValues(valuesIn)).get();
+                dataOut = taskManager.returnableMainThreadTask(() -> deserializeValues(valuesIn)).get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
