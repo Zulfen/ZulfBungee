@@ -9,28 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Hopefully removed almost all debug messages now">
-      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprServerMessageData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ClientDisconnect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffServerSendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffServerSendMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/events/EvtServerMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/events/EvtServerMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprNetworkVariable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprPreviousServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/expressions/ExprPreviousServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/sections/networkvariable/ExprSecNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/sections/networkvariable/ExprSecNetworkVariable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConnectionName.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConnectionName.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConsoleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ConsoleCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ProxyPlayerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/handlers/packets/ProxyPlayerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/managers/ConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/ClientChannelConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/ClientChannelConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/PacketHandlerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/PacketHandlerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/client/skript/ServerMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/client/skript/ServerMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/event/VelocityEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/event/VelocityEvents.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - deleted old class" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -164,20 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00082" summary="Alpha v0.9.5 - syntax adjustments">
-      <created>1680017116918</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1680017116919</updated>
-    </task>
-    <task id="LOCAL-00083" summary="Alpha v0.9.5 - more verbose logging">
-      <created>1680019297972</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1680019297972</updated>
     </task>
     <task id="LOCAL-00084" summary="Alpha v0.9.5 - small refactor">
       <created>1680019582477</created>
@@ -508,7 +473,21 @@
       <option name="project" value="LOCAL" />
       <updated>1691000200333</updated>
     </task>
-    <option name="localTasksCounter" value="131" />
+    <task id="LOCAL-00131" summary="Alpha v0.9.8 - Nice graceful channel connection disconnect if server gets shutdown, variable serialization fixes and switched message event to be any data">
+      <created>1691199419964</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1691199419964</updated>
+    </task>
+    <task id="LOCAL-00132" summary="Alpha v0.9.8 - deleted old class">
+      <created>1691199550632</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1691199550632</updated>
+    </task>
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -523,8 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.7 - fixed bugs with global script system" />
-    <MESSAGE value="Alpha v0.9.7 - idk why but this event didn't get commited" />
     <MESSAGE value="Alpha v0.9.8 - initial rewrite, beginning API fixes." />
     <MESSAGE value="Alpha v0.9.8 - plugin messaging support sort of working, rewrite done" />
     <MESSAGE value="Alpha v0.9.8 - Plugin messaging now works!!" />
@@ -548,16 +525,13 @@
     <MESSAGE value="Alpha v0.9.8 - Fixed events again (LOL), added a check for Waterfall" />
     <MESSAGE value="Alpha v0.9.8 - Removed warning message about Waterfall" />
     <MESSAGE value="Alpha v0.9.8 - Fixed network variable bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fixed network variable bugs" />
+    <MESSAGE value="Alpha v0.9.8 - Nice graceful channel connection disconnect if server gets shutdown, variable serialization fixes and switched message event to be any data" />
+    <MESSAGE value="Alpha v0.9.8 - deleted old class" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - deleted old class" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/util/SkriptVariableUtil.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
           <line>763</line>

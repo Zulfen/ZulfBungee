@@ -32,6 +32,11 @@ public class ExprServerMessageData extends EventValueExpression<Object> {
     }
 
     @Override
+    public boolean isSingle() {
+        return false;
+    }
+
+    @Override
     public boolean init() {
         boolean correctEvent = getParser().isCurrentEvent(EventProxyMessage.class);
         if (!correctEvent) {
