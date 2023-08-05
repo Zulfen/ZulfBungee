@@ -27,7 +27,7 @@ public class EffServerSendMessage extends Effect {
     private Expression<String> title;
 
     static {
-        Skript.registerEffect(EffServerSendMessage.class, "[[(proxy|bungeecord|bungee|velocity)] [server]] message [(proxy|bungeecord|bungee|velocity) [server[s]]] %-proxyservers% [(the message|(with|the) data)] %objects% (named|called|[with] title[d]) %string%");
+        Skript.registerEffect(EffServerSendMessage.class, "[send] [a] [[(proxy|bungeecord|bungee|velocity)] [server]] message [(proxy|bungeecord|bungee|velocity) [server[s]]] [to] %-proxyservers% [(the message|(with|the) data)] %objects% (named|called|[with] title[d]) %string%");
     }
 
     @Override

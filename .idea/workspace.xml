@@ -9,10 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - deleted old class">
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Fixed crash if player disconnects." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -146,13 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00084" summary="Alpha v0.9.5 - small refactor">
-      <created>1680019582477</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1680019582478</updated>
     </task>
     <task id="LOCAL-00085" summary="Alpha v0.9.5 - fix proxy player permission syntax">
       <created>1680021321922</created>
@@ -490,7 +480,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691199550632</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <task id="LOCAL-00133" summary="Alpha v0.9.8 - Fixed crash if player disconnects.">
+      <created>1691243024573</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1691243024574</updated>
+    </task>
+    <option name="localTasksCounter" value="134" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -505,7 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - initial rewrite, beginning API fixes." />
     <MESSAGE value="Alpha v0.9.8 - plugin messaging support sort of working, rewrite done" />
     <MESSAGE value="Alpha v0.9.8 - Plugin messaging now works!!" />
     <MESSAGE value="Alpha v0.9.8 - General event fixes (I honestly have written so much I forgot)" />
@@ -530,7 +526,8 @@
     <MESSAGE value="Alpha v0.9.8 - Fixed network variable bugs" />
     <MESSAGE value="Alpha v0.9.8 - Nice graceful channel connection disconnect if server gets shutdown, variable serialization fixes and switched message event to be any data" />
     <MESSAGE value="Alpha v0.9.8 - deleted old class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - deleted old class" />
+    <MESSAGE value="Alpha v0.9.8 - Fixed crash if player disconnects." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Fixed crash if player disconnects." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
