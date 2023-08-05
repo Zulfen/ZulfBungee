@@ -1,14 +1,13 @@
 package com.zulfen.zulfbungee.spigot.tasks;
 
 import ch.njol.skript.Skript;
-import org.bukkit.command.CommandSender;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import org.bukkit.command.CommandSender;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 public class GlobalScriptsTask implements Supplier<File> {
