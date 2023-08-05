@@ -148,7 +148,6 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
     @Override
     public void destroy() {
-        connection.sendDirect(new Packet(PacketTypes.CLIENT_DISCONNECT, false, true));
         pluginInstance.getProtocolManager().removePacketListener(channelPayload);
         super.destroy();
     }

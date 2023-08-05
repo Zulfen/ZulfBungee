@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - deleted old class" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - deleted old class">
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
