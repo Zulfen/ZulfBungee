@@ -28,6 +28,7 @@ Please keep in mind that this plugin is currently in Alpha testing, so serious b
 - `zulfen.bungee.admin.script.load` /zulfbungee scripts load <name>
 - `zulfen.bungee.admin.script.unload` /zulfbungee scripts unload <name>
 - `zulfen.bungee.admin.script.reload` /zulfbungee scripts reload <name>
+- `zulfen.bungee.admin.script.list` /zulfbungee scripts list
 
 - `zulfen.bungee.admin.update.check` /zulfbungee update check
 - `zulfen.bungee.admin.debug` /zulfbungee debug
