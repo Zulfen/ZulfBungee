@@ -26,6 +26,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.*;
@@ -191,6 +192,17 @@ public class ZulfBungeecord extends Plugin implements ZulfBungeeProxy<ProxyServe
     @Override
     public void unregisterMessageChannel(String channelNameIn) {
         getProxy().unregisterChannel(channelNameIn);
+    }
+
+    @Override
+    public void registerServer(String serverNameIn, SocketAddress addressIn) {
+        ServerInfo serverInfo = getProxy().constructServerInfo(serverNameIn, addressIn, String.format("ZulfBungee registered server (%s)", serverNameIn), false);
+        getProxy().getServers().put(serverNameIn, serverInfo);
+    }
+
+    @Override
+    public void deRegisterServer(String serverNameIn) {
+        getProxy().getServers().remove(serverNameIn);
     }
 
     @Override

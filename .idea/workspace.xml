@@ -9,7 +9,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Remove warning from config." />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.8 - Turned off case insensitive variables by default as they are sort of untested.">
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffDeRegisterServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/effects/EffRegisterServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/DeRegisterServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/RegisterServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/bungee.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/bungeecord/ZulfBungeecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/ZulfBungeeProxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/ZulfBungeeProxy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/PacketHandlerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/managers/PacketHandlerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/socket/objects/PacketTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/ZulfVelocity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/velocity/ZulfVelocity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,11 +106,11 @@
       <recent name="tk.zulfengaming.zulfbungee.bungeecord.command.subcommands" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.zulfen.zulfbungee.universal.handlers.packets" />
+      <recent name="com.zulfen.zulfbungee.spigot.elements.effects" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.socket" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.interfaces" />
       <recent name="tk.zulfengaming.zulfbungee.spigot.elements.expressions" />
-      <recent name="tk.zulfengaming.zulfbungee.universal.socket.packets" />
-      <recent name="tk.zulfengaming.zulfbungee.spigot.elements.conditions" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -143,13 +156,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00093" summary="Alpha v0.9.6 - update version number">
-      <created>1680362469721</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1680362469721</updated>
     </task>
     <task id="LOCAL-00094" summary="Alpha v0.9.6 - section check to prevent inception">
       <created>1680363072015</created>
@@ -487,7 +493,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691250537240</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="Alpha v0.9.8 - Turned off case insensitive variables by default as they are sort of untested.">
+      <created>1691251065987</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1691251065987</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -502,7 +515,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - Potential fix to stop events from getting dropped if a connection isn't immediately available." />
     <MESSAGE value="Alpha v0.9.8 - Actually fixed dropping event packets now." />
     <MESSAGE value="Alpha v0.9.8 - Fix disconnect event." />
     <MESSAGE value="Alpha v0.9.8 - Bungeecord fixes." />
@@ -527,7 +539,8 @@
     <MESSAGE value="Alpha v0.9.8 - slight adjustment" />
     <MESSAGE value="Alpha v0.9.8 - adjusted main thread task scheduling, so they aren't all callables." />
     <MESSAGE value="Alpha v0.9.8 - Remove warning from config." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Remove warning from config." />
+    <MESSAGE value="Alpha v0.9.8 - Turned off case insensitive variables by default as they are sort of untested." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.8 - Turned off case insensitive variables by default as they are sort of untested." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

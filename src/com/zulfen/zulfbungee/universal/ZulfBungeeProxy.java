@@ -2,14 +2,15 @@ package com.zulfen.zulfbungee.universal;
 
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.config.ProxyConfig;
+import com.zulfen.zulfbungee.universal.interfaces.NativePlayerConverter;
 import com.zulfen.zulfbungee.universal.managers.ProxyTaskManager;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
-import com.zulfen.zulfbungee.universal.interfaces.NativePlayerConverter;
 
+import java.net.SocketAddress;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,9 @@ public interface ZulfBungeeProxy<P, T> {
 
     void registerMessageChannel(String channelNameIn);
     void unregisterMessageChannel(String channelNameIn);
+
+    void registerServer(String serverNameIn, SocketAddress addressIn);
+    void deRegisterServer(String serverNameIn);
 
     void broadcast(String messageIn);
     void broadcast(String messageIn, ZulfProxyServer<P, T> serverIn);

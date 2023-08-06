@@ -36,6 +36,8 @@ public class PacketHandlerManager<P, T> {
         handlers.put(PacketTypes.CONNECTION_NAME, new ConnectionName<>(this));
         handlers.put(PacketTypes.PROXY_PLAYER_IP, new ProxyPlayerIP<>(this));
         handlers.put(PacketTypes.PLAYER_VIRTUAL_HOST, new ProxyPlayerVirtualHost<>(this));
+        handlers.put(PacketTypes.REGISTER_SERVER, new RegisterServer<>(this));
+        handlers.put(PacketTypes.DEREGISTER_SERVER, new DeRegisterServer<>(this));
 
     }
 

@@ -10,6 +10,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import com.zulfen.zulfbungee.universal.managers.transport.ChannelMainServer;
 import com.zulfen.zulfbungee.universal.managers.transport.SocketMainServer;
 import com.zulfen.zulfbungee.velocity.command.VelocityConsole;
@@ -35,6 +36,8 @@ import com.zulfen.zulfbungee.velocity.config.VelocityConfig;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.*;
@@ -44,7 +47,7 @@ import java.util.stream.Collectors;
 description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
 
-    protected static final String VERSION = "0.9.8";
+    protected static final String VERSION = "0.9.9-pre1";
 
     private final ProxyServer velocity;
     private final VelocityConfig pluginConfig;
@@ -117,7 +120,6 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
             } else {
                 chooseSocketServer();
             }
-
 
             velocity.getEventManager().register(this, new VelocityEvents(mainServer));
             velocity.getCommandManager().register("zulfbungee", new VelocityCommand(new CommandHandlerManager<>(mainServer)));
@@ -223,6 +225,18 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
     @Override
     public void unregisterMessageChannel(String channelNameIn) {
         velocity.getChannelRegistrar().unregister(MinecraftChannelIdentifier.from(channelNameIn));
+    }
+
+    @Override
+    public void registerServer(String serverNameIn, SocketAddress addressIn) {
+        ServerInfo serverInfo = new ServerInfo(serverNameIn, (InetSocketAddress) addressIn);
+        velocity.registerServer(serverInfo);
+    }
+
+    @Override
+    public void deRegisterServer(String serverNameIn) {
+        Optional<RegisteredServer> serverOptional = velocity.getServer(serverNameIn);
+        serverOptional.ifPresent(server -> velocity.unregisterServer(server.getServerInfo()));
     }
 
     @Override
