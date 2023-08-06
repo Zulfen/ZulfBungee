@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.9 - register and de-register support for servers" />
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.9 - register and de-register support for servers">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyClientInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyClientInfo.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -143,34 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00095" summary="Alpha v0.9.6 - section check to prevent inception">
-      <created>1680363545238</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
-      <option name="project" value="LOCAL" />
-      <updated>1680363545238</updated>
-    </task>
-    <task id="LOCAL-00096" summary="Alpha v0.9.6 - fix reload command not doing path checks properly">
-      <created>1680365362001</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1680365362001</updated>
-    </task>
-    <task id="LOCAL-00097" summary="Alpha v0.9.6 - remove pesky debug message">
-      <created>1680366112664</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1680366112664</updated>
-    </task>
-    <task id="LOCAL-00098" summary="Alpha v0.9.7 - fix error with bungeecord kick event">
-      <created>1680456369610</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1680456369610</updated>
     </task>
     <task id="LOCAL-00099" summary="Alpha v0.9.7 - migrated config to use Paths instead of Files">
       <created>1680565157793</created>
@@ -487,7 +462,35 @@
       <option name="project" value="LOCAL" />
       <updated>1691338006624</updated>
     </task>
-    <option name="localTasksCounter" value="144" />
+    <task id="LOCAL-00144" summary="Alpha v0.9.9 - register and de-register support for servers">
+      <created>1691338445265</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1691338445265</updated>
+    </task>
+    <task id="LOCAL-00145" summary="Alpha v0.9.9 - register and de-register support for servers">
+      <created>1691338461884</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1691338461884</updated>
+    </task>
+    <task id="LOCAL-00146" summary="Alpha v0.9.9 - register and de-register support for servers">
+      <created>1691338515184</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1691338515184</updated>
+    </task>
+    <task id="LOCAL-00147" summary="Alpha v0.9.9 - register and de-register support for servers">
+      <created>1691338564758</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1691338564758</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

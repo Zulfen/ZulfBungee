@@ -40,7 +40,7 @@ public class ProxyClientInfo<P, T> extends PacketHandler<P, T> {
                     getMainServer().addActiveConnection(connection, name, clientInfo);
                     return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
 
-                } else if (!addressCheck) {
+                } else {
 
                     getProxy().warning(String.format("We couldn't find the client with the address %s!", socketAddressIn.getAddress()));
                     getProxy().warning("Please make sure that the address in your proxy's main config is valid!");
