@@ -24,7 +24,7 @@ public class EffDeRegisterServer extends Effect {
 
         String serverNameOut = serverName.getSingle(event);
 
-        ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.REGISTER_SERVER, false, true,
+        ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.DEREGISTER_SERVER, false, true,
                 serverNameOut));
 
     }
