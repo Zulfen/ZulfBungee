@@ -31,7 +31,7 @@ public class EffDeRegisterServer extends Effect {
 
     @Override
     public String toString(Event e, boolean debug) {
-        return "effect register server";
+        return "effect deregister server";
     }
 
 
