@@ -16,7 +16,7 @@ public class EffDeRegisterServer extends Effect {
     private Expression<String> serverName;
 
     static {
-        Skript.registerEffect(EffDeRegisterServer.class, "(de|un)register [a] server [from the proxy] [named] %string%");
+        Skript.registerEffect(EffDeRegisterServer.class, "(de|un)register [a] server [from the proxy] [(named|called)] %string%");
     }
 
     @Override

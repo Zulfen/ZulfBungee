@@ -18,7 +18,7 @@ public class EffRegisterServer extends Effect {
     private Expression<Integer> port;
 
     static {
-        Skript.registerEffect(EffRegisterServer.class, "register [a] [new] server [with the proxy] [named] %string% with (IP|address) %string% [and] [with] port %number%");
+        Skript.registerEffect(EffRegisterServer.class, "register [a] [new] server [with the proxy] [(named|called)] %string% with (IP|address) %string% [and] [with] port %number%");
     }
 
     @Override
