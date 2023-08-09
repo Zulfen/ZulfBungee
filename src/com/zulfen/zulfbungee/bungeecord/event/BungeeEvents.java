@@ -75,7 +75,7 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
             }
         }
 
-        if (mainServer.getServerNames().contains(serverName)) {
+        if (mainServer.getActiveServerNames().contains(serverName)) {
             String legacyText = TextComponent.toLegacyText(event.getKickReasonComponent());
             serverKick(player.getName(), player.getUniqueId(), legacyText);
         }
@@ -91,7 +91,7 @@ public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer> implem
 
             String serverName = player.getServer().getInfo().getName();
 
-            if (mainServer.getServerNames().contains(serverName)) {
+            if (mainServer.getActiveServerNames().contains(serverName)) {
                 serverDisconnect(player.getName(), player.getUniqueId(), serverName);
             }
 

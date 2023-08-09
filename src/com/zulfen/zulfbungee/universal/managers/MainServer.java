@@ -191,8 +191,12 @@ public class MainServer<P, T> {
 
     }
 
-    public Set<String> getServerNames() {
+    public Set<String> getActiveServerNames() {
         return activeConnections.keySet();
+    }
+
+    public boolean isAddressRegistered(SocketAddress socketAddressIn) {
+        return addressNames.containsKey(socketAddressIn);
     }
 
     public Optional<ProxyServerConnection<P, T>> getConnection(String name) {

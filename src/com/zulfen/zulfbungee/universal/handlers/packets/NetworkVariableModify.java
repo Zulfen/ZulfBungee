@@ -38,13 +38,13 @@ public class NetworkVariableModify<P, T> extends PacketHandler<P, T> {
                         storage.setVariable(variable);
                         break;
                     case DELETE:
+                    case RESET:
                         storage.deleteVariable(variable.getName());
                         break;
                     case ADD:
                         storage.addToVariable(variable.getName(), variable.getValueArray());
                         break;
                     case REMOVE:
-                    case RESET:
                         storage.removeFromVariable(variable.getName(), variable.getValueArray());
                         break;
 

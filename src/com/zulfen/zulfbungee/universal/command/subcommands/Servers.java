@@ -18,7 +18,7 @@ public class Servers<P, T> extends CommandHandler<P, T> {
     @Override
     public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
-        Set<String> serverNames = getMainServer().getServerNames();
+        Set<String> serverNames = getMainServer().getActiveServerNames();
 
         if (!serverNames.isEmpty()) {
 

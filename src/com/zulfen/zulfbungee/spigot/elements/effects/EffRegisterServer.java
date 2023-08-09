@@ -15,7 +15,7 @@ public class EffRegisterServer extends Effect {
 
     private Expression<String> serverName;
     private Expression<String> address;
-    private Expression<Integer> port;
+    private Expression<Number> port;
 
     static {
         Skript.registerEffect(EffRegisterServer.class, "register [a] [new] server [with the proxy] [(named|called)] %string% with (IP|address) %string% [and] [with] port %number%");
@@ -24,12 +24,16 @@ public class EffRegisterServer extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
 
-        Integer portOut = port.getSingle(event);
-        String addressOut = address.getSingle(event);
-        String serverNameOut = serverName.getSingle(event);
+        Number getPort = port.getSingle(event);
 
-        ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.REGISTER_SERVER, false, true,
-                new Object[]{serverNameOut, addressOut, portOut}));
+        if (getPort != null) {
+            int portOut = getPort.intValue();
+            String addressOut = address.getSingle(event);
+            String serverNameOut = serverName.getSingle(event);
+            ZulfBungeeSpigot.getPlugin().getConnectionManager().sendDirect(new Packet(PacketTypes.REGISTER_SERVER, false, true,
+                    new Object[]{serverNameOut, addressOut, portOut}));
+        }
+
 
     }
 
@@ -43,7 +47,7 @@ public class EffRegisterServer extends Effect {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
         serverName = (Expression<String>) exprs[0];
         address = (Expression<String>) exprs[1];
-        port = (Expression<Integer>) exprs[2];
+        port = (Expression<Number>) exprs[2];
         return true;
     }
 }

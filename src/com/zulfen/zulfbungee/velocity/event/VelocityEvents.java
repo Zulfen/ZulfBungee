@@ -32,13 +32,17 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
     @Subscribe
     public void onServerConnected(ServerConnectedEvent serverConnectedEvent) {
 
-        RegisteredServer server = serverConnectedEvent.getServer();
-        VelocityServer velocityServer = new VelocityServer(server, zulfVelocity);
+        if (!serverConnectedEvent.getPreviousServer().isPresent()) {
 
-        Player eventPlayer = serverConnectedEvent.getPlayer();
-        VelocityPlayer velocityPlayer = new VelocityPlayer(eventPlayer, velocityServer, zulfVelocity);
+            RegisteredServer server = serverConnectedEvent.getServer();
+            VelocityServer velocityServer = new VelocityServer(server, zulfVelocity);
 
-        serverConnected(velocityPlayer);
+            Player eventPlayer = serverConnectedEvent.getPlayer();
+            VelocityPlayer velocityPlayer = new VelocityPlayer(eventPlayer, velocityServer, zulfVelocity);
+
+            serverConnected(velocityPlayer);
+
+        }
 
     }
 
