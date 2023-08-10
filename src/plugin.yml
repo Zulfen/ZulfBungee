@@ -1,6 +1,6 @@
 name: ZulfBungee
 main: com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot
-version: 0.9.9
+version: 0.9.9-pre1
 author: zulfen
 website: https://github.com/Zulfen/ZulfBungee
 description: A Skript addon which adds proxy integration.
