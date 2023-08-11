@@ -9,8 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.9 - Network variable fixes and velocity event fixes.">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.9 - Revert to pre-release version.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyClientInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/universal/handlers/packets/ProxyClientInfo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00101" summary="Alpha v0.9.7 - idk why but this event didn't get commited">
-      <created>1680704295960</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1680704295960</updated>
     </task>
     <task id="LOCAL-00102" summary="Alpha v0.9.8 - plugin messaging support sort of working, rewrite done">
       <created>1689168812774</created>
@@ -489,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691625546015</updated>
     </task>
-    <option name="localTasksCounter" value="150" />
+    <task id="LOCAL-00150" summary="Alpha v0.9.9 - Revert to pre-release version.">
+      <created>1691626591082</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1691626591082</updated>
+    </task>
+    <option name="localTasksCounter" value="151" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -504,7 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - Velocity NPE fix." />
     <MESSAGE value="Alpha v0.9.8 - package name change... dear god :sob:" />
     <MESSAGE value="Alpha v0.9.8 - another mini rewrite, everything is working!" />
     <MESSAGE value="Alpha v0.9.8 - small adjustments" />
@@ -529,7 +529,8 @@
     <MESSAGE value="Alpha v0.9.9 - register and de-register support for servers" />
     <MESSAGE value="Alpha v0.9.9 - valid client check fix" />
     <MESSAGE value="Alpha v0.9.9 - Network variable fixes and velocity event fixes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.9 - Network variable fixes and velocity event fixes." />
+    <MESSAGE value="Alpha v0.9.9 - Revert to pre-release version." />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.9 - Revert to pre-release version." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
