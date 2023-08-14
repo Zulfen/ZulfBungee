@@ -5,17 +5,16 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.event.events.EventNetworkVariable;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.TaskManager;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 public class SecNetworkVariable extends Section {
 

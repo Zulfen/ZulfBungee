@@ -7,7 +7,6 @@ import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
 import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
 import org.bukkit.entity.Player;
 
@@ -90,7 +89,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
             try {
                 awaitProperConnection.await();
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
             }
         }
 
@@ -118,7 +117,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
 
     @Override
-    public synchronized void writePacket(Packet inputPacket) {
+    public void writePacket(Packet inputPacket) {
 
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 
