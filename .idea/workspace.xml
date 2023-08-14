@@ -9,10 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.9 - Bump version to pre2">
+    <list default="true" id="dd3e117f-d4cd-4470-ab34-b8e232afca73" name="Changes" comment="Alpha v0.9.9 - Potential fix for channel connection crash">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/elements/sections/networkvariable/SecNetworkVariable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/interfaces/transport/ClientChannelCommHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/socket/Connection.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658421464722</updated>
-    </task>
-    <task id="LOCAL-00104" summary="Alpha v0.9.8 - General event fixes (I honestly have written so much I forgot)">
-      <created>1690150026606</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1690150026607</updated>
     </task>
     <task id="LOCAL-00105" summary="Alpha v0.9.8 - Removing debug messages">
       <created>1690151027148</created>
@@ -491,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691750538555</updated>
     </task>
-    <option name="localTasksCounter" value="153" />
+    <task id="LOCAL-00153" summary="Alpha v0.9.9 - Potential fix for channel connection crash">
+      <created>1692038122297</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1692038122298</updated>
+    </task>
+    <option name="localTasksCounter" value="154" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -506,7 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Alpha v0.9.8 - small adjustments" />
     <MESSAGE value="Alpha v0.9.8 - potential security fixes" />
     <MESSAGE value="Alpha v0.9.8 - cleaning up some stuff" />
     <MESSAGE value="Alpha v0.9.8 - preparing for release" />
@@ -531,25 +529,31 @@
     <MESSAGE value="Alpha v0.9.9 - Revert to pre-release version." />
     <MESSAGE value="Alpha v0.9.9 - Fixes to potential invalid config errors." />
     <MESSAGE value="Alpha v0.9.9 - Bump version to pre2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.9 - Bump version to pre2" />
+    <MESSAGE value="Alpha v0.9.9 - Potential fix for channel connection crash" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alpha v0.9.9 - Potential fix for channel connection crash" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
           <line>763</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
           <line>760</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/github/SkriptLang/Skript/2.6.4/Skript-2.6.4-sources.jar!/ch/njol/skript/registrations/Classes.java</url>
           <line>778</line>
           <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/zulfen/zulfbungee/spigot/ZulfBungeeSpigot.java</url>
+          <line>84</line>
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
