@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.universal.socket;
 
 import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
@@ -12,6 +12,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -20,13 +21,15 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class ProxyServerConnection<P, T> implements Runnable {
+public abstract class ProxyServerConnection<P, T> {
 
     protected final MainServer<P, T> mainServer;
-    protected final ZulfBungeeProxy<P, T> pluginInstance;
+    protected final ZulfProxyImpl<P, T> pluginInstance;
     protected final PacketHandlerManager<P, T> packetHandlerManager;
 
     protected ProxyCommHandler<P, T> proxyCommHandler;
+
+    private final BlockingPacketQueue queueOut = new BlockingPacketQueue();
 
     protected final AtomicBoolean connected = new AtomicBoolean(true);
 
@@ -34,21 +37,29 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     public ProxyServerConnection(MainServer<P, T> mainServerIn, SocketAddress socketAddressIn) {
         this.mainServer = mainServerIn;
-        this.pluginInstance = mainServer.getPluginInstance();
+        this.pluginInstance = mainServer.getImpl();
         this.socketAddress = socketAddressIn;
         this.packetHandlerManager = new PacketHandlerManager<>(mainServerIn);
     }
 
-    @Override
-    public void run() {
-
+    public void dataInLoop() {
         assert proxyCommHandler != null : "Comm Handler is null!";
-
         while (connected.get()) {
             Optional<Packet> read = proxyCommHandler.readPacket();
             read.ifPresent(this::processPacket);
         }
+    }
 
+    public void dataOutLoop() {
+        while (connected.get()) {
+            Optional<Packet> take = queueOut.take(false);
+            take.ifPresent(packet -> proxyCommHandler.writePacket(packet));
+        }
+    }
+
+    public void start() {
+        pluginInstance.getTaskManager().newTask(this::dataInLoop);
+        pluginInstance.getTaskManager().newTask(this::dataOutLoop);
     }
 
     public void sendEventPacket(EventPacket packetIn) {
@@ -60,10 +71,8 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     public void sendDirect(Packet packetIn) {
         assert proxyCommHandler != null : "Comm Handler is null!";
-        proxyCommHandler.writePacket(packetIn);
-        if (packetIn.getType() != PacketTypes.HEARTBEAT_PROXY) {
-            pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
-        }
+        queueOut.offer(packetIn);
+        pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
     }
 
     public void destroy() {
@@ -76,7 +85,7 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
 
     // input null into senderIn to make the console reload the scripts, not a player.
     // name allows you to define a custom name if needed
-    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender<P, T> senderIn) {
+    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender<P, T> senderIn, boolean isLastScriptIn) {
 
         pluginInstance.getTaskManager().newTask(() -> {
 
@@ -96,11 +105,11 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
                     byte[] data = Files.readAllBytes(scriptPathIn);
 
                     sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(actionIn,
-                            scriptName, playerOut, data)));
+                            scriptName, playerOut, data, isLastScriptIn)));
 
                 } else {
                     sendDirect(new Packet(PacketTypes.GLOBAL_SCRIPT, false, true, new ScriptInfo(ScriptAction.DELETE,
-                            scriptName, playerOut, new byte[0])));
+                            scriptName, playerOut, new byte[0], isLastScriptIn)));
                 }
 
 
@@ -118,8 +127,10 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
         try {
 
             Packet handledPacket = packetHandlerManager.handlePacket(packetIn, this);
+            pluginInstance.warning("Recieved: " + packetIn);
 
             if (packetIn.isReturnable() && handledPacket != null) {
+                pluginInstance.warning("Sent: " + handledPacket);
                 sendDirect(handledPacket);
             }
 
@@ -148,7 +159,7 @@ public abstract class ProxyServerConnection<P, T> implements Runnable {
         return mainServer;
     }
 
-    public ZulfBungeeProxy<P, T> getPluginInstance() {
+    public ZulfProxyImpl<P, T> getPluginInstance() {
         return pluginInstance;
     }
 

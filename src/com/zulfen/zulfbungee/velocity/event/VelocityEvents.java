@@ -13,7 +13,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.zulfen.zulfbungee.universal.event.ProxyEvents;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
-import com.zulfen.zulfbungee.velocity.ZulfVelocity;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityImpl;
 import com.zulfen.zulfbungee.velocity.objects.VelocityPlayer;
 import com.zulfen.zulfbungee.velocity.objects.VelocityServer;
 import net.kyori.adventure.text.Component;
@@ -22,11 +22,11 @@ import java.util.Optional;
 
 public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
 
-    private final ZulfVelocity zulfVelocity;
+    private final ZulfVelocityImpl zulfVelocityPlugin;
 
     public VelocityEvents(MainServer<ProxyServer, Player> mainServerIn) {
         super(mainServerIn);
-        this.zulfVelocity = (ZulfVelocity) mainServerIn.getPluginInstance();
+        this.zulfVelocityPlugin = (ZulfVelocityImpl) mainServerIn.getImpl();
     }
 
     @Subscribe
@@ -35,10 +35,10 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
         if (!serverConnectedEvent.getPreviousServer().isPresent()) {
 
             RegisteredServer server = serverConnectedEvent.getServer();
-            VelocityServer velocityServer = new VelocityServer(server, zulfVelocity);
+            VelocityServer velocityServer = new VelocityServer(server, zulfVelocityPlugin);
 
             Player eventPlayer = serverConnectedEvent.getPlayer();
-            VelocityPlayer velocityPlayer = new VelocityPlayer(eventPlayer, velocityServer, zulfVelocity);
+            VelocityPlayer velocityPlayer = new VelocityPlayer(eventPlayer, velocityServer, zulfVelocityPlugin);
 
             serverConnected(velocityPlayer);
 
@@ -54,7 +54,7 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player> {
 
         if (optionalReason.isPresent()) {
             serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(),
-                    zulfVelocity.getLegacyTextSerializer().serialize(optionalReason.get()));
+                    zulfVelocityPlugin.getLegacyTextSerializer().serialize(optionalReason.get()));
         } else {
             serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(), "");
         }

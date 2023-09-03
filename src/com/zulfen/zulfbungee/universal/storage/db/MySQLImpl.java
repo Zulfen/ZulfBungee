@@ -19,8 +19,8 @@ public class MySQLImpl<P, T> extends HikariSQLImpl<P, T> {
 
         String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
 
-        boolean useSSL = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-use-ssl");
-        boolean verifyCertificate = getMainServer().getPluginInstance().getConfig().getBoolean("mysql-verify-certificate");
+        boolean useSSL = getMainServer().getImpl().getConfig().getBoolean("mysql-use-ssl");
+        boolean verifyCertificate = getMainServer().getImpl().getConfig().getBoolean("mysql-verify-certificate");
 
         if (!useSSL) {
 

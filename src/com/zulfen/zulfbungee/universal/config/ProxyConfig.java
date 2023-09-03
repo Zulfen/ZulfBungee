@@ -1,6 +1,6 @@
 package com.zulfen.zulfbungee.universal.config;
 
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ public abstract class ProxyConfig<P, T> {
 
     private final ArrayList<String> activeScripts = new ArrayList<>();
 
-    protected ProxyConfig(ZulfBungeeProxy<P, T> instanceIn) {
+    protected ProxyConfig(ZulfProxyImpl<P, T> instanceIn) {
 
         Path dataFolder = instanceIn.getPluginFolder();
         this.configFile = dataFolder.resolve("config.yml");

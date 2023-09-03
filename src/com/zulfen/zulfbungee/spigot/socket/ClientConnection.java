@@ -6,16 +6,15 @@ import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
-import com.zulfen.zulfbungee.universal.socket.objects.client.HandshakePacket;
-import org.bukkit.scheduler.BukkitRunnable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
+import com.zulfen.zulfbungee.universal.socket.objects.client.HandshakePacket;
+import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
 
 import java.net.SocketAddress;
 import java.util.Optional;
-import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Connection<T> extends BukkitRunnable {
+public abstract class ClientConnection<T> {
 
     protected final ConnectionManager<T> connectionManager;
     protected final ZulfBungeeSpigot pluginInstance;
@@ -25,13 +24,18 @@ public abstract class Connection<T> extends BukkitRunnable {
     protected final ClientInfo clientInfo;
     protected final SocketAddress socketAddress;
 
-    protected final AtomicBoolean connected = new AtomicBoolean(false);
+    private final AtomicBoolean connected = new AtomicBoolean(false);
+    private final AtomicBoolean properConnection = new AtomicBoolean(false);
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    private final String forcedName;
-    private final LinkedTransferQueue<Optional<Packet>> skriptQueue = new LinkedTransferQueue<>();
+    protected final BlockingPacketQueue queueIn = new BlockingPacketQueue();
+    protected final BlockingPacketQueue queueOut = new BlockingPacketQueue();
 
-    public Connection(ConnectionManager<T> connectionManager, SocketAddress socketAddressIn) {
+    private final BlockingPacketQueue skriptQueue = new BlockingPacketQueue();
+
+    private final String forcedName;
+
+    public ClientConnection(ConnectionManager<T> connectionManager, SocketAddress socketAddressIn) {
 
         this.connectionManager = connectionManager;
         this.pluginInstance = connectionManager.getPluginInstance();
@@ -46,77 +50,101 @@ public abstract class Connection<T> extends BukkitRunnable {
     }
 
     public void start() {
-        pluginInstance.getTaskManager().newAsyncTask(this);
+        pluginInstance.getTaskManager().newAsyncTask(this::dataInLoop);
+        pluginInstance.getTaskManager().newAsyncTask(this::dataOutLoop);
+        pluginInstance.getTaskManager().newAsyncTask(this::handshakeTask);
     }
 
     public abstract void onRegister();
 
-    @Override
-    public void run() {
-
+    private void handshakeTask() {
+        clientCommHandler.awaitInitialConnection();
         if (forcedName.isEmpty()) {
             sendDirect(new HandshakePacket(PacketTypes.PROXY_CLIENT_INFO, clientInfo));
         } else {
             sendDirect(new HandshakePacket(PacketTypes.CONNECTION_NAME, new Object[]{forcedName, clientInfo}));
         }
         sendDirect(new HandshakePacket(PacketTypes.GLOBAL_SCRIPT, new Object[0]));
+    }
 
-        clientCommHandler.awaitProperConnection();
-        connected.set(true);
-        connectionManager.register(this);
-        onRegister();
+    private void dataOutLoop() {
+        while (running.get()) {
+            Optional<Packet> take = queueOut.take(false);
+            take.ifPresent(packet -> clientCommHandler.writePacket(packet));
+        }
+    }
 
-        while (connected.get()) {
+    private void dataInLoop() {
 
-            Optional<Packet> read = clientCommHandler.readPacket();
+        clientCommHandler.awaitInitialConnection();
+        if (running.get()) {
 
-            if (read.isPresent()) {
+            connectionManager.register(this);
+            onRegister();
+            connected.set(true);
 
-                Packet packet = read.get();
+            while (connected.get()) {
 
-                if (packet.shouldHandle()) {
-                    packetHandlerManager.handlePacket(packet);
+                Optional<Packet> read = clientCommHandler.readPacket();
+
+                if (read.isPresent()) {
+
+                    Packet packet = read.get();
+
+                    if (packet.shouldHandle()) {
+                        packetHandlerManager.handlePacket(packet);
+                    } else {
+                        skriptQueue.offer(packet);
+
+                    }
+
+
                 } else {
-                    skriptQueue.offer(read);
+                    skriptQueue.notifyListeners();
                 }
 
-            } else {
-                skriptQueue.offer(Optional.empty());
             }
-
         }
-        
+
     }
 
-    public void sendDirect(Packet packetIn) {
-        clientCommHandler.writePacket(packetIn);
-        if (packetIn.getType() != PacketTypes.HEARTBEAT_PROXY) {
+    public boolean sendDirect(Packet packetIn) {
+        if (properConnection.get() || packetIn instanceof HandshakePacket) {
+            queueOut.offer(packetIn);
             pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public Optional<Packet> read() {
-        if (connected.get()) {
-            try {
-                return skriptQueue.take();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+    public Optional<Packet> readSkriptQueue() {
+
+        if (properConnection.get()) {
+            return skriptQueue.take(true);
         }
+
         return Optional.empty();
+
     }
 
     public void destroy() {
-        if (running.compareAndSet(true, false)) {
-            connected.set(false);
-            clientCommHandler.destroy();
-            connectionManager.deRegister(this);
-        }
+        running.set(false);
+        connected.set(false);
+        queueIn.notifyListeners();
+        queueOut.notifyListeners();
+        skriptQueue.notifyListeners();
+        clientCommHandler.destroy();
+        connectionManager.deRegister(this);
     }
 
     protected void setClientCommHandler(ClientCommHandler<T> handlerIn) {
         this.clientCommHandler = handlerIn;
         clientCommHandler.setConnection(this);
+    }
+
+    public void signifyProperConnection() {
+        properConnection.set(true);
     }
 
     public ClientCommHandler<T> getClientCommHandler() {

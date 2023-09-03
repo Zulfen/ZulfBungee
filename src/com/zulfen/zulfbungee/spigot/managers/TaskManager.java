@@ -1,7 +1,6 @@
 package com.zulfen.zulfbungee.spigot.managers;
 
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.concurrent.*;
@@ -19,8 +18,8 @@ public class TaskManager {
         this.scheduler = instance.getServer().getScheduler();
     }
 
-    public void newAsyncTask(BukkitRunnable taskIn) {
-        taskIn.runTaskAsynchronously(instance);
+    public void runAsyncTaskLater(Runnable runnableIn, long delayIn) {
+        scheduler.runTaskLaterAsynchronously(instance, runnableIn, delayIn);
     }
 
     public void newAsyncTask(Runnable runnableIn) {

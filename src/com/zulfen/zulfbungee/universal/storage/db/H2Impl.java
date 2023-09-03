@@ -21,14 +21,14 @@ public class H2Impl<P, T> extends HikariSQLImpl<P, T> {
         HikariConfig hikariConfig = new HikariConfig();
 
         String pathString;
-        Path pluginFolder = getMainServer().getPluginInstance().getPluginFolder();
+        Path pluginFolder = getMainServer().getImpl().getPluginFolder();
 
         Path oldPath = pluginFolder.resolve(getDatabase() + ".db.mv.db");
         Path newPath = pluginFolder.resolve(getDatabase());
 
         // mistake with naming - .db suffix gets added automatically
         if (Files.exists(oldPath)) {
-            getMainServer().getPluginInstance().logDebug(ChatColour.YELLOW + "Using old database path format!");
+            getMainServer().getImpl().logDebug(ChatColour.YELLOW + "Using old database path format!");
             pathString = newPath.toAbsolutePath() + ".db";
         } else {
             pathString = newPath.toAbsolutePath().toString();

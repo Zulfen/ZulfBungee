@@ -1,7 +1,5 @@
 package com.zulfen.zulfbungee.bungeecord.command;
 
-import com.zulfen.zulfbungee.bungeecord.objects.BungeePlayer;
-import com.zulfen.zulfbungee.bungeecord.objects.BungeeServer;
 import com.zulfen.zulfbungee.universal.managers.CommandHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import net.md_5.bungee.api.CommandSender;
@@ -28,12 +26,13 @@ public class BungeeCommand extends Command implements TabExecutor {
         if (commandSender instanceof ProxiedPlayer) {
 
             ProxiedPlayer bungeePlayer = (ProxiedPlayer) commandSender;
-
-            commandHandlerManager.handle(new BungeePlayer(bungeePlayer, new BungeeServer(bungeePlayer.getServer().getInfo())), argsIn);
+            Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> proxyPlayer = commandHandlerManager.getMainServer()
+                    .getImpl().getPlayerConverter().apply(bungeePlayer);
+            proxyPlayer.ifPresent(player -> commandHandlerManager.handle(player, argsIn));
 
         } else {
 
-            commandHandlerManager.handle(commandHandlerManager.getMainServer().getPluginInstance()
+            commandHandlerManager.handle(commandHandlerManager.getMainServer().getImpl()
                     .getConsole(), argsIn);
 
         }
@@ -48,7 +47,7 @@ public class BungeeCommand extends Command implements TabExecutor {
 
             ProxiedPlayer bungeePlayer = (ProxiedPlayer) commandSender;
             Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer>> proxyPlayer = commandHandlerManager.getMainServer()
-                    .getPluginInstance().getPlayerConverter().apply(bungeePlayer);
+                    .getImpl().getPlayerConverter().apply(bungeePlayer);
 
             if (proxyPlayer.isPresent()) {
                 return commandHandlerManager.onTabComplete(proxyPlayer.get(), strings);
@@ -58,7 +57,7 @@ public class BungeeCommand extends Command implements TabExecutor {
 
         } else {
 
-            return commandHandlerManager.onTabComplete(commandHandlerManager.getMainServer().getPluginInstance()
+            return commandHandlerManager.onTabComplete(commandHandlerManager.getMainServer().getImpl()
                     .getConsole(), strings);
 
         }

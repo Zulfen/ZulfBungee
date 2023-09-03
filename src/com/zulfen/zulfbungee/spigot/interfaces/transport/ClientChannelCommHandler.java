@@ -1,6 +1,5 @@
 package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
-import com.comphenix.protocol.ProtocolManager;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.handlers.protocol.ChannelPayload;
 import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
@@ -8,10 +7,9 @@ import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
-import org.bukkit.entity.Player;
+import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.Optional;
 
 public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectionFactory> {
@@ -19,6 +17,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
     private final ChannelPayload channelPayload;
     private boolean transferFinished = false;
 
+    private final BlockingPacketQueue incomingPackets = new BlockingPacketQueue();
     private final int maxPacketSize;
 
     private final ByteArrayOutputStream fullPacketBytes = new ByteArrayOutputStream();
@@ -26,9 +25,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
     public ClientChannelCommHandler(ZulfBungeeSpigot pluginInstanceIn, int compressPackets) {
         super(pluginInstanceIn);
         pluginInstance.getServer().getMessenger().registerOutgoingPluginChannel(pluginInstance, "zproxy:channel");
-        ProtocolManager protocolManager = pluginInstanceIn.getProtocolManager();
-        this.channelPayload = new ChannelPayload(this, protocolManager.getMinecraftVersion());
-        protocolManager.addPacketListener(channelPayload);
+        this.channelPayload = new ChannelPayload(this, pluginInstance.getProtocolManager());
         this.maxPacketSize = compressPackets;
     }
 
@@ -60,7 +57,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
                 } else {
                     Packet packetIn = (Packet) readObject;
-                    queueIn.offer(Optional.of(packetIn));
+                    incomingPackets.offer(packetIn);
                 }
 
             }
@@ -74,29 +71,11 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
     @Override
     public Optional<Packet> readPacket() {
-        try {
-            return queueIn.take();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        return Optional.empty();
+        return incomingPackets.take(false);
     }
 
-    private void sendBytes(byte[] toSend) {
-
-        Collection<? extends Player> onlinePlayers = pluginInstance.getServer().getOnlinePlayers();
-        if (onlinePlayers.isEmpty()) {
-            try {
-                awaitProperConnection.await();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        if (pluginInstance.isEnabled()) {
-            pluginInstance.getServer().sendPluginMessage(pluginInstance, "zproxy:channel", toSend);
-        }
-
+    private void prepareMessage(byte[] toSend) {
+        pluginInstance.getServer().sendPluginMessage(pluginInstance, "zproxy:channel", toSend);
     }
 
     private byte[] packetToBytes(Packet inputPacket) {
@@ -129,16 +108,16 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
                 while (packetBytes.read(newBytesOut, 0, maxPacketSize) != -1) {
                     PacketChunk packetChunk = new PacketChunk(inputPacket.getType(), new ZulfByteBuffer(newBytesOut),
                             false);
-                    sendBytes(packetToBytes(packetChunk));
+                    prepareMessage(packetToBytes(packetChunk));
                 }
-                sendBytes(packetToBytes(new PacketChunk(inputPacket.getType(), new ZulfByteBuffer(new byte[0]), true)));
+                prepareMessage(packetToBytes(new PacketChunk(inputPacket.getType(), ZulfByteBuffer.emptyBuffer(), true)));
 
             } catch (IOException e) {
                 throw new RuntimeException("Error whilst sending packet chunks:", e);
             }
 
         } else {
-            sendBytes(fullPacketBytes);
+            prepareMessage(fullPacketBytes);
         }
 
 
@@ -148,6 +127,8 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
     @Override
     public void destroy() {
         pluginInstance.getProtocolManager().removePacketListener(channelPayload);
+        pluginInstance.getServer().getMessenger().unregisterOutgoingPluginChannel(pluginInstance);
+        incomingPackets.notifyListeners();
         super.destroy();
     }
 

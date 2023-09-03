@@ -5,7 +5,7 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.zulfen.zulfbungee.spigot.event.EventListeners;
+import com.zulfen.zulfbungee.spigot.event.BukkitEventListeners;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.TaskManager;
 import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManager;
@@ -32,7 +32,7 @@ public class ZulfBungeeSpigot extends JavaPlugin {
     public void onEnable() {
 
         plugin = this;
-        getServer().getPluginManager().registerEvents(new EventListeners(this), this);
+        getServer().getPluginManager().registerEvents(new BukkitEventListeners(this), this);
 
         taskManager = new TaskManager(this);
         saveDefaultConfig();

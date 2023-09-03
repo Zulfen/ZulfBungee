@@ -2,7 +2,9 @@ package com.zulfen.zulfbungee.spigot.tasks;
 
 import ch.njol.skript.Skript;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
@@ -22,16 +24,22 @@ public class GlobalScriptsTask implements Supplier<File> {
     private final ScriptAction scriptAction;
     private final CommandSender sender;
 
-    public GlobalScriptsTask(ZulfBungeeSpigot pluginInstanceIn, String scriptNameIn, ScriptAction scriptActionIn, CommandSender senderIn, byte[] dataIn) {
+    private final boolean isFinalScript;
+
+    private final ClientConnection<?> connection;
+
+    public GlobalScriptsTask(ZulfBungeeSpigot pluginInstanceIn, ClientConnection<?> connectionIn, CommandSender senderIn, ScriptInfo scriptInfoIn) {
         this.pluginInstance = pluginInstanceIn;
-        this.scriptName = scriptNameIn;
+        this.connection = connectionIn;
+        this.scriptName = scriptInfoIn.getScriptName();
         this.scriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
                 scriptName);
         this.unloadedScriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
                 "-" + scriptName);
-        this.scriptAction = scriptActionIn;
+        this.scriptAction = scriptInfoIn.getScriptAction();
+        this.isFinalScript = scriptInfoIn.isLastScript();
         this.sender = senderIn;
-        this.data = dataIn;
+        this.data = scriptInfoIn.getScriptData();
     }
 
 
@@ -103,8 +111,17 @@ public class GlobalScriptsTask implements Supplier<File> {
     }
 
     private void skriptProcess(String commandAction) {
-        pluginInstance.getTaskManager().newMainThreadTask(() -> pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
-                commandAction, scriptName)));
+
+        pluginInstance.getTaskManager().newMainThreadTask(() -> {
+
+            pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
+                    commandAction, scriptName));
+            if (isFinalScript) {
+                connection.signifyProperConnection();
+            }
+
+        });
+
     }
 
 }

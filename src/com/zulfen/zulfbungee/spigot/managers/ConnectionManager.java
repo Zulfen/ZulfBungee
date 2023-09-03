@@ -3,7 +3,7 @@ package com.zulfen.zulfbungee.spigot.managers;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.registrations.Classes;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
@@ -34,7 +34,7 @@ public abstract class ConnectionManager<T> {
     protected final ZulfBungeeSpigot pluginInstance;
     protected final ConcurrentHashMap<String, ClientInfo> proxyServers = new ConcurrentHashMap<>();
 
-    protected final CopyOnWriteArrayList<Connection<T>> allConnections = new CopyOnWriteArrayList<>();
+    protected final CopyOnWriteArrayList<ClientConnection<T>> allConnections = new CopyOnWriteArrayList<>();
     private final CopyOnWriteArrayList<SocketAddress> blockedConnections = new CopyOnWriteArrayList<>();
 
     protected final List<File> scriptFiles = Collections.synchronizedList(new ArrayList<>());
@@ -64,15 +64,19 @@ public abstract class ConnectionManager<T> {
 
     }
 
-    protected abstract void sendDirectImpl(Packet packetIn);
+    protected abstract boolean sendDirectImpl(Packet packetIn);
 
-    public boolean sendDirect(Packet packetIn) {
-        if (allConnections.size() > 0 || packetIn instanceof HandshakePacket) {
-            sendDirectImpl(packetIn);
-            return true;
+    public synchronized boolean sendDirect(Packet packetIn) {
+        if (pluginInstance.isEnabled()) {
+            if (!allConnections.isEmpty() || packetIn instanceof HandshakePacket) {
+                return sendDirectImpl(packetIn);
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
+
     }
 
     public abstract Optional<Packet> send(Packet packetIn);
@@ -142,7 +146,7 @@ public abstract class ConnectionManager<T> {
         send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
     }
 
-    public Optional<NetworkVariable> requestNetworkVariable(String nameIn) {
+    public synchronized Optional<NetworkVariable> requestNetworkVariable(String nameIn) {
 
         Optional<Packet> send = send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, nameIn));
 
@@ -171,15 +175,15 @@ public abstract class ConnectionManager<T> {
 
     }
 
-    public void register(Connection<T> connectionIn) {
+    public void register(ClientConnection<T> connectionIn) {
         allConnections.add(connectionIn);
     }
 
-    public void deRegister(Connection<T> connectionIn) {
+    public void deRegister(ClientConnection<T> connectionIn) {
         allConnections.remove(connectionIn);
     }
 
-    public void blockConnection(Connection<?> connectionIn) {
+    public void blockConnection(ClientConnection<?> connectionIn) {
         blockedConnections.add(connectionIn.getSocketAddress());
         connectionIn.destroy();
     }
@@ -208,8 +212,8 @@ public abstract class ConnectionManager<T> {
         return Optional.ofNullable(thisServer);
     }
 
-    // TODO: Re-do all of this at some point to buffer scripts instead of sending them in one large packet.
-    public void processGlobalScript(@NotNull ScriptInfo infoIn) {
+    // TODO: Re-do all of this at some point.
+    public void processGlobalScript(@NotNull ScriptInfo infoIn, ClientConnection<?> connectionIn) {
 
         ScriptAction action = infoIn.getScriptAction();
 
@@ -226,7 +230,7 @@ public abstract class ConnectionManager<T> {
 
         }
 
-        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(pluginInstance, infoIn.getScriptName(), action, sender, infoIn.getScriptData()))
+        getPluginInstance().getTaskManager().submitSupplier(new GlobalScriptsTask(pluginInstance, connectionIn, sender, infoIn))
                 .thenAccept(file -> {
                     switch (action) {
                         case RELOAD:
@@ -247,7 +251,7 @@ public abstract class ConnectionManager<T> {
 
         if (running.compareAndSet(true, false)) {
 
-            for (Connection<T> connection : allConnections) {
+            for (ClientConnection<T> connection : allConnections) {
                 connection.destroy();
             }
 

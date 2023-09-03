@@ -1,11 +1,12 @@
 package com.zulfen.zulfbungee.universal.handlers.transport;
 
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
 import com.zulfen.zulfbungee.universal.interfaces.MessageCallback;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
+import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
 
 import java.io.*;
 import java.util.Optional;
@@ -14,10 +15,11 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
     private final MessageCallback messageCallback;
 
+    private final BlockingPacketQueue incomingQueue = new BlockingPacketQueue();
     private final ByteArrayOutputStream fullPacketBytes = new ByteArrayOutputStream();
     private boolean transferFinished = false;
 
-    public ProxyChannelCommHandler(ZulfBungeeProxy<P, T> pluginInstanceIn, MessageCallback messageCallbackIn) {
+    public ProxyChannelCommHandler(ZulfProxyImpl<P, T> pluginInstanceIn, MessageCallback messageCallbackIn) {
         super(pluginInstanceIn);
         this.messageCallback = messageCallbackIn;
     }
@@ -50,7 +52,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
                 } else {
                     Packet packetIn = (Packet) readObject;
-                    queueIn.offer(Optional.of(packetIn));
+                    incomingQueue.offer(packetIn);
                 }
 
             }
@@ -64,12 +66,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
     @Override
     public Optional<Packet> readPacket() {
-        try {
-            return queueIn.take();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        return Optional.empty();
+        return incomingQueue.take(false);
     }
 
     private void sendBytes(byte[] dataIn) {

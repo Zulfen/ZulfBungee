@@ -1,26 +1,33 @@
 package com.zulfen.zulfbungee.spigot.handlers.protocol;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.MinecraftKey;
 import io.netty.buffer.ByteBuf;
 import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientChannelCommHandler;
+import io.netty.buffer.Unpooled;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class ChannelPayload extends PacketAdapter {
 
     private final ClientChannelCommHandler channelCommHandler;
+    private final ProtocolManager protocolManager;
     private final MinecraftVersion minecraftVersion;
 
-    public ChannelPayload(ClientChannelCommHandler channelCommHandlerIn, MinecraftVersion versionIn) {
+    public ChannelPayload(ClientChannelCommHandler channelCommHandlerIn, ProtocolManager protocolManagerIn) {
         super(channelCommHandlerIn.getPluginInstance(), ListenerPriority.NORMAL, PacketType.Play.Client.CUSTOM_PAYLOAD);
         this.channelCommHandler = channelCommHandlerIn;
-        this.minecraftVersion = versionIn;
+        this.protocolManager = protocolManagerIn;
+        this.minecraftVersion = protocolManager.getMinecraftVersion();
+        protocolManager.addPacketListener(this);
     }
 
     @Override
@@ -51,5 +58,23 @@ public class ChannelPayload extends PacketAdapter {
 
     @Override
     public void onPacketSending(PacketEvent event) {}
+
+    private void manualSend(byte[] bytesIn, Player playerIn) {
+
+        PacketContainer channelPacket = new PacketContainer(PacketType.Play.Server.CUSTOM_PAYLOAD);
+        ByteBuf byteBuf = Unpooled.copiedBuffer(bytesIn);
+        if (minecraftVersion.isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
+            channelPacket.getMinecraftKeys().write(0, new MinecraftKey("zproxy", "channel"));
+        } else {
+            channelPacket.getStrings().write(0, "zproxy:channel");
+        }
+
+        Object packetDataSerializer = MinecraftReflection.getPacketDataSerializer(byteBuf);
+        channelPacket.getModifier().withType(ByteBuf.class).write(0, packetDataSerializer);
+
+        channelCommHandler.getPluginInstance().error(playerIn.getDisplayName());
+        protocolManager.sendServerPacket(playerIn, channelPacket);
+
+    }
 
 }

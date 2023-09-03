@@ -6,7 +6,7 @@ import ch.njol.skript.util.chat.MessageComponent;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PlayerSendMessage extends PacketHandler {
 
-    public PlayerSendMessage(Connection<?> connectionIn) {
+    public PlayerSendMessage(ClientConnection<?> connectionIn) {
         super(connectionIn, false, PacketTypes.PLAYER_SEND_MESSAGE);
     }
 

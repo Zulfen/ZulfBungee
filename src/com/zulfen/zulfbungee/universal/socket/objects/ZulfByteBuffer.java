@@ -14,6 +14,10 @@ public class ZulfByteBuffer implements Serializable {
         return data;
     }
 
+    public static ZulfByteBuffer emptyBuffer() {
+        return new ZulfByteBuffer(new byte[0]);
+    }
+
 
 
 }

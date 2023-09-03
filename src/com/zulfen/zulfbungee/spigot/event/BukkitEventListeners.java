@@ -10,14 +10,13 @@ import com.zulfen.zulfbungee.spigot.managers.connections.ChannelConnectionManage
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChannelEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class EventListeners implements Listener {
+public class BukkitEventListeners implements Listener {
 
     private final ZulfBungeeSpigot pluginInstance;
 
-    public EventListeners(ZulfBungeeSpigot pluginInstanceIn) {
+    public BukkitEventListeners(ZulfBungeeSpigot pluginInstanceIn) {
         this.pluginInstance = pluginInstanceIn;
     }
 

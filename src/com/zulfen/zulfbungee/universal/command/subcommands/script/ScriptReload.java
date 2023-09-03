@@ -24,7 +24,7 @@ public class ScriptReload<P, T> extends CommandHandler<P, T> {
 
             WatchService folderWatchService = FileSystems.getDefault().newWatchService();
 
-            this.scriptsFolderPath = getMainServer().getPluginInstance().getConfig()
+            this.scriptsFolderPath = getMainServer().getImpl().getConfig()
                     .getScriptsFolderPath();
 
             this.watchKey = scriptsFolderPath
@@ -32,7 +32,7 @@ public class ScriptReload<P, T> extends CommandHandler<P, T> {
 
 
         } catch (IOException e) {
-            getMainServer().getPluginInstance().error("There was an error creating a watch service for the scripts folder!");
+            getMainServer().getImpl().error("There was an error creating a watch service for the scripts folder!");
             throw new RuntimeException(e);
         }
 
@@ -130,7 +130,7 @@ public class ScriptReload<P, T> extends CommandHandler<P, T> {
 
             ArrayList<String> suggestions = new ArrayList<>();
 
-            for (Path path : getMainServer().getPluginInstance().getConfig().getScriptPaths()) {
+            for (Path path : getMainServer().getImpl().getConfig().getScriptPaths()) {
 
                 String realName = path.getFileName().toString();
 

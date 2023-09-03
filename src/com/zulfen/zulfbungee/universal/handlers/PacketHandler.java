@@ -4,7 +4,7 @@ import com.zulfen.zulfbungee.universal.managers.MainServer;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 
 public abstract class PacketHandler<P, T> {
 
@@ -16,8 +16,8 @@ public abstract class PacketHandler<P, T> {
         return packetHandlerManager.getMainServer();
     }
 
-    public ZulfBungeeProxy<P, T> getProxy() {
-        return packetHandlerManager.getMainServer().getPluginInstance();
+    public ZulfProxyImpl<P, T> getProxy() {
+        return packetHandlerManager.getMainServer().getImpl();
     }
 
     public PacketHandler(PacketHandlerManager<P, T> packetHandlerManagerIn) {

@@ -14,11 +14,14 @@ public class ScriptInfo implements Serializable {
 
     private final byte[] scriptData;
 
-    public ScriptInfo(ScriptAction scriptActionIn, String scriptNameIn, ClientPlayer proxyPlayerIn, byte[] dataIn) {
+    private final boolean lastScript;
+
+    public ScriptInfo(ScriptAction scriptActionIn, String scriptNameIn, ClientPlayer proxyPlayerIn, byte[] dataIn, boolean isLastScriptIn) {
         this.scriptAction = scriptActionIn;
         this.scriptName = scriptNameIn;
         this.sender = proxyPlayerIn;
         this.scriptData = dataIn;
+        this.lastScript = isLastScriptIn;
     }
 
     public byte[] getScriptData() {
@@ -36,4 +39,9 @@ public class ScriptInfo implements Serializable {
     public String getScriptName() {
         return scriptName;
     }
+
+    public boolean isLastScript() {
+        return lastScript;
+    }
+
 }

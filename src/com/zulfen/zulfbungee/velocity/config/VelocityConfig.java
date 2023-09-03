@@ -3,10 +3,10 @@ package com.zulfen.zulfbungee.velocity.config;
 import com.google.common.reflect.TypeToken;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityImpl;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
 import com.zulfen.zulfbungee.universal.config.ProxyConfig;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class VelocityConfig extends ProxyConfig<ProxyServer, Player> {
 
     private final ConfigurationNode loadedConfig;
 
-    public VelocityConfig(ZulfBungeeProxy<ProxyServer, Player> instanceIn) {
+    public VelocityConfig(ZulfVelocityImpl instanceIn) {
 
         super(instanceIn);
 

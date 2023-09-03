@@ -20,7 +20,6 @@ public class ConnectionName<P, T> extends PacketHandler<P, T> {
         ClientInfo clientInfo = (ClientInfo) packetIn.getDataArray()[1];
 
         getMainServer().addActiveConnection(connection, givenName, clientInfo);
-
         return new Packet(PacketTypes.CONNECTION_NAME, true, true, givenName);
 
     }

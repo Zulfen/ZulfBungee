@@ -9,13 +9,14 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.command.util.ChatColour;
 import com.zulfen.zulfbungee.universal.interfaces.StorageImpl;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 import com.zulfen.zulfbungee.universal.storage.db.H2Impl;
 import com.zulfen.zulfbungee.universal.storage.db.MySQLImpl;
+import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.IOException;
 import java.net.*;
@@ -27,7 +28,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainServer<P, T> {
 
-    protected final ZulfBungeeProxy<P, T> pluginInstance;
+    protected final ZulfProxyImpl<P, T> pluginInstance;
 
     protected final CopyOnWriteArrayList<ProxyServerConnection<P, T>> connections = new CopyOnWriteArrayList<>();
 
@@ -39,13 +40,15 @@ public class MainServer<P, T> {
     protected final ConcurrentLinkedQueue<EventPacket> unsentEventPackets = new ConcurrentLinkedQueue<>();
 
     protected final ProxyTaskManager taskManager;
+    protected final CheckUpdateTask<P, T> checkUpdateTask;
 
     // storage
     private volatile StorageImpl<P, T> storage;
 
-    public MainServer(ZulfBungeeProxy<P, T> instanceIn) {
+    public MainServer(ZulfProxyImpl<P, T> instanceIn, CheckUpdateTask<P, T> updateTaskIn) {
 
         this.pluginInstance = instanceIn;
+        this.checkUpdateTask = updateTaskIn;
         this.taskManager = instanceIn.getTaskManager();
 
         pluginInstance.getTaskManager().newTask(() -> {
@@ -63,12 +66,12 @@ public class MainServer<P, T> {
 
         });
 
-        pluginInstance.getUpdater().checkUpdate(pluginInstance.getConsole(), true);
+        checkUpdateTask.checkUpdate(pluginInstance.getConsole(), true);
 
     }
 
-    protected void startConnection(ProxyServerConnection<P, T> connectionIn) {
-        taskManager.newTask(connectionIn);
+    protected void createConnection(ProxyServerConnection<P, T> connectionIn) {
+        connectionIn.start();
         connections.add(connectionIn);
     }
 
@@ -103,7 +106,7 @@ public class MainServer<P, T> {
         for (ProxyServerConnection<P, T> connection : connections) {
             for (Map.Entry<Path, ScriptAction> script : scriptNamesIn.entrySet()) {
                 String name = script.getKey().getFileName().toString();
-                connection.sendScript(name, script.getKey(), script.getValue(), senderIn);
+                connection.sendScript(name, script.getKey(), script.getValue(), senderIn, false);
             }
         }
 
@@ -113,7 +116,7 @@ public class MainServer<P, T> {
 
         for (ProxyServerConnection<P, T> connection : connections) {
             for (Map.Entry<String, Path> script : scriptNamesIn.entrySet()) {
-                connection.sendScript(script.getKey(), script.getValue(), scriptActionIn, senderIn);
+                connection.sendScript(script.getKey(), script.getValue(), scriptActionIn, senderIn, false);
             }
         }
 
@@ -195,10 +198,6 @@ public class MainServer<P, T> {
         return activeConnections.keySet();
     }
 
-    public boolean isAddressRegistered(SocketAddress socketAddressIn) {
-        return addressNames.containsKey(socketAddressIn);
-    }
-
     public Optional<ProxyServerConnection<P, T>> getConnection(String name) {
         return Optional.ofNullable(activeConnections.get(name));
     }
@@ -254,7 +253,11 @@ public class MainServer<P, T> {
         return Optional.ofNullable(storage);
     }
 
-    public ZulfBungeeProxy<P, T> getPluginInstance() {
+    public CheckUpdateTask<P, T> getCheckUpdateTask() {
+        return checkUpdateTask;
+    }
+
+    public ZulfProxyImpl<P, T> getImpl() {
         return pluginInstance;
     }
 

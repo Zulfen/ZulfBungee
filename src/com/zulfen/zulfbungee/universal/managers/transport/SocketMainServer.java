@@ -1,9 +1,10 @@
 package com.zulfen.zulfbungee.universal.managers.transport;
 
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.command.util.ChatColour;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
 import com.zulfen.zulfbungee.universal.socket.transport.SocketServerConnection;
+import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -25,8 +26,8 @@ public class SocketMainServer<P, T> extends MainServer<P, T> implements Runnable
     private ServerSocket serverSocket;
     private Socket socket;
 
-    public SocketMainServer(int port, InetAddress address, ZulfBungeeProxy<P, T> instanceIn) {
-        super(instanceIn);
+    public SocketMainServer(int port, InetAddress address, ZulfProxyImpl<P, T> instanceIn, CheckUpdateTask<P, T> updateTaskIn) {
+        super(instanceIn, updateTaskIn);
         this.hostAddress = address;
         this.port = port;
     }
@@ -98,7 +99,7 @@ public class SocketMainServer<P, T> extends MainServer<P, T> implements Runnable
 
     private void acceptSocketConnection(Socket socketIn) throws IOException {
         SocketServerConnection<P, T> connection = new SocketServerConnection<>(this, socketIn);
-        startConnection(connection);
+        createConnection(connection);
     }
 
     @Override

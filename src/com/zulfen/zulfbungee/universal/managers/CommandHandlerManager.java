@@ -95,7 +95,7 @@ public class CommandHandlerManager<P, T> {
                 }
 
             } else {
-                sender.sendPluginMessage("That sub command does not exist! Please read the documentation.");
+                sender.sendPluginMessage("That sub command does not exist! Please readSkriptQueue the documentation.");
             }
 
         } else {

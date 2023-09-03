@@ -23,7 +23,7 @@ public class ScriptUnload<P, T> extends CommandHandler<P, T> {
     @Override
     public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
-        ProxyConfig<P, T> config = getMainServer().getPluginInstance().getConfig();
+        ProxyConfig<P, T> config = getMainServer().getImpl().getConfig();
 
         if (separateArgs.length > 0) {
 
@@ -45,7 +45,7 @@ public class ScriptUnload<P, T> extends CommandHandler<P, T> {
                         try {
                             Files.move(scriptPath, scriptPath.resolveSibling("-" + fileName));
                         } catch (IOException e) {
-                            getMainServer().getPluginInstance().warning(String.format("There was an error trying to rename script %s whilst trying to unload it:", scriptName));
+                            getMainServer().getImpl().warning(String.format("There was an error trying to rename script %s whilst trying to unload it:", scriptName));
                             e.printStackTrace();
                         }
 
@@ -75,7 +75,7 @@ public class ScriptUnload<P, T> extends CommandHandler<P, T> {
 
         if (index == 0) {
 
-            return getMainServer().getPluginInstance().getConfig().getScriptPaths().stream()
+            return getMainServer().getImpl().getConfig().getScriptPaths().stream()
                     .map(path -> path.getFileName().toString())
                     .filter(realName -> !realName.startsWith("-"))
                     .collect(Collectors.toList());

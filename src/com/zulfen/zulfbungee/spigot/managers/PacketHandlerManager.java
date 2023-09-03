@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.spigot.managers;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.spigot.handlers.packets.*;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
@@ -15,7 +15,7 @@ public class PacketHandlerManager {
 
     private final ArrayList<PacketHandler> handlers = new ArrayList<>();
 
-    public PacketHandlerManager(Connection<?> connectionIn) {
+    public PacketHandlerManager(ClientConnection<?> connectionIn) {
         this.taskManager = connectionIn.getPluginInstance().getTaskManager();
         addHandler(new ConnectionName(connectionIn));
         addHandler(new ServerSwitchEvent(connectionIn));

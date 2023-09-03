@@ -6,7 +6,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
-import com.zulfen.zulfbungee.velocity.ZulfVelocity;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 public class VelocityServer extends ZulfProxyServer<ProxyServer, Player> {
 
     private final RegisteredServer server;
-    private final ZulfVelocity pluginInstance;
+    private final ZulfVelocityImpl pluginInstance;
 
-    public VelocityServer(RegisteredServer velocityServerIn, ZulfVelocity pluginIn) {
+    public VelocityServer(RegisteredServer velocityServerIn, ZulfVelocityImpl pluginIn) {
         super(velocityServerIn.getServerInfo().getName(), velocityServerIn.getServerInfo().getAddress());
         this.server = velocityServerIn;
         this.pluginInstance = pluginIn;

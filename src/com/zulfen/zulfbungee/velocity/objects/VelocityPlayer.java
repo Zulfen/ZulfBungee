@@ -5,7 +5,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
-import com.zulfen.zulfbungee.velocity.ZulfVelocity;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityImpl;
 
 import java.net.InetSocketAddress;
 import java.util.Optional;
@@ -14,10 +14,10 @@ public class VelocityPlayer extends ZulfProxyPlayer<ProxyServer, Player> {
 
     private final Player velocityPlayer;
 
-    private final ZulfVelocity zulfVelocity;
+    private final ZulfVelocityImpl zulfVelocity;
     private final ProxyServer velocity;
 
-    public VelocityPlayer(Player velocityPlayerIn, ZulfProxyServer<ProxyServer, Player> serverIn, ZulfVelocity pluginIn) {
+    public VelocityPlayer(Player velocityPlayerIn, ZulfProxyServer<ProxyServer, Player> serverIn, ZulfVelocityImpl pluginIn) {
         super(pluginIn.getPlatform(), velocityPlayerIn.getUsername(), velocityPlayerIn.getUniqueId(),
                 velocityPlayerIn.getRemoteAddress(), serverIn);
         this.zulfVelocity = pluginIn;

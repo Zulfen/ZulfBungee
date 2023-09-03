@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.vdurmont.semver4j.Semver;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.task.tasks.util.UpdateResult;
 import com.zulfen.zulfbungee.universal.task.tasks.util.VersionStatus;
 
@@ -19,9 +19,9 @@ import java.util.function.Supplier;
 
 public class CheckUpdateTask<P, T> implements Supplier<Optional<UpdateResult>> {
 
-    private final ZulfBungeeProxy<P, T> pluginInstance;
+    private final ZulfProxyImpl<P, T> pluginInstance;
 
-    public CheckUpdateTask(ZulfBungeeProxy<P, T> instanceIn) {
+    public CheckUpdateTask(ZulfProxyImpl<P, T> instanceIn) {
         this.pluginInstance = instanceIn;
     }
 

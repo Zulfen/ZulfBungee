@@ -8,6 +8,7 @@ import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public class GlobalScript<P, T> extends PacketHandler<P, T> {
 
@@ -20,21 +21,24 @@ public class GlobalScript<P, T> extends PacketHandler<P, T> {
     @Override
     public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> connection) {
 
-        ProxyConfig<P, T> config = getMainServer().getPluginInstance().getConfig();
+        ProxyConfig<P, T> config = getMainServer().getImpl().getConfig();
 
         if (config.getBoolean("global-scripts")) {
 
-            getProxy().getTaskManager().newTask(() -> {
+            List<Path> scriptPaths = config.getScriptPaths();
+            int listLength = scriptPaths.size();
+            for (int i = 0; i < listLength; i++) {
 
-                for (Path script : config.getScriptPaths()) {
-                    String scriptName = script.getFileName().toString();
-                    if (!scriptName.startsWith("-")) {
-                        connection.sendScript(scriptName, script, ScriptAction.RELOAD, null);
-                        config.registerScript(scriptName);
-                    }
+                Path currentScriptPath = scriptPaths.get(i);
+
+                boolean isLastScript = i == listLength - 1;
+                String scriptName = currentScriptPath.getFileName().toString();
+                if (!scriptName.startsWith("-")) {
+                    connection.sendScript(scriptName, currentScriptPath, ScriptAction.RELOAD, null, isLastScript);
+                    config.registerScript(scriptName);
                 }
 
-            });
+            }
 
         }
 

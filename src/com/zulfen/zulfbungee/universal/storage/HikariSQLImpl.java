@@ -25,7 +25,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
     public HikariSQLImpl(MainServer<P, T> mainServerIn) {
         super(mainServerIn);
         this.dataSource = initialiseDataSource();
-        this.caseInsensitive = mainServerIn.getPluginInstance().getConfig().getBoolean("case-insensitive-variables");
+        this.caseInsensitive = mainServerIn.getImpl().getConfig().getBoolean("case-insensitive-variables");
     }
 
     protected abstract HikariDataSource initialiseDataSource();
@@ -35,7 +35,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
-            getMainServer().getPluginInstance().logInfo(ChatColour.GREEN + "Storage successfully started!");
+            getMainServer().getImpl().logInfo(ChatColour.GREEN + "Storage successfully started!");
 
             String creationStatement = "CREATE TABLE IF NOT EXISTS variables " +
                     "(name VARCHAR(255) not NULL PRIMARY KEY, " +
@@ -45,11 +45,11 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
             Statement statement = tempConnection.createStatement();
             statement.execute(creationStatement);
 
-            getMainServer().getPluginInstance().logInfo(ChatColour.GREEN + "Done setting up the database!");
+            getMainServer().getImpl().logInfo(ChatColour.GREEN + "Done setting up the database!");
 
 
         } catch (SQLException e) {
-            getMainServer().getPluginInstance().error("There was an error setting up/connecting to the database!");
+            getMainServer().getImpl().error("There was an error setting up/connecting to the database!");
             e.printStackTrace();
         }
 
@@ -130,7 +130,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            getMainServer().getPluginInstance().error("Error fetching data from MySQL database!");
+            getMainServer().getImpl().error("Error fetching data from MySQL database!");
         }
 
         return Optional.empty();
@@ -172,7 +172,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
                     preparedStatement.executeUpdate();
 
-                    //getMainServer().getPluginInstance().logDebug("Stored variable in list " + variableNameIn);
+                    //getMainServer().getImpl().logDebug("Stored variable in list " + variableNameIn);
 
                 }
 
@@ -193,17 +193,17 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
                     preparedStatement.executeUpdate();
 
-                    //getMainServer().getPluginInstance().logDebug("Stored variable " + variableNameIn);
+                    //getMainServer().getImpl().logDebug("Stored variable " + variableNameIn);
 
                 } else {
-                    getMainServer().getPluginInstance().logDebug(String.format("%sVariable %s appears to be empty? Unable to save.", ChatColour.YELLOW, variableNameIn));
+                    getMainServer().getImpl().logDebug(String.format("%sVariable %s appears to be empty? Unable to save.", ChatColour.YELLOW, variableNameIn));
                 }
 
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            getMainServer().getPluginInstance().error("Error inserting value into MySQL database!");
+            getMainServer().getImpl().error("Error inserting value into MySQL database!");
 
         }
     }
@@ -309,7 +309,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            getMainServer().getPluginInstance().error("Error adding variable to MySQL Database!");
+            getMainServer().getImpl().error("Error adding variable to MySQL Database!");
         }
 
     }
@@ -352,13 +352,13 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
             }
             preparedStatement.executeUpdate();
 
-            //getMainServer().getPluginInstance().logDebug("Deleted variable " + name);
+            //getMainServer().getImpl().logDebug("Deleted variable " + name);
 
 
         } catch (SQLException e) {
 
             e.printStackTrace();
-            getMainServer().getPluginInstance().error("Error deleting value from MySQL database!");
+            getMainServer().getImpl().error("Error deleting value from MySQL database!");
 
         }
     }
@@ -453,14 +453,14 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            getMainServer().getPluginInstance().error("Error removing variable to MySQL Database!");
+            getMainServer().getImpl().error("Error removing variable to MySQL Database!");
         }
     }
 
     @Override
     public void shutdown() {
 
-        getMainServer().getPluginInstance().logDebug("Shutting down database connection...");
+        getMainServer().getImpl().logDebug("Shutting down database connection...");
         dataSource.close();
 
     }

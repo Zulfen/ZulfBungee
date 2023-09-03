@@ -2,7 +2,7 @@ package com.zulfen.zulfbungee.universal.command.subcommands;
 
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.handlers.CommandHandler;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
@@ -18,7 +18,7 @@ public class Debug<P, T> extends CommandHandler<P, T> {
     @Override
     public void handleCommand(ProxyCommandSender<P, T> sender, String[] separateArgs) {
 
-        ZulfBungeeProxy<P, T> pluginInstance = getMainServer().getPluginInstance();
+        ZulfProxyImpl<P, T> pluginInstance = getMainServer().getImpl();
         String transportType = getMainServer().getClass().getSimpleName();
 
         sender.sendPluginMessage(String.format("You are running on proxy platform: &o%s", pluginInstance.platformString()));

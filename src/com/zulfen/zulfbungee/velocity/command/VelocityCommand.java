@@ -4,23 +4,23 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.zulfen.zulfbungee.velocity.ZulfVelocity;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.managers.CommandHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityImpl;
 
 import java.util.List;
 import java.util.Optional;
 
 public class VelocityCommand implements SimpleCommand {
 
-    private final ZulfVelocity zulfVelocity;
+    private final ZulfVelocityImpl zulfVelocityPlugin;
 
     public final CommandHandlerManager<ProxyServer, Player> commandHandlerManager;
 
     public VelocityCommand(CommandHandlerManager<ProxyServer, Player> commandHandlerManagerIn) {
         this.commandHandlerManager = commandHandlerManagerIn;
-        this.zulfVelocity = (ZulfVelocity) commandHandlerManager.getMainServer().getPluginInstance();
+        this.zulfVelocityPlugin = (ZulfVelocityImpl) commandHandlerManager.getMainServer().getImpl();
     }
 
     private ProxyCommandSender<ProxyServer, Player> getSender(Invocation invocationIn) {
@@ -28,14 +28,14 @@ public class VelocityCommand implements SimpleCommand {
         CommandSource commandSource = invocationIn.source();
 
         if (commandSource instanceof Player) {
-            Optional<ZulfProxyPlayer<ProxyServer, Player>> apply = zulfVelocity.getPlayerConverter().apply((Player) commandSource);
+            Optional<ZulfProxyPlayer<ProxyServer, Player>> apply = zulfVelocityPlugin.getPlayerConverter().apply((Player) commandSource);
             if (apply.isPresent()) {
                 return apply.get();
             }
 
         }
 
-        return zulfVelocity.getConsole();
+        return zulfVelocityPlugin.getConsole();
 
     }
 

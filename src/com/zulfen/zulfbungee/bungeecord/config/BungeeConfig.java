@@ -1,6 +1,6 @@
 package com.zulfen.zulfbungee.bungeecord.config;
 
-import com.zulfen.zulfbungee.bungeecord.ZulfBungeecord;
+import com.zulfen.zulfbungee.bungeecord.interfaces.ZulfBungeecordImpl;
 import com.zulfen.zulfbungee.universal.config.ProxyConfig;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,7 +15,7 @@ public class BungeeConfig extends ProxyConfig<ProxyServer, ProxiedPlayer> {
 
     private final Configuration loadedConfig;
 
-    public BungeeConfig(ZulfBungeecord instanceIn) {
+    public BungeeConfig(ZulfBungeecordImpl instanceIn) {
 
         super(instanceIn);
 

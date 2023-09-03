@@ -2,7 +2,7 @@ package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
@@ -10,7 +10,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ClientPlayer
 
 public class ServerSwitchEvent extends PacketHandler {
 
-    public ServerSwitchEvent(Connection<?> connectionIn) {
+    public ServerSwitchEvent(ClientConnection<?> connectionIn) {
         super(connectionIn, true, PacketTypes.SERVER_SWITCH_EVENT);
 
     }

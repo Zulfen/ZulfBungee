@@ -1,11 +1,12 @@
 package com.zulfen.zulfbungee.universal.managers.transport;
 
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.command.util.ChatColour;
 import com.zulfen.zulfbungee.universal.handlers.transport.ProxyChannelCommHandler;
 import com.zulfen.zulfbungee.universal.interfaces.MessageCallback;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
 import com.zulfen.zulfbungee.universal.socket.transport.ChannelServerConnection;
+import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -15,8 +16,8 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
 
     private final ConcurrentHashMap<String, ChannelServerConnection<P, T>> channelConnections = new ConcurrentHashMap<>();
 
-    public ChannelMainServer(ZulfBungeeProxy<P, T> instanceIn) {
-        super(instanceIn);
+    public ChannelMainServer(ZulfProxyImpl<P, T> instanceIn, CheckUpdateTask<P, T> updateTaskIn) {
+        super(instanceIn, updateTaskIn);
         pluginInstance.registerMessageChannel("zproxy:channel");
         pluginInstance.logInfo(ChatColour.GREEN + "Waiting for a player to join...");
     }
@@ -30,7 +31,7 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
     public void acceptMessagingConnection(SocketAddress addressIn, String serverName, MessageCallback callbackIn) {
         ChannelServerConnection<P, T> connection = new ChannelServerConnection<>(this, callbackIn, addressIn);
         channelConnections.put(serverName, connection);
-        startConnection(connection);
+        createConnection(connection);
     }
 
     public void proccessPluginMessage(String serverNameIn, byte[] dataIn) {
@@ -50,8 +51,6 @@ public class ChannelMainServer<P, T> extends MainServer<P, T> {
     public void removeServerConnection(String name, SocketAddress address) {
 
         channelConnections.remove(name);
-        // we register the channel again just to be sure
-        pluginInstance.registerMessageChannel("zproxy:channel");
 
         if (channelConnections.isEmpty()) {
             pluginInstance.logInfo(ChatColour.GREEN + "Waiting for a player to join...");

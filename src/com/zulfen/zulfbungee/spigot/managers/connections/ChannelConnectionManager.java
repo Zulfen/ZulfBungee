@@ -28,25 +28,30 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
     public ChannelConnectionManager(ZulfBungeeSpigot pluginIn, InetAddress serverAddress, int serverPort) {
         super(pluginIn, ChannelConnectionFactory.class);
         this.socketAddress = new InetSocketAddress(serverAddress, serverPort);
-        newChannelConnection();
+        pluginInstance.logInfo(ChatColor.GREEN + "Waiting for a player to join...");
     }
 
     @Override
-    protected void sendDirectImpl(Packet packetIn) {
-        clientChannelConnection.sendDirect(packetIn);
+    protected boolean sendDirectImpl(Packet packetIn) {
+        return clientChannelConnection.sendDirect(packetIn);
     }
 
     @Override
-    public Optional<Packet> send(Packet packetIn) {
-        if (sendDirect(packetIn)) {
-            return clientChannelConnection.read();
+    public synchronized Optional<Packet> send(Packet packetIn) {
+        boolean sendDirect = sendDirect(packetIn);
+        if (sendDirect) {
+            Optional<Packet> read = clientChannelConnection.readSkriptQueue();
+            if (!read.isPresent()) {
+                pluginInstance.logDebug(String.format("%sDropped packet %s due to no response from proxy.", ChatColor.YELLOW, packetIn.getType().name()));
+            }
+            return read;
         } else {
             return Optional.empty();
         }
     }
 
     @Override
-    public List<ClientPlayer> getPlayers(ClientServer[] serversIn) {
+    public synchronized List<ClientPlayer> getPlayers(ClientServer[] serversIn) {
 
         Optional<Packet> send = send(new Packet(PacketTypes.PROXY_PLAYERS,
                 true, false, serversIn));
@@ -69,7 +74,6 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
             clientChannelConnection.destroy();
         }
 
-        pluginInstance.logInfo(ChatColor.GREEN + "Waiting for a player to join...");
         clientChannelConnection = createNewConnection()
                 .withAddress(socketAddress)
                 .compressLargePacketTo(5120)
@@ -80,7 +84,13 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
     }
 
     public void signalAvailableConnection() {
-        clientChannelConnection.getClientCommHandler().signalProperConnection();
+
+        if (clientChannelConnection == null) {
+            newChannelConnection();
+        }
+
+        clientChannelConnection.getClientCommHandler().signalInitialConnection();
+
     }
 
     @Override

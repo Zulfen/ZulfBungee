@@ -15,13 +15,13 @@ public abstract class StorageImpl<P, T> {
     public StorageImpl(MainServer<P, T> mainServerIn) {
         this.mainServer = mainServerIn;
 
-        this.host = mainServerIn.getPluginInstance().getConfig().getString("storage-host");
-        this.port = String.valueOf(mainServerIn.getPluginInstance().getConfig().getInt("storage-port"));
+        this.host = mainServerIn.getImpl().getConfig().getString("storage-host");
+        this.port = String.valueOf(mainServerIn.getImpl().getConfig().getInt("storage-port"));
 
-        this.username = mainServerIn.getPluginInstance().getConfig().getString("storage-username");
-        this.password = mainServerIn.getPluginInstance().getConfig().getString("storage-password");
+        this.username = mainServerIn.getImpl().getConfig().getString("storage-username");
+        this.password = mainServerIn.getImpl().getConfig().getString("storage-password");
 
-        this.database = mainServerIn.getPluginInstance().getConfig().getString("storage-database");
+        this.database = mainServerIn.getImpl().getConfig().getString("storage-database");
     }
     
     public String getHost() {

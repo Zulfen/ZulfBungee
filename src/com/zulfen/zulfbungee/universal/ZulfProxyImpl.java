@@ -8,7 +8,6 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
-import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
 
 import java.net.SocketAddress;
 import java.nio.file.Path;
@@ -17,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ZulfBungeeProxy<P, T> {
+public interface ZulfProxyImpl<P, T> {
 
     void logDebug(String messageIn);
 
@@ -66,8 +65,6 @@ public interface ZulfBungeeProxy<P, T> {
     P getPlatform();
 
     String platformString();
-
-    CheckUpdateTask<P, T> getUpdater();
 
     boolean isDebug();
 

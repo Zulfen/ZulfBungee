@@ -1,71 +1,54 @@
-package com.zulfen.zulfbungee.velocity;
+package com.zulfen.zulfbungee.velocity.interfaces;
 
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
-import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
-import com.zulfen.zulfbungee.universal.managers.transport.ChannelMainServer;
-import com.zulfen.zulfbungee.universal.managers.transport.SocketMainServer;
+import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
+import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
+import com.zulfen.zulfbungee.universal.config.ProxyConfig;
+import com.zulfen.zulfbungee.universal.interfaces.NativePlayerConverter;
+import com.zulfen.zulfbungee.universal.managers.ProxyTaskManager;
+import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
+import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import com.zulfen.zulfbungee.velocity.command.VelocityConsole;
-import com.zulfen.zulfbungee.velocity.event.VelocityEvents;
+import com.zulfen.zulfbungee.velocity.config.VelocityConfig;
 import com.zulfen.zulfbungee.velocity.objects.VelocityPlayer;
 import com.zulfen.zulfbungee.velocity.objects.VelocityServer;
 import com.zulfen.zulfbungee.velocity.task.VelocityTaskManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
-import com.zulfen.zulfbungee.universal.ZulfBungeeProxy;
-import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
-import com.zulfen.zulfbungee.universal.config.ProxyConfig;
-import com.zulfen.zulfbungee.universal.interfaces.NativePlayerConverter;
-import com.zulfen.zulfbungee.universal.managers.CommandHandlerManager;
-import com.zulfen.zulfbungee.universal.managers.ProxyTaskManager;
-import com.zulfen.zulfbungee.universal.managers.MainServer;
-import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
-import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
-import com.zulfen.zulfbungee.velocity.command.VelocityCommand;
-import com.zulfen.zulfbungee.velocity.config.VelocityConfig;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "zulfbungee", name = "zulfbungee", version = ZulfVelocity.VERSION, url = "https://github.com/Zulfen/ZulfBungee",
-description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
-public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
+public class ZulfVelocityImpl implements ZulfProxyImpl<ProxyServer, Player> {
 
-    protected static final String VERSION = "0.9.9-pre3";
+    private final NativePlayerConverter<ProxyServer, Player> playerConverter = new NativePlayerConverter<ProxyServer, Player>() {
+        @Override
+        public Optional<ZulfProxyPlayer<ProxyServer, Player>> apply(Player nativePlayer) {
+            Optional<ServerConnection> optionalServerConnection = nativePlayer.getCurrentServer();
+            return optionalServerConnection.map(serverConnection -> new VelocityPlayer(nativePlayer,
+                    new VelocityServer(serverConnection.getServer(), ZulfVelocityImpl.this), ZulfVelocityImpl.this));
+        }
+    };
 
     private final ProxyServer velocity;
-    private final VelocityConfig pluginConfig;
-    private MainServer<ProxyServer, Player> mainServer;
-
     private final Logger logger;
-
-    private final Path pluginFolderPath;
-
-    private final boolean isDebug;
-
-    private final CheckUpdateTask<ProxyServer, Player> updater;
-
-    private final VelocityTaskManager taskManager;
+    private final VelocityConfig config;
 
     private final VelocityConsole console;
 
-    private final String transportType;
+    private final VelocityTaskManager taskManager;
+    private final boolean isDebug;
+
+    private final Path pluginFolderPath;
+    private final String version;
 
     private final LegacyComponentSerializer legacyTextSerializer = LegacyComponentSerializer.builder()
             .character('&').
@@ -73,73 +56,15 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
             .hexColors()
             .build();
 
-    private final NativePlayerConverter<ProxyServer, Player> playerConverter = new NativePlayerConverter<ProxyServer, Player>() {
-        @Override
-        public Optional<ZulfProxyPlayer<ProxyServer, Player>> apply(Player nativePlayer) {
-            Optional<ServerConnection> optionalServerConnection = nativePlayer.getCurrentServer();
-            return optionalServerConnection.map(serverConnection -> new VelocityPlayer(nativePlayer,
-                    new VelocityServer(serverConnection.getServer(), ZulfVelocity.this), ZulfVelocity.this));
-        }
-    };
-
-    @Inject
-    public ZulfVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
-
-        this.velocity = server;
+    public ZulfVelocityImpl(ProxyServer proxyServerIn, Logger loggerIn, Path dataDirectoryIn, String versionIn) {
+        this.velocity = proxyServerIn;
+        this.logger = loggerIn;
+        this.config = new VelocityConfig(this);
         this.console = new VelocityConsole(this);
-        this.logger = logger;
-        this.pluginFolderPath = dataDirectory;
-        this.pluginConfig = new VelocityConfig(this);
-
         this.taskManager = new VelocityTaskManager(this);
-
-        this.isDebug = pluginConfig.getBoolean("debug");
-        this.transportType = pluginConfig.getString("transport-type");
-        this.updater = new CheckUpdateTask<>(this);
-
-    }
-
-    private void chooseSocketServer() throws UnknownHostException {
-        SocketMainServer<ProxyServer, Player> socketMainServer = new SocketMainServer<>(pluginConfig.getInt("port"),
-                InetAddress.getByName(pluginConfig.getString("host")), this);
-        taskManager.newTask(socketMainServer);
-        mainServer = socketMainServer;
-    }
-
-    @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
-
-        try {
-
-            if (transportType != null) {
-                if (transportType.equalsIgnoreCase("pluginmessage")) {
-                    mainServer = new ChannelMainServer<>(this);
-                } else {
-                    chooseSocketServer();
-                }
-            } else {
-                chooseSocketServer();
-            }
-
-            velocity.getEventManager().register(this, new VelocityEvents(mainServer));
-            velocity.getCommandManager().register("zulfbungee", new VelocityCommand(new CommandHandlerManager<>(mainServer)));
-
-        } catch (UnknownHostException e) {
-            error("Could not start the server! (velocity)");
-            e.printStackTrace();
-        }
-
-
-    }
-
-    @Subscribe
-    public void onProxyShutdown(ProxyShutdownEvent event) {
-        try {
-            mainServer.end();
-            taskManager.shutdown();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.isDebug = config.getBoolean("debug");
+        this.pluginFolderPath = dataDirectoryIn;
+        this.version = versionIn;
     }
 
     @Override
@@ -169,7 +94,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
 
     @Override
     public ProxyConfig<ProxyServer, Player> getConfig() {
-        return pluginConfig;
+        return config;
     }
 
     @Override
@@ -259,7 +184,7 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
 
     @Override
     public String getVersion() {
-        return VERSION;
+        return version;
     }
 
     @Override
@@ -277,23 +202,18 @@ public class ZulfVelocity implements ZulfBungeeProxy<ProxyServer, Player> {
         return velocity;
     }
 
+    public LegacyComponentSerializer getLegacyTextSerializer() {
+        return legacyTextSerializer;
+    }
+
     @Override
     public String platformString() {
         return String.format("Velocity &a(%s)", velocity.getVersion().getVersion());
     }
 
     @Override
-    public CheckUpdateTask<ProxyServer, Player> getUpdater() {
-        return updater;
-    }
-
-    @Override
     public boolean isDebug() {
         return isDebug;
-    }
-
-    public LegacyComponentSerializer getLegacyTextSerializer() {
-        return legacyTextSerializer;
     }
 
 }

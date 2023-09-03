@@ -32,8 +32,10 @@ public class ProxyEvents<P, T> {
         mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.CONNECT_EVENT, () -> mainServer.toClientPlayer(proxyPlayerIn)));
 
         if (proxyPlayerIn.hasPermission("zulfen.admin")) {
-            mainServer.getPluginInstance().getUpdater().checkUpdate(proxyPlayerIn, false);
+            mainServer.getCheckUpdateTask().checkUpdate(proxyPlayerIn, false);
         }
+
+        mainServer.getConnection(proxyPlayerIn);
 
 
     }
@@ -63,12 +65,11 @@ public class ProxyEvents<P, T> {
 
     protected synchronized void pluginMessage(String serverNameIn, byte[] dataIn) {
 
-        Optional<ZulfProxyServer<P, T>> serverOptional = mainServer.getPluginInstance().getServer(serverNameIn);
+        Optional<ZulfProxyServer<P, T>> serverOptional = mainServer.getImpl().getServer(serverNameIn);
 
         if (serverOptional.isPresent()) {
 
             ZulfProxyServer<P, T> serverIn = serverOptional.get();
-
             if (mainServer instanceof ChannelMainServer) {
 
                 ChannelMainServer<P, T> channelMainServer = (ChannelMainServer<P, T>) mainServer;

@@ -20,7 +20,7 @@ public class ScriptLoad<P, T> extends CommandHandler<P, T> {
 
     public ScriptLoad(MainServer<P, T> mainServerIn) {
         super(mainServerIn, "zulfen.bungee.admin.script.load", "scripts", "load");
-        this.config = mainServerIn.getPluginInstance().getConfig();
+        this.config = mainServerIn.getImpl().getConfig();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ScriptLoad<P, T> extends CommandHandler<P, T> {
                     loadScript(markedPathString, newPath, sender);
 
                 } catch (IOException e) {
-                    getMainServer().getPluginInstance().warning(String.format("There was an error trying to rename script %s whilst trying to load it:", scriptName));
+                    getMainServer().getImpl().warning(String.format("There was an error trying to rename script %s whilst trying to load it:", scriptName));
                     e.printStackTrace();
                 }
 
@@ -87,7 +87,7 @@ public class ScriptLoad<P, T> extends CommandHandler<P, T> {
 
         if (index == 0) {
 
-            return getMainServer().getPluginInstance().getConfig().getScriptPaths().stream()
+            return getMainServer().getImpl().getConfig().getScriptPaths().stream()
                     .map(path -> path.getFileName().toString())
                     .filter(realName -> realName.startsWith("-"))
                     .map(realName -> realName.substring(1))

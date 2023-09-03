@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.spigot.handlers.packets;
 
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
-import com.zulfen.zulfbungee.spigot.socket.Connection;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class ProxyClientInfo extends PacketHandler {
 
-    public ProxyClientInfo(Connection<?> connectionIn) {
+    public ProxyClientInfo(ClientConnection<?> connectionIn) {
         super(connectionIn, false, PacketTypes.PROXY_CLIENT_INFO);
 
     }

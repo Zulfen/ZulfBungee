@@ -4,14 +4,14 @@ import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
-import com.zulfen.zulfbungee.velocity.ZulfVelocity;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityImpl;
 
 public class VelocityConsole implements ProxyCommandSender<ProxyServer, Player> {
 
-    private final ZulfVelocity velocity;
+    private final ZulfVelocityImpl velocity;
     private final ConsoleCommandSource consoleCommandSource;
 
-    public VelocityConsole(ZulfVelocity velocityIn) {
+    public VelocityConsole(ZulfVelocityImpl velocityIn) {
         this.velocity = velocityIn;
         this.consoleCommandSource = velocity.getPlatform().getConsoleCommandSource();
     }
