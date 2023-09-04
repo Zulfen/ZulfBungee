@@ -127,10 +127,8 @@ public abstract class ProxyServerConnection<P, T> {
         try {
 
             Packet handledPacket = packetHandlerManager.handlePacket(packetIn, this);
-            pluginInstance.warning("Recieved: " + packetIn);
 
             if (packetIn.isReturnable() && handledPacket != null) {
-                pluginInstance.warning("Sent: " + handledPacket);
                 sendDirect(handledPacket);
             }
 

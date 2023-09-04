@@ -13,6 +13,7 @@ import com.zulfen.zulfbungee.universal.interfaces.NativePlayerConverter;
 import com.zulfen.zulfbungee.universal.managers.ProxyTaskManager;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
+import com.zulfen.zulfbungee.velocity.ZulfVelocityMain;
 import com.zulfen.zulfbungee.velocity.command.VelocityConsole;
 import com.zulfen.zulfbungee.velocity.config.VelocityConfig;
 import com.zulfen.zulfbungee.velocity.objects.VelocityPlayer;
@@ -56,14 +57,14 @@ public class ZulfVelocityImpl implements ZulfProxyImpl<ProxyServer, Player> {
             .hexColors()
             .build();
 
-    public ZulfVelocityImpl(ProxyServer proxyServerIn, Logger loggerIn, Path dataDirectoryIn, String versionIn) {
+    public ZulfVelocityImpl(ProxyServer proxyServerIn, ZulfVelocityMain pluginInstance, Logger loggerIn, Path dataDirectoryIn, String versionIn) {
         this.velocity = proxyServerIn;
         this.logger = loggerIn;
+        this.pluginFolderPath = dataDirectoryIn;
         this.config = new VelocityConfig(this);
         this.console = new VelocityConsole(this);
-        this.taskManager = new VelocityTaskManager(this);
+        this.taskManager = new VelocityTaskManager(this, pluginInstance);
         this.isDebug = config.getBoolean("debug");
-        this.pluginFolderPath = dataDirectoryIn;
         this.version = versionIn;
     }
 

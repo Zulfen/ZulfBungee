@@ -3,16 +3,20 @@ package com.zulfen.zulfbungee.universal.util;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 
 public class BlockingPacketQueue {
 
     private final Object shutdownFlag = new Object();
-    private final LinkedBlockingDeque<Object> blockingQueue = new LinkedBlockingDeque<>();
+    private final LinkedTransferQueue<Object> blockingQueue = new LinkedTransferQueue<>();
 
     public void offer(Packet packet) {
-        blockingQueue.offerLast(packet);
+        try {
+            blockingQueue.transfer(packet);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public Optional<Packet> take(boolean poll) {
@@ -44,7 +48,7 @@ public class BlockingPacketQueue {
     }
 
     public void notifyListeners() {
-        blockingQueue.offerLast(shutdownFlag);
+        blockingQueue.tryTransfer(shutdownFlag);
         blockingQueue.clear();
     }
 

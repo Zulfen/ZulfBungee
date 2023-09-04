@@ -24,21 +24,28 @@ public class ZulfVelocityMain {
 
     protected final static String VERSION = "0.9.9-pre4";
     private final ProxyServer velocity;
-    private final ZulfVelocityPlugin plugin;
+    private final Logger logger;
+    private final Path dataDirectory;
+    private ZulfVelocityPlugin plugin;
 
-    private final MainServer<ProxyServer, Player> mainServer;
+    private MainServer<ProxyServer, Player> mainServer;
 
     @Inject
     public ZulfVelocityMain(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
         this.velocity = server;
-        this.plugin = new ZulfVelocityPlugin(velocity, logger, dataDirectory, VERSION);
-        this.mainServer = plugin.getMainServer();
+        this.logger = logger;
+        this.dataDirectory = dataDirectory;
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+
+        plugin = new ZulfVelocityPlugin(velocity, this, logger, dataDirectory, VERSION);
+        mainServer = plugin.getMainServer();
+
         velocity.getEventManager().register(this, new VelocityEvents(mainServer));
         velocity.getCommandManager().register("zulfbungee", new VelocityCommand(new CommandHandlerManager<>(mainServer)));
+
     }
 
     @Subscribe
