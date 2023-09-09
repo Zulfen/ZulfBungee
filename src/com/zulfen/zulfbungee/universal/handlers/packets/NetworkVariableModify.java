@@ -3,7 +3,7 @@ package com.zulfen.zulfbungee.universal.handlers.packets;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SkriptChangeMode;
 import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
 import com.zulfen.zulfbungee.universal.interfaces.StorageImpl;
@@ -20,7 +20,7 @@ public class NetworkVariableModify<P, T> extends PacketHandler<P, T> {
     @Override
     public Packet handlePacket(Packet packetIn, ProxyServerConnection<P, T> address) {
 
-        NetworkVariable variable = (NetworkVariable) packetIn.getDataSingle();
+        SerializedNetworkVariable variable = (SerializedNetworkVariable) packetIn.getDataSingle();
 
         Optional<StorageImpl<P, T>> getStorage = getMainServer().getStorage();
 

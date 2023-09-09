@@ -40,7 +40,7 @@ public class EffServerSendMessage extends Effect {
         if (getClientServer.isPresent()) {
 
             Object[] objects = message.getArray(event);
-            ServerMessage messageOut = new ServerMessage(title.getSingle(event), connectionManager.toValueArray(objects), servers.getArray(event),
+            ServerMessage messageOut = new ServerMessage(title.getSingle(event), connectionManager.threadSafeSerialize(objects), servers.getArray(event),
                     getClientServer.get());
 
             connectionManager.sendDirect(new Packet(PacketTypes.SERVER_SEND_MESSAGE_EVENT,

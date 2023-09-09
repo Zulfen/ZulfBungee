@@ -1,5 +1,7 @@
 package com.zulfen.zulfbungee.spigot.interfaces;
 
+import java.io.IOException;
+
 public abstract class ConnectionFactory<T, M> {
 
     protected final M connectionManager;
@@ -8,6 +10,6 @@ public abstract class ConnectionFactory<T, M> {
         this.connectionManager = connectionManagerIn;
     }
 
-    public abstract T build();
+    public abstract T build() throws IOException;
 
 }

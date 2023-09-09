@@ -22,7 +22,7 @@ import java.nio.file.Path;
         description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocityMain {
 
-    protected final static String VERSION = "0.9.9-pre4";
+    protected final static String VERSION = "0.9.9-pre5";
     private final ProxyServer velocity;
     private final Logger logger;
     private final Path dataDirectory;

@@ -6,7 +6,7 @@ import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.util.Optional;
@@ -28,10 +28,10 @@ public class NetworkVariableGet<P, T> extends PacketHandler<P, T> {
 
             StorageImpl<P, T> storage = getStorage.get();
 
-            Optional<NetworkVariable> storedVariable = storage.getVariable(variableName);
+            Optional<SerializedNetworkVariable> storedVariable = storage.getVariable(variableName);
 
             if (storedVariable.isPresent()) {
-                NetworkVariable variable = storedVariable.get();
+                SerializedNetworkVariable variable = storedVariable.get();
                 return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable);
             }
 

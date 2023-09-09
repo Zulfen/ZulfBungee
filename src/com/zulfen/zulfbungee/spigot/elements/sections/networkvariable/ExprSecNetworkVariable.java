@@ -7,14 +7,13 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
-    private static Object[] DATA;
-    private static String NAME;
+    private static PreparedNetworkVariable VARIABLE;
 
     static {
         Skript.registerExpression(ExprSecNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "[the [(retrieved|loaded)]] [(proxy|network|bungeecord|bungee|velocity)] variable");
@@ -22,18 +21,22 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     protected Object[] get(@NotNull Event event) {
-        return DATA;
+        if (VARIABLE != null) {
+            Variable<Object> variable = Variable.newInstance(VARIABLE.getName(), VARIABLE.getClasses());
+            return CollectionUtils.array(variable);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean isSingle() {
-        if (DATA != null) return DATA.length == 1;
         return false;
     }
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        return Object.class;
+        return Variable.class;
     }
 
     @Override
@@ -72,19 +75,17 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     public void change(@NotNull Event e, Object[] delta, Changer.@NotNull ChangeMode mode) {
-        if (NAME != null) {
-            ZulfBungeeSpigot.getPlugin().getConnectionManager().modifyNetworkVariable(delta, mode, NAME);
+        if (VARIABLE != null) {
+            ZulfBungeeSpigot.getPlugin().getConnectionManager().modifyNetworkVariable(delta, mode, VARIABLE.getName());
         }
     }
 
     protected synchronized static void clear() {
-        NAME = null;
-        DATA = null;
+        VARIABLE = null;
     }
 
-    protected synchronized static void setNetworkVariable(NetworkVariable networkVariableIn) {
-        NAME = networkVariableIn.getName();
-        DATA = ZulfBungeeSpigot.getPlugin().getConnectionManager().toObjectArray(networkVariableIn.getValueArray());
+    protected synchronized static void setNetworkVariable(PreparedNetworkVariable varIn) {
+        VARIABLE = varIn;
     }
 
 }

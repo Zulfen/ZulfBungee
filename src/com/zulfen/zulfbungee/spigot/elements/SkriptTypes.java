@@ -10,7 +10,7 @@ import ch.njol.yggdrasil.Fields;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.StreamCorruptedException;
@@ -144,35 +144,6 @@ public class SkriptTypes {
                     @Override
                     protected boolean canBeInstantiated() {
                         return false;
-                    }
-
-                }));
-
-        Classes.registerClass(new ClassInfo<>(NetworkVariable.class, "networkvariable")
-                .user("networkvariables?")
-                .name("Network Variable")
-                .description("Represents a network variable.")
-                .defaultExpression(new EventValueExpression<>(NetworkVariable.class))
-                .parser(new Parser<NetworkVariable>() {
-
-                    @Override
-                    public NetworkVariable parse(@NotNull String s, @NotNull ParseContext context) {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean canParse(@NotNull ParseContext context) {
-                        return false;
-                    }
-
-                    @Override
-                    public @NotNull String toString(NetworkVariable networkVariable, int i) {
-                        return networkVariable.getName();
-                    }
-
-                    @Override
-                    public @NotNull String toVariableNameString(NetworkVariable networkVariable) {
-                        return networkVariable.getName();
                     }
 
                 }));

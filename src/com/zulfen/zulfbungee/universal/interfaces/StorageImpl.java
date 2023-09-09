@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.universal.interfaces;
 
 import com.zulfen.zulfbungee.universal.managers.MainServer;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 
 import java.util.Optional;
@@ -46,9 +46,9 @@ public abstract class StorageImpl<P, T> {
 
     public abstract void setupDatabase();
 
-    public abstract Optional<NetworkVariable> getVariable(String name);
+    public abstract Optional<SerializedNetworkVariable> getVariable(String name);
 
-    public abstract void setVariable(NetworkVariable variable);
+    public abstract void setVariable(SerializedNetworkVariable variable);
 
     public abstract void addToVariable(String name, Value[] values);
 

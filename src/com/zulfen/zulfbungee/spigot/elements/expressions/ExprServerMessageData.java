@@ -23,7 +23,7 @@ public class ExprServerMessageData extends EventValueExpression<Object> {
     protected Object[] get(@NotNull Event event) {
         EventProxyMessage eventProxyMessage = (EventProxyMessage) event;
         ServerMessage message = eventProxyMessage.getMessage();
-        Object[] objects = ZulfBungeeSpigot.getPlugin().getConnectionManager().toObjectArray(message.getData());
+        Object[] objects = ZulfBungeeSpigot.getPlugin().getConnectionManager().threadSafeDeserialize(message.getData());
         if (objects.length == 0) {
             return null;
         } else {

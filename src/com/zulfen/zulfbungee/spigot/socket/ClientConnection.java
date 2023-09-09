@@ -108,7 +108,7 @@ public abstract class ClientConnection<T> {
 
     }
 
-    public boolean sendDirect(Packet packetIn) {
+    public synchronized boolean sendDirect(Packet packetIn) {
         if (properConnection.get() || packetIn instanceof HandshakePacket) {
             queueOut.offer(packetIn);
             pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");

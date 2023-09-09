@@ -73,8 +73,6 @@ public class SocketConnectionTask implements Runnable {
                                 .build()
                                 .start();
 
-
-
                     }
 
                     finished++;

@@ -69,7 +69,7 @@ public abstract class ProxyServerConnection<P, T> {
         }
     }
 
-    public void sendDirect(Packet packetIn) {
+    public synchronized void sendDirect(Packet packetIn) {
         assert proxyCommHandler != null : "Comm Handler is null!";
         queueOut.offer(packetIn);
         pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");

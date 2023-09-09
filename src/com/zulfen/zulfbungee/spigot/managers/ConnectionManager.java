@@ -2,7 +2,9 @@ package com.zulfen.zulfbungee.spigot.managers;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.variables.Variables;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
+import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
 import com.zulfen.zulfbungee.spigot.tasks.GlobalScriptsTask;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
@@ -11,12 +13,13 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.HandshakePacket;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -24,7 +27,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -97,64 +101,74 @@ public abstract class ConnectionManager<T> {
                 .toArray(Object[]::new);
     }
 
-    public Value[] toValueArray(Object[] delta) {
+    public Value[] threadSafeSerialize(Object[] delta) {
 
-        Value[] values = new Value[0];
+        Value[] values;
 
         if (pluginInstance.getServer().isPrimaryThread()) {
             values = serializeValues(delta);
         } else {
-            try {
-                values = taskManager.returnableMainThreadTask(() -> serializeValues(delta)).get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            }
+            values = taskManager.returnableMainThreadTask(() -> serializeValues(delta));
         }
 
         return values;
 
     }
 
-    public Object[] toObjectArray(Value[] valuesIn) {
+    public Object[] threadSafeDeserialize(Value[] valuesIn) {
 
-        Object[] dataOut = new Object[0];
+        Object[] dataOut;
 
         if (pluginInstance.getServer().isPrimaryThread()) {
             dataOut = deserializeValues(valuesIn);
         } else {
-            try {
-                dataOut = taskManager.returnableMainThreadTask(() -> deserializeValues(valuesIn)).get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            }
+            dataOut = taskManager.returnableMainThreadTask(() -> deserializeValues(valuesIn));
         }
 
         return dataOut;
 
     }
 
+    private PreparedNetworkVariable prepareNetworkVariable(SerializedNetworkVariable serializedVarIn, Event eventIn) {
+
+        Value[] valueArray = serializedVarIn.getValueArray();
+        Object[] dataOut = threadSafeDeserialize(valueArray);
+
+        int length = valueArray.length;
+        String varName = serializedVarIn.getName();
+
+        if (length > 0) {
+            return new PreparedNetworkVariable(varName, dataOut);
+        } else {
+            return null;
+        }
+
+    }
+
     public void modifyNetworkVariable(Object[] delta, Changer.ChangeMode mode, String variableNameIn) {
         Value[] values = new Value[0];
         if (mode != Changer.ChangeMode.DELETE) {
-            values = toValueArray(delta);
+            values = threadSafeSerialize(delta);
         }
-        NetworkVariable variableOut = new NetworkVariable(variableNameIn, mode.name(), values);
+        SerializedNetworkVariable variableOut = new SerializedNetworkVariable(variableNameIn, mode.name(), values);
         send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
     }
 
-    public synchronized Optional<NetworkVariable> requestNetworkVariable(String nameIn) {
+    public synchronized Optional<PreparedNetworkVariable> requestNetworkVariable(String nameIn, Event eventIn) {
 
         Optional<Packet> send = send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, nameIn));
 
         if (send.isPresent()) {
+
             Packet packet = send.get();
             if (packet.getDataArray().length > 0) {
-                return Optional.of((NetworkVariable) packet.getDataSingle());
+
+                SerializedNetworkVariable serializedVar = (SerializedNetworkVariable) packet.getDataSingle();
+                PreparedNetworkVariable preparedNetworkVariable = prepareNetworkVariable(serializedVar, eventIn);
+                return Optional.ofNullable(preparedNetworkVariable);
+
             }
+
         }
 
         return Optional.empty();

@@ -9,7 +9,7 @@ import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.event.events.EventNetworkVariable;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.TaskManager;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,6 @@ public class SecNetworkVariable extends Section {
             if (!variableExpression.isLocal()) {
 
                 trigger = loadCode(sectionNode, "using network variable", EventNetworkVariable.class);
-
                 return true;
 
             } else {
@@ -73,13 +72,11 @@ public class SecNetworkVariable extends Section {
 
         taskManager.newAsyncTask(() -> {
 
-            Thread.currentThread().setName("SecNetworkVariable");
-
-            Optional<NetworkVariable> requestNetworkVariable = connectionManager
-                    .requestNetworkVariable(variableExpression.getName().toString(event));
+            Optional<PreparedNetworkVariable> requestNetworkVariable = connectionManager
+                    .requestNetworkVariable(variableExpression.getName().toString(event), event);
 
             if (requestNetworkVariable.isPresent()) {
-                NetworkVariable variable = requestNetworkVariable.get();
+                PreparedNetworkVariable variable = requestNetworkVariable.get();
                 ExprSecNetworkVariable.setNetworkVariable(variable);
             } else {
                 ExprSecNetworkVariable.clear();

@@ -6,6 +6,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -21,8 +22,8 @@ public class ExprCurrentProxyServer extends SimpleExpression<ClientServer> {
 
     @Override
     protected ClientServer[] get(@NotNull Event event) {
-        Optional<ClientServer> connection = ZulfBungeeSpigot.getPlugin().getConnectionManager().getAsServer();
-        return connection.map(server -> new ClientServer[]{server}).orElse(null);
+        Optional<ClientServer> serverOptional = ZulfBungeeSpigot.getPlugin().getConnectionManager().getAsServer();
+        return serverOptional.map(CollectionUtils::array).orElse(null);
     }
 
     @Override

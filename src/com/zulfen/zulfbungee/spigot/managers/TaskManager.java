@@ -28,8 +28,15 @@ public class TaskManager {
         }
     }
 
-    public <T> Future<T> returnableMainThreadTask(Callable<T> callableIn) {
-        return scheduler.callSyncMethod(instance, callableIn);
+    public <T> T returnableMainThreadTask(Callable<T> callableIn) {
+        try {
+            return scheduler.callSyncMethod(instance, callableIn).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public void newMainThreadTask(Runnable runnableIn) {

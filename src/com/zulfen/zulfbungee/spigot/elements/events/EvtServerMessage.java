@@ -28,7 +28,7 @@ public class EvtServerMessage extends SkriptEvent {
             @Override
             public String get(EventProxyMessage eventProxyMessage) {
                 ServerMessage serverMessage = eventProxyMessage.getMessage();
-                Object possibleString = ZulfBungeeSpigot.getPlugin().getConnectionManager().toObjectArray(serverMessage.getData())[0];
+                Object possibleString = ZulfBungeeSpigot.getPlugin().getConnectionManager().threadSafeDeserialize(serverMessage.getData())[0];
                 if (possibleString instanceof String) {
                     return (String) possibleString;
                 } else {

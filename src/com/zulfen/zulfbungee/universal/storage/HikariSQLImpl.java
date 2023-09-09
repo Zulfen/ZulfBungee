@@ -3,7 +3,7 @@ package com.zulfen.zulfbungee.universal.storage;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zulfen.zulfbungee.universal.command.util.ChatColour;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 import com.zulfen.zulfbungee.universal.storage.util.variable.UniversalVariableUtils;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
     }
 
     @Override
-    public Optional<NetworkVariable> getVariable(@NotNull String name) {
+    public Optional<SerializedNetworkVariable> getVariable(@NotNull String name) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 
@@ -95,7 +95,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
                 }
 
                 if (!values.isEmpty()) {
-                    return Optional.of(new NetworkVariable(name, null, values.toArray(new Value[0])));
+                    return Optional.of(new SerializedNetworkVariable(name, null, values.toArray(new Value[0])));
                 }
 
                 return Optional.empty();
@@ -123,7 +123,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
                     String type = result.getString("type");
                     Value value = new Value(type, data);
 
-                    return Optional.of(new NetworkVariable(name, value));
+                    return Optional.of(new SerializedNetworkVariable(name, value));
 
                 }
             }
@@ -138,7 +138,7 @@ public abstract class HikariSQLImpl<P, T> extends StorageImpl<P, T> {
     }
 
     @Override
-    public void setVariable(@NotNull NetworkVariable variable) {
+    public void setVariable(@NotNull SerializedNetworkVariable variable) {
 
         try (java.sql.Connection tempConnection = dataSource.getConnection()) {
 

@@ -2,12 +2,12 @@ package com.zulfen.zulfbungee.spigot.socket.factory;
 
 import com.zulfen.zulfbungee.spigot.interfaces.ConnectionFactory;
 import com.zulfen.zulfbungee.spigot.managers.connections.SocketConnectionManager;
-import com.zulfen.zulfbungee.spigot.socket.ClientSocketClientConnection;
+import com.zulfen.zulfbungee.spigot.socket.SocketClientConnection;
 
 import java.io.IOException;
 import java.net.Socket;
 
-public class SocketConnectionFactory extends ConnectionFactory<ClientSocketClientConnection, SocketConnectionManager> {
+public class SocketConnectionFactory extends ConnectionFactory<SocketClientConnection, SocketConnectionManager> {
 
     private Socket socket;
 
@@ -21,14 +21,10 @@ public class SocketConnectionFactory extends ConnectionFactory<ClientSocketClien
     }
 
     @Override
-    public ClientSocketClientConnection build() {
-        try {
-            ClientSocketClientConnection clientSocketConnection = new ClientSocketClientConnection(connectionManager, socket);
-            connectionManager.registerBefore();
-            return clientSocketConnection;
-        } catch (IOException e) {
-            throw new RuntimeException("Error creating new socket connection!", e);
-        }
+    public SocketClientConnection build() throws IOException {
+        SocketClientConnection clientSocketConnection = new SocketClientConnection(connectionManager, socket);
+        connectionManager.registerBefore();
+        return clientSocketConnection;
     }
 
 }

@@ -10,10 +10,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
+import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.NetworkVariable;
 
 import java.util.Optional;
 
@@ -31,18 +31,26 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     @Override
     protected Object[] get(@NotNull Event event) {
+
         ConnectionManager<?> connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
-        Optional<NetworkVariable> networkVariable = connectionManager.requestNetworkVariable(givenVariable.getName().toString(event));
-        return networkVariable.map(variable -> connectionManager.toObjectArray(variable.getValueArray())).orElse(null);
+
+        Optional<PreparedNetworkVariable> variableOptional = connectionManager.requestNetworkVariable(givenVariable.getName().toString(event), event);
+        if (variableOptional.isPresent()) {
+            PreparedNetworkVariable preparedVar = variableOptional.get();
+            return preparedVar.getData();
+        }
+
+        return null;
+
     }
 
     @Override
     public boolean isSingle() {
-        return !givenVariable.isList();
+        return givenVariable.isSingle();
     }
 
     @Override
-    public @NotNull Class<?> getReturnType() {
+    public Class<?> getReturnType() {
         return Object.class;
     }
 

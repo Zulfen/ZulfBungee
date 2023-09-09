@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements;
 
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.registrations.Converters;
+import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -51,6 +53,7 @@ public class SkriptConverters {
             Optional<ClientServer> server = ZulfBungeeSpigot.getPlugin().getConnectionManager().getProxyServer(s);
             return server.orElse(null);
         });
+
 
     }
 
