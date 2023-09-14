@@ -27,6 +27,7 @@ public abstract class ClientCommHandler<T> extends CommunicationHandler {
 
     public void destroy() {
         awaitProperConnection.countDown();
+        connection.destroy();
         super.destroy();
     }
 

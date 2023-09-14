@@ -71,10 +71,13 @@ public abstract class ClientConnection<T> implements PacketConsumer {
     public void consume(Packet packetIn) {
 
         clientCommHandler.awaitInitialConnection();
-        if (running.get()) {
+        if (connected.compareAndSet(false, true)) {
             connectionManager.register(this);
             onRegister();
             connected.set(true);
+        }
+
+        if (running.get()) {
             if (packetIn.shouldHandle()) {
                 packetHandlerManager.handlePacket(packetIn);
             } else {
@@ -111,11 +114,12 @@ public abstract class ClientConnection<T> implements PacketConsumer {
     }
 
     public void destroy() {
-        running.set(false);
-        connected.set(false);
-        skriptQueue.notifyListeners();
-        clientCommHandler.destroy();
-        connectionManager.deRegister(this);
+        if (running.compareAndSet(true, false)) {
+            connected.set(false);
+            skriptQueue.notifyListeners();
+            clientCommHandler.destroy();
+            connectionManager.deRegister(this);
+        }
     }
 
     protected void setClientCommHandler(ClientCommHandler<T> handlerIn) {

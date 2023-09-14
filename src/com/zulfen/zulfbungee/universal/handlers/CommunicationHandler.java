@@ -56,6 +56,8 @@ public abstract class CommunicationHandler {
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {
             freeResources();
+            queueIn.notifyListeners();
+            queueOut.notifyListeners();
             packetConsumer.destroyConsumer();
         }
     }
