@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.universal.handlers.packets;
+package com.zulfen.zulfbungee.universal.handlers.proxy.packets;
 
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;

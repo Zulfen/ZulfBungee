@@ -2,7 +2,7 @@ package com.zulfen.zulfbungee.universal.managers.transport;
 
 import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.command.util.ChatColour;
-import com.zulfen.zulfbungee.universal.handlers.transport.ProxyChannelCommHandler;
+import com.zulfen.zulfbungee.universal.handlers.proxy.transport.ProxyChannelCommHandler;
 import com.zulfen.zulfbungee.universal.interfaces.MessageCallback;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
 import com.zulfen.zulfbungee.universal.socket.transport.ChannelServerConnection;

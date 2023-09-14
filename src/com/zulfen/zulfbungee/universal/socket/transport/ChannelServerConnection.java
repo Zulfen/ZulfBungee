@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.universal.socket.transport;
 
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
-import com.zulfen.zulfbungee.universal.handlers.transport.ProxyChannelCommHandler;
+import com.zulfen.zulfbungee.universal.handlers.proxy.transport.ProxyChannelCommHandler;
 import com.zulfen.zulfbungee.universal.interfaces.MessageCallback;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
 

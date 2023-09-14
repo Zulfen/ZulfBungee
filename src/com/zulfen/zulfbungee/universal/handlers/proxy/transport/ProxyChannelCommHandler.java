@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.universal.handlers.transport;
+package com.zulfen.zulfbungee.universal.handlers.proxy.transport;
 
 import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
@@ -65,7 +65,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    public Optional<Packet> readPacket() {
+    public Optional<Packet> readPacketImpl() {
         return incomingQueue.take(false);
     }
 

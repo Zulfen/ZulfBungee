@@ -42,10 +42,10 @@ public abstract class ProxyServerConnection<P, T> {
         this.packetHandlerManager = new PacketHandlerManager<>(mainServerIn);
     }
 
-    public void dataInLoop() {
+    public void processingLoop() {
         assert proxyCommHandler != null : "Comm Handler is null!";
         while (connected.get()) {
-            Optional<Packet> read = proxyCommHandler.readPacket();
+            Optional<Packet> read = proxyCommHandler.readPacketImpl();
             read.ifPresent(this::processPacket);
         }
     }
@@ -58,7 +58,7 @@ public abstract class ProxyServerConnection<P, T> {
     }
 
     public void start() {
-        pluginInstance.getTaskManager().newTask(this::dataInLoop);
+        pluginInstance.getTaskManager().newTask(this::processingLoop);
         pluginInstance.getTaskManager().newTask(this::dataOutLoop);
     }
 
@@ -122,7 +122,7 @@ public abstract class ProxyServerConnection<P, T> {
 
     }
 
-    protected void processPacket(Packet packetIn) {
+    public void processPacket(Packet packetIn) {
 
         try {
 

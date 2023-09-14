@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.universal.handlers.packets;
+package com.zulfen.zulfbungee.universal.handlers.proxy.packets;
 
 import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
 import com.zulfen.zulfbungee.universal.interfaces.StorageImpl;

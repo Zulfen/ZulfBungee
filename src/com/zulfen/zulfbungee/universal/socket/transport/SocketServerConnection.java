@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.universal.socket.transport;
 
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
-import com.zulfen.zulfbungee.universal.handlers.transport.ProxySocketCommHandler;
+import com.zulfen.zulfbungee.universal.handlers.proxy.transport.ProxySocketCommHandler;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
 
 import java.io.IOException;

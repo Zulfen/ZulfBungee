@@ -1,4 +1,4 @@
-package com.zulfen.zulfbungee.universal.handlers.transport;
+package com.zulfen.zulfbungee.universal.handlers.proxy.transport;
 
 import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
@@ -25,7 +25,7 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    public Optional<Packet> readPacket() {
+    public Optional<Packet> readPacketImpl() {
 
         try {
             Object readObject = inputStream.readObject();
