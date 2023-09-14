@@ -11,7 +11,7 @@ public class ClientChannelConnection extends ClientConnection<ChannelConnectionF
 
     public ClientChannelConnection(ChannelConnectionManager connectionManager, SocketAddress socketAddressIn, int compressPackets) {
         super(connectionManager, socketAddressIn);
-        setClientCommHandler(new ClientChannelCommHandler(connectionManager.getPluginInstance(), compressPackets));
+        setClientCommHandler(new ClientChannelCommHandler(this, compressPackets));
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ChannelServerConnection<P, T> extends ProxyServerConnection<P, T> {
 
     public ChannelServerConnection(MainServer<P, T> mainServerIn, MessageCallback messageCallbackIn, SocketAddress socketAddressIn) {
         super(mainServerIn, socketAddressIn);
-        this.proxyChannelCommHandler = new ProxyChannelCommHandler<>(pluginInstance, messageCallbackIn);
+        this.proxyChannelCommHandler = new ProxyChannelCommHandler<>(this, messageCallbackIn);
         setProxyCommHandler(proxyChannelCommHandler);
     }
 
