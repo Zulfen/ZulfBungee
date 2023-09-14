@@ -1,10 +1,11 @@
 package com.zulfen.zulfbungee.universal.socket;
 
-import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
 import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
 import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
-import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
+import com.zulfen.zulfbungee.universal.handlers.proxy.ProxyCommHandler;
+import com.zulfen.zulfbungee.universal.interfaces.PacketConsumer;
 import com.zulfen.zulfbungee.universal.managers.MainServer;
+import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
@@ -12,24 +13,20 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptAction
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ScriptInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.EventPacket;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
-import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
 
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class ProxyServerConnection<P, T> {
+public abstract class ProxyServerConnection<P, T> implements PacketConsumer {
 
     protected final MainServer<P, T> mainServer;
     protected final ZulfProxyImpl<P, T> pluginInstance;
     protected final PacketHandlerManager<P, T> packetHandlerManager;
 
     protected ProxyCommHandler<P, T> proxyCommHandler;
-
-    private final BlockingPacketQueue queueOut = new BlockingPacketQueue();
 
     protected final AtomicBoolean connected = new AtomicBoolean(true);
 
@@ -42,24 +39,14 @@ public abstract class ProxyServerConnection<P, T> {
         this.packetHandlerManager = new PacketHandlerManager<>(mainServerIn);
     }
 
-    public void processingLoop() {
-        assert proxyCommHandler != null : "Comm Handler is null!";
-        while (connected.get()) {
-            Optional<Packet> read = proxyCommHandler.readPacketImpl();
-            read.ifPresent(this::processPacket);
-        }
-    }
-
-    public void dataOutLoop() {
-        while (connected.get()) {
-            Optional<Packet> take = queueOut.take(false);
-            take.ifPresent(packet -> proxyCommHandler.writePacket(packet));
-        }
+    public void setProxyCommHandler(ProxyCommHandler<P, T> proxyCommHandler) {
+        this.proxyCommHandler = proxyCommHandler;
     }
 
     public void start() {
-        pluginInstance.getTaskManager().newTask(this::processingLoop);
-        pluginInstance.getTaskManager().newTask(this::dataOutLoop);
+        pluginInstance.getTaskManager().newTask(() -> proxyCommHandler.dataInLoop());
+        pluginInstance.getTaskManager().newTask(() -> proxyCommHandler.dataOutLoop());
+        pluginInstance.getTaskManager().newTask(() -> proxyCommHandler.processLoop());
     }
 
     public void sendEventPacket(EventPacket packetIn) {
@@ -71,16 +58,8 @@ public abstract class ProxyServerConnection<P, T> {
 
     public synchronized void sendDirect(Packet packetIn) {
         assert proxyCommHandler != null : "Comm Handler is null!";
-        queueOut.offer(packetIn);
+        proxyCommHandler.offerPacket(packetIn);
         pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
-    }
-
-    public void destroy() {
-        assert proxyCommHandler != null : "Comm Handler is null!";
-        if (connected.compareAndSet(true, false)) {
-            proxyCommHandler.destroy();
-            mainServer.removeServerConnection(this);
-        }
     }
 
     // input null into senderIn to make the console reload the scripts, not a player.
@@ -122,7 +101,7 @@ public abstract class ProxyServerConnection<P, T> {
 
     }
 
-    public void processPacket(Packet packetIn) {
+    public void consume(Packet packetIn) {
 
         try {
 
@@ -144,9 +123,17 @@ public abstract class ProxyServerConnection<P, T> {
 
     }
 
-    public void setProxyCommHandler(ProxyCommHandler<P, T> proxyCommHandlerIn) {
-        this.proxyCommHandler = proxyCommHandlerIn;
-        proxyCommHandler.setServerConnection(this);
+    public void destroy() {
+        assert proxyCommHandler != null : "Comm Handler is null!";
+        if (connected.compareAndSet(true, false)) {
+            proxyCommHandler.destroy();
+            mainServer.removeServerConnection(this);
+        }
+    }
+
+    @Override
+    public void destroyConsumer() {
+        destroy();
     }
 
     public SocketAddress getAddress() {

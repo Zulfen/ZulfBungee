@@ -12,7 +12,7 @@ public abstract class CommunicationHandler {
     protected final BlockingPacketQueue queueIn = new BlockingPacketQueue();
     protected final BlockingPacketQueue queueOut = new BlockingPacketQueue();
 
-    private final PacketConsumer packetConsumer;
+    protected final PacketConsumer packetConsumer;
     private final AtomicBoolean isRunning = new AtomicBoolean(true);
 
     public CommunicationHandler(PacketConsumer packetConsumerIn) {
@@ -21,12 +21,34 @@ public abstract class CommunicationHandler {
 
     public void dataInLoop() {
         while (isRunning.get()) {
-            Optional<Packet> take = queueIn.take(false);
-            take.ifPresent(packetConsumer::consume);
+            Optional<Packet> packet = readPacketImpl();
+            packet.ifPresent(queueIn::offer);
         }
     }
 
-    public abstract Packet readPacketImpl();
+    public void processLoop() {
+        while (isRunning.get()) {
+            Optional<Packet> take = queueIn.take(false);
+            if (take.isPresent()) {
+                packetConsumer.consume(take.get());
+            } else {
+                packetConsumer.destroyConsumer();
+            }
+        }
+    }
+
+    public void dataOutLoop() {
+        while (isRunning.get()) {
+            Optional<Packet> take = queueOut.take(false);
+            take.ifPresent(this::writePacketImpl);
+        }
+    }
+
+    public void offerPacket(Packet packetIn) {
+        queueOut.offer(packetIn);
+    }
+
+    public abstract Optional<Packet> readPacketImpl();
     public abstract void writePacketImpl(Packet toWrite);
 
     protected void freeResources() {}
@@ -34,7 +56,7 @@ public abstract class CommunicationHandler {
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {
             freeResources();
-            packetConsumer.shutdown();
+            packetConsumer.destroyConsumer();
         }
     }
 

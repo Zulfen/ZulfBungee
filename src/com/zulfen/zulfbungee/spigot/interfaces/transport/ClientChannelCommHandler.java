@@ -1,8 +1,8 @@
 package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
-import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.handlers.protocol.ChannelPayload;
 import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
+import com.zulfen.zulfbungee.spigot.socket.ClientChannelConnection;
 import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
@@ -22,8 +22,8 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
     private final ByteArrayOutputStream fullPacketBytes = new ByteArrayOutputStream();
 
-    public ClientChannelCommHandler(ZulfBungeeSpigot pluginInstanceIn, int compressPackets) {
-        super(pluginInstanceIn);
+    public ClientChannelCommHandler(ClientChannelConnection connectionIn, int compressPackets) {
+        super(connectionIn);
         pluginInstance.getServer().getMessenger().registerOutgoingPluginChannel(pluginInstance, "zproxy:channel");
         this.channelPayload = new ChannelPayload(this, pluginInstance.getProtocolManager());
         this.maxPacketSize = compressPackets;
@@ -70,7 +70,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
     }
 
     @Override
-    public Optional<Packet> readPacket() {
+    public Optional<Packet> readPacketImpl() {
         return incomingPackets.take(false);
     }
 
@@ -96,7 +96,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
 
     @Override
-    public void writePacket(Packet inputPacket) {
+    public void writePacketImpl(Packet inputPacket) {
 
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 

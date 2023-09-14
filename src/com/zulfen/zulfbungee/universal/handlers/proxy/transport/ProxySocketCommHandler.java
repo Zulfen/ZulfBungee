@@ -1,8 +1,8 @@
 package com.zulfen.zulfbungee.universal.handlers.proxy.transport;
 
-import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
+import com.zulfen.zulfbungee.universal.handlers.proxy.ProxyCommHandler;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
+import com.zulfen.zulfbungee.universal.socket.transport.SocketServerConnection;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,13 +12,15 @@ import java.util.Optional;
 
 public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
+    private final SocketServerConnection<P, T> connection;
     private final Socket socket;
 
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
 
-    public ProxySocketCommHandler(ZulfProxyImpl<P, T> instanceIn, Socket socketIn) throws IOException {
-        super(instanceIn);
+    public ProxySocketCommHandler(SocketServerConnection<P, T> connectionIn, Socket socketIn) throws IOException {
+        super(connectionIn);
+        this.connection = connectionIn;
         this.socket = socketIn;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -44,7 +46,7 @@ public class ProxySocketCommHandler<P, T> extends ProxyCommHandler<P, T> {
     }
 
     @Override
-    public void writePacket(Packet toWrite) {
+    public void writePacketImpl(Packet toWrite) {
         try {
             outputStream.writeObject(toWrite);
             outputStream.flush();

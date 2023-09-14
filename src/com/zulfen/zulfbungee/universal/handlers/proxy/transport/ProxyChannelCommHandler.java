@@ -1,26 +1,26 @@
 package com.zulfen.zulfbungee.universal.handlers.proxy.transport;
 
-import com.zulfen.zulfbungee.universal.ZulfProxyImpl;
-import com.zulfen.zulfbungee.universal.handlers.ProxyCommHandler;
+import com.zulfen.zulfbungee.universal.handlers.proxy.ProxyCommHandler;
 import com.zulfen.zulfbungee.universal.interfaces.MessageCallback;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
-import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
+import com.zulfen.zulfbungee.universal.socket.transport.ChannelServerConnection;
 
 import java.io.*;
 import java.util.Optional;
+import java.util.concurrent.SynchronousQueue;
 
 public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
     private final MessageCallback messageCallback;
 
-    private final BlockingPacketQueue incomingQueue = new BlockingPacketQueue();
+    private final SynchronousQueue<Packet> incomingQueue = new SynchronousQueue<>();
     private final ByteArrayOutputStream fullPacketBytes = new ByteArrayOutputStream();
     private boolean transferFinished = false;
 
-    public ProxyChannelCommHandler(ZulfProxyImpl<P, T> pluginInstanceIn, MessageCallback messageCallbackIn) {
-        super(pluginInstanceIn);
+    public ProxyChannelCommHandler(ChannelServerConnection<P, T> connectionIn, MessageCallback messageCallbackIn) {
+        super(connectionIn);
         this.messageCallback = messageCallbackIn;
     }
 
@@ -66,7 +66,12 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
     @Override
     public Optional<Packet> readPacketImpl() {
-        return incomingQueue.take(false);
+        try {
+            return Optional.of(incomingQueue.take());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return Optional.empty();
     }
 
     private void sendBytes(byte[] dataIn) {
@@ -74,7 +79,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
         boolean hasSent = messageCallback.sendData(dataIn);
 
         if(!hasSent) {
-            connection.destroy();
+            packetConsumer.destroyConsumer();
         }
 
     }
@@ -95,8 +100,7 @@ public class ProxyChannelCommHandler<P, T> extends ProxyCommHandler<P, T> {
 
     }
 
-    @Override
-    public void writePacket(Packet inputPacket) {
+    public void writePacketImpl(Packet inputPacket) {
 
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 

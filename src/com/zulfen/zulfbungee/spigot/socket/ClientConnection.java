@@ -4,6 +4,7 @@ import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
 import com.zulfen.zulfbungee.spigot.managers.ConnectionManager;
 import com.zulfen.zulfbungee.spigot.managers.PacketHandlerManager;
+import com.zulfen.zulfbungee.universal.interfaces.PacketConsumer;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
@@ -14,7 +15,7 @@ import java.net.SocketAddress;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class ClientConnection<T> {
+public abstract class ClientConnection<T> implements PacketConsumer {
 
     protected final ConnectionManager<T> connectionManager;
     protected final ZulfBungeeSpigot pluginInstance;
@@ -22,14 +23,12 @@ public abstract class ClientConnection<T> {
     protected ClientCommHandler<T> clientCommHandler;
 
     protected final ClientInfo clientInfo;
+
     protected final SocketAddress socketAddress;
 
     private final AtomicBoolean connected = new AtomicBoolean(false);
     private final AtomicBoolean properConnection = new AtomicBoolean(false);
     private final AtomicBoolean running = new AtomicBoolean(true);
-
-    protected final BlockingPacketQueue queueIn = new BlockingPacketQueue();
-    protected final BlockingPacketQueue queueOut = new BlockingPacketQueue();
 
     private final BlockingPacketQueue skriptQueue = new BlockingPacketQueue();
 
@@ -50,9 +49,10 @@ public abstract class ClientConnection<T> {
     }
 
     public void start() {
-        pluginInstance.getTaskManager().newAsyncTask(this::dataInLoop);
-        pluginInstance.getTaskManager().newAsyncTask(this::dataOutLoop);
         pluginInstance.getTaskManager().newAsyncTask(this::handshakeTask);
+        pluginInstance.getTaskManager().newAsyncTask(() -> clientCommHandler.dataOutLoop());
+        pluginInstance.getTaskManager().newAsyncTask(() -> clientCommHandler.dataInLoop());
+        pluginInstance.getTaskManager().newAsyncTask(() -> clientCommHandler.processLoop());
     }
 
     public abstract void onRegister();
@@ -67,50 +67,27 @@ public abstract class ClientConnection<T> {
         sendDirect(new HandshakePacket(PacketTypes.GLOBAL_SCRIPT, new Object[0]));
     }
 
-    private void dataOutLoop() {
-        while (running.get()) {
-            Optional<Packet> take = queueOut.take(false);
-            take.ifPresent(packet -> clientCommHandler.writePacket(packet));
-        }
-    }
-
-    private void dataInLoop() {
+    @Override
+    public void consume(Packet packetIn) {
 
         clientCommHandler.awaitInitialConnection();
         if (running.get()) {
-
             connectionManager.register(this);
             onRegister();
             connected.set(true);
-
-            while (connected.get()) {
-
-                Optional<Packet> read = clientCommHandler.readPacket();
-
-                if (read.isPresent()) {
-
-                    Packet packet = read.get();
-
-                    if (packet.shouldHandle()) {
-                        packetHandlerManager.handlePacket(packet);
-                    } else {
-                        skriptQueue.offer(packet);
-
-                    }
-
-
-                } else {
-                    skriptQueue.notifyListeners();
-                }
-
+            if (packetIn.shouldHandle()) {
+                packetHandlerManager.handlePacket(packetIn);
+            } else {
+                skriptQueue.offer(packetIn);
             }
         }
+
 
     }
 
     public synchronized boolean sendDirect(Packet packetIn) {
         if (properConnection.get() || packetIn instanceof HandshakePacket) {
-            queueOut.offer(packetIn);
+            clientCommHandler.offerPacket(packetIn);
             pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
             return true;
         } else {
@@ -128,11 +105,14 @@ public abstract class ClientConnection<T> {
 
     }
 
+    @Override
+    public void destroyConsumer() {
+        destroy();
+    }
+
     public void destroy() {
         running.set(false);
         connected.set(false);
-        queueIn.notifyListeners();
-        queueOut.notifyListeners();
         skriptQueue.notifyListeners();
         clientCommHandler.destroy();
         connectionManager.deRegister(this);

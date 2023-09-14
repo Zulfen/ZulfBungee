@@ -1,7 +1,7 @@
 package com.zulfen.zulfbungee.spigot.interfaces.transport;
 
-import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.interfaces.ClientCommHandler;
+import com.zulfen.zulfbungee.spigot.socket.SocketClientConnection;
 import com.zulfen.zulfbungee.spigot.socket.factory.SocketConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 
@@ -18,8 +18,8 @@ public class ClientSocketCommHandler extends ClientCommHandler<SocketConnectionF
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
 
-    public ClientSocketCommHandler(ZulfBungeeSpigot instanceIn, Socket socketIn) throws IOException {
-        super(instanceIn);
+    public ClientSocketCommHandler(SocketClientConnection connectionIn, Socket socketIn) throws IOException {
+        super(connectionIn);
         this.socket = socketIn;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -27,7 +27,7 @@ public class ClientSocketCommHandler extends ClientCommHandler<SocketConnectionF
     }
 
     @Override
-    public Optional<Packet> readPacket() {
+    public Optional<Packet> readPacketImpl() {
 
         try {
             Object readObject = inputStream.readObject();
@@ -46,7 +46,7 @@ public class ClientSocketCommHandler extends ClientCommHandler<SocketConnectionF
     }
 
     @Override
-    public synchronized void writePacket(Packet toWrite) {
+    public synchronized void writePacketImpl(Packet toWrite) {
         try {
             outputStream.writeObject(toWrite);
             outputStream.flush();

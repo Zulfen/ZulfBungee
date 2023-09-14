@@ -14,7 +14,7 @@ public class SocketClientConnection extends ClientConnection<SocketConnectionFac
 
     public SocketClientConnection(SocketConnectionManager connectionManagerIn, Socket socketIn) throws IOException {
         super(connectionManagerIn, socketIn.getRemoteSocketAddress());
-        setClientCommHandler(new ClientSocketCommHandler(pluginInstance, socketIn));
+        setClientCommHandler(new ClientSocketCommHandler(this, socketIn));
         this.socketConnectionManager = connectionManagerIn;
     }
 

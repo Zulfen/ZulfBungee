@@ -4,5 +4,5 @@ import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 
 public interface PacketConsumer {
     void consume(Packet packetIn);
-    void shutdown();
+    void destroyConsumer();
 }

@@ -11,7 +11,7 @@ public class SocketServerConnection<P, T> extends ProxyServerConnection<P, T> {
 
     public SocketServerConnection(MainServer<P, T> mainServerIn, Socket socketIn) throws IOException {
         super(mainServerIn, socketIn.getRemoteSocketAddress());
-        setProxyCommHandler(new ProxySocketCommHandler<>(mainServerIn.getImpl(), socketIn));
+        setProxyCommHandler(new ProxySocketCommHandler<>(this, socketIn));
     }
 
 }
