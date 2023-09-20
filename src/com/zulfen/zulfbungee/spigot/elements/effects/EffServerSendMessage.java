@@ -52,7 +52,7 @@ public class EffServerSendMessage extends Effect {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return "effect server sendDirect message to " + servers.toString(event, b) + " with message " + message + " and title " + title;
+        return "effect server send message to " + servers.toString(event, b) + " with message " + message + " and title " + title;
     }
 
     @Override
