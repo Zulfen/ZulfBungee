@@ -8,7 +8,11 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SkriptChange
 import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
 import com.zulfen.zulfbungee.universal.interfaces.StorageImpl;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
+import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 public class NetworkVariableModify<P, T> extends PacketHandler<P, T> {
@@ -33,24 +37,29 @@ public class NetworkVariableModify<P, T> extends PacketHandler<P, T> {
                 SkriptChangeMode mode = variable.getChangeMode().get();
 
                 switch (mode) {
-
                     case SET:
                         storage.setVariable(variable);
                         break;
+
                     case DELETE:
+
                     case RESET:
                         storage.deleteVariable(variable.getName());
                         break;
+
                     case ADD:
-                        storage.addToVariable(variable.getName(), variable.getValueArray());
+                        Optional<SerializedNetworkVariable> optionalVariable = storage.getVariable(variable.getName());
+                        Value[] existingValues = optionalVariable.map(SerializedNetworkVariable::getValueArray).orElse(new Value[0]);
+                        ArrayList<Value> newValues = new ArrayList<>(Arrays.asList(existingValues));
+                        Collections.addAll(newValues, variable.getValueArray());
+                        storage.deleteVariable(variable.getName());
+                        storage.setVariable(new SerializedNetworkVariable(variable.getName(), "ADD", newValues.toArray(new Value[newValues.size()])));
                         break;
+
                     case REMOVE:
                         storage.removeFromVariable(variable.getName(), variable.getValueArray());
                         break;
-
                 }
-
-
 
             }
 
