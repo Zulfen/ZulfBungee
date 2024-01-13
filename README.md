@@ -15,10 +15,6 @@ Building this addon by yourself might be a bit of a pain right now, sorry! I am 
 
 **Please keep in mind that this plugin is currently in Alpha testing, so serious bugs may occur!**
 
-## **Known Bugs:**
-
-* None right now!
-
 # **Supported Syntax:**
 
 [![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=ZulfBungee)
