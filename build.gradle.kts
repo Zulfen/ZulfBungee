@@ -48,6 +48,8 @@ tasks.test {
 
 tasks {
     shadowJar {
+        // Fetch the short Git commit hash
+        val gitCommitHash: String = "git rev-parse --short HEAD".runCommand()?.trim() ?: "unknown"
 
         // Relocate dependencies to avoid conflicts
         relocate("com.zaxxer", "com.zulfen.zulfbungee.libs.zaxxer")
@@ -55,14 +57,27 @@ tasks {
         relocate("org.h2", "com.zulfen.zulfbungee.libs.h2")
 
         // Set the archive file name
-        archiveFileName.set("ZulfBungee-$version-Paper.jar")
+        archiveFileName.set("ZulfBungee-$version-$gitCommitHash.jar")
 
-        // (Optional) Only include the specified dependencies if needed
+        // Include specific dependencies if needed
         dependencies {
             include(dependency("com.zaxxer:HikariCP"))
             include(dependency("org.semver4j:semver4j"))
             include(dependency("com.h2database:h2"))
         }
+    }
+}
 
+// Helper function to run shell commands
+fun String.runCommand(): String? {
+    return try {
+        val process = ProcessBuilder(*split(" ").toTypedArray())
+            .directory(file("."))
+            .redirectOutput(ProcessBuilder.Redirect.PIPE)
+            .redirectError(ProcessBuilder.Redirect.PIPE)
+            .start()
+        process.inputStream.bufferedReader().readText()
+    } catch (e: Exception) {
+        null
     }
 }
