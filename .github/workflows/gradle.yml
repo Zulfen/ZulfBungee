@@ -39,11 +39,15 @@ jobs:
     - name: Build + Create JAR
       run: ./gradlew shadowJar
 
+    - name: Get JAR Filename
+      id: jarname
+      run: echo "FILENAME=$(ls build/libs/ZulfBungee-*.jar)" >> $GITHUB_ENV
+
     - name: Upload JAR Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: shadow-jar
-        path: build/libs/*.jar
+        name: ${{ env.FILENAME }}
+        path: ${{ env.FILENAME }}
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
