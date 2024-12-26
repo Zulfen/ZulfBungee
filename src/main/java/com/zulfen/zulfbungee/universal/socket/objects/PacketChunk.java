@@ -7,7 +7,7 @@ public class PacketChunk extends Packet {
     public PacketChunk(PacketTypes typeIn, ZulfByteBuffer byteBufferIn, boolean finalChunkIn) {
         super(typeIn, false, true, byteBufferIn);
         this.finalChunk = finalChunkIn;
-        if (byteBufferIn.getData().length > 20480) {
+        if (byteBufferIn.data().length > 20480) {
             throw new UnsupportedOperationException("Packet chunks must not be bigger than 20000 bytes.");
         }
     }

@@ -66,9 +66,3 @@ tasks {
 
     }
 }
-
-
-// Make the `shadowJar` task the default jar task (thanks chatgpt)
-tasks.assemble {
-    dependsOn(tasks.shadowJar)
-}

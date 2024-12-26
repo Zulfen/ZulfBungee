@@ -37,16 +37,14 @@ public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> 
 
             if (readObject instanceof Packet) {
 
-                if (readObject instanceof PacketChunk) {
-
-                    PacketChunk packetChunk = (PacketChunk) readObject;
+                if (readObject instanceof PacketChunk packetChunk) {
 
                     if (packetChunk.isFinalChunk()) {
                         transferFinished = true;
                         provideBytes(fullPacketBytes.toByteArray());
                     } else {
                         transferFinished = false;
-                        byte[] chunkData = packetChunk.getDataSingle().getData();
+                        byte[] chunkData = packetChunk.getDataSingle().data();
                         fullPacketBytes.write(chunkData);
                     }
 
@@ -129,6 +127,8 @@ public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> 
 
     }
 
+    @Override
+    protected void freeResources() {}
 
 
 }

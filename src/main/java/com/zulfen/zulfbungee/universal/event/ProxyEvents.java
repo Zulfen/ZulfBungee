@@ -70,9 +70,7 @@ public class ProxyEvents<P, T, C> {
         if (serverOptional.isPresent()) {
 
             ZulfProxyServer<P, T, C> serverIn = serverOptional.get();
-            if (mainServer instanceof ChannelMainServer) {
-
-                ChannelMainServer<P, T, C> channelMainServer = (ChannelMainServer<P, T, C>) mainServer;
+            if (mainServer instanceof ChannelMainServer<P, T, C> channelMainServer) {
 
                 if (!channelMainServer.isChannelConnectionActive(serverNameIn)) {
                     channelMainServer.acceptMessagingConnection(serverIn.getSocketAddress(), serverNameIn,

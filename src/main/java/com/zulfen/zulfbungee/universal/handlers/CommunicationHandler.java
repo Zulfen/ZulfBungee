@@ -51,7 +51,7 @@ public abstract class CommunicationHandler {
     public abstract Optional<Packet> readPacketImpl();
     public abstract void writePacketImpl(Packet toWrite);
 
-    protected void freeResources() {}
+    protected abstract void freeResources();
 
     public void destroy() {
         if (isRunning.compareAndSet(true, false)) {

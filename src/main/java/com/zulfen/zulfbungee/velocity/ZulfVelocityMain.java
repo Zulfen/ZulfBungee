@@ -1,6 +1,7 @@
 package com.zulfen.zulfbungee.velocity;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -46,7 +47,12 @@ public class ZulfVelocityMain {
         mainServer = plugin.getMainServer();
 
         velocity.getEventManager().register(this, new VelocityEvents(mainServer));
-        velocity.getCommandManager().register("zulfbungee", new VelocityCommand(new CommandHandlerManager<>(mainServer)));
+        CommandMeta commandMeta = velocity.getCommandManager()
+                .metaBuilder("zulfbungee")
+                .plugin(velocity)
+                .build();
+        velocity.getCommandManager().register(commandMeta, new VelocityCommand(new CommandHandlerManager<>(mainServer)));
+
 
     }
 

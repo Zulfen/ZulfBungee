@@ -42,16 +42,14 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
             if (readObject instanceof Packet) {
 
-                if (readObject instanceof PacketChunk) {
-
-                    PacketChunk packetChunk = (PacketChunk) readObject;
+                if (readObject instanceof PacketChunk packetChunk) {
 
                     if (packetChunk.isFinalChunk()) {
                         transferFinished = true;
                         provideBytes(fullPacketBytes.toByteArray());
                     } else {
                         transferFinished = false;
-                        byte[] chunkData = packetChunk.getDataSingle().getData();
+                        byte[] chunkData = packetChunk.getDataSingle().data();
                         fullPacketBytes.write(chunkData);
                     }
 
@@ -123,6 +121,9 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
 
     }
+
+    @Override
+    protected void freeResources() {}
 
     @Override
     public void destroy() {
