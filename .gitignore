@@ -1,3 +1,6 @@
 /zulfbungee.pdn
 /zulfbungee.png
 **/.idea/workspace.xml **/.idea/tasks.xml
+.gradle
+*.iml
+/.idea/*
