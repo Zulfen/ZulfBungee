@@ -5,13 +5,15 @@
 
 # **ZulfBungee - a proxy Skript addon!**
 
-*The project is currently based around Minecraft 1.12.2 and Java 8 to ensure a level of legacy support, but will be dropped soon.*
+Currently focused on supporting the latest version of Minecraft and Skript. If you are using 1.12.2 or below and using Skript 2.6.4, use [this version.](https://github.com/Zulfen/ZulfBungee/releases/tag/v0.9.9-pre6)
 
 **Supports Bungeecord and Velocity!**
 
 Small portions of this plugin were referenced from another addon to aid development ([Skungee by LimeGlass](https://github.com/Skungee/Skungee-2.0.0)), and code referenced will be credited accordingly.
 
-Building this addon by yourself might be a bit of a pain right now, sorry! I am currently planning on switching from Maven to Gradle. For the meantime, you can load the repo as an IntelliJ project and you should be able to build it from there.
+`gradlew shadowJar` should build the plugin and create a usable JAR. Please let me know if you encounter any issues!
+
+I will be adding unit testing soon to catch issues before any major releases.
 
 **Please keep in mind that this plugin is currently in Alpha testing, so serious bugs may occur!**
 
