@@ -39,7 +39,7 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
-    - name: Build with Gradle Wrapper
+    - name: Create JAR
       run: ./gradlew shadowJar
 
     - name: Upload JAR Artifact
