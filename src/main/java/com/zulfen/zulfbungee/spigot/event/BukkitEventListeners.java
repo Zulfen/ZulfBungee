@@ -24,8 +24,7 @@ public class BukkitEventListeners implements Listener {
     public void onChannelEvent(PlayerChannelEvent playerChannelEvent) {
         if (playerChannelEvent.getChannel().equals("zproxy:channel")) {
             ConnectionManager<?> connectionManager = pluginInstance.getConnectionManager();
-            if (connectionManager instanceof ChannelConnectionManager) {
-                ChannelConnectionManager channelConnectionManager = (ChannelConnectionManager) connectionManager;
+            if (connectionManager instanceof ChannelConnectionManager channelConnectionManager) {
                 if (pluginInstance.getServer().getOnlinePlayers().size() == 1) {
                     channelConnectionManager.signalAvailableConnection();
                 }
@@ -36,8 +35,7 @@ public class BukkitEventListeners implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent playerDisconnectEvent) {
         ConnectionManager<?> connectionManager = pluginInstance.getConnectionManager();
-        if (connectionManager instanceof ChannelConnectionManager) {
-            ChannelConnectionManager channelConnectionManager = (ChannelConnectionManager) connectionManager;
+        if (connectionManager instanceof ChannelConnectionManager channelConnectionManager) {
             if (pluginInstance.getServer().getOnlinePlayers().size() == 1) {
                 channelConnectionManager.newChannelConnection();
             }

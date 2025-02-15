@@ -32,10 +32,9 @@ public class GlobalScriptsTask implements Supplier<File> {
         this.pluginInstance = pluginInstanceIn;
         this.connection = connectionIn;
         this.scriptName = scriptInfoIn.getScriptName();
-        this.scriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
-                scriptName);
-        this.unloadedScriptFile = new File(String.format("%s%sscripts", Skript.getInstance().getDataFolder(), File.separator),
-                "-" + scriptName);
+        File scriptsFolder = new File(Skript.getInstance().getDataFolder(), "scripts");
+        this.scriptFile = new File(scriptsFolder, scriptName);
+        this.unloadedScriptFile = new File(scriptsFolder, "-" + scriptName);
         this.scriptAction = scriptInfoIn.getScriptAction();
         this.isFinalScript = scriptInfoIn.isLastScript();
         this.sender = senderIn;

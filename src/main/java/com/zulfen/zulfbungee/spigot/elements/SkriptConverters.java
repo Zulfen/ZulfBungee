@@ -1,18 +1,11 @@
 package com.zulfen.zulfbungee.spigot.elements;
 
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.registrations.Converters;
-import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
-import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 import org.bukkit.entity.Player;
-
-import java.util.Optional;
+import org.skriptlang.skript.lang.converter.Converters;
 
 public class SkriptConverters {
 
@@ -23,7 +16,10 @@ public class SkriptConverters {
         Converters.registerConverter(OfflinePlayer.class, ClientPlayer.class, offlinePlayer -> {
             if (offlinePlayer.isOnline()) {
                 Player onlinePlayer = offlinePlayer.getPlayer();
-                return new ClientPlayer(onlinePlayer.getName(), onlinePlayer.getUniqueId(), onlinePlayer.getAddress());
+                if (onlinePlayer != null) {
+                    return new ClientPlayer(onlinePlayer.getName(), onlinePlayer.getUniqueId(), onlinePlayer.getAddress());
+                }
+                return null;
             } else {
                 return new ClientPlayer(offlinePlayer.getName(), offlinePlayer.getUniqueId());
             }
@@ -33,7 +29,7 @@ public class SkriptConverters {
 
         Converters.registerConverter(ClientPlayer.class, String.class, ClientPlayer::getName);
 
-        Converters.registerConverter(String.class, ClientPlayer.class, s -> {
+        /*Converters.registerConverter(String.class, ClientPlayer.class, s -> {
 
             Optional<Packet> playerRequest = ZulfBungeeSpigot.getPlugin().getConnectionManager()
                     .send(new Packet(PacketTypes.PROXY_PLAYER_UUID, true, true, s));
@@ -52,7 +48,7 @@ public class SkriptConverters {
         Converters.registerConverter(String.class, ClientServer.class, s -> {
             Optional<ClientServer> server = ZulfBungeeSpigot.getPlugin().getConnectionManager().getProxyServer(s);
             return server.orElse(null);
-        });
+        });*/
 
 
     }

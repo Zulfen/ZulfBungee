@@ -33,13 +33,14 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.zaxxer:HikariCP:6.2.1")
     implementation("com.h2database:h2:2.3.232")
-    implementation("com.github.SkriptLang:Skript:2.9.5")
+    implementation("com.github.SkriptLang:Skript:2.10.1")
     implementation("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     compileOnly("io.github.waterfallmc:waterfall-api:1.21-R0.1-SNAPSHOT")
     annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     implementation("org.semver4j:semver4j:5.4.1")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    implementation("com.mysql:mysql-connector-j:9.2.0")
 }
 
 tasks.test {
@@ -55,6 +56,7 @@ tasks {
         relocate("com.zaxxer", "com.zulfen.zulfbungee.libs.zaxxer")
         relocate("org.semver4j", "com.zulfen.zulfbungee.libs.semver4j")
         relocate("org.h2", "com.zulfen.zulfbungee.libs.h2")
+        relocate("com.mysql", "com.zulfen.zulfbungee.libs.mysql")
 
         // Set the archive file name
         archiveFileName.set("ZulfBungee-$version-$gitCommitHash.jar")
@@ -64,6 +66,7 @@ tasks {
             include(dependency("com.zaxxer:HikariCP"))
             include(dependency("org.semver4j:semver4j"))
             include(dependency("com.h2database:h2"))
+            include(dependency("mysql:mysql-connector-java"))
         }
     }
 }
