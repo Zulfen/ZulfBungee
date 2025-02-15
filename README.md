@@ -6,6 +6,7 @@
 # **ZulfBungee - a proxy Skript addon!**
 
 Currently focused on supporting the latest version of Minecraft and Skript. If you are using 1.12.2 or below and using Skript 2.6.4, use [this version.](https://github.com/Zulfen/ZulfBungee/releases/tag/v0.9.9-pre6)
+I am slowly updating the plugin to use Skript 2.10 and modern versions of Minecraft, look at the artifacts with each commit and test them to see if any changes work!
 
 **Supports Bungeecord and Velocity!**
 
