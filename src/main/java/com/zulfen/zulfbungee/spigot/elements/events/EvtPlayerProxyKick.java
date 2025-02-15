@@ -7,7 +7,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerKick;
@@ -20,19 +19,9 @@ public class EvtPlayerProxyKick extends SkriptEvent {
     static {
         Skript.registerEvent("Proxy Player Kick", EvtPlayerProxyKick.class, EventPlayerServerKick.class, "(proxy|bungeecord|bungee|velocity) player kick");
 
-        EventValues.registerEventValue(EventPlayerServerKick.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerServerKick>() {
-            @Override
-            public ClientPlayer get(EventPlayerServerKick eventPlayerServerKick) {
-                return eventPlayerServerKick.getPlayer();
-            }
-        }, 0);
+        EventValues.registerEventValue(EventPlayerServerKick.class, ClientPlayer.class, EventPlayerServerKick::getPlayer);
+        EventValues.registerEventValue(EventPlayerServerKick.class, String.class, EventPlayerServerKick::getReason);
 
-        EventValues.registerEventValue(EventPlayerServerKick.class, String.class, new Getter<String, EventPlayerServerKick>() {
-            @Override
-            public String get(EventPlayerServerKick eventPlayerServerKick) {
-                return eventPlayerServerKick.getReason();
-            }
-        }, 0);
     }
 
     @Override
@@ -49,4 +38,5 @@ public class EvtPlayerProxyKick extends SkriptEvent {
     public @NotNull String toString(Event event, boolean b) {
         return "event proxy player kick";
     }
+
 }

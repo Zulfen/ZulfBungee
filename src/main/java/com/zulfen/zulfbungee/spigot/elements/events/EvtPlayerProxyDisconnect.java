@@ -7,7 +7,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
@@ -19,14 +18,7 @@ public class EvtPlayerProxyDisconnect extends SkriptEvent {
 
     static {
         Skript.registerEvent("Proxy Player Disconnect", EvtPlayerProxyDisconnect.class, EventPlayerServerDisconnect.class, "(proxy|bungeecord|bungee|velocity) player disconnect");
-
-        EventValues.registerEventValue(EventPlayerServerDisconnect.class, ClientPlayer.class, new Getter<ClientPlayer, EventPlayerServerDisconnect>() {
-            @Override
-            public ClientPlayer get(EventPlayerServerDisconnect eventPlayerServerDisconnect) {
-                return eventPlayerServerDisconnect.getPlayer();
-            }
-        }, 0);
-
+        EventValues.registerEventValue(EventPlayerServerDisconnect.class, ClientPlayer.class, EventPlayerServerDisconnect::getPlayer);
     }
 
     @Override
