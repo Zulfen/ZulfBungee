@@ -2,15 +2,15 @@ package com.zulfen.zulfbungee.spigot.handlers.protocol;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.MinecraftKey;
 import io.netty.buffer.ByteBuf;
 import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientChannelCommHandler;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class ChannelPayload extends PacketAdapter {
@@ -33,18 +33,53 @@ public class ChannelPayload extends PacketAdapter {
             PacketContainer packet = event.getPacket();
 
             String channel;
+            ByteBuf byteBuffer;
+
             // Channel identifiers changed in 1.13 (arrrrgghh)
-            if (minecraftVersion.isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
+            if (minecraftVersion.isAtLeast(MinecraftVersion.CONFIG_PHASE_PROTOCOL_UPDATE)) {
+
+                // https://vitri-mappings.pyke.io/1.21.4/net/minecraft/network/protocol/common/custom/CustomPacketPayload.html
+                Object handle = packet.getHandle();
+                Class<?> underlyingMinecraftClass = handle.getClass();
+
+                try {
+
+                    Object payload = underlyingMinecraftClass.getMethod("payload").invoke(handle);
+                    Field dataField = payload.getClass().getDeclaredField("data");
+                    dataField.setAccessible(true);
+
+                    byteBuffer = (ByteBuf) dataField.get(payload);
+
+                    Method idMethod = payload.getClass().getMethod("id");
+                    Object resourceLocation = idMethod.invoke(payload); // this should be the ResourceLocation object
+
+                    Field namespaceField = resourceLocation.getClass().getDeclaredField("namespace");
+                    Field pathField = resourceLocation.getClass().getDeclaredField("path");
+                    namespaceField.setAccessible(true);
+                    pathField.setAccessible(true);
+
+                    String namespaceValue = (String) namespaceField.get(resourceLocation);
+                    String pathValue = (String) pathField.get(resourceLocation);
+
+                    channel = namespaceValue + ":" + pathValue;
+
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                         NoSuchFieldException e) {
+                    throw new RuntimeException("Workaround for lack of ProtocolLib update to reflect new channel payload changes failed spectacularly: " + e.getCause().toString());
+                }
+
+            } else if (minecraftVersion.isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
                 List<MinecraftKey> minecraftKeys = packet.getMinecraftKeys().getValues();
                 channel = minecraftKeys.getFirst().getFullKey();
+                byteBuffer = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
             } else {
                 channel = packet.getStrings().read(0);
+                byteBuffer = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
             }
 
             if (channel.equals("zproxy:channel")) {
-                ByteBuf byteBuf = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
-                byte[] message = new byte[byteBuf.readableBytes()];
-                byteBuf.getBytes(byteBuf.readerIndex(), message);
+                byte[] message = new byte[byteBuffer.readableBytes()];
+                byteBuffer.getBytes(byteBuffer.readerIndex(), message);
                 channelCommHandler.provideBytes(message);
             }
 
@@ -52,6 +87,7 @@ public class ChannelPayload extends PacketAdapter {
     }
 
     @Override
-    public void onPacketSending(PacketEvent event) {}
+    public void onPacketSending(PacketEvent event) {
+    }
 
 }
