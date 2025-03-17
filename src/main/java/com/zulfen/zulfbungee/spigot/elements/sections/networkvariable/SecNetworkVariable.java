@@ -73,7 +73,7 @@ public class SecNetworkVariable extends Section {
         taskManager.newAsyncTask(() -> {
 
             Optional<PreparedNetworkVariable> requestNetworkVariable = connectionManager
-                    .requestNetworkVariable(variableExpression.getName().toString(event), event);
+                    .requestNetworkVariable(variableExpression.getName().toString(event));
 
             if (requestNetworkVariable.isPresent()) {
                 PreparedNetworkVariable variable = requestNetworkVariable.get();

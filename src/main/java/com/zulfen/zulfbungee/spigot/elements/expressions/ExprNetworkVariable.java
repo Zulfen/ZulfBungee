@@ -34,7 +34,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
         ConnectionManager<?> connectionManager = ZulfBungeeSpigot.getPlugin().getConnectionManager();
 
-        Optional<PreparedNetworkVariable> variableOptional = connectionManager.requestNetworkVariable(givenVariable.getName().toString(event), event);
+        Optional<PreparedNetworkVariable> variableOptional = connectionManager.requestNetworkVariable(givenVariable.getName().toString(event));
         if (variableOptional.isPresent()) {
             PreparedNetworkVariable preparedVar = variableOptional.get();
             return preparedVar.getData();
