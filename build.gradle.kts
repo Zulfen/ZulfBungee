@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.zulfen.zulfbungee"
-version = "0.9.9-pre6"
+version = "0.9.9-pre7"
 
 java {
     toolchain {
