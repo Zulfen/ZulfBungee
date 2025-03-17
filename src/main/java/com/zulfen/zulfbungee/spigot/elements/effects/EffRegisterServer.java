@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -11,6 +13,8 @@ import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
+@Name("Register Server")
+@Description("Register a given server with the proxy.")
 public class EffRegisterServer extends Effect {
 
     private Expression<String> serverName;

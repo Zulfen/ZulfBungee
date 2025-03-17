@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -11,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
+@Name("Proxy Servers")
+@Description("Gets a list of all the proxy servers registered with the proxy.")
 public class ExprProxyServers extends SimpleExpression<ClientServer> {
 
     static {

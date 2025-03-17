@@ -1,5 +1,7 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
@@ -10,6 +12,8 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import java.net.InetSocketAddress;
 import java.util.Optional;
 
+@Name("Proxy Player's Virtual Host")
+@Description("The virtual host of a given proxy player, which is the IP of the proxy they connected to. (e.g. play.server.com)")
 public class ExprProxyPlayerVirtualHost extends SimplePropertyExpression<ClientPlayer, String> {
 
     static {

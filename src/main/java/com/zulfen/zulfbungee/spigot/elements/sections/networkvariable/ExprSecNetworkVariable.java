@@ -10,6 +10,7 @@ import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.skriptlang.skript.lang.structure.Structure;
 
 public class ExprSecNetworkVariable extends SimpleExpression<Object> {
 
@@ -47,15 +48,12 @@ public class ExprSecNetworkVariable extends SimpleExpression<Object> {
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
 
-        SkriptEvent event = getParser().getCurrentSkriptEvent();
-
-        if (event instanceof SectionSkriptEvent) {
-
-            SectionSkriptEvent sectionSkriptEvent = (SectionSkriptEvent) event;
+        Structure currentStructure = getParser().getCurrentStructure();
+        if (currentStructure instanceof SectionSkriptEvent) {
+            SectionSkriptEvent sectionSkriptEvent = (SectionSkriptEvent) currentStructure;
             if (sectionSkriptEvent.isSection(SecNetworkVariable.class)) {
                 return true;
             }
-
         }
 
         Skript.error("You can only use this expression in a network variable section!");

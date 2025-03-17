@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -14,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 
+@Name("Proxy Server")
+@Description("Represents a proxy server from a given name.")
 public class ExprProxyServer extends SimpleExpression<ClientServer> {
 
     private Expression<String> names;

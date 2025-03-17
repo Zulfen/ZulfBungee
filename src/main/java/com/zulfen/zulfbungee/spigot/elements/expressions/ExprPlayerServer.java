@@ -1,5 +1,7 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
@@ -13,6 +15,8 @@ import java.util.Optional;
 
 // again, referenced code from Skungee 2.0!
 
+@Name("Proxy Player's Current Server")
+@Description("Returns the given proxy player's current server.")
 public class ExprPlayerServer extends SimplePropertyExpression<ClientPlayer, ClientServer> {
 
     static {

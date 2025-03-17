@@ -23,11 +23,9 @@ public class ExprPreviousServer extends EventValueExpression<ClientServer> {
     @Override
     protected ClientServer[] get(@NotNull Event event) {
 
-        if (event instanceof EventPlayerSwitchServer) {
-            EventPlayerSwitchServer eventPlayerSwitchServer = (EventPlayerSwitchServer) event;
+        if (event instanceof EventPlayerSwitchServer eventPlayerSwitchServer) {
             return CollectionUtils.array(eventPlayerSwitchServer.getFromServer());
-        } else if (event instanceof EventPlayerServerDisconnect) {
-            EventPlayerServerDisconnect eventPlayerServerDisconnect = (EventPlayerServerDisconnect) event;
+        } else if (event instanceof EventPlayerServerDisconnect eventPlayerServerDisconnect) {
             return CollectionUtils.array(eventPlayerServerDisconnect.getLastServer());
         }
 

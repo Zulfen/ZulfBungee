@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -14,6 +16,8 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
 import java.util.*;
 
+@Name("Proxy Players")
+@Description("Gets a list of all the proxy players on the proxy, or on a given server.")
 public class ExprProxyServerPlayers extends SimpleExpression<ClientPlayer> {
 
     static {

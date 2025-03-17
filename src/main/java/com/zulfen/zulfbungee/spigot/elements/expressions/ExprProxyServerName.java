@@ -1,9 +1,13 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
+@Name("Proxy Server's Name")
+@Description("The name of a given proxy server.")
 public class ExprProxyServerName extends SimplePropertyExpression<ClientServer, String> {
 
     static {

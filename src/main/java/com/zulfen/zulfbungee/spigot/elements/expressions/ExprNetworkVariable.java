@@ -2,6 +2,8 @@ package com.zulfen.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -21,6 +23,8 @@ import java.util.Optional;
 // Some code I have written here has been referenced from Skungee 2.0.0:
 // https://github.com/Skungee/Skungee-2.0.0/blob/master/src/main/java/com/skungee/spigot/elements/expressions/ExprNetworkVariable.java
 
+@Name("Network Variable")
+@Description("Represents a network variable which is synced between all servers. It can be set, added to, removed from or deleted - just like a regular variable.\n")
 public class ExprNetworkVariable extends SimpleExpression<Object> {
 
     static {

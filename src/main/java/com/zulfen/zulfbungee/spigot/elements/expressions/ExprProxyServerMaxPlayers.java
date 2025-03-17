@@ -1,9 +1,13 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
+@Name("Proxy Server's Max Player Count")
+@Description("The maximum number of players that can join a given proxy server.")
 public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ClientServer, Number> {
 
     static {

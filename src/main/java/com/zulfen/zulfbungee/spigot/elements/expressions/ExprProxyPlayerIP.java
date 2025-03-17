@@ -1,5 +1,7 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
@@ -9,6 +11,8 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import java.net.InetSocketAddress;
 import java.util.Optional;
 
+@Name("Proxy Player's IP")
+@Description("A proxy player's IP address.")
 public class ExprProxyPlayerIP extends SimplePropertyExpression<ClientPlayer, String> {
 
     static {

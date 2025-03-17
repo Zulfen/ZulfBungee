@@ -2,6 +2,8 @@ package com.zulfen.zulfbungee.spigot.elements.sections.networkvariable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
@@ -16,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+@Name("Using Network Variable")
+@Description("A section you can use to grab network variables asynchronously.")
 public class SecNetworkVariable extends Section {
 
     private Trigger trigger;

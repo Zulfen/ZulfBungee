@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
@@ -12,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventProxyMessage;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
+@Name("Server Message")
+@Description("Called when this server receives a message.")
 public class EvtServerMessage extends SkriptEvent {
 
     private Literal<String> title;

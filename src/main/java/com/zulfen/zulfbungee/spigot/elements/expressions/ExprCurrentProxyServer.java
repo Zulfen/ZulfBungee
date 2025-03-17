@@ -1,6 +1,8 @@
 package com.zulfen.zulfbungee.spigot.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -14,6 +16,8 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
 
 import java.util.Optional;
 
+@Name("Current Proxy Server")
+@Description("Represents the current server this script is being ran on.")
 public class ExprCurrentProxyServer extends SimpleExpression<ClientServer> {
 
     static {

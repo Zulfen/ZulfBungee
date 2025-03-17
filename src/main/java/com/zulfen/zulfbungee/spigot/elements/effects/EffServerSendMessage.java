@@ -19,8 +19,8 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ServerMessag
 
 import java.util.Optional;
 
-@Name("Proxy Server receive message")
-@Description("When a proxy server receives a message.")
+@Name("Proxy Server Send Message")
+@Description("Sends a message to a given proxy server. This can be listened to with the corresponding event.")
 public class EffServerSendMessage extends Effect {
 
     private Expression<ClientServer> servers;
