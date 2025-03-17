@@ -34,7 +34,6 @@ public class PlayerSwitchServer<P, T, C> extends PacketHandler<P, T, C> {
                 for (ClientPlayer clientPlayer : switchEvent.getPlayers()) {
 
                     Optional<ZulfProxyPlayer<P, T, C>> proxyPlayer = getProxy().getPlayer(clientPlayer);
-
                     proxyPlayer.ifPresent(pZulfProxyPlayer -> pZulfProxyPlayer.connect(server.get()));
 
                 }

@@ -2,7 +2,7 @@ package com.zulfen.zulfbungee.universal.command;
 
 import com.zulfen.zulfbungee.universal.command.util.Constants;
 
-public interface ProxyCommandSender<P, T, C>{
+public interface ProxyCommandSender {
    boolean isPlayer();
    boolean hasPermission(String permission);
    void sendMessage(String message);

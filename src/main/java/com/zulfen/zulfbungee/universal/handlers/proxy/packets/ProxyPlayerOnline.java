@@ -2,7 +2,6 @@ package com.zulfen.zulfbungee.universal.handlers.proxy.packets;
 
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
@@ -25,11 +24,11 @@ public class ProxyPlayerOnline<P, T, C> extends PacketHandler<P, T, C> {
 
             Optional<ZulfProxyPlayer<P, T, C>> proxiedPlayer = getProxy().getPlayer(skriptPlayer);
             if (proxiedPlayer.isPresent()) {
-                return new Packet(PacketTypes.PLAYER_ONLINE, false, false, true);
+                return packetIn.response(false, false, true);
             }
 
         }
 
-        return new Packet(PacketTypes.PLAYER_ONLINE, false, false, false);
+        return packetIn.response(false, false, false);
     }
 }

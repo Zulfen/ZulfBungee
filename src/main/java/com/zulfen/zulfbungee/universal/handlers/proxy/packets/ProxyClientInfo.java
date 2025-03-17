@@ -33,12 +33,12 @@ public class ProxyClientInfo<P, T, C> extends PacketHandler<P, T, C> {
             if (!getMainServer().getActiveServerNames().contains(name)) {
 
                 // new server
-                boolean portCheck = infoSockAddr.getPort() == clientInfo.getMinecraftPort();
+                boolean portCheck = infoSockAddr.getPort() == clientInfo.minecraftPort();
                 boolean addressCheck = infoSockAddr.getAddress().equals(socketAddressIn.getAddress());
 
                 if (addressCheck && portCheck) {
                     getMainServer().addActiveConnection(connection, name, clientInfo);
-                    return new Packet(PacketTypes.CONNECTION_NAME, true, true, name);
+                    return new Packet(PacketTypes.CONNECTION_NAME, false, true, name);
                 }
 
             }

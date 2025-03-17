@@ -1,7 +1,5 @@
 package com.zulfen.zulfbungee.spigot.objects;
 
-import ch.njol.skript.lang.Variable;
-
 public class PreparedNetworkVariable {
 
     private final String name;

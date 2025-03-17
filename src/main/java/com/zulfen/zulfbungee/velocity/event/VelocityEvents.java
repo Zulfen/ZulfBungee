@@ -33,16 +33,19 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player, Configurati
     @Subscribe
     public void onServerConnected(ServerConnectedEvent serverConnectedEvent) {
 
+        RegisteredServer toServer = serverConnectedEvent.getServer();
+        VelocityServer velocityServer = new VelocityServer(toServer, zulfVelocityPlugin);
+        VelocityPlayer velocityPlayer = new VelocityPlayer(serverConnectedEvent.getPlayer(), velocityServer, zulfVelocityPlugin);
         if (serverConnectedEvent.getPreviousServer().isEmpty()) {
-
-            RegisteredServer server = serverConnectedEvent.getServer();
-            VelocityServer velocityServer = new VelocityServer(server, zulfVelocityPlugin);
-
-            Player eventPlayer = serverConnectedEvent.getPlayer();
-            VelocityPlayer velocityPlayer = new VelocityPlayer(eventPlayer, velocityServer, zulfVelocityPlugin);
-
             serverConnected(velocityPlayer);
-
+        } else {
+            RegisteredServer fromServer = serverConnectedEvent.getPreviousServer().get();
+            switchServer(
+                    toServer.getServerInfo().getName(),
+                    fromServer.getServerInfo().getName(),
+                    serverConnectedEvent.getPlayer().getUsername(),
+                    serverConnectedEvent.getPlayer().getUniqueId()
+            );
         }
 
     }
@@ -52,16 +55,18 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player, Configurati
 
         Player velocityPlayer = kickedFromServerEvent.getPlayer();
         Optional<Component> optionalReason = kickedFromServerEvent.getServerKickReason();
+        String name = kickedFromServerEvent.getServer().getServerInfo().getName();
 
         if (optionalReason.isPresent()) {
             serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(),
-                    zulfVelocityPlugin.getLegacyTextSerializer().serialize(optionalReason.get()));
+                    zulfVelocityPlugin.getLegacyTextSerializer().serialize(optionalReason.get()), name);
         } else {
-            serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(), "");
+            serverKick(velocityPlayer.getUsername(), velocityPlayer.getUniqueId(), "", name);
         }
 
 
     }
+
 
     @Subscribe
     public void onDisconnect(DisconnectEvent disconnectEvent) {
@@ -81,8 +86,7 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player, Configurati
             ChannelMessageSource source = event.getSource();
 
             String serverName;
-            if (source instanceof ServerConnection) {
-                ServerConnection serverConnection = (ServerConnection) source;
+            if (source instanceof ServerConnection serverConnection) {
                 serverName = serverConnection.getServerInfo().getName();
             } else {
                 return;
@@ -93,5 +97,6 @@ public class VelocityEvents extends ProxyEvents<ProxyServer, Player, Configurati
         }
 
     }
+
 
 }

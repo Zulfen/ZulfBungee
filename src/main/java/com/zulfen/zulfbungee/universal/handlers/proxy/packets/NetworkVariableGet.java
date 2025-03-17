@@ -5,7 +5,6 @@ import com.zulfen.zulfbungee.universal.interfaces.StorageImpl;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 
@@ -32,12 +31,12 @@ public class NetworkVariableGet<P, T, C> extends PacketHandler<P, T, C> {
 
             if (storedVariable.isPresent()) {
                 SerializedNetworkVariable variable = storedVariable.get();
-                return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, variable);
+                return packetIn.response(true, false, variable);
             }
 
         }
 
-        return new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, new Value[0]);
+        return packetIn.response(true, false, new Value[0]);
 
     }
 }

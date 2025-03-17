@@ -14,6 +14,7 @@ import com.zulfen.zulfbungee.universal.command.ProxyCommandSender;
 import com.zulfen.zulfbungee.universal.command.util.ChatColour;
 import com.zulfen.zulfbungee.universal.interfaces.StorageImpl;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
+import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyServer;
 import com.zulfen.zulfbungee.universal.storage.db.H2Impl;
 import com.zulfen.zulfbungee.universal.storage.db.MySQLImpl;
 import com.zulfen.zulfbungee.universal.task.tasks.CheckUpdateTask;
@@ -60,7 +61,7 @@ public class MainServer<P, T, C> {
                 storage = newStorage.get();
                 storage.setupDatabase();
 
-                pluginInstance.logDebug(ChatColour.GREEN + "Currently using StorageImpl: " + storage.getClass().toString());
+                pluginInstance.logDebug(ChatColour.GREEN + "Currently using StorageImpl: " + storage.getClass());
 
             }
 
@@ -101,7 +102,7 @@ public class MainServer<P, T, C> {
 
     }
 
-    public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender<P, T, C> senderIn) {
+    public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender senderIn) {
 
         for (ProxyServerConnection<P, T, C> connection : connections) {
             for (Map.Entry<Path, ScriptAction> script : scriptNamesIn.entrySet()) {
@@ -112,7 +113,7 @@ public class MainServer<P, T, C> {
 
     }
 
-    public void syncScripts(Map<String, Path> scriptNamesIn, ScriptAction scriptActionIn, ProxyCommandSender<P, T, C> senderIn) {
+    public void syncScripts(Map<String, Path> scriptNamesIn, ScriptAction scriptActionIn, ProxyCommandSender senderIn) {
 
         for (ProxyServerConnection<P, T, C> connection : connections) {
             for (Map.Entry<String, Path> script : scriptNamesIn.entrySet()) {
@@ -141,7 +142,8 @@ public class MainServer<P, T, C> {
     }
 
     public void removeServerConnection(String name, SocketAddress address) {
-        activeConnections.remove(name);
+        ProxyServerConnection<P, T, C> toRemove = activeConnections.remove(name);
+        connections.remove(toRemove);
         clientInfos.remove(name);
         pluginInstance.logInfo(String.format(ChatColour.YELLOW + "Disconnecting client %s (%s)", address, name));
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
@@ -203,7 +205,7 @@ public class MainServer<P, T, C> {
     }
 
     public Optional<ProxyServerConnection<P, T, C>> getConnection(ClientServer serverIn) {
-        return Optional.ofNullable(activeConnections.get(serverIn.getName()));
+        return Optional.ofNullable(activeConnections.get(serverIn.name()));
     }
 
     public Optional<ProxyServerConnection<P, T, C>> getConnection(ZulfProxyPlayer<P, T, C> playerIn) {
@@ -243,6 +245,10 @@ public class MainServer<P, T, C> {
 
     public Optional<ClientInfo> getClientInfo(String nameIn) {
         return Optional.ofNullable(clientInfos.get(nameIn));
+    }
+
+    public Optional<ClientInfo> getClientInfo(ZulfProxyServer<P, T, C> serverIn) {
+        return Optional.ofNullable(clientInfos.get(serverIn.getName()));
     }
 
     public boolean areClientsConnected() {

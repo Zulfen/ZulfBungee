@@ -3,7 +3,6 @@ package com.zulfen.zulfbungee.universal.handlers.proxy.packets;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.ClientPlayerDataContainer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
@@ -35,12 +34,12 @@ public class ProxyPlayerPermission<P, T, C> extends PacketHandler<P, T, C> {
                     .map(String.class::cast)
                     .allMatch(proxyPlayer::hasPermission);
 
-            return new Packet(PacketTypes.PROXY_PLAYER_PERMISSION, true, false, hasPermissions);
+            return packetIn.response(true, false, hasPermissions);
 
 
         }
 
-        return new Packet(PacketTypes.PROXY_PLAYER_PERMISSION, true, false, false);
+        return packetIn.response(true, false, false);
 
     }
 

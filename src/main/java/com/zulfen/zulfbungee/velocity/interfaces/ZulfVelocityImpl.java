@@ -137,7 +137,6 @@ public class ZulfVelocityImpl implements ZulfProxyImpl<ProxyServer, Player, Conf
     public Map<String, ZulfProxyServer<ProxyServer, Player, ConfigurationNode>> getServersCopy() {
 
         HashMap<String, ZulfProxyServer<ProxyServer, Player, ConfigurationNode>> serversMap = new HashMap<>();
-
         for (RegisteredServer server : velocity.getAllServers()) {
             serversMap.put(server.getServerInfo().getName(), new VelocityServer(server, this));
         }
@@ -197,7 +196,7 @@ public class ZulfVelocityImpl implements ZulfProxyImpl<ProxyServer, Player, Conf
     }
 
     @Override
-    public ProxyCommandSender<ProxyServer, Player, ConfigurationNode> getConsole() {
+    public ProxyCommandSender getConsole() {
         return console;
     }
 

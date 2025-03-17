@@ -25,8 +25,8 @@ public class ProxyClientInfo extends PacketHandler {
                 .filter(ClientServer.class::isInstance)
                 .map(ClientServer.class::cast)
                 .collect(Collectors.toMap(
-                        ClientServer::getName,
-                        ClientServer::getClientInfo
+                        ClientServer::name,
+                        ClientServer::clientInfo
                 ));
 
         getConnection().getPluginInstance().getConnectionManager().setProxyServers(serverMap);

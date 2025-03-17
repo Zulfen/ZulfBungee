@@ -1,24 +1,17 @@
 package com.zulfen.zulfbungee.universal.socket.objects.client;
 
+import java.io.Serial;
 import java.io.Serializable;
 
-public class ClientServer implements Serializable {
+public record ClientServer(String name, ClientInfo clientInfo) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 0L;
 
-    private final String name;
-
-    private final ClientInfo clientInfo;
-
-    public ClientServer(String name, ClientInfo clientInfo) {
-        this.name = name;
-        this.clientInfo = clientInfo;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ClientInfo getClientInfo() {
-        return clientInfo;
+    @Override
+    public String toString() {
+        return "ClientServer[" +
+                "name=" + name + ", " +
+                "clientInfo=" + clientInfo + ']';
     }
 
 }

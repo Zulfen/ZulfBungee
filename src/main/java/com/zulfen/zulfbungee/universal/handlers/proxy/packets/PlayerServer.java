@@ -28,10 +28,10 @@ public class PlayerServer<P, T, C> extends PacketHandler<P, T, C> {
             ZulfProxyServer<P, T, C> server = player.get().getServer();
             String name = server.getName();
 
-            return new Packet(PacketTypes.PLAYER_SERVER, false, false, name);
+            return packetIn.response(false, false, name);
 
         } else {
-            return new Packet(PacketTypes.PLAYER_SERVER, false, false, new Object[0]);
+            return packetIn.response(false, false);
         }
 
 

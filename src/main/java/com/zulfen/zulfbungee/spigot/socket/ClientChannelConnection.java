@@ -19,4 +19,9 @@ public class ClientChannelConnection extends ClientConnection<ChannelConnectionF
         pluginInstance.logInfo(ChatColor.GREEN + "Established connection with proxy via plugin messaging channels!");
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+    }
+
 }

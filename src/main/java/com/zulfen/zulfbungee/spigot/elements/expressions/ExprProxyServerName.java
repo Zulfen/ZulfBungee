@@ -17,7 +17,7 @@ public class ExprProxyServerName extends SimplePropertyExpression<ClientServer, 
 
     @Override
     public String convert(ClientServer zulfProxyServer) {
-        return zulfProxyServer.getName();
+        return zulfProxyServer.name();
     }
 
     @Override

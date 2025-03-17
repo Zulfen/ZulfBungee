@@ -9,7 +9,7 @@ import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
-import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
+import com.zulfen.zulfbungee.universal.util.MultiplePacketQueue;
 import org.bukkit.ChatColor;
 
 import java.net.InetAddress;
@@ -20,10 +20,12 @@ import java.util.stream.Collectors;
 
 public class SocketConnectionManager extends ConnectionManager<SocketConnectionFactory> implements Runnable {
 
-    private final BlockingPacketQueue connectionPackets = new BlockingPacketQueue();
+    private final MultiplePacketQueue responses = new MultiplePacketQueue();
 
     private final AtomicInteger registered = new AtomicInteger();
     private final Semaphore connectionBarrier = new Semaphore(0);
+
+    private final MultiplePacketQueue requests = new MultiplePacketQueue();
 
     private final SocketConnectionTask connectionTask;
 
@@ -37,8 +39,9 @@ public class SocketConnectionManager extends ConnectionManager<SocketConnectionF
         Queue<Packet> packetQueue = new LinkedList<>();
         boolean sendDirect = sendDirect(packetIn);
         if (sendDirect) {
+            requests.enqueue(packetIn);
             for (int i = 0; i < registered.get(); i++) {
-                Optional<Packet> take = connectionPackets.take(true);
+                Optional<Packet> take = responses.take(true);
                 if (take.isPresent()) {
                     packetQueue.offer(take.get());
                 } else {
@@ -50,6 +53,8 @@ public class SocketConnectionManager extends ConnectionManager<SocketConnectionF
         return packetQueue;
 
     }
+
+
 
     @Override
     protected boolean sendDirectImpl(Packet packetIn) {
@@ -94,13 +99,13 @@ public class SocketConnectionManager extends ConnectionManager<SocketConnectionF
                 while (registered.get() > 0) {
 
                     for (ClientConnection<SocketConnectionFactory> connection : allConnections) {
-                        Optional<Packet> take = connection.readSkriptQueue();
-                        take.ifPresent(connectionPackets::offer);
+                        requests.take(false)
+                                .flatMap(connection::waitForRequest)
+                                .ifPresent(responses::enqueue);
+
                     }
 
                 }
-
-                connectionPackets.notifyListeners();
 
                 taskManager.newAsyncTask(connectionTask);
                 connectionBarrier.acquire();
@@ -111,26 +116,27 @@ public class SocketConnectionManager extends ConnectionManager<SocketConnectionF
 
         } while(running.get());
 
-        connectionPackets.notifyListeners();
-
     }
 
     public void releaseConnectionBarrier() {
         connectionBarrier.release();
     }
 
-    public void registerBefore() {
+    public void registerWithManager() {
         registered.incrementAndGet();
     }
 
     @Override
     public void deRegister(ClientConnection<SocketConnectionFactory> connectionIn) {
         registered.decrementAndGet();
+        requests.notifyStopWaiting();
         super.deRegister(connectionIn);
     }
 
     public void shutdown() {
         connectionBarrier.release();
+        responses.notifyShutdown();
+        requests.notifyShutdown();
         super.shutdown();
     }
 

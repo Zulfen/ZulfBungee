@@ -16,7 +16,7 @@ public class Debug<P, T, C> extends CommandHandler<P, T, C> {
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P, T, C> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender sender, String[] separateArgs) {
 
         ZulfProxyImpl<P, T, C> pluginInstance = getMainServer().getImpl();
         String transportType = getMainServer().getClass().getSimpleName();
@@ -29,7 +29,7 @@ public class Debug<P, T, C> extends CommandHandler<P, T, C> {
             Optional<ClientInfo> optionalClientInfo = getMainServer().getClientInfo(serverName);
             if (optionalClientInfo.isPresent()) {
                 ClientInfo clientInfo = optionalClientInfo.get();
-                String serverVersion = clientInfo.getVersionString();
+                String serverVersion = clientInfo.versionString();
                 sender.sendPluginMessage(String.format("Your current server is running on platform: &o%s", serverVersion));
             }
         }

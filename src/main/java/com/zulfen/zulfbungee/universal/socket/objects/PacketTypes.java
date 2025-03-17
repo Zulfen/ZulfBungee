@@ -28,5 +28,6 @@ public enum PacketTypes {
     CONSOLE_EXECUTE_COMMAND,
     REGISTER_SERVER,
     DEREGISTER_SERVER,
+    KEEP_ALIVE,
 
 }

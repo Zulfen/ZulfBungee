@@ -25,7 +25,7 @@ public class VelocityCommand implements SimpleCommand {
         this.zulfVelocityPlugin = (ZulfVelocityImpl) commandHandlerManager.getMainServer().getImpl();
     }
 
-    private ProxyCommandSender<ProxyServer, Player, ConfigurationNode> getSender(Invocation invocationIn) {
+    private ProxyCommandSender getSender(Invocation invocationIn) {
 
         CommandSource commandSource = invocationIn.source();
 

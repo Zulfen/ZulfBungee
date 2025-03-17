@@ -1,15 +1,17 @@
 package com.zulfen.zulfbungee.universal.socket.objects;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Packet implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 38_573_475_842L;
 
     private final PacketTypes type;
-    private UUID id;
+    private final UUID id;
 
     private final boolean returnable;
 
@@ -33,6 +35,22 @@ public class Packet implements Serializable {
         this.id = UUID.randomUUID();
     }
 
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object[] dataIn, UUID id) {
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+        this.data = dataIn;
+        this.id = id;
+    }
+
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object dataIn, UUID id) {
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+        this.data[0] = dataIn;
+        this.id = id;
+    }
+
     public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, Object dataIn) {
         this.type = packetType;
         this.returnable = isReturnable;
@@ -46,6 +64,13 @@ public class Packet implements Serializable {
         this.returnable = isReturnable;
         this.shouldHandle = handleIn;
         this.id = UUID.randomUUID();
+    }
+
+    public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, UUID id) {
+        this.type = packetType;
+        this.returnable = isReturnable;
+        this.shouldHandle = handleIn;
+        this.id = id;
     }
 
     public PacketTypes getType() {
@@ -72,16 +97,24 @@ public class Packet implements Serializable {
         return id;
     }
 
-    public void setId(UUID uuidIn) {
-        this.id = uuidIn;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Packet packet = (Packet) o;
         return returnable == packet.returnable && shouldHandle == packet.shouldHandle && type == packet.type;
+    }
+
+    public Packet response(boolean returnable, boolean handleIn, Object[] dataIn) {
+        return new Packet(type, returnable, handleIn, dataIn, id);
+    }
+
+    public Packet response(boolean returnable, boolean handleIn, Object dataIn) {
+        return new Packet(type, returnable, handleIn, dataIn, id);
+    }
+
+    public Packet response(boolean returnable, boolean handleIn) {
+        return new Packet(type, returnable, handleIn, id);
     }
 
     @Override
@@ -96,6 +129,7 @@ public class Packet implements Serializable {
                 ", returnable=" + returnable +
                 ", shouldHandle=" + shouldHandle +
                 ", size=" + data.length +
+                ", id=" + id +
                 '}';
     }
 

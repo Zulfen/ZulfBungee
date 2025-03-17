@@ -14,6 +14,7 @@ public class ServerMessage implements Serializable {
 
     private final ClientServer from;
 
+
     public ServerMessage(String titleIn, Value[] valuesIn, ClientServer[] serversIn, ClientServer fromIn) {
         this.title = titleIn;
         this.values = valuesIn;

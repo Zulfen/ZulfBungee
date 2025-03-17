@@ -2,7 +2,6 @@ package com.zulfen.zulfbungee.spigot.managers;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.variables.Variables;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.spigot.objects.PreparedNetworkVariable;
 import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
@@ -19,7 +18,6 @@ import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNe
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.Value;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -129,7 +127,7 @@ public abstract class ConnectionManager<T> {
 
     }
 
-    private PreparedNetworkVariable prepareNetworkVariable(SerializedNetworkVariable serializedVarIn, Event eventIn) {
+    private PreparedNetworkVariable prepareNetworkVariable(SerializedNetworkVariable serializedVarIn) {
 
         Value[] valueArray = serializedVarIn.getValueArray();
         Object[] dataOut = threadSafeDeserialize(valueArray);
@@ -154,7 +152,7 @@ public abstract class ConnectionManager<T> {
         send(new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, true, false, variableOut));
     }
 
-    public synchronized Optional<PreparedNetworkVariable> requestNetworkVariable(String nameIn, Event eventIn) {
+    public synchronized Optional<PreparedNetworkVariable> requestNetworkVariable(String nameIn) {
 
         Optional<Packet> send = send(new Packet(PacketTypes.NETWORK_VARIABLE_GET, true, false, nameIn));
 
@@ -162,9 +160,8 @@ public abstract class ConnectionManager<T> {
 
             Packet packet = send.get();
             if (packet.getDataArray().length > 0) {
-
                 SerializedNetworkVariable serializedVar = (SerializedNetworkVariable) packet.getDataSingle();
-                PreparedNetworkVariable preparedNetworkVariable = prepareNetworkVariable(serializedVar, eventIn);
+                PreparedNetworkVariable preparedNetworkVariable = prepareNetworkVariable(serializedVar);
                 return Optional.ofNullable(preparedNetworkVariable);
 
             }

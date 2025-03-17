@@ -40,7 +40,7 @@ public interface ZulfProxyImpl<P, T, C> {
 
     Optional<ZulfProxyServer<P, T, C>> getServer(String serverNameIn);
     default Optional<ZulfProxyServer<P, T, C>> getServer(ClientServer serverIn) {
-        return getServer(serverIn.getName());
+        return getServer(serverIn.name());
     }
 
     NativePlayerConverter<P, T, C> getPlayerConverter();
@@ -60,7 +60,7 @@ public interface ZulfProxyImpl<P, T, C> {
 
     Path getPluginFolder();
 
-    ProxyCommandSender<P, T, C> getConsole();
+    ProxyCommandSender getConsole();
 
     P getPlatform();
 

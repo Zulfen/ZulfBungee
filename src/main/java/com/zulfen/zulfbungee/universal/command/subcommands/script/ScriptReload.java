@@ -37,10 +37,9 @@ public class ScriptReload<P, T, C> extends CommandHandler<P, T, C> {
         }
 
     }
-
+    
     @Override
-    @SuppressWarnings("unchecked")
-    public void handleCommand(ProxyCommandSender<P, T, C> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender sender, String[] separateArgs) {
 
         HashMap<Path, ScriptAction> scriptsMap = new HashMap<>();
 
@@ -87,7 +86,7 @@ public class ScriptReload<P, T, C> extends CommandHandler<P, T, C> {
                     List<String> scriptNames = scriptsMap.keySet().stream()
                             .map(Path::getFileName)
                             .map(Path::toString)
-                            .collect(Collectors.toList());
+                            .toList();
 
                     sender.sendPluginMessage(String.format("%s script(s) have been updated: %s", scriptsMap.size(), scriptNames));
 

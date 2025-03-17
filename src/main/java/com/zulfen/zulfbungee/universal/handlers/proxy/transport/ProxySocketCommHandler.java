@@ -38,7 +38,7 @@ public class ProxySocketCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> {
             if (pluginInstance.isDebug()) {
                 e.printStackTrace();
             }
-            destroy();
+            connection.destroy();
         }
 
         return Optional.empty();
@@ -54,7 +54,7 @@ public class ProxySocketCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> {
             if (pluginInstance.isDebug()) {
                 e.printStackTrace();
             }
-            destroy();
+            connection.destroy();
         }
     }
 

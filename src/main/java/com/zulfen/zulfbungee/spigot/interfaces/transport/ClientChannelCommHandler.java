@@ -7,7 +7,7 @@ import com.zulfen.zulfbungee.spigot.socket.factory.ChannelConnectionFactory;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
-import com.zulfen.zulfbungee.universal.util.BlockingPacketQueue;
+import com.zulfen.zulfbungee.universal.util.MultiplePacketQueue;
 
 import java.io.*;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
     private final ChannelPayload channelPayload;
     private boolean transferFinished = false;
 
-    private final BlockingPacketQueue incomingPackets = new BlockingPacketQueue();
+    private final MultiplePacketQueue incomingPackets = new MultiplePacketQueue();
     private final int maxPacketSize;
 
     private final ByteArrayOutputStream fullPacketBytes = new ByteArrayOutputStream();
@@ -29,7 +29,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
         this.maxPacketSize = compressPackets;
     }
 
-    public synchronized void provideBytes(byte[] bytesIn) {
+    public void provideBytes(byte[] bytesIn) {
 
         if (transferFinished) {
             fullPacketBytes.reset();
@@ -55,7 +55,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
                 } else {
                     Packet packetIn = (Packet) readObject;
-                    incomingPackets.offer(packetIn);
+                    incomingPackets.enqueue(packetIn);
                 }
 
             }
@@ -72,8 +72,12 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
         return incomingPackets.take(false);
     }
 
+
     private void prepareMessage(byte[] toSend) {
-        pluginInstance.getServer().sendPluginMessage(pluginInstance, "zproxy:channel", toSend);
+        pluginInstance.getServer().getOnlinePlayers()
+                .stream()
+                .findFirst()
+                .ifPresent(player -> channelPayload.sendCustomPayload(player, toSend));
     }
 
     private byte[] packetToBytes(Packet inputPacket) {
@@ -98,7 +102,7 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 
-        if (fullPacketBytes.length > 20480) {
+        if (fullPacketBytes.length > 5120) {
 
             try (ByteArrayInputStream packetBytes = new ByteArrayInputStream(fullPacketBytes)) {
 
@@ -127,9 +131,9 @@ public class ClientChannelCommHandler extends ClientCommHandler<ChannelConnectio
 
     @Override
     public void destroy() {
-        pluginInstance.getProtocolManager().removePacketListener(channelPayload);
+        pluginInstance.getProtocolManager().getAsynchronousManager().unregisterAsyncHandler(channelPayload);
         pluginInstance.getServer().getMessenger().unregisterOutgoingPluginChannel(pluginInstance);
-        incomingPackets.notifyListeners();
+        incomingPackets.notifyShutdown();
         super.destroy();
     }
 

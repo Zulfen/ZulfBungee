@@ -6,16 +6,16 @@ import com.zulfen.zulfbungee.universal.socket.objects.Packet;
 import com.zulfen.zulfbungee.universal.socket.objects.PacketChunk;
 import com.zulfen.zulfbungee.universal.socket.objects.ZulfByteBuffer;
 import com.zulfen.zulfbungee.universal.socket.transport.ChannelServerConnection;
+import com.zulfen.zulfbungee.universal.util.SinglePacketQueue;
 
 import java.io.*;
 import java.util.Optional;
-import java.util.concurrent.SynchronousQueue;
 
 public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> {
 
     private final MessageCallback messageCallback;
 
-    private final SynchronousQueue<Packet> incomingQueue = new SynchronousQueue<>();
+    private final SinglePacketQueue incomingQueue = new SinglePacketQueue();
     private final ByteArrayOutputStream fullPacketBytes = new ByteArrayOutputStream();
     private boolean transferFinished = false;
 
@@ -50,7 +50,8 @@ public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> 
 
                 } else {
                     Packet packetIn = (Packet) readObject;
-                    incomingQueue.offer(packetIn);
+                    pluginInstance.warning("Constructed " + packetIn);
+                    incomingQueue.enqueue(packetIn);
                 }
 
             }
@@ -64,12 +65,7 @@ public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> 
 
     @Override
     public Optional<Packet> readPacketImpl() {
-        try {
-            return Optional.of(incomingQueue.take());
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        return Optional.empty();
+        return incomingQueue.take(false);
     }
 
     private void sendBytes(byte[] dataIn) {
@@ -102,7 +98,7 @@ public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> 
 
         byte[] fullPacketBytes = packetToBytes(inputPacket);
 
-        if (fullPacketBytes.length > 20480) {
+        if (fullPacketBytes.length > 5120) {
 
             try (ByteArrayInputStream fullByteStream = new ByteArrayInputStream(fullPacketBytes)) {
 
@@ -128,7 +124,9 @@ public class ProxyChannelCommHandler<P, T, C> extends ProxyCommHandler<P, T, C> 
     }
 
     @Override
-    protected void freeResources() {}
+    protected void freeResources() {
+        queueIn.notifyShutdown();
+    }
 
 
 }

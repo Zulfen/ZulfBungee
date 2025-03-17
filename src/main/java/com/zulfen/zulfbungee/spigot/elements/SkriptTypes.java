@@ -10,7 +10,6 @@ import ch.njol.yggdrasil.Fields;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientInfo;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientServer;
-import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.StreamCorruptedException;
@@ -25,7 +24,7 @@ public class SkriptTypes {
                 .name("Proxy Player")
                 .description("Represents a player on the Bungeecord network.")
                 .defaultExpression(new EventValueExpression<>(ClientPlayer.class))
-                .parser(new Parser<ClientPlayer>() {
+                .parser(new Parser<>() {
 
                     @Override
                     public ClientPlayer parse(@NotNull String s, @NotNull ParseContext context) {
@@ -47,7 +46,7 @@ public class SkriptTypes {
                         return proxyPlayer.getName();
                     }
 
-                }).serializer(new Serializer<ClientPlayer>() {
+                }).serializer(new Serializer<>() {
 
                     @Override
                     public @NotNull Fields serialize(ClientPlayer clientPlayer) {
@@ -100,24 +99,24 @@ public class SkriptTypes {
 
                     @Override
                     public @NotNull String toString(ClientServer zulfProxyServer, int i) {
-                        return zulfProxyServer.getName();
+                        return zulfProxyServer.name();
                     }
 
                     @Override
                     public @NotNull String toVariableNameString(ClientServer zulfProxyServer) {
-                        return zulfProxyServer.getName();
+                        return zulfProxyServer.name();
                     }
 
-                }).serializer(new Serializer<ClientServer>() {
+                }).serializer(new Serializer<>() {
 
                     @Override
                     public @NotNull Fields serialize(ClientServer clientServer) {
                         Fields fields = new Fields();
-                        ClientInfo clientInfo = clientServer.getClientInfo();
-                        fields.putObject("name", clientServer.getName());
-                        fields.putPrimitive("maxplayers", clientInfo.getMaxPlayers());
-                        fields.putPrimitive("minecraftport", clientInfo.getMinecraftPort());
-                        fields.putObject("versionstring", clientInfo.getVersionString());
+                        ClientInfo clientInfo = clientServer.clientInfo();
+                        fields.putObject("name", clientServer.name());
+                        fields.putPrimitive("maxplayers", clientInfo.maxPlayers());
+                        fields.putPrimitive("minecraftport", clientInfo.minecraftPort());
+                        fields.putObject("versionstring", clientInfo.versionString());
                         return fields;
                     }
 

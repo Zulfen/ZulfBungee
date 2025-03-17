@@ -25,7 +25,7 @@ import java.nio.file.Path;
         description = "A Skript addon which adds proxy integration.", authors = {"zulfen"})
 public class ZulfVelocityMain {
 
-    protected final static String VERSION = "0.9.9-pre6";
+    protected final static String VERSION = "0.9.9-pre7";
     private final ProxyServer velocity;
     private final Logger logger;
     private final Path dataDirectory;
@@ -49,7 +49,7 @@ public class ZulfVelocityMain {
         velocity.getEventManager().register(this, new VelocityEvents(mainServer));
         CommandMeta commandMeta = velocity.getCommandManager()
                 .metaBuilder("zulfbungee")
-                .plugin(velocity)
+                .plugin(this)
                 .build();
         velocity.getCommandManager().register(commandMeta, new VelocityCommand(new CommandHandlerManager<>(mainServer)));
 

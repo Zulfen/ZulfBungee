@@ -4,7 +4,6 @@ import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
@@ -27,11 +26,11 @@ public class ProxyPlayerUUID<P, T, C> extends PacketHandler<P, T, C> {
            ZulfProxyPlayer<P, T, C> proxyPlayer = proxyPlayerOptional.get();
            Optional<ClientPlayer> clientPlayerOptional = getMainServer().toClientPlayer(proxyPlayer);
            if (clientPlayerOptional.isPresent()) {
-               return new Packet(PacketTypes.PROXY_PLAYER_UUID, false, false, clientPlayerOptional.get());
+               return packetIn.response(false, false, clientPlayerOptional.get());
            }
        }
 
-       return new Packet(PacketTypes.PROXY_PLAYER_UUID, false, false, new Object[0]);
+       return packetIn.response( false, false);
 
     }
 }

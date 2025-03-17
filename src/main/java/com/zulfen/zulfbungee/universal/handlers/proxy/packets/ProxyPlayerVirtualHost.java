@@ -4,7 +4,6 @@ import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
 import com.zulfen.zulfbungee.universal.managers.PacketHandlerManager;
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.universal.socket.objects.proxy.ZulfProxyPlayer;
 
@@ -27,11 +26,11 @@ public class ProxyPlayerVirtualHost<P, T, C> extends PacketHandler<P, T, C> {
             Optional<InetSocketAddress> virtHostOptional = playerOptional.get().getVirtualHost();
             if (virtHostOptional.isPresent()) {
                 String virtualHostString = virtHostOptional.get().getAddress().toString();
-                return new Packet(PacketTypes.PLAYER_VIRTUAL_HOST, false, false, virtualHostString);
+                return packetIn.response( false, false, virtualHostString);
             }
         }
 
-        return new Packet(PacketTypes.PLAYER_VIRTUAL_HOST, false, false, new Object[0]);
+        return packetIn.response(false, false);
 
     }
 

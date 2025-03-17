@@ -37,7 +37,7 @@ public class ZulfBungeecordImpl implements ZulfProxyImpl<ProxyServer, ProxiedPla
     private final boolean isDebug;
     private boolean isWaterfall = false;
 
-    private final NativePlayerConverter<ProxyServer, ProxiedPlayer, Configuration> playerConverter = new NativePlayerConverter<ProxyServer, ProxiedPlayer, Configuration>() {
+    private final NativePlayerConverter<ProxyServer, ProxiedPlayer, Configuration> playerConverter = new NativePlayerConverter<>() {
         @Override
         public Optional<ZulfProxyPlayer<ProxyServer, ProxiedPlayer, Configuration>> apply(ProxiedPlayer nativePlayer) {
             if (nativePlayer != null) {
@@ -188,7 +188,7 @@ public class ZulfBungeecordImpl implements ZulfProxyImpl<ProxyServer, ProxiedPla
     }
 
     @Override
-    public ProxyCommandSender<ProxyServer, ProxiedPlayer, Configuration> getConsole() {
+    public ProxyCommandSender getConsole() {
         return console;
     }
 

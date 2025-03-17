@@ -19,14 +19,9 @@ public class EvtServerMessage extends SkriptEvent {
     static {
         Skript.registerEvent("Server Message", EvtServerMessage.class, EventProxyMessage.class, "[(bungeecord|bungee|proxy|velocity)] server message [(titled|called)] %string%");
 
-        EventValues.registerEventValue(EventProxyMessage.class, String.class, event -> {
+        EventValues.registerEventValue(EventProxyMessage.class, Object[].class, event -> {
                 ServerMessage serverMessage = event.getMessage();
-                Object possibleString = ZulfBungeeSpigot.getPlugin().getConnectionManager().threadSafeDeserialize(serverMessage.getData())[0];
-                if (possibleString instanceof String) {
-                    return (String) possibleString;
-                } else {
-                    return null;
-                }
+                return ZulfBungeeSpigot.getPlugin().getConnectionManager().threadSafeDeserialize(serverMessage.getData());
         });
 
         EventValues.registerEventValue(EventProxyMessage.class, ClientServer.class, event -> event.getMessage().getFrom());
@@ -49,4 +44,5 @@ public class EvtServerMessage extends SkriptEvent {
     public String toString(Event event, boolean b) {
         return "server message event with title " + title.toString(event, b);
     }
+
 }

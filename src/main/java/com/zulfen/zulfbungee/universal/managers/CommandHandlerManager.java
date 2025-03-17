@@ -41,7 +41,7 @@ public class CommandHandlerManager<P, T, C> {
         handlers.add(handlerIn);
     }
 
-    public void handle(ProxyCommandSender<P, T, C> sender, String[] argsIn) {
+    public void handle(ProxyCommandSender sender, String[] argsIn) {
 
         if (argsIn.length > 0) {
 
@@ -96,7 +96,7 @@ public class CommandHandlerManager<P, T, C> {
                 }
 
             } else {
-                sender.sendPluginMessage("That sub command does not exist! Please readSkriptQueue the documentation.");
+                sender.sendPluginMessage("That sub command does not exist! Please read the documentation.");
             }
 
         } else {
@@ -105,7 +105,7 @@ public class CommandHandlerManager<P, T, C> {
 
     }
 
-    public List<String> onTabComplete(ProxyCommandSender<P, T, C> commandSender, String[] strings) {
+    public List<String> onTabComplete(ProxyCommandSender commandSender, String[] strings) {
 
         if (strings.length > 0) {
 

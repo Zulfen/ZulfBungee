@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class ZulfProxyPlayer<P, T, C> implements ProxyCommandSender<P, T, C> {
+public abstract class ZulfProxyPlayer<P, T, C> implements ProxyCommandSender {
 
     protected final P platform;
     protected final String name;

@@ -74,7 +74,7 @@ public class CheckUpdateTask<P, T, C> implements Supplier<Optional<UpdateResult>
         return Optional.empty();
     }
 
-    public void checkUpdate(ProxyCommandSender<P, T, C> senderIn, boolean notifySuccess) {
+    public void checkUpdate(ProxyCommandSender senderIn, boolean notifySuccess) {
 
         CompletableFuture.supplyAsync(this)
                 .thenAccept(updateResult -> {

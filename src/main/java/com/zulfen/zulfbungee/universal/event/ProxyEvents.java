@@ -27,6 +27,28 @@ public class ProxyEvents<P, T, C> {
         return infoOptional.map(info -> new ClientServer(nameIn, info));
     }
 
+    private Optional<ClientServer> checkValidConnection(String nameIn) {
+
+        Optional<ZulfProxyServer<P, T, C>> serverOptional = mainServer.getImpl()
+                .getServer(nameIn);
+
+
+        if (serverOptional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        ZulfProxyServer<P, T, C> server = serverOptional.get();
+        if (server.getPlayers().size() <= 1 && mainServer instanceof ChannelMainServer) {
+            mainServer.removeServerConnection(server.getName(), server.getSocketAddress());
+            return Optional.empty();
+        }
+
+        Optional<ClientInfo> clientInfo = mainServer.getClientInfo(server);
+        return clientInfo.map(info -> new ClientServer(nameIn, info));
+
+    }
+
+
     protected void serverConnected(ZulfProxyPlayer<P, T, C> proxyPlayerIn) {
 
         mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.CONNECT_EVENT, () -> mainServer.toClientPlayer(proxyPlayerIn)));
@@ -34,8 +56,6 @@ public class ProxyEvents<P, T, C> {
         if (proxyPlayerIn.hasPermission("zulfen.admin")) {
             mainServer.getCheckUpdateTask().checkUpdate(proxyPlayerIn, false);
         }
-
-        mainServer.getConnection(proxyPlayerIn);
 
 
     }
@@ -52,21 +72,27 @@ public class ProxyEvents<P, T, C> {
 
     }
 
-    protected void serverKick(String nameIn, UUID uuidIn, String reason) {
-        mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.KICK_EVENT,
-                new ClientPlayerDataContainer(reason, new ClientPlayer(nameIn, uuidIn))));
+    protected void serverKick(String playerNameIn, UUID uuidIn, String reason, String previousServerName) {
+        checkValidConnection(previousServerName).ifPresent(clientServer ->
+                mainServer.sendDirectToAllAsync(new EventPacket(
+                        PacketTypes.KICK_EVENT,
+                        new ClientPlayerDataContainer(reason, new ClientPlayer(playerNameIn, uuidIn)))));
+
     }
 
     protected void serverDisconnect(String nameIn, UUID uuidIn, String previousServerName) {
-        Optional<ClientServer> serverOptional = toClientServer(previousServerName);
-        serverOptional.ifPresent(clientServer -> mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.DISCONNECT_EVENT,
-                new ClientPlayerDataContainer(clientServer, new ClientPlayer(nameIn, uuidIn)))));
+        checkValidConnection(previousServerName).ifPresent(clientServer ->
+                mainServer.sendDirectToAllAsync(new EventPacket(
+                        PacketTypes.DISCONNECT_EVENT,
+                        new ClientPlayerDataContainer(clientServer, new ClientPlayer(nameIn, uuidIn))
+                ))
+        );
     }
+
 
     protected synchronized void pluginMessage(String serverNameIn, byte[] dataIn) {
 
         Optional<ZulfProxyServer<P, T, C>> serverOptional = mainServer.getImpl().getServer(serverNameIn);
-
         if (serverOptional.isPresent()) {
 
             ZulfProxyServer<P, T, C> serverIn = serverOptional.get();

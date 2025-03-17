@@ -23,7 +23,7 @@ public class ServerSendMessage<P, T, C> extends PacketHandler<P, T, C> {
 
         for (ClientServer server : message.getServers()) {
 
-            String serverName = server.getName();
+            String serverName = server.name();
 
             Optional<ProxyServerConnection<P, T, C>> connectionFromName = getMainServer().getConnection(serverName);
 

@@ -23,7 +23,7 @@ public class EffProxyPlayerExecute extends Effect {
     private Expression<String> command;
 
     static {
-        Skript.registerEffect(EffProxyPlayerExecute.class, "make [(proxy|bungeecord|bungee|velocity) player[s]] %-proxyplayers% (execute|run) [[the] command] %string%");
+        Skript.registerEffect(EffProxyPlayerExecute.class, "make %-proxyplayers% (execute|run) [[the] command] %string%");
     }
 
     @Override

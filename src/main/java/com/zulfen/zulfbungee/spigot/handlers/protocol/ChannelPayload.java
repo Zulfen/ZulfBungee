@@ -5,12 +5,12 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.MinecraftKey;
+import com.zulfen.zulfbungee.spigot.handlers.protocol.util.UnsafeNetworkAccess;
 import io.netty.buffer.ByteBuf;
 import com.zulfen.zulfbungee.spigot.interfaces.transport.ClientChannelCommHandler;
+import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.List;
 
 public class ChannelPayload extends PacketAdapter {
@@ -18,11 +18,14 @@ public class ChannelPayload extends PacketAdapter {
     private final ClientChannelCommHandler channelCommHandler;
     private final MinecraftVersion minecraftVersion;
 
+    private final UnsafeNetworkAccess unsafeNetworkAccess;
+
     public ChannelPayload(ClientChannelCommHandler channelCommHandlerIn, ProtocolManager protocolManagerIn) {
-        super(channelCommHandlerIn.getPluginInstance(), ListenerPriority.NORMAL, PacketType.Play.Client.CUSTOM_PAYLOAD);
+        super(channelCommHandlerIn.getPluginInstance(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.CUSTOM_PAYLOAD), ListenerOptions.ASYNC);
         this.channelCommHandler = channelCommHandlerIn;
         this.minecraftVersion = protocolManagerIn.getMinecraftVersion();
-        protocolManagerIn.addPacketListener(this);
+        this.unsafeNetworkAccess = new UnsafeNetworkAccess(minecraftVersion);
+        protocolManagerIn.getAsynchronousManager().registerAsyncHandler(this).start();
     }
 
     @Override
@@ -86,8 +89,12 @@ public class ChannelPayload extends PacketAdapter {
         }
     }
 
-    @Override
-    public void onPacketSending(PacketEvent event) {
+    public void sendCustomPayload(Player player, byte[] payload) {
+        if (!unsafeNetworkAccess.sendPayloadPacket(player, payload)) channelCommHandler.getPluginInstance().logDebug("Latest packet was dropped!");
     }
+
+
+    @Override
+    public void onPacketSending(PacketEvent event) {}
 
 }

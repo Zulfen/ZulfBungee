@@ -21,7 +21,7 @@ public class ScriptUnload<P, T, C> extends CommandHandler<P, T, C> {
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P, T, C> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender sender, String[] separateArgs) {
 
         ProxyConfig<P, T, C> config = getMainServer().getImpl().getConfig();
 

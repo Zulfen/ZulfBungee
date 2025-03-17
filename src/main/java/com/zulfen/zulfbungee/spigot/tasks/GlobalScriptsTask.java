@@ -115,9 +115,6 @@ public class GlobalScriptsTask implements Supplier<File> {
 
             pluginInstance.getServer().dispatchCommand(sender, String.format("sk %s %s",
                     commandAction, scriptName));
-            if (isFinalScript) {
-                connection.signifyProperConnection();
-            }
 
         });
 

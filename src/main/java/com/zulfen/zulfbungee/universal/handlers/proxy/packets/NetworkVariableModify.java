@@ -2,7 +2,6 @@ package com.zulfen.zulfbungee.universal.handlers.proxy.packets;
 
 import com.zulfen.zulfbungee.universal.socket.ProxyServerConnection;
 import com.zulfen.zulfbungee.universal.socket.objects.Packet;
-import com.zulfen.zulfbungee.universal.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SerializedNetworkVariable;
 import com.zulfen.zulfbungee.universal.socket.objects.client.skript.SkriptChangeMode;
 import com.zulfen.zulfbungee.universal.handlers.PacketHandler;
@@ -56,7 +55,7 @@ public class NetworkVariableModify<P, T, C> extends PacketHandler<P, T, C> {
 
         }
 
-        return new Packet(PacketTypes.NETWORK_VARIABLE_MODIFY, false, false, new Object[0]);
+        return packetIn.response(false, false);
 
     }
 }

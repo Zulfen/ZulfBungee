@@ -56,15 +56,16 @@ public abstract class ProxyServerConnection<P, T, C> implements PacketConsumer {
         }
     }
 
-    public synchronized void sendDirect(Packet packetIn) {
+    public void sendDirect(Packet packetIn) {
         assert proxyCommHandler != null : "Comm Handler is null!";
-        proxyCommHandler.offerPacket(packetIn);
+        proxyCommHandler.enqueuePacket(packetIn);
         pluginInstance.logDebug("Sent packet " + packetIn.getType() + "...");
     }
 
     // input null into senderIn to make the console reload the scripts, not a player.
     // name allows you to define a custom name if needed
-    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender<P, T, C> senderIn, boolean isLastScriptIn) {
+    @SuppressWarnings("unchecked")
+    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender senderIn, boolean isLastScriptIn) {
 
         pluginInstance.getTaskManager().newTask(() -> {
 

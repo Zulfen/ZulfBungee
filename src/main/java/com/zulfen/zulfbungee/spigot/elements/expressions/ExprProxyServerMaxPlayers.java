@@ -17,7 +17,7 @@ public class ExprProxyServerMaxPlayers extends SimplePropertyExpression<ClientSe
 
     @Override
     public Number convert(ClientServer zulfProxyServer) {
-        return zulfProxyServer.getClientInfo().getMaxPlayers();
+        return zulfProxyServer.clientInfo().maxPlayers();
     }
 
     @Override

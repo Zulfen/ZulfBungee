@@ -11,7 +11,7 @@ public class ScriptList<P, T, C> extends CommandHandler<P, T, C> {
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P, T, C> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender sender, String[] separateArgs) {
         sender.sendPluginMessage("Listing all available scripts...");
         sender.sendPluginMessage(getMainServer().getImpl().getConfig().getScriptPaths().toString());
     }

@@ -23,7 +23,7 @@ public class SocketConnectionFactory extends ConnectionFactory<SocketClientConne
     @Override
     public SocketClientConnection build() throws IOException {
         SocketClientConnection clientSocketConnection = new SocketClientConnection(connectionManager, socket);
-        connectionManager.registerBefore();
+        connectionManager.registerWithManager();
         return clientSocketConnection;
     }
 

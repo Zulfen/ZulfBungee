@@ -24,7 +24,7 @@ public class ScriptLoad<P, T, C> extends CommandHandler<P, T, C> {
     }
 
     @Override
-    public void handleCommand(ProxyCommandSender<P, T, C> sender, String[] separateArgs) {
+    public void handleCommand(ProxyCommandSender sender, String[] separateArgs) {
 
         if (separateArgs.length > 0) {
 
@@ -63,7 +63,7 @@ public class ScriptLoad<P, T, C> extends CommandHandler<P, T, C> {
 
     }
 
-    private void loadScript(String scriptName, Path scriptPathIn, ProxyCommandSender<P, T, C> senderIn) {
+    private void loadScript(String scriptName, Path scriptPathIn, ProxyCommandSender senderIn) {
 
         if (getMainServer().areClientsConnected()) {
 

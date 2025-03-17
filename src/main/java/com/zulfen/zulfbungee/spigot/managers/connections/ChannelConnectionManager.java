@@ -37,21 +37,17 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
     }
 
     @Override
-    public synchronized Optional<Packet> send(Packet packetIn) {
+    public Optional<Packet> send(Packet packetIn) {
         boolean sendDirect = sendDirect(packetIn);
         if (sendDirect) {
-            Optional<Packet> read = clientChannelConnection.readSkriptQueue();
-            if (!read.isPresent()) {
-                pluginInstance.logDebug(String.format("%sDropped packet %s due to no response from proxy.", ChatColor.YELLOW, packetIn.getType().name()));
-            }
-            return read;
+            return clientChannelConnection.waitForRequest(packetIn);
         } else {
             return Optional.empty();
         }
     }
 
     @Override
-    public synchronized List<ClientPlayer> getPlayers(ClientServer[] serversIn) {
+    public List<ClientPlayer> getPlayers(ClientServer[] serversIn) {
 
         Optional<Packet> send = send(new Packet(PacketTypes.PROXY_PLAYERS,
                 true, false, serversIn));
@@ -70,10 +66,6 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
 
     public void newChannelConnection() {
 
-        if (clientChannelConnection != null) {
-            clientChannelConnection.destroy();
-        }
-
         clientChannelConnection = createNewConnection()
                 .withAddress(socketAddress)
                 .compressLargePacketTo(5120)
@@ -83,14 +75,12 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
 
     }
 
+    public void destroyChannelConnection() {
+        clientChannelConnection.destroy();
+    }
+
     public void signalAvailableConnection() {
-
-        if (clientChannelConnection == null) {
-            newChannelConnection();
-        }
-
         clientChannelConnection.getClientCommHandler().signalInitialConnection();
-
     }
 
     @Override

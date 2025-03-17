@@ -14,7 +14,7 @@ public abstract class CommandHandler<P, T, C> {
 
     private final MainServer<P, T, C> mainServer;
 
-    public abstract void handleCommand(ProxyCommandSender<P, T, C> sender, String[] separateArgs);
+    public abstract void handleCommand(ProxyCommandSender sender, String[] separateArgs);
 
     public Collection<String> onTab(int index) {
         return Collections.emptyList();
