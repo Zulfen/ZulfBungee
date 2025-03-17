@@ -16,6 +16,7 @@ public class MySQLImpl<P, T, C> extends HikariSQLImpl<P, T, C> {
         HikariDataSource dataSource = new HikariDataSource();
 
         dataSource.setMaximumPoolSize(10);
+        dataSource.setDriverClassName("com.zulfen.zulfbungee.libs.mysql.cj.jdbc.Driver");
 
         String jdbcUrl = "jdbc:mysql://" + getHost() + ":" + getPort() + "/" + getDatabase();
 
