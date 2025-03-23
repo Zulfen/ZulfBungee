@@ -1,0 +1,67 @@
+package com.zulfen.zulfbungee.velocity;
+
+import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandMeta;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.zulfen.zulfbungee.core.managers.CommandHandlerManager;
+import com.zulfen.zulfbungee.core.managers.MainServer;
+import com.zulfen.zulfbungee.velocity.command.VelocityCommand;
+import com.zulfen.zulfbungee.velocity.event.VelocityEvents;
+import com.zulfen.zulfbungee.velocity.interfaces.ZulfVelocityPlugin;
+import org.slf4j.Logger;
+
+import org.spongepowered.configurate.ConfigurationNode;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+public class ZulfVelocityMain {
+
+    protected final static String VERSION = "0.9.9-pre7";
+    private final ProxyServer velocity;
+    private final Logger logger;
+    private final Path dataDirectory;
+    private ZulfVelocityPlugin plugin;
+
+    private MainServer<ProxyServer, Player, ConfigurationNode> mainServer;
+
+    @Inject
+    public ZulfVelocityMain(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
+        this.velocity = server;
+        this.logger = logger;
+        this.dataDirectory = dataDirectory;
+    }
+
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+
+        plugin = new ZulfVelocityPlugin(velocity, this, logger, dataDirectory, VERSION);
+        mainServer = plugin.getMainServer();
+
+        velocity.getEventManager().register(this, new VelocityEvents(mainServer));
+        CommandMeta commandMeta = velocity.getCommandManager()
+                .metaBuilder("zulfbungee")
+                .plugin(this)
+                .build();
+        velocity.getCommandManager().register(commandMeta, new VelocityCommand(new CommandHandlerManager<>(mainServer)));
+
+
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        try {
+            mainServer.end();
+            plugin.getTaskManager().shutdown();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+}

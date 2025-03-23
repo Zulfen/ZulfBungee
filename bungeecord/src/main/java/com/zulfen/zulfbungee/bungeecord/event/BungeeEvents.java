@@ -1,0 +1,122 @@
+package com.zulfen.zulfbungee.bungeecord.event;
+
+import com.zulfen.zulfbungee.bungeecord.interfaces.ZulfBungeecordImpl;
+import com.zulfen.zulfbungee.bungeecord.objects.BungeePlayer;
+import com.zulfen.zulfbungee.bungeecord.objects.BungeeServer;
+import com.zulfen.zulfbungee.core.ZulfProxyImpl;
+import com.zulfen.zulfbungee.core.event.ProxyEvents;
+import com.zulfen.zulfbungee.core.managers.MainServer;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.Connection;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
+import net.md_5.bungee.api.event.*;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.config.Configuration;
+
+public class BungeeEvents extends ProxyEvents<ProxyServer, ProxiedPlayer, Configuration> implements Listener {
+
+    private final ZulfBungeecordImpl bungeecordInstance;
+
+    public BungeeEvents(MainServer<ProxyServer, ProxiedPlayer, Configuration> mainServerIn) {
+        super(mainServerIn);
+        ZulfProxyImpl<ProxyServer, ProxiedPlayer, Configuration> pluginInstance = mainServer.getImpl();
+        if (pluginInstance instanceof ZulfBungeecordImpl) {
+            this.bungeecordInstance = (ZulfBungeecordImpl) pluginInstance;
+        } else {
+            throw new RuntimeException("Tried to instantiate BungeeEvents, but the plugin instance is reported as not being Bungeecord.");
+        }
+    }
+
+    @EventHandler
+    public void onServerConnected(ServerConnectedEvent event) {
+
+        ProxiedPlayer eventPlayer = event.getPlayer();
+
+        if (eventPlayer.getServer() == null) {
+
+            ServerInfo serverInfo = event.getServer().getInfo();
+            BungeePlayer bungeePlayer = new BungeePlayer(eventPlayer, new BungeeServer(serverInfo));
+            serverConnected(bungeePlayer);
+
+        }
+    }
+
+
+    @EventHandler
+    public void onSwitchServerEvent(ServerSwitchEvent event) {
+
+        ProxiedPlayer eventPlayer = event.getPlayer();
+
+        if (event.getFrom() != null) {
+
+            ServerInfo from = event.getFrom();
+            ServerInfo to = eventPlayer.getServer().getInfo();
+
+            switchServer(to.getName(), from.getName(), eventPlayer.getName(), eventPlayer.getUniqueId());
+
+        }
+
+    }
+
+
+    @EventHandler
+    public void onServerKick(ServerKickEvent event) {
+
+        ProxiedPlayer player = event.getPlayer();
+        String serverName = event.getKickedFrom().getName();
+
+        // Waterfall is weird and fires this event even if you disconnect normally, but at least you can check the kick cause...
+        if (bungeecordInstance.isWaterfall()) {
+            if (event.getCause() == ServerKickEvent.Cause.LOST_CONNECTION) {
+                return;
+            }
+        }
+
+        if (mainServer.getActiveServerNames().contains(serverName)) {
+            String legacyText = TextComponent.toLegacyText(event.getKickReasonComponent());
+            serverKick(player.getName(), player.getUniqueId(), legacyText, serverName);
+        }
+
+    }
+
+    @EventHandler
+    public void onPlayerDisconnect(PlayerDisconnectEvent event) {
+
+        ProxiedPlayer player = event.getPlayer();
+
+        if (player.getServer() != null) {
+
+            String serverName = player.getServer().getInfo().getName();
+
+            if (mainServer.getActiveServerNames().contains(serverName)) {
+                serverDisconnect(player.getName(), player.getUniqueId(), serverName);
+            }
+
+        }
+
+    }
+
+    @EventHandler
+    public void onPluginMessageReceived(PluginMessageEvent event) {
+
+        if (event.getTag().equals("zproxy:channel")) {
+
+            Connection sender = event.getSender();
+
+            String serverName;
+            if (sender instanceof Server server) {
+                serverName = server.getInfo().getName();
+            } else {
+                return;
+            }
+
+            pluginMessage(serverName, event.getData());
+
+        }
+    }
+
+}

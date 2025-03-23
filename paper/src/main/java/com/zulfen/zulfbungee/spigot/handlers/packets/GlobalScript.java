@@ -1,0 +1,23 @@
+package com.zulfen.zulfbungee.spigot.handlers.packets;
+
+import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
+import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
+import com.zulfen.zulfbungee.core.socket.objects.Packet;
+import com.zulfen.zulfbungee.core.socket.objects.PacketTypes;
+import com.zulfen.zulfbungee.core.socket.objects.client.skript.ScriptInfo;
+
+public class GlobalScript extends PacketHandler {
+
+    public GlobalScript(ClientConnection<?> connectionIn) {
+        super(connectionIn, false, PacketTypes.GLOBAL_SCRIPT);
+
+    }
+
+    @Override
+    public void handlePacket(Packet packetIn) {
+
+        ScriptInfo scriptInfo = (ScriptInfo) packetIn.getDataSingle();
+        getConnection().getPluginInstance().getConnectionManager().processGlobalScript(scriptInfo, getConnection());
+
+    }
+}
