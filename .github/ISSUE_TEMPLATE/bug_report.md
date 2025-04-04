@@ -24,6 +24,8 @@ If applicable, add screenshots to help explain the issue.
  - Minecraft Version: [e.g. 1.19]
  - Skript Version [e.g. 2.6.1]
  - Java Version [e.g. 8]
+ - ProtocolLib Version (e.g. 5.4.0-SNAPSHOT)
+ - Are you using Paper or a fork of it? (e.g. Purpur)
 
 **Proxy information (in this order)**
  - Proxy Type [e.g. Bungeecord]
