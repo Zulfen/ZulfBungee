@@ -4,11 +4,11 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
 import com.zulfen.zulfbungee.spigot.ZulfBungeeSpigot;
 import com.zulfen.zulfbungee.core.socket.objects.client.skript.ServerMessage;
+import com.zulfen.zulfbungee.spigot.event.ProxySkriptEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventProxyMessage;
@@ -16,7 +16,7 @@ import com.zulfen.zulfbungee.core.socket.objects.client.ClientServer;
 
 @Name("Server Message")
 @Description("Called when this server receives a message.")
-public class EvtServerMessage extends SkriptEvent {
+public class EvtServerMessage extends ProxySkriptEvent {
 
     private Literal<String> title;
 

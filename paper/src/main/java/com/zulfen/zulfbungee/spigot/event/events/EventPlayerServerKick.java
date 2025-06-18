@@ -1,30 +1,20 @@
 package com.zulfen.zulfbungee.spigot.event.events;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import com.zulfen.zulfbungee.spigot.event.ProxyBukkitEvent;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientPlayer;
 
-public class EventPlayerServerKick extends Event {
+import java.util.UUID;
 
-    private static final HandlerList handlerList = new HandlerList();
+public class EventPlayerServerKick extends ProxyBukkitEvent {
 
     private final ClientPlayer player;
 
     private final String reason;
 
-    public EventPlayerServerKick(String reason, ClientPlayer player) {
-        super(true);
+    public EventPlayerServerKick(UUID eventId, String reason, ClientPlayer player) {
+        super(eventId);
         this.player = player;
         this.reason = reason;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
     }
 
     public ClientPlayer getPlayer() {
@@ -34,4 +24,5 @@ public class EventPlayerServerKick extends Event {
     public String getReason() {
         return reason;
     }
+
 }

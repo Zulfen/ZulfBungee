@@ -5,6 +5,7 @@ import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -19,16 +20,19 @@ import org.spongepowered.configurate.ConfigurationNode;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 public class ZulfVelocityMain {
 
-    protected final static String VERSION = "0.9.9-pre7";
     private final ProxyServer velocity;
     private final Logger logger;
     private final Path dataDirectory;
     private ZulfVelocityPlugin plugin;
 
     private MainServer<ProxyServer, Player, ConfigurationNode> mainServer;
+
+    @Inject
+    private PluginContainer pluginContainer;
 
     @Inject
     public ZulfVelocityMain(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -40,7 +44,11 @@ public class ZulfVelocityMain {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
-        plugin = new ZulfVelocityPlugin(velocity, this, logger, dataDirectory, VERSION);
+        String version = Optional.ofNullable(pluginContainer)
+                .flatMap(container -> container.getDescription().getVersion())
+                .orElse("unknown");
+
+        plugin = new ZulfVelocityPlugin(velocity, this, logger, dataDirectory, version);
         mainServer = plugin.getMainServer();
 
         velocity.getEventManager().register(this, new VelocityEvents(mainServer));

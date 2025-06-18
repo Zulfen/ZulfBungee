@@ -7,7 +7,6 @@ import java.io.Serializable;
 public class ClientPlayerDataContainer implements Serializable {
 
     private Object[] data = new Object[1];
-
     private ClientPlayer[] players = new ClientPlayer[1];
 
     public ClientPlayerDataContainer(Object dataIn, ClientPlayer[] playersIn) {

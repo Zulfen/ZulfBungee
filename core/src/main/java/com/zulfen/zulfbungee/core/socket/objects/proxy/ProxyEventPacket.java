@@ -5,19 +5,21 @@ import com.zulfen.zulfbungee.core.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.core.interfaces.EventCallback;
 
 import java.util.Optional;
+import java.util.UUID;
 
 // Separate class, so we can tell this is an event packet
-public class EventPacket extends Packet {
+public class ProxyEventPacket extends Packet {
 
     private transient EventCallback eventCallback;
+    private final UUID eventId = UUID.randomUUID();
 
     // supports callbacks if needed
-    public EventPacket(PacketTypes eventType, EventCallback callbackIn) {
+    public ProxyEventPacket(PacketTypes eventType, EventCallback callbackIn) {
         super(eventType, false, true);
         this.eventCallback = callbackIn;
     }
 
-    public EventPacket(PacketTypes eventType, Object dataIn) {
+    public ProxyEventPacket(PacketTypes eventType, Object dataIn) {
         super(eventType, false, true, dataIn);
     }
 
@@ -35,6 +37,10 @@ public class EventPacket extends Packet {
 
         return data[0] != null;
 
+    }
+
+    public UUID getEventId() {
+        return eventId;
     }
 
 }

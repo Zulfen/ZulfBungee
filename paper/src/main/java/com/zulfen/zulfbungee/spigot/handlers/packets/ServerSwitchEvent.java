@@ -22,7 +22,7 @@ public class ServerSwitchEvent extends PacketHandler {
         ClientServer fromServer = (ClientServer) dataContainer.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                new EventPlayerSwitchServer(fromServer, dataContainer.getPlayers()[0])
+                new EventPlayerSwitchServer(packetIn.getId(), fromServer, dataContainer.getPlayers()[0])
         );
 
     }

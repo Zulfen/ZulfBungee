@@ -24,7 +24,7 @@ public class ServerKickEvent extends PacketHandler {
         ClientPlayer player = container.getPlayers()[0];
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                new EventPlayerServerKick(reason, player)
+                new EventPlayerServerKick(packetIn.getId(), reason, player)
         );
 
     }

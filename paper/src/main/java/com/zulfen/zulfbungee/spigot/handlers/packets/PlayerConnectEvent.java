@@ -1,5 +1,6 @@
 package com.zulfen.zulfbungee.spigot.handlers.packets;
 
+import com.zulfen.zulfbungee.core.socket.objects.proxy.ProxyEventPacket;
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerConnect;
 import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
@@ -17,11 +18,12 @@ public class PlayerConnectEvent extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn) {
 
-        ClientPlayer player = (ClientPlayer) packetIn.getDataSingle();
+        ProxyEventPacket eventPacket = (ProxyEventPacket) packetIn;
+        ClientPlayer player = (ClientPlayer) eventPacket.getDataSingle();
 
         if (player != null) {
             getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                    new EventPlayerServerConnect(player)
+                    new EventPlayerServerConnect(eventPacket.getEventId(), player)
             );
         }
 

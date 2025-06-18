@@ -117,8 +117,7 @@ public class ZulfVelocityImpl implements ZulfProxyImpl<ProxyServer, Player, Conf
     public List<ZulfProxyPlayer<ProxyServer, Player, ConfigurationNode>> getAllPlayers() {
         return velocity.getAllPlayers().stream()
                 .map(playerConverter)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .collect(Collectors.toList());
     }
 

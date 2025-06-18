@@ -3,10 +3,8 @@ package com.zulfen.zulfbungee.spigot.elements.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
+import com.zulfen.zulfbungee.spigot.event.ProxySkriptEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerKick;
@@ -14,7 +12,7 @@ import com.zulfen.zulfbungee.core.socket.objects.client.ClientPlayer;
 
 @Name("Proxy Player Kick")
 @Description("When a proxy player gets kicked from the proxy. (e.g. a ban)")
-public class EvtPlayerProxyKick extends SkriptEvent {
+public class EvtPlayerProxyKick extends ProxySkriptEvent {
 
     static {
         Skript.registerEvent("Proxy Player Kick", EvtPlayerProxyKick.class, EventPlayerServerKick.class, "(proxy|bungeecord|bungee|velocity) player kick");
@@ -22,16 +20,6 @@ public class EvtPlayerProxyKick extends SkriptEvent {
         EventValues.registerEventValue(EventPlayerServerKick.class, ClientPlayer.class, EventPlayerServerKick::getPlayer);
         EventValues.registerEventValue(EventPlayerServerKick.class, String.class, EventPlayerServerKick::getReason);
 
-    }
-
-    @Override
-    public boolean init(Literal<?> @NotNull [] literals, int i, SkriptParser.@NotNull ParseResult parseResult) {
-        return true;
-    }
-
-    @Override
-    public boolean check(@NotNull Event event) {
-        return true;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class SecNetworkVariable extends Section {
     private Variable<?> variableExpression;
 
     static {
-        Skript.registerSection(SecNetworkVariable.class, "(using|load|get|with) (proxy|network|bungeecord|bungee|velocity) variable %objects% [[and] do]");
+        Skript.registerSection(SecNetworkVariable.class, "(using|load|get|with) (proxy|network|bungeecord|bungee|velocity) variable[s] %objects% [and] [do] [async]");
     }
 
     @Override

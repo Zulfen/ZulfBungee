@@ -3,10 +3,8 @@ package com.zulfen.zulfbungee.spigot.elements.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
+import com.zulfen.zulfbungee.spigot.event.ProxySkriptEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerSwitchServer;
@@ -15,7 +13,7 @@ import com.zulfen.zulfbungee.core.socket.objects.client.ClientServer;
 
 @Name("Proxy Player Switch Server")
 @Description("When a proxy player switches to another server.")
-public class EvtPlayerSwitchServer extends SkriptEvent {
+public class EvtPlayerSwitchServer extends ProxySkriptEvent {
 
     static {
 
@@ -26,16 +24,6 @@ public class EvtPlayerSwitchServer extends SkriptEvent {
         EventValues.registerEventValue(EventPlayerSwitchServer.class, ClientServer.class, event -> event.getPlayer().getServer().orElse(null));
 
 
-    }
-
-    @Override
-    public boolean init(Literal<?> @NotNull [] literals, int i, SkriptParser.@NotNull ParseResult parseResult) {
-        return true;
-    }
-
-    @Override
-    public boolean check(@NotNull Event event) {
-        return true;
     }
 
     @Override

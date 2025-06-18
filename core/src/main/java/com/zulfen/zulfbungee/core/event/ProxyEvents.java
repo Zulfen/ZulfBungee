@@ -6,7 +6,7 @@ import com.zulfen.zulfbungee.core.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientServer;
 import com.zulfen.zulfbungee.core.socket.objects.client.skript.ClientPlayerDataContainer;
-import com.zulfen.zulfbungee.core.socket.objects.proxy.EventPacket;
+import com.zulfen.zulfbungee.core.socket.objects.proxy.ProxyEventPacket;
 import com.zulfen.zulfbungee.core.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.core.socket.objects.proxy.ZulfProxyServer;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientInfo;
@@ -51,7 +51,7 @@ public class ProxyEvents<P, T, C> {
 
     protected void serverConnected(ZulfProxyPlayer<P, T, C> proxyPlayerIn) {
 
-        mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.CONNECT_EVENT, () -> mainServer.toClientPlayer(proxyPlayerIn)));
+        mainServer.sendDirectToAllAsync(new ProxyEventPacket(PacketTypes.CONNECT_EVENT, () -> mainServer.toClientPlayer(proxyPlayerIn)));
 
         if (proxyPlayerIn.hasPermission("zulfen.admin")) {
             mainServer.getCheckUpdateTask().checkUpdate(proxyPlayerIn, false);
@@ -66,7 +66,7 @@ public class ProxyEvents<P, T, C> {
         Optional<ClientServer> transferFrom = toClientServer(fromServerName);
 
         if (transferFrom.isPresent() && transferTo.isPresent()) {
-            mainServer.sendDirectToAllAsync(new EventPacket(PacketTypes.SERVER_SWITCH_EVENT,
+            mainServer.sendDirectToAllAsync(new ProxyEventPacket(PacketTypes.SERVER_SWITCH_EVENT,
                     new ClientPlayerDataContainer(transferFrom.get(), new ClientPlayer(nameIn, uuidIn, transferTo.get()))));
         }
 
@@ -74,7 +74,7 @@ public class ProxyEvents<P, T, C> {
 
     protected void serverKick(String playerNameIn, UUID uuidIn, String reason, String previousServerName) {
         checkValidConnection(previousServerName).ifPresent(clientServer ->
-                mainServer.sendDirectToAllAsync(new EventPacket(
+                mainServer.sendDirectToAllAsync(new ProxyEventPacket(
                         PacketTypes.KICK_EVENT,
                         new ClientPlayerDataContainer(reason, new ClientPlayer(playerNameIn, uuidIn)))));
 
@@ -82,7 +82,7 @@ public class ProxyEvents<P, T, C> {
 
     protected void serverDisconnect(String nameIn, UUID uuidIn, String previousServerName) {
         checkValidConnection(previousServerName).ifPresent(clientServer ->
-                mainServer.sendDirectToAllAsync(new EventPacket(
+                mainServer.sendDirectToAllAsync(new ProxyEventPacket(
                         PacketTypes.DISCONNECT_EVENT,
                         new ClientPlayerDataContainer(clientServer, new ClientPlayer(nameIn, uuidIn))
                 ))

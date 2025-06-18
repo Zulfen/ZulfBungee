@@ -1,5 +1,6 @@
 package com.zulfen.zulfbungee.spigot.handlers.packets;
 
+import com.zulfen.zulfbungee.core.socket.objects.proxy.ProxyEventPacket;
 import com.zulfen.zulfbungee.spigot.interfaces.PacketHandler;
 import com.zulfen.zulfbungee.spigot.event.events.EventPlayerServerDisconnect;
 import com.zulfen.zulfbungee.spigot.socket.ClientConnection;
@@ -18,10 +19,15 @@ public class PlayerDisconnectEvent extends PacketHandler {
     @Override
     public void handlePacket(Packet packetIn) {
 
-        ClientPlayerDataContainer dataContainer = (ClientPlayerDataContainer) packetIn.getDataSingle();
+        ProxyEventPacket eventPacket = (ProxyEventPacket) packetIn;
+        ClientPlayerDataContainer dataContainer = (ClientPlayerDataContainer) eventPacket.getDataSingle();
 
         getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
-                new EventPlayerServerDisconnect(dataContainer.getPlayers()[0], (ClientServer) dataContainer.getDataSingle())
+                new EventPlayerServerDisconnect(
+                        eventPacket.getEventId(),
+                        dataContainer.getPlayers()[0],
+                        (ClientServer) dataContainer.getDataSingle()
+                )
         );
 
 

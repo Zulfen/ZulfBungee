@@ -28,15 +28,20 @@ public class ChannelPayload extends PacketAdapter {
         protocolManagerIn.getAsynchronousManager().registerAsyncHandler(this).start();
     }
 
+    private byte[] byteBufToBytes(ByteBuf byteBuf) {
+        byte[] message = new byte[byteBuf.readableBytes()];
+        byteBuf.getBytes(byteBuf.readerIndex(), message);
+        return message;
+    }
+
     @Override
     public void onPacketReceiving(PacketEvent event) {
 
         if (event.getPacketType() == PacketType.Play.Client.CUSTOM_PAYLOAD) {
 
             PacketContainer packet = event.getPacket();
-
             String channel;
-            ByteBuf byteBuffer;
+            byte[] bytes;
 
             // Channel identifiers changed in 1.13 (arrrrgghh)
             if (minecraftVersion.isAtLeast(MinecraftVersion.CONFIG_PHASE_PROTOCOL_UPDATE)) {
@@ -51,7 +56,13 @@ public class ChannelPayload extends PacketAdapter {
                     Field dataField = payload.getClass().getDeclaredField("data");
                     dataField.setAccessible(true);
 
-                    byteBuffer = (ByteBuf) dataField.get(payload);
+                    // on newer builds of paper 1.21 this is actually a byte array instead of a bytebuf
+                    if (minecraftVersion.isAtLeast(MinecraftVersion.v1_21_0)) {
+                        bytes = (byte[]) dataField.get(payload);
+                    } else {
+                        ByteBuf buffer = (ByteBuf) dataField.get(payload);
+                        bytes = byteBufToBytes(buffer);
+                    }
 
                     Method idMethod = payload.getClass().getMethod("id");
                     Object resourceLocation = idMethod.invoke(payload); // this should be the ResourceLocation object
@@ -74,16 +85,16 @@ public class ChannelPayload extends PacketAdapter {
             } else if (minecraftVersion.isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
                 List<MinecraftKey> minecraftKeys = packet.getMinecraftKeys().getValues();
                 channel = minecraftKeys.getFirst().getFullKey();
-                byteBuffer = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
+                ByteBuf byteBuf = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
+                bytes = byteBufToBytes(byteBuf);
             } else {
                 channel = packet.getStrings().read(0);
-                byteBuffer = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
+                ByteBuf byteBuf = (ByteBuf) packet.getModifier().withType(ByteBuf.class).read(0);
+                bytes = byteBufToBytes(byteBuf);
             }
 
             if (channel.equals("zproxy:channel")) {
-                byte[] message = new byte[byteBuffer.readableBytes()];
-                byteBuffer.getBytes(byteBuffer.readerIndex(), message);
-                channelCommHandler.provideBytes(message);
+                channelCommHandler.provideBytes(bytes);
             }
 
         }

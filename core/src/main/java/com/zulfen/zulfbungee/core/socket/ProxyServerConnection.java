@@ -11,13 +11,14 @@ import com.zulfen.zulfbungee.core.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.core.socket.objects.client.skript.ScriptAction;
 import com.zulfen.zulfbungee.core.socket.objects.client.skript.ScriptInfo;
-import com.zulfen.zulfbungee.core.socket.objects.proxy.EventPacket;
+import com.zulfen.zulfbungee.core.socket.objects.proxy.ProxyEventPacket;
 import com.zulfen.zulfbungee.core.socket.objects.proxy.ZulfProxyPlayer;
 
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class ProxyServerConnection<P, T, C> implements PacketConsumer {
@@ -49,7 +50,7 @@ public abstract class ProxyServerConnection<P, T, C> implements PacketConsumer {
         pluginInstance.getTaskManager().newTask(() -> proxyCommHandler.processLoop());
     }
 
-    public void sendEventPacket(EventPacket packetIn) {
+    public void sendProxyEventPacket(ProxyEventPacket packetIn) {
         boolean processCallback = packetIn.processCallback();
         if (processCallback) {
             sendDirect(packetIn);
@@ -65,8 +66,8 @@ public abstract class ProxyServerConnection<P, T, C> implements PacketConsumer {
     // input null into senderIn to make the console reload the scripts, not a player.
     // name allows you to define a custom name if needed
     @SuppressWarnings("unchecked")
-    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender senderIn, boolean isLastScriptIn) {
 
+    public void sendScript(String scriptName, Path scriptPathIn, ScriptAction actionIn, ProxyCommandSender senderIn, boolean isLastScriptIn) {
         pluginInstance.getTaskManager().newTask(() -> {
 
             ClientPlayer playerOut = null;
@@ -130,6 +131,18 @@ public abstract class ProxyServerConnection<P, T, C> implements PacketConsumer {
             proxyCommHandler.destroy();
             mainServer.removeServerConnection(this);
         }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProxyServerConnection<?, ?, ?> that)) return false;
+        return Objects.equals(mainServer, that.mainServer) && Objects.equals(pluginInstance, that.pluginInstance) && Objects.equals(packetHandlerManager, that.packetHandlerManager) && Objects.equals(proxyCommHandler, that.proxyCommHandler) && Objects.equals(connected, that.connected) && Objects.equals(socketAddress, that.socketAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mainServer, pluginInstance, packetHandlerManager, proxyCommHandler, connected, socketAddress);
     }
 
     @Override

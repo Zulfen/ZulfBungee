@@ -19,7 +19,10 @@ public class ServerMessageEvent extends PacketHandler {
 
         ServerMessage message = (ServerMessage) packetIn.getDataSingle();
 
-        getConnection().getPluginInstance().getServer().getPluginManager().callEvent(new EventProxyMessage(message));
+        getConnection().getPluginInstance().getServer().getPluginManager().callEvent(
+                new EventProxyMessage(packetIn.getId(), message)
+        );
+
 
     }
 }

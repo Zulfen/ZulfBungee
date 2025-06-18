@@ -38,8 +38,7 @@ public class PacketHandlerManager<P, T, C> {
         handlers.put(PacketTypes.PLAYER_VIRTUAL_HOST, new ProxyPlayerVirtualHost<>(this));
         handlers.put(PacketTypes.REGISTER_SERVER, new RegisterServer<>(this));
         handlers.put(PacketTypes.DEREGISTER_SERVER, new DeRegisterServer<>(this));
-        handlers.put(PacketTypes.KEEP_ALIVE, new KeepAlive<>(this));
-
+        handlers.put(PacketTypes.PROXY_EVENT_PROCESSED, new EventProcessed<>(this));
     }
 
     // ease of use. it's an absolute pain in the arse writing it out fully every time

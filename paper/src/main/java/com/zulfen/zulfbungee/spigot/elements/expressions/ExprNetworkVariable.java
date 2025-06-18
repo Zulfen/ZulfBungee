@@ -44,6 +44,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
             return preparedVar.getData();
         }
 
+
         return null;
 
     }

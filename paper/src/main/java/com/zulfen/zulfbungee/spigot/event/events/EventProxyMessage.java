@@ -1,27 +1,20 @@
 package com.zulfen.zulfbungee.spigot.event.events;
 
 import com.zulfen.zulfbungee.core.socket.objects.client.skript.ServerMessage;
-import org.bukkit.event.Event;
+import com.zulfen.zulfbungee.spigot.event.ProxyBukkitEvent;
 import org.bukkit.event.HandlerList;
 
-public class EventProxyMessage extends Event {
+import java.util.UUID;
+
+public class EventProxyMessage extends ProxyBukkitEvent {
 
     private static final HandlerList handlerList = new HandlerList();
 
     private final ServerMessage message;
 
-    public EventProxyMessage(ServerMessage messageIn) {
-        super(true);
+    public EventProxyMessage(UUID eventId, ServerMessage messageIn) {
+        super(eventId);
         this.message = messageIn;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
     }
 
     public ServerMessage getMessage() {

@@ -85,7 +85,9 @@ public class ChannelConnectionManager extends ConnectionManager<ChannelConnectio
 
     @Override
     public void shutdown() {
-        clientChannelConnection.destroy();
+        if (clientChannelConnection != null) {
+            destroyChannelConnection();
+        }
         super.shutdown();
     }
 

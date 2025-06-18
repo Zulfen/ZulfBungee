@@ -1,30 +1,24 @@
 package com.zulfen.zulfbungee.spigot.event.events;
 
-import org.bukkit.event.Event;
+import com.zulfen.zulfbungee.spigot.event.ProxyBukkitEvent;
 import org.bukkit.event.HandlerList;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientPlayer;
 
-public class EventPlayerServerConnect extends Event {
+import java.util.UUID;
+
+public class EventPlayerServerConnect extends ProxyBukkitEvent {
 
     private static final HandlerList handlerList = new HandlerList();
 
     private final ClientPlayer player;
 
-    public EventPlayerServerConnect(ClientPlayer player) {
-        super(true);
+    public EventPlayerServerConnect(UUID eventId, ClientPlayer player) {
+        super(eventId);
         this.player = player;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
     }
 
     public ClientPlayer getPlayer() {
         return player;
     }
+
 }

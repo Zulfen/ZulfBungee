@@ -7,7 +7,7 @@ import com.zulfen.zulfbungee.core.socket.objects.PacketTypes;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientPlayer;
 import com.zulfen.zulfbungee.core.socket.objects.client.ClientServer;
 import com.zulfen.zulfbungee.core.socket.objects.client.skript.ScriptAction;
-import com.zulfen.zulfbungee.core.socket.objects.proxy.EventPacket;
+import com.zulfen.zulfbungee.core.socket.objects.proxy.ProxyEventPacket;
 import com.zulfen.zulfbungee.core.socket.objects.proxy.ZulfProxyPlayer;
 import com.zulfen.zulfbungee.core.ZulfProxyImpl;
 import com.zulfen.zulfbungee.core.command.ProxyCommandSender;
@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainServer<P, T, C> {
 
@@ -38,13 +39,17 @@ public class MainServer<P, T, C> {
 
     protected final ConcurrentHashMap<String, ClientInfo> clientInfos = new ConcurrentHashMap<>();
 
-    protected final ConcurrentLinkedQueue<EventPacket> unsentEventPackets = new ConcurrentLinkedQueue<>();
+    protected final ConcurrentLinkedQueue<ProxyEventPacket> unsentProxyEventPackets = new ConcurrentLinkedQueue<>();
 
     protected final ProxyTaskManager taskManager;
     protected final CheckUpdateTask<P, T, C> checkUpdateTask;
 
+    private final AtomicInteger numEventChecks = new AtomicInteger(0);
+    private final CopyOnWriteArrayList<UUID> eventsProcessed = new CopyOnWriteArrayList<>();
+
     // storage
     private volatile StorageImpl<P, T, C> storage;
+
 
     public MainServer(ZulfProxyImpl<P, T, C> instanceIn, CheckUpdateTask<P, T, C> updateTaskIn) {
 
@@ -85,21 +90,25 @@ public class MainServer<P, T, C> {
     // unsent packets and sendDirect them when a connection is available.
     public void sendDirectToAll(Packet packetIn) {
         pluginInstance.logDebug("Sending packet " + packetIn.getType().toString() + " to all clients...");
-        boolean isEventPacket = packetIn instanceof EventPacket;
+        boolean isEventPacket = packetIn instanceof ProxyEventPacket;
         if (!connections.isEmpty()) {
             for (ProxyServerConnection<P, T, C> connection : connections) {
                 if (isEventPacket) {
-                    connection.sendEventPacket((EventPacket) packetIn);
+                    sendProxyEventTo(connection, (ProxyEventPacket) packetIn);
                 } else {
                     connection.sendDirect(packetIn);
                 }
             }
         } else if (isEventPacket) {
             if (packetIn.getType() != PacketTypes.PROXY_CLIENT_INFO) {
-                unsentEventPackets.offer((EventPacket) packetIn);
+                unsentProxyEventPackets.offer((ProxyEventPacket) packetIn);
             }
         }
 
+    }
+
+    private void sendProxyEventTo(ProxyServerConnection<P, T, C> connection, ProxyEventPacket packetIn) {
+        connection.sendProxyEventPacket(packetIn);
     }
 
     public void syncScripts(Map<Path, ScriptAction> scriptNamesIn, ProxyCommandSender senderIn) {
@@ -134,9 +143,9 @@ public class MainServer<P, T, C> {
         pluginInstance.logInfo(String.format("%sConnection established with %s (%s)", ChatColour.GREEN, address, name));
         sendDirectToAll(new Packet(PacketTypes.PROXY_CLIENT_INFO, false, true, getClientServerArray()));
 
-        while (unsentEventPackets.peek() != null) {
-            EventPacket eventPacket = unsentEventPackets.poll();
-            connectionIn.sendEventPacket(eventPacket);
+        while (unsentProxyEventPackets.peek() != null) {
+            ProxyEventPacket proxyEventPacket = unsentProxyEventPackets.poll();
+            sendProxyEventTo(connectionIn, proxyEventPacket);
         }
 
     }
@@ -164,6 +173,23 @@ public class MainServer<P, T, C> {
 
     }
 
+    public synchronized boolean hasEventProcessed(UUID eventId) {
+        // only 1 connection, so duplicates impossible.
+        if (connections.size() == 1) {
+            return false;
+        }
+        if (numEventChecks.incrementAndGet() >= connections.size()) {
+            eventsProcessed.remove(eventId);
+            numEventChecks.set(0);
+        } else {
+            if (!eventsProcessed.contains(eventId)) {
+                eventsProcessed.add(eventId);
+                return false;
+            }
+
+        }
+        return true;
+    }
 
     public void end() throws IOException {
 

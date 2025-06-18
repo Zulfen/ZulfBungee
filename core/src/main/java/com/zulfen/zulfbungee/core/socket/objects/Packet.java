@@ -66,6 +66,8 @@ public class Packet implements Serializable {
         this.id = UUID.randomUUID();
     }
 
+
+
     public Packet(PacketTypes packetType, boolean isReturnable, boolean handleIn, UUID id) {
         this.type = packetType;
         this.returnable = isReturnable;
@@ -83,6 +85,15 @@ public class Packet implements Serializable {
 
     public Object getDataSingle() {
         return data[0];
+    }
+
+    // typed version
+    public <T> T getDataSingle(Class<T> clazz) {
+        Object value = data[0];
+        if (clazz.isInstance(value)) {
+            return clazz.cast(value);
+        }
+        throw new ClassCastException("Cannot cast " + value.getClass().getName() + " to " + clazz.getName());
     }
 
     public boolean isReturnable() {
